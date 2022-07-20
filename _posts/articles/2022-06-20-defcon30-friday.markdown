@@ -9,7 +9,7 @@ toc: true
 
 ## I’m not Keylogging you! Just some benign data collection for User Behavior Modeling
 
-**Time**: 12:00-13:00 \
+**Time**: 11:00-12:00 \
 **Speaker**: Harini Kannan 
 
 User and Entity Behavior Analysis (UEBA) has been an active area of research in cybersecurity for years now. Advancements in unsupervised machine learning methodologies have made UEBA models effective in detecting anomalous drifts from baseline behavior. But when collecting user generated systems data from a cluster of machines in the cloud or from an endpoint, the data scientist gets access to human generated raw features, which keys are typed when, and what are those. This starts off as acceptable but wades into the grey area of almost keylogging users which is dangerous.
@@ -18,7 +18,7 @@ In this talk, we will go through a real example of how a user behavior experimen
 
 ## The Chaos of Coding with Language Models
 
-**Time**: 15:00-16:00 \
+**Time**: 14:00-15:00 \
 **Speaker**: Nick Doiron
 
 Language models are being deployed to assist with writing code and explaining code snippets. These transformer-based models have learned patterns and probabilities from large datasets of open source code and human text. A Wired article claims one plugin writes "a remarkable 35 percent of its users’ newly posted code".
@@ -36,7 +36,7 @@ Resources will include a GitHub repo, runnable notebooks, and a form to suggest 
 
 ## LATMA - Lateral movement analyzer
 
-**Time**: 17:00-18:00 \
+**Time**: 15:00-16:00 \
 **Speaker**: Gal Sadeh
 
 Lateral movement is the stage in which attackers spread in networks following initial access. so far, reliable detections of lateral movement attacks from a given set of authentications is an unaddressed challenge. This talk will present a new online algorithm for detecting lateral movement attacks which provides one false positive a day, 30 times better than the state-of-the-art algorithms. Our algorithm was trained and tested on data from more than 20 different enterprise environments. The detection method combines domain knowledge, practical machine learning and algorithmic tools. In addition, we will present the offline tool LATMA which collects authentication AD logs, finds suspected lateral movement based on our algorithm and visualises the results. We will explain how to analyse lateral movement attacks using LATMA’s visualisations and demonstrate it.
