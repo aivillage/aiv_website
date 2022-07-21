@@ -34,7 +34,7 @@ Attendees will walk away from this talk with the knowledge and tools to attack R
 **Time**: 12:00-13:00 \
 **Speaker**: dadabots
 
-
+TBA
 
 ## CatPhish Automation - The Emerging Use of Artificial Intelligence in Social Engineering
 
@@ -42,6 +42,13 @@ Attendees will walk away from this talk with the knowledge and tools to attack R
 **Speaker**: Justin Hutchens
 
 Infestations of bots on social network platforms is nothing new, but the sophistication of these bots have transformed dramatically in the past few years. In the recent past, it was fairly easy for any sensible person to recognize if they were talking to a bot. But that is rapidly changing as Artificial Intelligence (AI) solutions become more advanced and more accessible. During this presentation, the speaker will explore the increasing use of AI for automated social engineering within the context of social networks, and will show how AI chat bots can be leveraged to conduct phishing attacks, compromise credentials, or distribute malware. By using emerging technologies (to include Generative Adversarial Networks for generating non-searchable profile images, and deep-learning natural language processing models for simulating human intelligence), these bots can be used to consistently fool even the most vigilant of users.
+
+## AI and Red Team Villages Joint Panel
+
+**Time**: 14:00-15:00 \
+**Speaker**: TBA
+
+TBA
 
 ## A System for Alert Prioritization
 

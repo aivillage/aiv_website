@@ -7,12 +7,16 @@ category: "defcon 30"
 toc: true
 ---
 
-## Attacks on Tiny Intelligence
+## Automate Detection with Machine Learning
 
 **Time**: 9:00-10:30 \
 **Speaker**: Gavin Klondike
 
-Come build a spam detection model from scratch in this hands on workshop.
+Today, over a quarter of security products for detection have some form of machine learning built in. However, “machine learning” is nothing more than a mysterious buzzword for many security analysts. In order to properly deploy and manage these products, analysts will need to understand how the machine learning components operate to ensure they are working efficiently. In this talk, we will dive head first into building and training our own security-related models using the 7-step machine learning process. No environment setup is necessary, but Python experience is strongly encouraged. 
+
+Gavin Klondike is a senior consultant and researcher who has a passion for network security, both attack and defense. Through that passion, he runs NetSec Explained; a blog and YouTube channel which covers intermediate and advanced level network security topics, in an easy to understand way. His work has given him the opportunity to be published in industry magazines and speak at conferences such as Def Con, Def Con China, and CactusCon. Currently, he is researching into ways to address the cybersecurity skills gap, by utilizing machine learning to augment the capabilities of current security analysts.
+
+## Attacks on Tiny Intelligence
 
 **Time**: 10:30-11:30 \
 **Speaker**: Yuvaraj Govindarajulu
@@ -30,3 +34,9 @@ As the current machine learning paradigm shifts toward the use of large pretrain
 
 As part of an emphasis on trojan detection, the talk will also cover key aspects of the TrojAI Competition (https://pages.nist.gov/trojai/)—an open leaderboard run by NIST and IARPA to spur the development of better trojan detection techniques. This leaderboard provides anyone with the opportunity to run and evaluate their own trojan detectors across large datasets of clean/poisoned AI models already developed by the TrojAI team. These datasets consist of numerous different AI architectures trained across tasks ranging from image classification to extractive question answering. They are open-source and ready for the community to use.
 
+## CTF Results and Q&A
+
+**Time**: 12:30-13:30 \
+**Speaker**: Will Pearce
+
+TBA
