@@ -9,7 +9,12 @@ toc: true
 
 ## Attacks on Tiny Intelligence
 
-**Time**: 10:00-11:00 \
+**Time**: 9:00-10:30 \
+**Speaker**: Gavin Klondike
+
+Come build a spam detection model from scratch in this hands on workshop.
+
+**Time**: 10:30-11:30 \
 **Speaker**: Yuvaraj Govindarajulu
 
 As of this year, there are over a 2.5 billion Edge-enabled IoT devices and close to 1.5 million new AI Edge devices projected to be shipped. These devices include smaller compressed versions of AI models running on them. While in the last years, we have been able to improve the performance of the AI models and reduce their memory footprint on these devices, not much has been spoken about the security threats of the AI models on tiny models.
@@ -18,7 +23,7 @@ First step towards protecting these AI models from attacks such as Model Theft, 
 
 ## AI Trojan Attacks, Defenses, and the TrojAI Competition
 
-**Time**: 11:00:12:00 \
+**Time**: 11:30-12:30 \
 **Speaker**: Taylor Kulp-Mcdowall
 
 As the current machine learning paradigm shifts toward the use of large pretrained models fine-tuned to a specific use case, it becomes increasingly important to trust the pretrained models that are downloaded from central model repositories (or other areas of the internet). As has been well documented in the machine learning literature, numerous attacks currently exist that allow an adversary to poison or "trojan" a machine learning model causing the model to behave correctly except when dealing with a specific adversary chosen input or "trigger". This talk will introduce the threats posed by these AI trojan attacks, discuss the current types of attacks that exist, and then focus on the state of the art techniques used to both defend and detect these attacks.

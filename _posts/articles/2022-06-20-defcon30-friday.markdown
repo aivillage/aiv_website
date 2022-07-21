@@ -7,6 +7,13 @@ category: "defcon 30"
 toc: true
 ---
 
+## ML Workshop
+
+**Time**: 9:30-11:00 \
+**Speaker**: Gavin Klondike
+
+Come build a spam detection model from scratch in this hands on workshop.
+
 ## I’m not Keylogging you! Just some benign data collection for User Behavior Modeling
 
 **Time**: 11:00-12:00 \

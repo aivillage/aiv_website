@@ -29,6 +29,13 @@ In this talk, I will provide a high-level overview of reinforcement learning and
 
 Attendees will walk away from this talk with the knowledge and tools to attack RL models, as well as an appreciation for the importance of properly securing machine learning systems.
 
+## AI Music Tutorial
+
+**Time**: 12:00-13:00 \
+**Speaker**: dadabots
+
+
+
 ## CatPhish Automation - The Emerging Use of Artificial Intelligence in Social Engineering
 
 **Time**: 13:00-14:00 \
