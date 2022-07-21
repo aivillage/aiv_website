@@ -46,9 +46,12 @@ Infestations of bots on social network platforms is nothing new, but the sophist
 ## AI and Red Team Villages Joint Panel
 
 **Time**: 14:00-15:00 \
-**Speaker**: TBA
-
-TBA
+**Moderator**: Omar Santos
+Panelists:
+- Will Schroeder: @HarmJ0y
+- Will Pearce: @moo_hax
+- TBA
+- TBA
 
 ## A System for Alert Prioritization
 
