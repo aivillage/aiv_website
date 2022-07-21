@@ -67,3 +67,10 @@ Resources will include a GitHub repo, runnable notebooks, and a form to suggest 
 **Speaker**: Gal Sadeh
 
 Lateral movement is the stage in which attackers spread in networks following initial access. so far, reliable detections of lateral movement attacks from a given set of authentications is an unaddressed challenge. This talk will present a new online algorithm for detecting lateral movement attacks which provides one false positive a day, 30 times better than the state-of-the-art algorithms. Our algorithm was trained and tested on data from more than 20 different enterprise environments. The detection method combines domain knowledge, practical machine learning and algorithmic tools. In addition, we will present the offline tool LATMA which collects authentication AD logs, finds suspected lateral movement based on our algorithm and visualises the results. We will explain how to analyse lateral movement attacks using LATMA’s visualisations and demonstrate it.
+
+## AI and Hiring Tech
+
+**Time**: 16:00-17:00 \
+**Moderator**: Rachel See
+
+Panelists: HireVue (Lindsay), Matt Scherer (Center for Democracy and Tech), Patrick Hall (bnh)
