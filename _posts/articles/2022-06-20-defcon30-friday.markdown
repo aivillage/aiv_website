@@ -30,7 +30,7 @@ In this talk, we will go through a real example of how a user behavior experimen
 **Time**: 12:00-13:00 \
 **Speaker**: Keith E. Sonderling - EEOC Commissioner
 
-TBA
+More details coming soon!
 
 ## ML Security Evasion Competition Launch
 
@@ -73,4 +73,4 @@ Lateral movement is the stage in which attackers spread in networks following in
 **Time**: 16:00-17:00 \
 **Moderator**: Rachel See
 
-Panelists: HireVue (Lindsay), Matt Scherer (Center for Democracy and Tech), Patrick Hall (bnh)
+Panelists: To Be Announced!
