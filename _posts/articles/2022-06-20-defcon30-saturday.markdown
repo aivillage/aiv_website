@@ -29,12 +29,14 @@ In this talk, I will provide a high-level overview of reinforcement learning and
 
 Attendees will walk away from this talk with the knowledge and tools to attack RL models, as well as an appreciation for the importance of properly securing machine learning systems.
 
-## AI Music Tutorial
+## A System for Alert Prioritization
 
 **Time**: 12:00-13:00 \
-**Speaker**: dadabots
+**Speaker**: Salma Taoufiq and Ben Gelman
 
-TBA
+At any moment, tens of thousands of analysts within security operations centers (SOCs) inspect security alerts to detect evidence of compromise, but the knowledge they gain in the process is often lost, siloed, or inefficiently preserved. In our talk, we'll present a machine learning prototype that leverages this forgotten knowledge, helping analysts triage malicious alerts in a feedback loop. The system learns to predict which alerts analysts will escalate, presents these alerts to analysts, and improves as analysts make decisions about these alerts. Our system is trained on real activity from hundreds of SOC analysts analyzing threats over thousands of customer environments, and it demonstrates a dramatic reduction in alert volume with minimal loss in detection rate, freeing up analysts to dive into alerts that truly matter.
+
+In our presentation, we describe this system in transparent detail, discussing the complexity of raw data, the limitations of current approaches, and how our system can integrate into existing infrastructure, even in the presence of unstructured data and a shifting landscape of security sensors. We’ll also show our system's performance in the practical defense of a diverse population of organizations and go over in-the-trenches case studies illustrating our system's strengths and weaknesses.
 
 ## CatPhish Automation - The Emerging Use of Artificial Intelligence in Social Engineering
 
@@ -56,11 +58,16 @@ Panelists:
 - TBA
 - TBA
 
-## A System for Alert Prioritization
+## Generative Art Tutorial
 
 **Time**: 15:00-16:00 \
-**Speaker**: Salma Taoufiq and Ben Gelman
+**Speaker**: TBD
 
-At any moment, tens of thousands of analysts within security operations centers (SOCs) inspect security alerts to detect evidence of compromise, but the knowledge they gain in the process is often lost, siloed, or inefficiently preserved. In our talk, we'll present a machine learning prototype that leverages this forgotten knowledge, helping analysts triage malicious alerts in a feedback loop. The system learns to predict which alerts analysts will escalate, presents these alerts to analysts, and improves as analysts make decisions about these alerts. Our system is trained on real activity from hundreds of SOC analysts analyzing threats over thousands of customer environments, and it demonstrates a dramatic reduction in alert volume with minimal loss in detection rate, freeing up analysts to dive into alerts that truly matter.
+TBA
 
-In our presentation, we describe this system in transparent detail, discussing the complexity of raw data, the limitations of current approaches, and how our system can integrate into existing infrastructure, even in the presence of unstructured data and a shifting landscape of security sensors. We’ll also show our system's performance in the practical defense of a diverse population of organizations and go over in-the-trenches case studies illustrating our system's strengths and weaknesses.
+## dadabots: AI Music Tutorial and Show
+
+**Time**: 16:00-17:00 \
+**Speaker**: dadabots
+
+TBA
