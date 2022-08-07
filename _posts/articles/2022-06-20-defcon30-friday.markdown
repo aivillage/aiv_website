@@ -71,6 +71,9 @@ Lateral movement is the stage in which attackers spread in networks following in
 ## AI and Hiring Tech
 
 **Time**: 16:00-17:00 \
-**Moderator**: Rachel See
+**Moderator**: Rachel See, EEOC
 
-Panelists: To Be Announced!
+Panelists: 
+- Lindsay Zuloaga, HireVue
+- Matt Scherer, Center for Democracy and Tech
+- Patrick Hall, bnh.ai

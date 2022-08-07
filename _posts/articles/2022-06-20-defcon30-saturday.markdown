@@ -65,9 +65,9 @@ Panelists:
 
 TBA
 
-## dadabots: AI Music Tutorial and Show
+## AI Death Metal : Eliminating Humans from Music
 
 **Time**: 16:00-17:00 \
 **Speaker**: dadabots
 
-TBA
+This is the soundtrack to skynet eliminating all humans," joke YouTubers tuning into a livestream of their raw audio neural network trained on technical death metal which has been running 24/7 for 3 years. Join us as Dadabots unleashes machine learning onto the production of extreme music. Dadabots takes us on a journey from procedural mathcore, battling human beatbox champions, inventing new subgenres (florpstep, no soul), ssh'ing into giant gpu clusters, python dependency hell, kurt cobain screaming jesus, nuns singing hail satan & more. Dadabots also shows us how to fight takedowns on music deep fakes, and how to sell arms to both sides of the copyright war. As these tools become accessible to people, we imminently approach a major creative renaissance. To quote Mike Patton, "the more fucked up and further away music is from music, the healthier it is for music

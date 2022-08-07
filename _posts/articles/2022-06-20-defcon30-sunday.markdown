@@ -37,6 +37,6 @@ As part of an emphasis on trojan detection, the talk will also cover key aspects
 ## CTF Results and Q&A
 
 **Time**: 12:30-13:30 \
-**Speaker**: Will Pearce
+**Speaker**: Will Pearce, and others!
 
-TBA
+We'll go over the challenges and the solutions people made up. 

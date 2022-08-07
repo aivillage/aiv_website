@@ -85,8 +85,8 @@ DEFCON 30 schedule. This is subject to change.
 </tr>
 <tr>
     <td> Friday </td>
-    <td> 1:00 PM </td>
-    <td> 60 </td>
+    <td> 1:30 PM </td>
+    <td> 30 </td>
     <td> Hyrum Anderson </td>
     <td>  
         <a href="{% post_url 2022-06-20-defcon30-friday  %}#ml-security-evasion-competition-launch">
