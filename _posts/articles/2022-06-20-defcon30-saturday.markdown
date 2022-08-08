@@ -61,9 +61,11 @@ Panelists:
 ## Generative Art Tutorial
 
 **Time**: 15:00-16:00 \
-**Speaker**: TBD
-
-TBA
+**Speaker**: Barton Rhodes and Ari Herbert-Voss
+- A brief and very recent history of making art with clever prompts
+- [Introduction to Hugging Face Diffusers](https://colab.research.google.com/github/huggingface/notebooks/blob/main/diffusers/diffusers_intro.ipynb#scrollTo=6exNXjaejtJ-)
+- [How to design your prompts](https://dallery.gallery/the-dalle-2-prompt-book/)
+- Audience Participation: side-by-side of [Mega-secret Model]() against [Stable Diffusion](https://proximacentaurib.notion.site/e2537cbf42c34b7e9a9a4126f81dfd0d?v=7b4a3c03fb654045be324eb71acc57e6)
 
 ## AI Death Metal : Eliminating Humans from Music
 
