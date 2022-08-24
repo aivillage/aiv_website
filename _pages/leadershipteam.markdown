@@ -22,7 +22,9 @@ permalink: /leadership_team/
             <strong>Expertise:</strong> {{ volunteer.expertise }}
             <br>
         {% endif %}
-        <strong>Bio:</strong>{{ volunteer.content | markdownify }}
+        {% if volunteer.bio %}
+            <strong>Bio:</strong>{{ volunteer.content | markdownify }}
+        {% endif %}
         </td>
     </tr>
 {% endfor %}
