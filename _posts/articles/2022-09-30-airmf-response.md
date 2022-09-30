@@ -6,6 +6,8 @@ date: 2022-09-30 09:00:00 +0900
 category: "AI Security"
 ---
 
+**Disclaimer: This does not reflect the AIV as a whole, these are my opinions and this was my response.**
+
 I believe that the Risk Management Framework is lacking in actionable recommendations for model governance, and ignores the long history of model risk management that is employed by companies and organizations that deploy models in adversarial settings. It does address large expensive models well, but the majority of models are disposable models trained on shifting datasets. Additionally, there are recommendations that are contrary to model risk from a security standpoint which are not pointed out. A model that resists adversarial attacks is often less secure than a model that was designed without this consideration. Explainability gives attackers information that they can use to attack the model. There are major tradeoffs between security and these two recommendations that organizations need to consider.
 
 ## Background
