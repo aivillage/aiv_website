@@ -16,11 +16,11 @@ One of the first lessons people learn about ML systems is that they are fallible
 
 The ML's efficacy guarantees need to be measurable and externally auditable, which is where things get tricky. Companies do not want to tell you when there's a problem, or enable a customer to audit them. They would prefer ML to be "black magic". Each mistake can be called a one off error blamed on the error rate the ML is allowed to have, if there's no way for the public to verify the efficacy of the ML. In the case of a business to business vendor-customer relationship the customer should have tools to audit this. This already kind-of happens in some industries, a SIEM gives enterprise anti-virus customers some idea of the malware model's efficacy. If the ML model is being used in a model sold to the public, like a image filter, then it needs to be externally auditable. 
 
-Finally, the models _will_ break. The underlying data will drift, and they will not generalize to new situations. 
+Finally, the models _will_ break. The underlying data will drift, and they will not generalize to new situations. Even static foundational models, like image classification and large language models will go stale. Someone is going to design a car that an image model misclassifies 
 
 The contract between the vendor and customer/stakeholders should explicitly lay out:
 1. the efficacy guarantee,
 2. how the efficacy guarantee is measured,
 2. the remediation when that guarantee is not met.
 
-ML Companies are bad at points 2 and 3, and do not want to publicaly do 1. 
+ML Companies are bad at points 2 and 3, and do not want to publically do 1. 
