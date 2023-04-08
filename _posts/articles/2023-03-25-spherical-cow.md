@@ -16,11 +16,13 @@ One of the first lessons people learn about ML systems is that they are fallible
 
 The ML's efficacy guarantees need to be measurable and externally auditable, which is where things get tricky. Companies do not want to tell you when there's a problem, or enable a customer to audit them. They would prefer ML to be "black magic". Each mistake can be called a one off error blamed on the error rate the ML is allowed to have, if there's no way for the public to verify the efficacy of the ML. In the case of a business to business vendor-customer relationship the customer should have tools to audit this. This already kind-of happens in some industries, a SIEM gives enterprise anti-virus customers some idea of the malware model's efficacy. If the ML model is being used in a model sold to the public, like a image filter, then it needs to be externally auditable. 
 
-Finally, the models _will_ break. The underlying data will drift, and they will not generalize to new situations. Even static foundational models, like image classification and large language models will go stale. Someone is going to design a car that an image model misclassifies 
+Finally, the models _will_ break. At some point the deployed model's efficacy will drop to an unacceptable point and it will be an old stale model. The underlying data will drift, and they will not generalize to new situations. Even massive foundational models, like image classification and large language models will go stale. Someone is going to eventually design a car that an image model misclassifies, though this may take many years to do. Most other models go stale faster. To combat this financial, spam, malware, moderation, recommendation, and many others have a retraining cycle measured in months to days to hours. 
 
 The contract between the vendor and customer/stakeholders should explicitly lay out:
 1. the efficacy guarantee,
 2. how the efficacy guarantee is measured,
 2. the remediation when that guarantee is not met.
 
-ML Companies are bad at points 2 and 3, and do not want to publically do 1. 
+## The Contract and Power Dynamics 
+
+There's a strong incentive to not make these guarantees as maintaining them is expensive. When the machine learning teams are internal facing and answerable to other parts of the same organization, like Gmail's spam team, these are often stringently maintained. External facing models, like business to business and business to consumer, often do not come with these recommendations. The larger the disparity between the model provider, who sees all the data, and the model consumers, who each see only part of the data, the worse these get. Internally facing teams are at one end of the power dynamic where their entire role is to maintain those guarantees and are closely watched by upper management. The other end is the business to consumer models where each person only sees their tiny fraction of the data. The purpose of the team is usually to make money, and they make model choices designed to extract money out of consumers while lowering costs. 
