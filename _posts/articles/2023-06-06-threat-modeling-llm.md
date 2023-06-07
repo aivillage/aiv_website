@@ -8,6 +8,10 @@ category: "large language models"
 
 # Threat Modeling LLM Applications
 
+Before we get started: Hi! My name is GTKlondike, and these are my opinions as a cybersecurity consultant. While experts from the AI Village provided input, I will always welcome open discussion so that we can come to a better understanding of LLM security together. If you'd like to continue this conversation, you can reach me on Twitter at [@GTKlondike](https://twitter.com/GTKlondike). And checkout my [YouTube channel, Netsec Explained](https://www.youtube.com/@NetsecExplained), for more advanced security topics. 
+
+*****
+
 This past week, OWASP kicked-off their [OWASP Top 10 for Large Language Model (LLM) Applications project](https://owasp.org/www-project-top-10-for-large-language-model-applications/). I'm happy that LLM security is being taken seriously and feel fortunate to have joined the kick-off and Slack for this project.
 
 As part of our conversations, there's been a bit of debate around what's considered a vulnerability and what's considered a feature of how LLMs operate. So I figured now would be a good time to take a stab at building a high-level threat model to suss out these differences and contribute to a greater understanding of LLMs in a security context. I'd also like for this post to act as a starting point for anyone interested in building or deploying their own LLM applications. 
