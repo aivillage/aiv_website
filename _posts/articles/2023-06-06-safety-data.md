@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Safety Data: It Takes a Village
+title: Safety Data&#58; It Takes a Village
 author: Sean McGregor and Scott Cambo
 date: 2023-06-13 09:00:00 +0900
 category: "vulnerabilities"
