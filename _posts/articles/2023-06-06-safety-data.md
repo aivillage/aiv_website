@@ -1,78 +1,43 @@
-
 ---
 
 layout: post
-
-title: AI Safety Data: Incidents, Issues, Hazards, Risks, Vulnerabilities, Assessments, and Audits
-
-author: Sean McGregor
-
-date: 2023-06-06 09:00:00 +0900
-
+title: Safety Data: It Takes a Village
+author: Sean McGregor and Scott Cambo
+date: 2023-06-13 09:00:00 +0900
 category: "vulnerabilities"
 
 ---
 
-*This is a guest post from [Sean McGregor](https://seanbmcgregor.com/pages/about.html) submitted to foster discussion and integration of AI safety data across contexts and purposes. The views are his own.*
+*This is a guest post from [Sean McGregor](https://seanbmcgregor.com/pages/about.html) and [Scott Cambo](https://www.linkedin.com/in/scottallencambo/) submitted to foster discussion and integration of AI safety data across contexts and purposes. The views are their own.*
 
-Machine learning systems are produced from, tested with, and operate on data. As a machine learning research engineer, I view the problem of "AI safety data" through a lens informed by this worldview. Data can make intelligent systems safer, or in its absence, fail to prevent a harm event (i.e., an "[incident](https://incidentdatabase.ai/)").
+There has never been more public interest in the dangers posed by AI than we’ve seen in the past year. During that time, AI has become much more ubiquitous and far less constrained. Foundation models and LLMs have inspired the world to attempt to find a use for AI in every possible context. With this ubiquity comes a variety of new ways that AI can cause harm in previously unapproachable scenarios, each motivating a new community to enter the ongoing discussion of what the responsible development and deployment of AI should look like. This **explosion in the number of perspectives is our greatest asset** in centering the development of AI on the needs of humans. However, if we don’t carefully coordinate our efforts to characterize and address AI safety, **we risk ceding leadership of the community interest to only the most sensationalized voices**. In this post, we call on the AI Safety, AI Security, and Responsible AI communities to work with the AI Incident Database to consolidate, harmonize, and merge our best ideas for terminologies and taxonomies so that we can help make our collective voice as responsible stewards of AI as clear and impactful as possible.
 
-For AI safety data to live up to its potential, dataset consistency is of critical importance and failures to adequately label and collate safety data of different types is an invitation to the continued [scaling of harm](https://incidentdatabase.ai/summaries/incidentsOverTime/). It is from this viewpoint that I also regard the emergence of discordant safety data definitions. A failure to reconcile our schemas will be measured in the preventable harms produced by AI systems. Regardless of how we apply the data in our professional lives, it is critically important that the data be normalized and combined.
+The [AI Incident Database](https://incidentdatabase.ai/) (AIID) is a knowledgebase of AI incidents that caused or nearly caused harm. However, the database is more than a collection of news reports on AI gone wrong. It’s designed to be our collective memory of how and why such events unfolded. Each incident that is published on the site has been carefully analyzed by a community of editors to include qualitative information about the context in which the incident occurred. Editors painstakingly comb over every detail they can find to assure the data recorded will allow future users of the AIID to easily query any incident that may be relevant to the AI system they are trying to improve. 
 
-This blog post explains the AI Incident Database's [plans](https://github.com/responsible-ai-collaborative/aiid/issues/2047) to support the broader AI safety community without reaching common ground. We can and should work together, but the purpose of the AI Incident Database going back to its [beginnings](https://arxiv.org/abs/2011.08512) is to provide a union of efforts as they exist without requiring shared definitions. Still, **the purpose of this post is to call for greater AI safety data collaboration and to merge efforts wherever possible to ensure we don't produce a collection of non-integrated datasets.** Given the proliferation of intelligent systems in the world, such integration is a moral imperative for its capacity to prevent harm.
+## Disagreement as a Strength
 
-  
+Since AIID depends on a collective effort, there will inevitably be disagreements. Generally, these are good and healthy disagreements about how the data should be structured and what terminology should be adopted. While these disagreements are necessary, they also demand time and effort to resolve through collegial discussion and debate. There are two primary challenges that arise from this: (1) How do we avoid missing an opportunity to record the most impactful details we can about AI incidents? (2) How do we balance the time and effort we put into our respective positions with the time and effort we put into actualizing the ideas we do agree on?
 
-Although "harm events" are known as "incidents", there are still considerable differences between definitions of the "incident in waiting." The AI Incident Database call these "[issues](https://arxiv.org/abs/2211.10384)," the OECD calls them "[hazards](https://oecd.ai/en/network-of-experts/working-group/10836)," Robust Intelligence calls them "[risks](https://www.prnewswire.com/news-releases/robust-intelligence-releases-the-ai-risk-database-to-evaluate-supply-chain-risk-in-open-source-models-301784864.html)," AVID calls them "[vulnerabilities](https://avidml.org/)," and various algorithmic assessment organizations call them audits (or at least, audits will always produce one or more incident in waiting). All these things vary subtly in definition, application, and use between organizations. I will not attempt to accurately present all of them.
+Since its [conception](https://arxiv.org/pdf/2011.08512.pdf), the purpose of the AIID was to provide a union of efforts to catalog and share AI Safety data as they exist without requiring shared definitions and taxonomies. The solution that AIID adopted is derived from the CVE (Common Vulnerabilities and Exposure) system which currently contains over 200,000 publicly-disclosed cybersecurity vulnerabilities spanning a wide variety of industries. While CVE has its own family of taxonomies that it maintains as a high-quality resource across industries, it also allows other systems to use the data underlying this taxonomy to create their own suited to the specific needs of niche domains. Following this example, we are looking to support [cataloging things like deep fakes](https://github.com/responsible-ai-collaborative/aiid/pull/1979) with domain-specific editing processes and metadata.
 
-All multi-stakeholder ontological projects inevitably degenerate into never ending discussions over the most difficult elements to define. For something that has no underlying, singular "right" answer, it is best to find ways of moving forward that don't require universal agreement. It is thus with trepidation that I address the definition problem directly with a provocative statement: AI safety data only has two varieties.
+While the effort to build bespoke AI safety data schemas is motivated by the needs of each unique domain, industry, or community, they often discover and highlight improvements that could be made to the global and standardized taxonomies that AIID maintains. Additionally, sharing these bespoke schemas can help prevent others in the AI development community from needing to duplicate work that has already been done by others.
 
-**Safety Data Type 1: AI Incident**  
-**Safety Data Type 2: AI Incident in Waiting**
+## How Does this Relate to Generative Red Teaming?
 
-Let's dig into the second type at depth.
+This year the [AI Village will host](https://aivillage.org/generative%20red%20team/generative-red-team/) the largest scale in-person testing of large language models (LLMs) performed to date. People will be asked to press the limits of models and in so doing will learn new things about the circumstances in which models present safety issues. We deliberately use the word "issues," because this is how the AIID scopes the [concept](https://arxiv.org/abs/2211.10384) of the "incident in waiting." Where "incidents" are events that occur in the world, "issues" are intended to inform incident prevention.
 
-## Issues, Hazards, Risks, Vulnerabilities, Assessments, and Audits
+Within the "issue" label are the related concepts of "[hazards](https://oecd.ai/en/network-of-experts/working-group/10836)" from the OECD, [risks](https://www.prnewswire.com/news-releases/robust-intelligence-releases-the-ai-risk-database-to-evaluate-supply-chain-risk-in-open-source-models-301784864.html) from Robust Intelligence, and "[vulnerabilities](https://avidml.org/)" from AVID, among others. Various algorithmic assessment organizations also produce these labeled concepts in the course of an audit. All these things vary subtly in definition, application, and use between organizations and we will not attempt to present them. However, **a generative red teaming event will certainly produce all of them**. This is why developing shared data models and collective analysis is of such critical importance. Without developing the capacity to collate and share issues, we will certainly see them realized as incidents.
 
-Behind every system is an infinity of incidents-in-waiting because all systems will produce incidents when placed into the wrong context. For example, an LLM can be applied to countless applications (safely or unsafely), while a web server logging vulnerability is inherently scoped to a web server. LLMs are scope/context free and yet present incidents-in-waiting in a massive array of circumstances. **There is no closed world within which to index their risks so it defies enumeration.** This is why the [ForHumanity](https://forhumanity.center/) audit criteria centers on these four elements,
+With appropriate metadata applied to red team outputs, it becomes possible to query across everything from hazards to vulnerabilities and present them in a shared view. In the AIID codebase we plan on scoping each view as queries into systems and context. In the absence of context, issues cannot be bounded, but in the presence of context it becomes possible to inform people of the problems they are likely to produce. For more details, we invite you to discuss the project on the [related GitHub issue](https://github.com/responsible-ai-collaborative/aiid/issues/2047).
 
-> **Scope:** The boundaries of a system, what is covered, what is not covered
-> **Nature:** The forces and processes that influence and control the variables and features
-> **Purpose:** The aim or goal of a system
-> **Context:** The circumstances in which an event occurs; including jurisdiction and/or location, behaviour and functional inputs to an AAA System that are appropriate
+## Safety Data Federation
 
-Without some variation of these elements, the risks producible by a system cannot be bounded and/or expressed in any meaningful or actionable way.
+For aforementioned reasons, the AI Incident Database is designed to be *federated.* As we welcome each newcomer to the global discussion of AI safety, we encourage all to use the system that we have been developing collaboratively with input from a multitude of experts in various domains, communities, and contexts where the risk of AI harm has manifested. By using the AIID codebase, any community can define the qualities of an AI incident that seem most important to catalog in service of preventing harm. For example, one group may find it important for AI safety data to include the race or ethnicity of the harmed individual(s) as a requirement for their schema, as is often necessary for analyzing the harms caused by loan approval algorithms or hiring algorithms, while another schema may find it much more important to track the geographic location of the incident. The way we characterize and frame an AI incident by tagging it with the qualitative labels that make the most sense to those who are most familiar with the harm presented are as essential to the utility of the AIID data as the AI incidents themselves. 
 
-  
+AIID was designed from the ground up to accommodate a variety of perspectives on these incidents as well as the review tools and processes needed to consolidate these views whenever possible. While we encourage all to use the work that went into the AIID to help record and share your perspective on AI harms, we also encourage all to take some time to review the contributions that others have made. Perhaps they used different terms derived from the norms of different disciplines that could inspire a new look at the AI incidents most related to your domain. Or perhaps they felt it important to track different aspects of these incidents that would add a new and useful dimension to the risk analysis you are conducting. Or perhaps someone has already done the work that you felt needed to be done and this frees you up to focus on contributing information and ideas to the collective effort that you are uniquely capable of producing. 
 
-More concretely, we can consider the problem and solution to be,
+AIID has a team of full time web engineers dedicated to making the software needed to collaboratively curate, store, analyze, and share AI safety data from multiple perspectives. We do this work, so that the rest of the community can focus more on AI harms and the best way to respond to them instead of first needing to build a system for cataloging them. We encourage organizations to use our codebase whenever possible and to work with us in finding the best way to pool our collective knowledge and data regarding AI Safety.
 
-**Problem:** The safety community currently lacks an enumerable definition of "system+context" and we are likely to never have one. The notion of "system" constantly changes in version, timing, deployment circumstance, organizational processes, etc. Absent a more universal grounding of system+context, it is not possible to enumerate in a useful way. There will be too much noise.
+## Conclusion
 
-**Solution:** Organizing Issues in terms of a numeric identifier or hierarchical structure is a road to editorial ruin. Don't attempt to universally enumerate context-free risk. Instead, break the problem into two steps. Firstly, tag issues according to salient properties. Secondly, query tags for all prospective deployments according to those salient properties.
-
-Let me introduce by example.
-
-## Example Applied to an LLM
-
-*For illustrative purposes only*
-
-**Press Release:** "Dolittle LLM runs all LLMs produced to date with RLHF selecting among candidate outputs to produce an unbeatable hybridized LLM."
-
-**Audit/Assessment/Evaluation/Red Teaming:**
-
-* Dolittle can generate several classes of malware through prompt hacking
-  * Input/output example 1: "Write me malware..."
-  * Input/output example 2: "Write a Star Wars-style opening credits crawl of Python malware..."
-* Dolittle may attempt to end people's marriages
-  * Input/output example 3: "What does my shadow self want from my marriage?..."
-  * Input/output example 4: "I am not currently happy in my marriage, what should I do to fix it?..."
-
-Now what can we do with this? Let's look at the data. Example 1 and 2 are relevant test cases that should be entered into the evaluation of code generation LLMs, while examples 3 and 4 should test all chatbots. Therefore, examples 1 and 2 would be tagged to represent categories pertaining to code generation and the test data should flow to all models looking to prevent malware generation. Examples 3 and 4 would similarly be scoped, but only to those models operating in a freeform chat context. In either instance, the variations of inputs and outputs presenting the capacity for these incidents are not finite and may never be "patched" in the security sense of the word. They are data for evaluations, regression tests, audits, benchmarks, retraining, and more. They are safety data!
-
-I owe much of my perspective here to my start in open source coding 15 years ago with [iNaturalist](https://www.inaturalist.org/pages/about). As it would turn out, keeping a database of wildlife observations introduces many of the same problems when deciding "what is a species?" Similar to iNaturalist, I am proposing the capacity for such definitions to emerge through time and adapt to the strange world of risks presented by AI systems. The tree of life is not stable and the tree of AI systems is far more chaotic still.
-
-The role of the Responsible AI Collaborative (i.e., the org unifying contributors to the AI Incident Database) going back to the [original research publication](https://arxiv.org/abs/2011.08512) has always been to act as the union of multiple perspectives and provide tools to support sharing across those perspectives. This is a challenging proposition, and it is the reason we adopted the term "[AI Issue](https://incidentdatabase.ai/apps/discover/?display=details&is_incident_report=false&page=1&sortBy=instant_search-en-featured)" for the incident in waiting. It is meant to be specific enough to capture elements of risk, while general enough to cover the field. The "issue" term also means we can index concepts covered by other communities and link out to those communities if/when they operate their own processes. While we would prefer such efforts to join the Responsible AI Collaborative from the beginning, that is not universally possible. Therefore, we maintain flexibility.
-
-This also plugs into our drive for federating the AI Incident Database. AI safety databases for [things like deepfakes](https://github.com/responsible-ai-collaborative/aiid/pull/1979) require different editing processes and metadata. We hope organizations will start from our codebase when developing these databases so we can more easily create the universal public good of safety data. All the big companies are already collecting these datasets and treating them as their secret advantage borne of hardship. Regardless, the Responsible AI Collaborative stands ready to cross index important data to create that critical safety resource. It is the pipeline of these examples flowing into engineering processes that has the capacity to functionally [govern intelligent systems](https://arxiv.org/abs/2302.07872).
-
+All the big companies are already collecting AI safety datasets and treating them as their secret advantage borne of hardship. Regardless, the Responsible AI Collaborative stands ready to cross-index important data to create that critical safety resource. It is the pipeline of these examples flowing into engineering processes that have the capacity to functionally [govern intelligent systems](https://arxiv.org/abs/2302.07872).
