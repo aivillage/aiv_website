@@ -1,11 +1,9 @@
 ---
-
 layout: post
 title: Safety Data: It Takes a Village
 author: Sean McGregor and Scott Cambo
 date: 2023-06-13 09:00:00 +0900
 category: "vulnerabilities"
-
 ---
 
 *This is a guest post from [Sean McGregor](https://seanbmcgregor.com/pages/about.html) and [Scott Cambo](https://www.linkedin.com/in/scottallencambo/) submitted to foster discussion and integration of AI safety data across contexts and purposes. The views are their own.*
