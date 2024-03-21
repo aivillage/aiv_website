@@ -16,7 +16,7 @@ title: "Events"
 * RSA Sandbox May 6-9
 * DEFCON 32 August 8-12
 
-For a discount [RSA](https://www.rsaconference.com/rsac-programs/innovation/innovation-sandbox) use the code below
+For a discount [RSAC](https://www.rsaconference.com/usa?utm_source=sbox-AIvil&utm_medium=referral&utm_campaign=textad-us2024) pass use the code below
 ![RSA](/assets/images/RSAC 2024_AI Village_300x250_Code2.jpg)
 
 # Past Events
