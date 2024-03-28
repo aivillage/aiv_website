@@ -8,6 +8,18 @@ toc_sticky: true
 title: "Events"
 ---
 
+# Volunteer Demo Submissions 2024
+
+The AIVillage is seeking 16 volunteer project demos for this years DEFCON! If you're a student or in your early career, we'll pay for your flights and hotel to present this.
+
+* Submit before April 25th you could present at RSA.
+* The top 8 demos will be invited to present them at the AI day Hackers on the Hill.
+* **Submissions should be made before May 1st 2024 to be considered in time for DEFCON.** 
+
+To learn more and submit your demo, **[complete this google form.](https://forms.gle/MDLZnvYcnNG3HzXX7)**
+
+# 2024 Events
+
 * CactusCon February 16-17
 * CypherCon April 4-5
 * BSides Puerto Rico April 12-13
