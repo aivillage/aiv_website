@@ -1,0 +1,48 @@
+---
+layout: "single"
+permalink: /events/
+toc: true
+toc_label: "Events"
+toc_icon: "calendar"
+toc_sticky: true
+title: "Events"
+---
+
+<main class="content">
+
+    <p>
+        If you would like to volunteer at an event 
+        <a href="https://forms.gle/vCrz3zpR8xHCsTtJ8" target="_blank" rel="noopener noreferrer">
+            submit a general volunteer application here.
+        </a>
+    </p>
+
+  <section class="all-events">
+
+    {% assign sorted_events = site.events | sort: "date" | reverse %}
+    {% assign eventsByYear = sorted_events | group_by_exp:"event", "event.date | date: '%Y'" %}
+    
+    {% assign sortedYears = eventsByYear | sort: "name" | reverse %}
+    
+    {% for year in sortedYears %}
+      <div class="year-section">
+        <h2 class="year-heading">{{ year.name }}</h2>
+        
+        <div class="events-list">
+          {% for event in year.items %}
+            <article class="event-item">
+              <h3 class="event-title">
+                <a href="{{ event.url | relative_url }}">{{ event.title }}</a>
+              </h3>
+              <div class="event-date">{{ event.date | date: "%Y-%m-%d" }}</div>
+              {% if event.description %}
+                <p class="event-description">{{ event.description }}</p>
+              {% endif %}
+            </article>
+          {% endfor %}
+        </div>
+      </div>
+    {% endfor %}
+  </section>
+</main>
+

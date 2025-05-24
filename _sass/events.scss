@@ -1,0 +1,55 @@
+
+.event-item {
+  padding: 0rem 0; 
+  margin-bottom: 2rem; 
+  border-bottom: 1px solid #ddd;
+}
+
+
+.event-title {
+  margin-bottom: 0.25rem;
+
+  a {
+    color: #003366;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.125rem;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+}
+
+.event-date {
+  font-size: 0.875rem;
+  color: #666;
+  font-style: italic;
+  margin-bottom: 0.5rem;
+}
+
+.event-description {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #333;
+  margin: 0;
+}
+
+.events-toc ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.events-toc ul ul {
+  padding-left: 1rem;
+}
+
+.events-toc a {
+  text-decoration: none;
+  color: #007acc;
+}
+
+.events-toc a:hover {
+  text-decoration: underline;
+}
+
