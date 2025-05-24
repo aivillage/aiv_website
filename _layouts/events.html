@@ -1,7 +1,6 @@
 ---
 layout: "single"
 permalink: /events/
-toc: true
 toc_label: "Events"
 toc_icon: "calendar"
 toc_sticky: true
@@ -10,39 +9,91 @@ title: "Events"
 
 <main class="content">
 
-    <p>
-        If you would like to volunteer at an event 
-        <a href="https://forms.gle/vCrz3zpR8xHCsTtJ8" target="_blank" rel="noopener noreferrer">
-            submit a general volunteer application here.
-        </a>
-    </p>
+  <p>
+    If you would like to volunteer at an event 
+    <a href="https://forms.gle/vCrz3zpR8xHCsTtJ8" target="_blank" rel="noopener noreferrer">
+      submit a general volunteer application here.
+    </a>
+  </p>
 
-  <section class="all-events">
+  {% assign now = 'now' | date: "%s" %}
+  {% assign future_events = "" | split: "" %}
+  {% assign past_events = "" | split: "" %}
 
-    {% assign sorted_events = site.events | sort: "date" | reverse %}
-    {% assign eventsByYear = sorted_events | group_by_exp:"event", "event.date | date: '%Y'" %}
-    
-    {% assign sortedYears = eventsByYear | sort: "name" | reverse %}
-    
-    {% for year in sortedYears %}
+  {% for event in site.events %}
+    {% assign event_time = event.date | date: "%s" %}
+    {% if event_time >= now %}
+      {% assign future_events = future_events | push: event %}
+    {% else %}
+      {% assign past_events = past_events | push: event %}
+    {% endif %}
+  {% endfor %}
+
+  {% assign future_events = future_events | sort: "date" %}
+  {% assign past_events = past_events | sort: "date" | reverse %}
+
+  {% assign future_events_by_year = future_events | group_by_exp: "event", "event.date | date: '%Y'" %}
+  {% assign sorted_future_years = future_events_by_year | sort: "name" %}
+
+<!-- FUTURE EVENTS -->
+<section class="future-events">
+  <h2 class="event__subtitle">Upcoming Events</h2>
+  {% if future_events.size > 0 %}
+    {% for year in sorted_future_years %}
       <div class="year-section">
-        <h2 class="year-heading">{{ year.name }}</h2>
-        
+        <h3 class="year-heading">{{ year.name }}</h3>
         <div class="events-list">
           {% for event in year.items %}
             <article class="event-item">
-              <h3 class="event-title">
-                <a href="{{ event.url | relative_url }}">{{ event.title }}</a>
-              </h3>
-              <div class="event-date">{{ event.date | date: "%Y-%m-%d" }}</div>
-              {% if event.description %}
-                <p class="event-description">{{ event.description }}</p>
-              {% endif %}
+              <div class="event-date">
+                <div class="event-month">{{ event.date | date: "%b" }}</div>
+                <div class="event-day">{{ event.date | date: "%d" }}</div>
+              </div>
+              <div class="event-content">
+                <h3 class="event__item">
+                  <a class="event-link" href="{{ event.url | relative_url }}">{{ event.title }}</a>
+                </h3>
+                {% if event.description %}
+                  <p class="event-description small-muted">{{ event.description }}</p>
+                {% endif %}
+              </div>
             </article>
           {% endfor %}
         </div>
       </div>
     {% endfor %}
-  </section>
-</main>
+  {% else %}
+    <p>No upcoming events at this time.</p>
+  {% endif %}
+</section>
 
+{% assign past_events_by_year = past_events | group_by_exp: "event", "event.date | date: '%Y'" %}
+{% assign sorted_years = past_events_by_year | sort: "name" | reverse %}
+
+<!-- PAST EVENTS -->
+<section class="past-events">
+  <h2 class="event__subtitle">Past Events</h2>
+  {% for year in sorted_years %}
+    <div class="year-section">
+      <h3 class="year-heading">{{ year.name }}</h3>
+      <div class="events-list">
+        {% for event in year.items %}
+          <article class="event-item">
+            <div class="event-date">
+              <div class="event-month">{{ event.date | date: "%b" }}</div>
+              <div class="event-day">{{ event.date | date: "%d" }}</div>
+            </div>
+            <div class="event-content">
+              <h3 class="event__item">
+                <a class="event-link" href="{{ event.url | relative_url }}">{{ event.title }}</a>
+              </h3>
+              {% if event.description %}
+                <p class="event-description small-muted">{{ event.description }}</p>
+              {% endif %}
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+    </div>
+  {% endfor %}
+</section>
