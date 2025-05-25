@@ -1,11 +1,10 @@
 ---
-layout: single 
-title: Bsides 
-permalink: /bsides/
+title: "AI Village @ BsidesSF 2024"
+date: 2024-04-26
+description: "Join AI Village at BsidesSF 2024 for talks, workshops, and demos."
+location: "San Francisco, CA"
+layout: single
 ---
-
-AI Village is at BsidesSF 2024!
-Come join us for talks, workshops, and demos.
 
 ## CTF
 https://crucible.dreadnode.io/
