@@ -17,10 +17,20 @@ To add new articles to the website, drop the markdown file in the "_posts" folde
 Each post has an author tab displayed on the left by default, this can be disabled in the YAML front matter by adding author_profile: false. To assign an author to the article, set author: Author Name in the front matter of the post. Add and edit author information in "_data/authors.yml".  I added some default incomplete author information in that file already, but it needs to be updated.
 
 ### Events
-To add events, include the event as a markdown file in the "/_events" folder. Make sure to include the following in the front-matter of the markdown file:
+To add events, include the event as a markdown file in the "/_events" folder. 
+Make sure to include the following in the front-matter of the markdown file:
 - the date in the format "YYYY-MM-DD" under "date" 
 - short description of the event under "description"
 - location in the format "City, State/Country" 
 
 ### Leadership Team
-The leadership team page is currently full of default entries.  This page is simply laid out with two two-column tables.  In the first column, link to the portrait image that will be held in "/assets/images" and use site variables to keep the linking dynamic.  Change the name of the member in the same column of the table directly below the image.  In the second column, add information about each member.
+To add to the leadership team page, include a markdown file under "_volunteers" in the format "firstname_lastname.md" and a profile picture under "_volunteers/profiles".
+Make sure to include the following in the front-matter of the markdown file:
+- first name
+- last name
+- position
+- expertise
+- affiliation
+- profile: filename of the profile picture 
+- bio: "true/false"
+Add a bio in the body of the markdown file if bio: true.
