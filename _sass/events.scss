@@ -6,7 +6,7 @@
   margin-bottom: 2.5rem;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  align-items: flex-start; /* Align date with top of content */
+  align-items: flex-start;
   transition: transform 0.2s ease, box-shadow 0.3s ease;
 }
 
@@ -16,13 +16,11 @@
 }
 
 /* === Past and Future Event Cards === */
-.future-events .event-item,
-.past-events .event-item {
+.event-item {
   background: #EBF2FA;
 }
 
-.future-events .event-date,
-.past-events .event-date {
+.event-date {
   background-color: #1e3a5f;
   color: #fff;
 }
@@ -81,7 +79,7 @@
 
 .event-description {
   font-size: 0.75rem;
-  margin-top: 0rem; /* Keeps spacing tight under location */
+  margin-top: 0rem; 
 }
 
 /* === Section Headings === */
@@ -98,19 +96,19 @@
   font-weight: 600;
   cursor: pointer;
   position: relative;
-  padding-left: 1.6rem; /* space for arrow */
+  padding-left: 1.6rem; 
   user-select: none;
-  list-style: none; /* remove default bullet for some browsers */
+  list-style: none;
 }
 
-/* Hide default disclosure triangle */
+
 .year-heading::-webkit-details-marker {
   display: none;
 }
 
 /* Arrow icon */
 .year-heading::before {
-  content: "▶"; /* right-pointing arrow */
+  content: "▶"; 
   position: absolute;
   left: 0.5rem;
   top: 50%;
@@ -135,7 +133,7 @@ details[open] > .year-heading::before {
 
 /* Expand when open */
 details[open] > .events-container {
-  max-height: 2000px; /* big enough for all content */
+  max-height: 2000px; 
   transition: max-height 0.5s ease;
 }
 
@@ -154,6 +152,7 @@ details[open] > .events-container {
   .event-item {
     flex-direction: column;
     align-items: stretch;
+    
   }
 
   .event-date {
