@@ -53,8 +53,11 @@ title: "Events"
                 <h3 class="event__item">
                   <a class="event-link" href="{{ event.url | relative_url }}">{{ event.title }}</a>
                 </h3>
+                {% if event.location %}
+                  <div class="event-location small-muted">{{ event.location }}</div>
+                {% endif %}
                 {% if event.description %}
-                  <p class="event-description small-muted">{{ event.description }}</p>
+                  <p class="event-description">{{ event.description }}</p>
                 {% endif %}
               </div>
             </article>
@@ -87,8 +90,11 @@ title: "Events"
               <h3 class="event__item">
                 <a class="event-link" href="{{ event.url | relative_url }}">{{ event.title }}</a>
               </h3>
+              {% if event.location %}
+                <div class="event-location small-muted">{{ event.location }}</div>
+              {% endif %}
               {% if event.description %}
-                <p class="event-description small-muted">{{ event.description }}</p>
+                <p class="event-description ">{{ event.description }}</p>
               {% endif %}
             </div>
           </article>

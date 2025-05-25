@@ -6,7 +6,7 @@
   margin-bottom: 2.5rem;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  align-items: center;
+  align-items: flex-start; /* Align date with top of content */
   transition: transform 0.2s ease, box-shadow 0.3s ease;
 }
 
@@ -15,7 +15,7 @@
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
 }
 
-/* === past and future event cards === */
+/* === Past and Future Event Cards === */
 .future-events .event-item,
 .past-events .event-item {
   background: #EBF2FA;
@@ -31,7 +31,8 @@
 .past-events .event-description {
   color: black;
 }
-/* === Date Box Layout === */
+
+/* === Date Box === */
 .event-date {
   min-width: 110px;
   text-align: center;
@@ -58,14 +59,32 @@
   margin-top: 0.1rem;
 }
 
+/* === Event Content === */
 .event-content {
   flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .event__item {
-  margin: 0 0 0.4rem 0;
+  margin: 0;
 }
 
+.event-location {
+  margin: 0;
+  padding: 0;
+  font-style: italic;
+  font-size: 0.85rem;
+  color: #6c757d;
+  margin-top: 0.25rem;
+}
+
+.event-description {
+  font-size: 0.85rem;
+  margin-top: 0rem; /* Keeps spacing tight under location */
+}
+
+/* === Section Headings === */
 .year-heading {
   font-size: 1.2rem;
   margin-top: 3rem;
