@@ -74,20 +74,20 @@
   margin: 0;
   padding: 0;
   font-style: italic;
-  font-size: 0.85rem;
+  font-size: 0.75rem;
   color: #6c757d;
   margin-top: 0.25rem;
 }
 
 .event-description {
-  font-size: 0.85rem;
+  font-size: 0.75rem;
   margin-top: 0rem; /* Keeps spacing tight under location */
 }
 
 /* === Section Headings === */
 .year-heading {
   font-size: 1.2rem;
-  margin-top: 3rem;
+  margin-top: 1rem;
   margin-bottom: 1.5rem;
   color: #003366;
   background-color: #F2F2F2;
@@ -97,13 +97,54 @@
   width: 100%;
   font-weight: 600;
   cursor: pointer;
+  position: relative;
+  padding-left: 1.6rem; /* space for arrow */
+  user-select: none;
+  list-style: none; /* remove default bullet for some browsers */
 }
 
+/* Hide default disclosure triangle */
+.year-heading::-webkit-details-marker {
+  display: none;
+}
+
+/* Arrow icon */
+.year-heading::before {
+  content: "▶"; /* right-pointing arrow */
+  position: absolute;
+  left: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%) rotate(0deg);
+  transform-origin: 50% 50%;
+  transition: transform 0.3s ease;
+  font-size: 1rem;
+  color: #003366;
+}
+
+/* Rotate arrow when open */
+details[open] > .year-heading::before {
+  transform: translateY(-50%) rotate(90deg);
+}
+
+/* Collapsible content container */
+.events-container {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.35s ease;
+}
+
+/* Expand when open */
+details[open] > .events-container {
+  max-height: 2000px; /* big enough for all content */
+  transition: max-height 0.5s ease;
+}
+
+/* === Event Subtitle === */
 .event__subtitle {
   font-size: 1.3rem;
-  margin-bottom: 2rem;
+  margin-bottom: 0.85rem;
   font-weight: bold;
-  border-bottom: 3px solid #005bb5;
+  border-bottom: 1px solid #e5e5e5;
   padding-bottom: 0.4rem;
   color: #3d4144;
 }
