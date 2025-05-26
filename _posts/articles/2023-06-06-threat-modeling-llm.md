@@ -6,8 +6,6 @@ date: 2023-06-06 09:00:00 +0900
 category: "large language models"
 ---
 
-# Threat Modeling LLM Applications
-
 Before we get started: Hi! My name is GTKlondike, and these are my opinions as a cybersecurity consultant. While experts from the AI Village provided input, I will always welcome open discussion so that we can come to a better understanding of LLM security together. If you'd like to continue this conversation, you can reach me on Twitter at [@GTKlondike](https://twitter.com/GTKlondike). And checkout my [YouTube channel, Netsec Explained](https://www.youtube.com/@NetsecExplained), for more advanced security topics. 
 
 *****

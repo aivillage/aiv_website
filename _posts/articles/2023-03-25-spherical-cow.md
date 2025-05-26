@@ -6,8 +6,6 @@ date: 2023-03-25 09:00:00 +0900
 category: "adversarial ml"
 ---
 
-# The Spherical Cow of Machine Learning Security
-
 First of all, these are my opinions and there are people at AI Village who may disagree with me. I want to present the simplest version of managing risk of a ML model as I believe the conversation quickly gets distracted by technical details or social implications that are more exciting to think about. I want to focus on the simplest version of the problem where you do not worry about particular vulnerabilities in the machine learning algorithm. I also want to postpone the social & ethical issues until after the basic model has been established. In physics terms I want to talk about a [spherical cow](https://en.wikipedia.org/wiki/Spherical_cow), but I believe in ML Security's case this cow exists and is ignored by the authors of NIST's AI Risk Management Framework and the EU AI Act.
 
 ## The Social Contract of ML 
