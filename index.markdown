@@ -1,10 +1,9 @@
 ---
 layout: splash
 title: About
+header:
+  image: /assets/images/tablecloth.png
 ---
-<br>
-
-# About Us
 
 <div style="margin: 0.25rem 0; font-size: 0.85rem;">
   The <strong>AI Village</strong> is a community of hackers and data scientists working to educate the world on the use and abuse of artificial intelligence in security and privacy. We aim to bring more diverse viewpoints to AI security, grow a community of hackers, engineers, researchers, and policy makers, and encourage more people with a hacker mindset to assess machine learning systems. We have a strong presence at DEF CON, the world’s longest-running and largest hacking conference. If you're interested in volunteering, <a href="https://forms.gle/vCrz3zpR8xHCsTtJ8" target="_blank" rel="noopener noreferrer">submit an application here</a>.
