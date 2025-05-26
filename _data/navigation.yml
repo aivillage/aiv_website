@@ -1,6 +1,8 @@
 main:
   # - title: "DEFCON 31"
   #   url: /defcon31/
+  - title: "Home"
+    url: /
   - title: "Events"
     url: /events/
   - title: "Blog"
@@ -11,4 +13,5 @@ main:
     url: /conduct/
   - title: "Discord Guide"
     url: /discord/
+
   

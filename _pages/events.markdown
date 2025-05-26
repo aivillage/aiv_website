@@ -79,7 +79,7 @@ title: "Events"
 <section class="past-events">
   <div class="event__subtitle">Past Events</div>
   {% for year in sorted_years %}
-    <details class="year-section" >
+    <details class="year-section" open>
       <summary class="year-heading">{{ year.name }}</summary>
       <div class="events-container">
         <div class="events-list">
