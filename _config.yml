@@ -297,3 +297,6 @@ collections:
   events:
     output: true
     permalink: /events/:name/
+
+# to render future events
+future: true

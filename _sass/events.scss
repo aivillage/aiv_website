@@ -8,6 +8,10 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   align-items: flex-start;
   transition: transform 0.2s ease, box-shadow 0.3s ease;
+    height: 100%; /* allow card to grow to parent */
+  flex: 1;       /* stretch if inside a flex column */
+  display: flex;
+  flex-direction: row; /* already applied */
 }
 
 .event-item:hover {
@@ -165,4 +169,29 @@ details[open] > .events-container {
   .event-day {
     margin-left: 0.5rem;
   }
+}
+
+/* === Events and Blog Side-by-Side Layout === */
+.events-and-blog {
+  display: flex;
+  gap: 2rem;
+  justify-content: space-between;
+  align-items: stretch; /* ensures children grow to equal height */
+  margin-bottom: 0rem;
+  flex-wrap: wrap;
+}
+
+.upcoming-events-wrapper,
+.latest-blogpost-wrapper {
+  flex: 1 1 48%;
+  display: flex;
+  flex-direction: column;
+}
+
+.upcoming-events-wrapper h3,
+.latest-blogpost-wrapper h3 {
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+  color: #003366;
 }

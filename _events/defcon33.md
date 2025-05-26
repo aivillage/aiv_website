@@ -6,4 +6,4 @@ location: "Las Vegas, NV"
 layout: single
 ---
 
-DEF CON 32 is between August 7-10.
+DEF CON 33 is between August 7-10.
