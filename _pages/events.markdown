@@ -2,7 +2,6 @@
 layout: "single"
 permalink: /events/
 toc_label: "Events"
-toc_icon: "calendar"
 toc_sticky: true
 title: "Events"
 ---

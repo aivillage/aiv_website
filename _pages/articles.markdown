@@ -20,7 +20,7 @@ permalink: /blog/
       </h2>
 
       {% if post.author or post.date %}
-        <p class="archive__item-meta" style="margin: 0; padding: 0; font-size: 0.85rem; color: #666;">
+        <p class="archive__item-meta" style="margin: 0; padding: 0; font-size: 0.7rem; color: #666;">
           {% if post.author %}
             <span class="post-author">{{ post.author }}</span>
           {% endif %}
