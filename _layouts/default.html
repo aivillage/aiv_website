@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>{% if page.title %}{{ page.title | escape }} | {{ site.title | escape }}{% else %}{{ site.title | escape }}{% endif %}</title>
+    <meta name="description" content="{% if page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}{% else %}{{ site.description }}{% endif %}">
+    
+    <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
+    <link rel="canonical" href="{{ page.url | replace:'index.html','' | absolute_url }}">
+    
+    {% seo %}
+    {% feed_meta %}
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="container">
+            <div class="header-content">
+                <a class="site-title" href="{{ '/' | relative_url }}">{{ site.title }}</a>
+                
+                <nav class="nav-menu">
+                    <a href="{{ '/' | relative_url }}" {% if page.url == '/' %}class="active"{% endif %}>Home</a>
+                    <a href="{{ '/events/' | relative_url }}" {% if page.url contains '/events' %}class="active"{% endif %}>Events</a>
+                    <a href="{{ '/blog/' | relative_url }}" {% if page.url contains '/blog' %}class="active"{% endif %}>Blog</a>
+                    <a href="{{ '/leadership/' | relative_url }}" {% if page.url contains '/leadership' %}class="active"{% endif %}>Team</a>
+                    <a href="{{ '/discord/' | relative_url }}" {% if page.url contains '/discord' %}class="active"{% endif %}>Discord</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            {{ content }}
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="social-links">
+                    <a href="https://twitter.com/aivillage_dc" target="_blank">Twitter</a>
+                    <a href="https://github.com/aivillage" target="_blank">GitHub</a>
+                    <a href="https://discord.com/invite/GX5fhfT" target="_blank">Discord</a>
+                </div>
+                <p>&copy; {{ 'now' | date: "%Y" }} AI Village. All rights reserved.</p>
+                <p class="text-mono">Securing AI, one hack at a time.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

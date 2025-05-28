@@ -1,0 +1,92 @@
+---
+layout: default
+---
+
+<article class="event">
+  <header class="event-header" style="margin-bottom: 2rem;">
+    <h1 style="color: #00ff00; margin: 0 0 1rem 0;">{{ page.title }}</h1>
+    
+    <div class="event-meta" style="display: flex; flex-wrap: wrap; gap: 2rem; margin: 1rem 0; color: #888; font-family: 'JetBrains Mono', monospace;">
+      {% if page.date %}
+        <div>
+          <strong style="color: #ffff00;">📅 Date:</strong> 
+          <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%B %-d, %Y" }}</time>
+        </div>
+      {% endif %}
+      
+      {% if page.location %}
+        <div>
+          <strong style="color: #ffff00;">📍 Location:</strong> {{ page.location }}
+        </div>
+      {% endif %}
+    </div>
+    
+    {% if page.description %}
+      <div class="event-description" style="background: #1a1a1a; padding: 1rem; border-left: 4px solid #ff0000; border-radius: 0 5px 5px 0; margin: 1rem 0;">
+        <p style="margin: 0; color: #ccc; font-size: 1.1rem;">{{ page.description }}</p>
+      </div>
+    {% endif %}
+  </header>
+
+  <div class="event-content" style="line-height: 1.7;">
+    {{ content }}
+  </div>
+  
+  <footer class="event-footer" style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid #333;">
+    <div style="text-align: center; margin: 2rem 0; padding: 1.5rem; background: #1a1a1a; border-radius: 5px;">
+      <p style="margin: 0 0 1rem 0; color: #00ff00; font-weight: bold;">
+        🎪 Interested in attending or presenting at AI Village events?
+      </p>
+      <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+        <a href="/discord/" style="color: #00ffff;">Join our Discord</a>
+        <span style="color: #666;">•</span>
+        <a href="https://forms.gle/vCrz3zpR8xHCsTtJ8" target="_blank" style="color: #00ffff;">Volunteer Application</a>
+        <span style="color: #666;">•</span>
+        <a href="/events/" style="color: #00ffff;">All Events</a>
+      </div>
+    </div>
+    
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-top: 2rem;">
+      
+      <div class="event-navigation">
+        {% assign events = site.events | sort: 'date' %}
+        {% assign current_index = nil %}
+        {% for event in events %}
+          {% if event.url == page.url %}
+            {% assign current_index = forloop.index0 %}
+            {% break %}
+          {% endif %}
+        {% endfor %}
+        
+        {% if current_index %}
+          {% assign prev_index = current_index | minus: 1 %}
+          {% assign next_index = current_index | plus: 1 %}
+          
+          {% if prev_index >= 0 %}
+            {% assign prev_event = events[prev_index] %}
+            <a href="{{ prev_event.url }}" style="color: #00ffff;">
+              ← {{ prev_event.title | truncate: 30 }}
+            </a>
+          {% endif %}
+          
+          {% if prev_index >= 0 and next_index < events.size %}
+            <span style="color: #666; margin: 0 1rem;">|</span>
+          {% endif %}
+          
+          {% if next_index < events.size %}
+            {% assign next_event = events[next_index] %}
+            <a href="{{ next_event.url }}" style="color: #00ffff;">
+              {{ next_event.title | truncate: 30 }} →
+            </a>
+          {% endif %}
+        {% endif %}
+      </div>
+      
+      <div class="event-share">
+        <a href="https://twitter.com/intent/tweet?url={{ page.url | absolute_url }}&text={{ page.title | uri_escape }}&via=aivillage_dc" 
+           target="_blank" style="color: #1DA1F2; margin: 0 0.5rem;">Share Event</a>
+      </div>
+      
+    </div>
+  </footer>
+</article>

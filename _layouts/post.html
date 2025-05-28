@@ -1,6 +1,69 @@
 ---
-layout: posts
+layout: default
 ---
-<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
-Posted by {{ page.author }} on {{ page.date | date_to_long_string }}
-{{ content }}
+
+<article class="post">
+  <header class="post-header" style="margin-bottom: 2rem;">
+    <h1 style="color: #00ff00; margin: 0 0 1rem 0;">{{ page.title }}</h1>
+    
+    <div class="post-meta" style="color: #888; font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; margin: 1rem 0;">
+      {% if page.author %}
+        <span style="color: #00ff00;">By {{ page.author }}</span>
+      {% endif %}
+      {% if page.author and page.date %} • {% endif %}
+      {% if page.date %}
+        <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%B %-d, %Y" }}</time>
+      {% endif %}
+      {% if page.category %}
+        • <span style="color: #ffff00;">#{{ page.category }}</span>
+      {% endif %}
+    </div>
+    
+    {% if page.description %}
+      <div class="post-description" style="background: #1a1a1a; padding: 1rem; border-left: 4px solid #00ff00; border-radius: 0 5px 5px 0; margin: 1rem 0;">
+        <p style="margin: 0; color: #ccc; font-style: italic;">{{ page.description }}</p>
+      </div>
+    {% endif %}
+  </header>
+
+  <div class="post-content" style="line-height: 1.7;">
+    {{ content }}
+  </div>
+  
+  <footer class="post-footer" style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid #333;">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+      
+      <div class="post-navigation">
+        {% if page.previous.url %}
+          <a href="{{ page.previous.url }}" style="color: #00ffff;">
+            ← {{ page.previous.title | truncate: 30 }}
+          </a>
+        {% endif %}
+        
+        {% if page.next.url and page.previous.url %}
+          <span style="color: #666; margin: 0 1rem;">|</span>
+        {% endif %}
+        
+        {% if page.next.url %}
+          <a href="{{ page.next.url }}" style="color: #00ffff;">
+            {{ page.next.title | truncate: 30 }} →
+          </a>
+        {% endif %}
+      </div>
+      
+      <div class="post-share">
+        <a href="https://twitter.com/intent/tweet?url={{ page.url | absolute_url }}&text={{ page.title | uri_escape }}&via=aivillage_dc" 
+           target="_blank" style="color: #1DA1F2; margin: 0 0.5rem;">Share on Twitter</a>
+      </div>
+      
+    </div>
+    
+    <div style="text-align: center; margin: 2rem 0; padding: 1.5rem; background: #1a1a1a; border-radius: 5px;">
+      <p style="margin: 0; color: #888;">
+        📝 <strong>Want to contribute?</strong> 
+        <a href="https://github.com/aivillage/aiv_website" target="_blank" style="color: #00ffff;">Submit a pull request</a> 
+        or join our <a href="/discord/" style="color: #00ffff;">Discord</a> to discuss ideas.
+      </p>
+    </div>
+  </footer>
+</article>
