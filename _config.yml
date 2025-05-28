@@ -7,14 +7,6 @@ description: >-
 baseurl: ""
 url: "https://aivillage.org"
 
-# Build settings
-markdown: kramdown
-highlighter: rouge
-plugins:
-  - jekyll-feed
-  - jekyll-sitemap
-  - jekyll-seo-tag
-
 # Collections
 collections:
   events:
