@@ -3,7 +3,7 @@ title: "AI Village @ BsidesSF 2024"
 date: 2024-04-26
 description: "Join AI Village at BsidesSF 2024 for talks, workshops, and demos."
 location: "San Francisco, CA"
-layout: single
+layout: post
 ---
 
 ## CTF

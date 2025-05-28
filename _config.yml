@@ -18,6 +18,7 @@ plugins:
 # Collections
 collections:
   events:
+    future: true
     output: true
     permalink: /:collection/:name/
   volunteers:
@@ -61,3 +62,5 @@ social:
   links:
     - https://twitter.com/aivillage_dc
     - https://github.com/aivillage
+
+future: true

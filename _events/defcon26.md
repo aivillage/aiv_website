@@ -3,7 +3,7 @@ title: "AI Village @ DEF CON 26"
 date: 2018-08-01
 description: "Join AI Village at DEF CON 26."
 location: "Las Vegas, NV"
-layout: single
+layout: post
 ---
 
 ## AI Village @ DEF CON 26

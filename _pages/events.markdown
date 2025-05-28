@@ -1,5 +1,5 @@
 ---
-layout: "single"
+layout: "default"
 permalink: /events/
 toc_label: "Events"
 toc_sticky: true

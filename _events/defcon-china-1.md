@@ -3,7 +3,7 @@ title: "AI Village @ DEF CON China 1"
 date: 2018-05-01 
 description: "Join AI Village at DEF CON China 1."
 location: "Beijing, China"
-layout: single
+layout: post
 ---
 
  Time | 12 May (Sat)                                                                                 | 13 May (Sun)

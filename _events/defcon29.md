@@ -3,7 +3,7 @@ title: "AI Village @ DEF CON 29"
 date: 2022-08-06
 description: "Join AI Village at DEF CON 29 for Safe Mode."
 location: "Las Vegas, NV"
-layout: single
+layout: post
 ---
 
 ## AI Village @ DEF CON 29, Safe Mode

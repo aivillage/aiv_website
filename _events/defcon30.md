@@ -3,7 +3,7 @@ title: "AI Village @ DEF CON 30"
 date: 2022-08-11
 description: "Join AI Village at DEF CON 30 for ML Evasion and AI Art."
 location: "Las Vegas, NV"
-layout: single
+layout: post
 ---
 
 
