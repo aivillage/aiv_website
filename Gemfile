@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
 gem "jekyll"
-gem "kramdown", "~> 2.5.1"
+gem "kramdown"
 
 group :jekyll_plugins do
   gem "jekyll-feed"
