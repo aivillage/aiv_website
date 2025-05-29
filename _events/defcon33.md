@@ -16,4 +16,4 @@ Read more about GRT-3 [here](/generative-red-team/2025/05/24/grt3-info.html).
 
 ## Deepfake Karaoke
 
-Read more about deepfake karaoke [here](/blog/deepfake-karaoke).
+More on deepfake karaoke soon!
