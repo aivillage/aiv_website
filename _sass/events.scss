@@ -21,17 +21,19 @@
 
 /* === Past and Future Event Cards === */
 .event-item {
-  background: #EBF2FA;
+  background: rgba(26, 0, 41, 0.6) !important;
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(138, 43, 226, 0.4);
 }
 
 .event-date {
-  background-color: #1e3a5f;
-  color: #fff;
+  background-color: #2a0040;
+  color: #00ffff;
 }
 
 .future-events .event-description,
 .past-events .event-description {
-  color: black;
+  color: #e6e6fa !important;
 }
 
 /* === Date Box === */
