@@ -21,16 +21,37 @@
             <div class="header-content">
                 <a class="site-title" href="{{ '/' | relative_url }}">{{ site.title }}</a>
                 
-                <nav class="nav-menu">
+                <nav class="nav-menu" id="nav-menu">
                     <a href="{{ '/' | relative_url }}" {% if page.url == '/' %}class="active"{% endif %}>Home</a>
                     <a href="{{ '/events/' | relative_url }}" {% if page.url contains '/events' %}class="active"{% endif %}>Events</a>
                     <a href="{{ '/blog/' | relative_url }}" {% if page.url contains '/blog' %}class="active"{% endif %}>Blog</a>
                     <a href="{{ '/leadership/' | relative_url }}" {% if page.url contains '/leadership' %}class="active"{% endif %}>Team</a>
                     <a href="{{ '/discord/' | relative_url }}" {% if page.url contains '/discord' %}class="active"{% endif %}>Discord</a>
                 </nav>
+
+                <button class="hamburger" aria-label="Toggle menu" onclick="toggleMenu(this)">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
             </div>
         </div>
     </header>
+
+    <script>
+        function toggleMenu(hamburger) {
+            const menu = document.getElementById('nav-menu');
+            hamburger.classList.toggle('active');
+            menu.classList.toggle('active');
+            document.body.style.overflow = hamburger.classList.contains('active') ? 'hidden' : '';
+        }
+
+        // Add transition delay to menu items
+        const menuItems = document.querySelectorAll('.nav-menu a');
+        menuItems.forEach((item, index) => {
+            item.style.transitionDelay = `${index * 0.1}s`;
+        });
+    </script>
 
     <main class="main-content">
         <div class="container">
