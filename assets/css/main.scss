@@ -83,7 +83,8 @@ html {
 
 body {
   font-family: $font-sans;
-  background: linear-gradient(135deg, $bg-primary 0%, $bg-secondary 50%, $bg-tertiary 100%);
+  background: #0a0014 !important;
+  background: linear-gradient(135deg, #0a0014 0%, #1a0029 50%, #2a0040 100%) !important;
   color: $text-primary;
   line-height: 1.6;
   margin: 0;
