@@ -13,25 +13,25 @@
   --bg-secondary: #1a0029;
   --bg-tertiary: #2a0040;
   --bg-glass: rgba(138, 43, 226, 0.1);
-  
+
   /* Neon accents */
   --neon-cyan: #00ffff;
   --neon-magenta: #ff00ff;
   --neon-purple: #8a2be2;
   --neon-pink: #ff1493;
   --neon-blue: #4169e1;
-  
+
   /* Professional text colors */
   --text-primary: #ffffff;
   --text-secondary: #e6e6fa;
   --text-accent: #00ffff;
   --text-muted: #b19cd9;
-  
+
   /* Grid and borders */
   --grid-color: rgba(0, 255, 255, 0.2);
   --border-primary: rgba(138, 43, 226, 0.4);
   --border-accent: rgba(0, 255, 255, 0.6);
-  
+
   /* Fonts */
   --font-mono: 'JetBrains Mono', monospace;
   --font-sans: 'Inter', sans-serif;
@@ -84,7 +84,8 @@ html {
 body {
   font-family: $font-sans;
   background: linear-gradient(135deg, #0a0014 0%, #1a0029 50%, #2a0040 100%) !important;
-  background-color: #0a0014;
+  background-color: #0a0014 !important;
+  background-attachment: fixed !important;
   color: $text-primary;
   line-height: 1.6;
   margin: 0;
@@ -92,6 +93,19 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   position: relative;
+}
+
+html {
+  background: #0a0014 !important;
+  background-color: #0a0014 !important;
+}
+
+// Ensure all main containers inherit the dark background
+.main-content,
+.container,
+article,
+.post {
+  background: transparent !important;
 }
 
 /* ===================================
@@ -106,7 +120,7 @@ body::before {
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: 
+  background-image:
     linear-gradient($grid-color 1px, transparent 1px),
     linear-gradient(90deg, $grid-color 1px, transparent 1px);
   background-size: 50px 50px;
@@ -116,8 +130,13 @@ body::before {
 }
 
 @keyframes gridMove {
-  0% { transform: translate(0, 0); }
-  100% { transform: translate(50px, 50px); }
+  0% {
+    transform: translate(0, 0);
+  }
+
+  100% {
+    transform: translate(50px, 50px);
+  }
 }
 
 // Glowing gradient overlay
@@ -137,7 +156,12 @@ body::after {
    TYPOGRAPHY
    =================================== */
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   color: $text-accent;
   font-family: $font-mono;
   margin: 1.5em 0 0.75em 0;
@@ -147,34 +171,34 @@ h1, h2, h3, h4, h5, h6 {
   letter-spacing: 1px;
 }
 
-h1 { 
-  font-size: 2.5rem; 
+h1 {
+  font-size: 2.5rem;
   text-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
   margin-top: 0;
 }
 
-h2 { 
-  font-size: 2rem; 
+h2 {
+  font-size: 2rem;
   color: $neon-magenta;
 }
 
-h3 { 
-  font-size: 1.5rem; 
+h3 {
+  font-size: 1.5rem;
   color: $text-accent;
 }
 
-h4 { 
-  font-size: 1.25rem; 
+h4 {
+  font-size: 1.25rem;
   color: $text-accent;
 }
 
-h5 { 
-  font-size: 1.1rem; 
+h5 {
+  font-size: 1.1rem;
   color: $text-accent;
 }
 
-h6 { 
-  font-size: 1rem; 
+h6 {
+  font-size: 1rem;
   color: $text-accent;
 }
 
@@ -187,7 +211,7 @@ a {
   color: $neon-cyan;
   text-decoration: none;
   transition: all 0.3s ease;
-  
+
   &:hover {
     color: $neon-magenta;
     text-decoration: underline;
@@ -195,12 +219,14 @@ a {
   }
 }
 
-strong, b {
+strong,
+b {
   color: $text-primary;
   font-weight: 600;
 }
 
-em, i {
+em,
+i {
   color: $text-secondary;
   font-style: italic;
 }
@@ -209,7 +235,8 @@ em, i {
    LISTS
    =================================== */
 
-ul, ol {
+ul,
+ol {
   margin: 1em 0;
   padding-left: 2em;
   color: $text-secondary;
@@ -217,7 +244,7 @@ ul, ol {
 
 ul {
   list-style-type: none;
-  
+
   li::before {
     content: "▸ ";
     color: $text-accent;
@@ -228,10 +255,10 @@ ul {
 
 ol {
   counter-reset: item;
-  
+
   li {
     counter-increment: item;
-    
+
     &::before {
       content: counter(item) ". ";
       color: $text-accent;
@@ -269,7 +296,7 @@ pre {
   backdrop-filter: blur(10px);
   border: 1px solid $border-primary;
   margin: 1.5em 0;
-  
+
   code {
     background: none;
     padding: 0;
@@ -292,19 +319,19 @@ blockquote {
   border-radius: 0 8px 8px 0;
   border: 1px solid $border-primary;
   border-left: 4px solid $neon-magenta;
-  
+
   p {
     margin: 0;
     color: $text-secondary;
   }
-  
+
   cite {
     display: block;
     margin-top: 1em;
     color: $text-muted;
     font-family: $font-mono;
     font-size: 0.9em;
-    
+
     &::before {
       content: "— ";
     }
@@ -338,7 +365,7 @@ blockquote {
   position: sticky;
   top: 0;
   z-index: 100;
-  
+
   .header-content {
     display: flex;
     justify-content: space-between;
@@ -346,7 +373,7 @@ blockquote {
     flex-wrap: wrap;
     gap: 1rem;
   }
-  
+
   .site-title {
     font-family: $font-mono;
     font-size: 1.8rem;
@@ -355,25 +382,25 @@ blockquote {
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 2px;
-    
+
     &::before {
       content: "> ";
       color: $neon-magenta;
       animation: blink 2s infinite;
     }
-    
+
     &:hover {
       text-shadow: 0 0 20px rgba(0, 255, 255, 0.7);
     }
   }
-  
+
   .nav-menu {
     display: flex;
     list-style: none;
     margin: 0;
     padding: 0;
     gap: 2rem;
-    
+
     a {
       color: $text-secondary;
       font-family: $font-mono;
@@ -385,14 +412,14 @@ blockquote {
       border-radius: 4px;
       transition: all 0.3s ease;
       text-decoration: none;
-      
+
       &:hover {
         color: $text-accent;
         border-color: $border-accent;
         background: $bg-glass;
         box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
       }
-      
+
       &.active {
         color: $text-accent;
         border-color: $border-accent;
@@ -403,8 +430,16 @@ blockquote {
 }
 
 @keyframes blink {
-  0%, 50% { opacity: 1; }
-  51%, 100% { opacity: 0.3; }
+
+  0%,
+  50% {
+    opacity: 1;
+  }
+
+  51%,
+  100% {
+    opacity: 0.3;
+  }
 }
 
 /* ===================================
@@ -421,7 +456,7 @@ blockquote {
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
-  
+
   &::before {
     content: '';
     position: absolute;
@@ -432,22 +467,25 @@ blockquote {
     background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.1), transparent);
     transition: left 0.5s ease;
   }
-  
+
   &:hover {
     border-color: $border-accent;
     box-shadow: 0 10px 40px rgba(138, 43, 226, 0.3);
     transform: translateY(-5px);
-    
+
     &::before {
       left: 100%;
     }
   }
-  
-  h3, h4, h5, h6 {
+
+  h3,
+  h4,
+  h5,
+  h6 {
     color: $text-accent;
     margin-top: 0;
   }
-  
+
   p:last-child {
     margin-bottom: 0;
   }
@@ -473,7 +511,7 @@ blockquote {
   overflow: hidden;
   background: transparent;
   cursor: pointer;
-  
+
   &::before {
     content: '';
     position: absolute;
@@ -485,38 +523,38 @@ blockquote {
     transition: left 0.3s ease;
     z-index: -1;
   }
-  
+
   &:hover {
     color: $bg-primary;
     box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
     text-decoration: none;
-    
+
     &::before {
       left: 0;
     }
   }
-  
+
   &.secondary {
     border-color: $neon-magenta;
     color: $neon-magenta;
-    
+
     &::before {
       background: $neon-magenta;
     }
-    
+
     &:hover {
       box-shadow: 0 0 30px rgba(255, 0, 255, 0.5);
     }
   }
-  
+
   &.disabled {
     opacity: 0.5;
     cursor: not-allowed;
-    
+
     &:hover {
       transform: none;
       box-shadow: none;
-      
+
       &::before {
         left: -100%;
       }
@@ -540,19 +578,19 @@ blockquote {
   border-radius: 0 12px 12px 0;
   border: 1px solid $border-primary;
   transition: all 0.3s ease;
-  
+
   &:hover {
     border-color: $border-accent;
     box-shadow: 0 8px 30px rgba(138, 43, 226, 0.3);
     transform: translateY(-2px);
   }
-  
+
   .event-date {
     min-width: 80px;
     text-align: center;
     font-family: $font-mono;
     flex-shrink: 0;
-    
+
     .event-month {
       background: $text-accent;
       color: $bg-primary;
@@ -562,7 +600,7 @@ blockquote {
       text-transform: uppercase;
       border-radius: 4px 4px 0 0;
     }
-    
+
     .event-day {
       background: $bg-tertiary;
       color: $text-accent;
@@ -574,22 +612,23 @@ blockquote {
       border-top: none;
     }
   }
-  
+
   .event-content {
     flex: 1;
-    
-    h3, h4 {
+
+    h3,
+    h4 {
       margin: 0 0 0.5rem 0;
       color: $text-accent;
     }
-    
+
     .event-location {
       color: $text-muted;
       font-size: 0.9rem;
       margin: 0.25rem 0;
       font-family: $font-mono;
     }
-    
+
     .event-description {
       color: $text-secondary;
       margin: 0.5rem 0 0 0;
@@ -613,7 +652,7 @@ blockquote {
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
-    
+
     &::before {
       content: '';
       position: absolute;
@@ -624,38 +663,38 @@ blockquote {
       background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.1), transparent);
       transition: left 0.5s ease;
     }
-    
+
     &:hover {
       border-color: $border-accent;
       transform: translateY(-5px);
       box-shadow: 0 10px 40px rgba(138, 43, 226, 0.3);
-      
+
       &::before {
         left: 100%;
       }
     }
-    
+
     h2 {
       margin: 0 0 0.5rem 0;
-      
+
       a {
         color: $text-accent;
         text-decoration: none;
-        
+
         &:hover {
           color: $neon-magenta;
           text-shadow: 0 0 15px rgba(255, 0, 255, 0.5);
         }
       }
     }
-    
+
     .post-meta {
       color: $text-muted;
       font-size: 0.9rem;
       margin: 0.5rem 0;
       font-family: $font-mono;
     }
-    
+
     .post-excerpt {
       color: $text-secondary;
       margin: 1rem 0 0 0;
@@ -666,14 +705,22 @@ blockquote {
 
 .post-header {
   margin-bottom: 2rem;
-  
+
   .post-meta {
     color: $text-muted;
     font-family: $font-mono;
     font-size: 0.9rem;
     margin: 1rem 0;
+
+    .post-author {
+      color: $text-accent;
+    }
+
+    .post-category {
+      color: $neon-magenta;
+    }
   }
-  
+
   .post-description {
     background: $bg-glass;
     backdrop-filter: blur(10px);
@@ -682,7 +729,7 @@ blockquote {
     border-radius: 0 8px 8px 0;
     margin: 1rem 0;
     border: 1px solid $border-primary;
-    
+
     p {
       margin: 0;
       color: $text-secondary;
@@ -693,7 +740,7 @@ blockquote {
 
 .post-content {
   line-height: 1.7;
-  
+
   img {
     max-width: 100%;
     height: auto;
@@ -707,33 +754,75 @@ blockquote {
   margin-top: 3rem;
   padding-top: 2rem;
   border-top: 1px solid $border-primary;
-  
-  .post-navigation {
+
+  .post-footer-content {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
     gap: 1rem;
     margin-bottom: 2rem;
-    
-    a {
+  }
+
+  .post-navigation {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+
+    .nav-link {
       color: $text-accent;
       font-family: $font-mono;
       font-size: 0.9rem;
-      
+      text-decoration: none;
+
       &:hover {
         color: $neon-magenta;
+        text-shadow: 0 0 10px rgba(255, 0, 255, 0.5);
+      }
+    }
+
+    .nav-separator {
+      color: $text-muted;
+      margin: 0 0.5rem;
+    }
+  }
+
+  .post-share {
+    .share-link {
+      color: #1DA1F2;
+      text-decoration: none;
+
+      &:hover {
+        color: $text-accent;
+        text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
       }
     }
   }
-  
-  .post-share {
+
+  .post-contribute {
     text-align: center;
-    
-    a {
-      color: $text-muted;
-      margin: 0 0.5rem;
-      
-      &:hover {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background: $bg-glass;
+    backdrop-filter: blur(10px);
+    border-radius: 8px;
+    border: 1px solid $border-primary;
+
+    p {
+      margin: 0;
+      color: $text-secondary;
+
+      strong {
+        color: $text-primary;
+      }
+
+      a {
         color: $text-accent;
+
+        &:hover {
+          color: $neon-cyan;
+          text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
       }
     }
   }
@@ -752,13 +841,14 @@ table {
   border-radius: 8px;
   overflow: hidden;
   border: 1px solid $border-primary;
-  
-  th, td {
+
+  th,
+  td {
     padding: 1rem;
     text-align: left;
     border-bottom: 1px solid $border-primary;
   }
-  
+
   th {
     background: rgba(42, 0, 64, 0.8);
     color: $text-accent;
@@ -767,15 +857,15 @@ table {
     text-transform: uppercase;
     letter-spacing: 1px;
   }
-  
+
   td {
     color: $text-secondary;
   }
-  
+
   tr:hover {
     background: rgba(0, 255, 255, 0.05);
   }
-  
+
   tr:last-child {
     td {
       border-bottom: none;
@@ -787,7 +877,9 @@ table {
    FORMS
    =================================== */
 
-input, textarea, select {
+input,
+textarea,
+select {
   background: rgba(26, 0, 41, 0.6);
   backdrop-filter: blur(20px);
   border: 1px solid $border-primary;
@@ -798,13 +890,13 @@ input, textarea, select {
   width: 100%;
   margin-bottom: 1rem;
   transition: all 0.3s ease;
-  
+
   &:focus {
     outline: none;
     border-color: $border-accent;
     box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
   }
-  
+
   &::placeholder {
     color: $text-muted;
   }
@@ -830,28 +922,28 @@ label {
   border-top: 1px solid $border-primary;
   padding: 2rem 0;
   margin-top: 4rem;
-  
+
   .footer-content {
     text-align: center;
     color: $text-muted;
     font-family: $font-mono;
-    
+
     .social-links {
       margin: 1rem 0;
-      
+
       a {
         color: $text-muted;
         text-decoration: none;
         margin: 0 1rem;
         transition: all 0.3s ease;
-        
+
         &:hover {
           color: $text-accent;
           text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
         }
       }
     }
-    
+
     p {
       margin: 0.5rem 0;
       font-size: 0.9rem;
@@ -871,7 +963,7 @@ details {
   border-radius: 8px;
   margin: 1rem 0;
   overflow: hidden;
-  
+
   summary {
     background: rgba(42, 0, 64, 0.8);
     padding: 1rem;
@@ -881,17 +973,17 @@ details {
     color: $text-accent;
     font-family: $font-mono;
     font-weight: 500;
-    
+
     &:hover {
       background: rgba(42, 0, 64, 1);
       color: $text-primary;
     }
   }
-  
+
   &[open] summary {
     border-bottom: 1px solid $border-primary;
   }
-  
+
   .details-content {
     padding: 1rem;
   }
@@ -908,10 +1000,10 @@ details {
   border-left: 4px solid $text-accent;
   border: 1px solid $border-primary;
   margin: 1rem 0;
-  
+
   .member-photo {
     flex-shrink: 0;
-    
+
     img {
       width: 120px;
       height: 120px;
@@ -919,22 +1011,22 @@ details {
       object-fit: cover;
       border: 2px solid $text-accent;
       transition: all 0.3s ease;
-      
+
       &:hover {
         box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
         transform: scale(1.05);
       }
     }
   }
-  
+
   .member-info {
     flex: 1;
-    
+
     h3 {
       margin: 0 0 0.5rem 0;
       color: $text-accent;
     }
-    
+
     .member-position {
       color: $neon-magenta;
       font-family: $font-mono;
@@ -942,13 +1034,13 @@ details {
       margin: 0.25rem 0;
       font-weight: bold;
     }
-    
+
     .member-affiliation,
     .member-expertise {
       color: $text-muted;
       font-size: 0.9rem;
       margin: 0.25rem 0;
-      
+
       strong {
         color: $text-secondary;
       }
@@ -959,7 +1051,7 @@ details {
 // Role cards
 .role-card {
   transition: all 0.3s ease;
-  
+
   &:hover {
     transform: translateX(10px);
     box-shadow: 0 5px 20px rgba(138, 43, 226, 0.3);
@@ -972,8 +1064,9 @@ details {
   justify-content: center;
   gap: 0.5rem;
   margin: 2rem 0;
-  
-  a, span {
+
+  a,
+  span {
     padding: 0.5rem 1rem;
     border: 1px solid $border-primary;
     background: rgba(26, 0, 41, 0.6);
@@ -983,13 +1076,13 @@ details {
     border-radius: 4px;
     transition: all 0.3s ease;
     font-family: $font-mono;
-    
+
     &:hover {
       border-color: $border-accent;
       color: $text-accent;
       box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
     }
-    
+
     &.current {
       background: $text-accent;
       color: $bg-primary;
@@ -998,55 +1091,361 @@ details {
   }
 }
 
+@media (max-width: 768px) {
+  // Force dark vaporwave background on all mobile devices
+  html {
+    background: $bg-primary !important;
+    background-color: $bg-primary !important;
+  }
+  
+  body {
+    background: linear-gradient(135deg, $bg-primary 0%, $bg-secondary 50%, $bg-tertiary 100%) !important;
+    background-color: $bg-primary !important;
+    background-attachment: fixed !important;
+    min-height: 100vh !important;
+  }
+  
+  // Ensure main layout containers don't override the background
+  .container,
+  .main-content,
+  main,
+  section,
+  article,
+  .content,
+  .page-content {
+    background: transparent !important;
+    background-color: transparent !important;
+  }
+  
+  // Override any problematic white/light backgrounds from other stylesheets
+  div:not(.card):not(.event-item):not(.post-item),
+  section:not(.card),
+  article:not(.card),
+  main:not(.card) {
+    background: transparent !important;
+    background-color: transparent !important;
+  }
+  
+  // Preserve card styling but ensure it uses dark theme
+  .card,
+  .event-item,
+  .post-item {
+    background: $bg-glass !important;
+    backdrop-filter: blur(20px) !important;
+    border: 1px solid $border-primary !important;
+  }
+  
+  .container {
+    padding: 0 1rem;
+  }
+
+  .main-content {
+    padding: 1rem 0;
+  }
+
+  .site-header {
+    .header-content {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .nav-menu {
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+
+      a {
+        padding: 0.25rem 0.75rem;
+        font-size: 0.9rem;
+      }
+    }
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  h2 {
+    font-size: 1.75rem;
+  }
+
+  h3 {
+    font-size: 1.5rem;
+  }
+
+  h4 {
+    font-size: 1.25rem;
+  }
+
+  .post-header {
+    margin-bottom: 1.5rem;
+
+    .post-meta {
+      font-size: 0.8rem;
+    }
+  }
+
+  .post-footer {
+    .post-footer-content {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 1.5rem;
+    }
+
+    .post-navigation {
+      flex-direction: column;
+      gap: 0.5rem;
+
+      .nav-separator {
+        display: none;
+      }
+    }
+
+    .post-share {
+      text-align: center;
+    }
+
+    .post-contribute {
+      padding: 1rem;
+    }
+  }
+
+  .card {
+    padding: 1rem;
+    margin: 0.5rem 0;
+  }
+
+  .team-member {
+    flex-direction: column;
+    text-align: center;
+
+    .member-photo img {
+      width: 100px;
+      height: 100px;
+    }
+  }
+
+  .btn {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.9rem;
+  }
+
+  table {
+    font-size: 0.9rem;
+
+    th,
+    td {
+      padding: 0.5rem;
+    }
+  }
+
+  .grid-2 {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+
+  .container {
+    padding: 0 0.75rem;
+  }
+
+  h1 {
+    font-size: 1.75rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+  }
+
+  .site-header {
+    .site-title {
+      font-size: 1.5rem;
+    }
+
+    .nav-menu {
+      gap: 0.5rem;
+
+      a {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.8rem;
+      }
+    }
+  }
+
+  .post-contribute {
+    padding: 0.75rem;
+
+    p {
+      font-size: 0.9rem;
+    }
+  }
+
+  .btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+  }
+}
+
 /* ===================================
    UTILITY CLASSES
    =================================== */
 
-.text-center { text-align: center; }
-.text-left { text-align: left; }
-.text-right { text-align: right; }
-
-.text-mono { font-family: $font-mono; }
-.text-sans { font-family: $font-sans; }
-
-.text-primary { color: $text-primary; }
-.text-secondary { color: $text-secondary; }
-.text-muted { color: $text-muted; }
-.text-accent { color: $text-accent; }
-
-.text-cyan { color: $neon-cyan; }
-.text-magenta { color: $neon-magenta; }
-.text-purple { color: $neon-purple; }
-
-.mb-0 { margin-bottom: 0; }
-.mb-1 { margin-bottom: 1rem; }
-.mb-2 { margin-bottom: 2rem; }
-.mb-3 { margin-bottom: 3rem; }
-
-.mt-0 { margin-top: 0; }
-.mt-1 { margin-top: 1rem; }
-.mt-2 { margin-top: 2rem; }
-.mt-3 { margin-top: 3rem; }
-
-.p-1 { padding: 1rem; }
-.p-2 { padding: 2rem; }
-.p-3 { padding: 3rem; }
-
-.d-block { display: block; }
-.d-inline { display: inline; }
-.d-inline-block { display: inline-block; }
-.d-flex { display: flex; }
-.d-grid { display: grid; }
-.d-none { display: none; }
-
-.flex-wrap { flex-wrap: wrap; }
-.flex-nowrap { flex-wrap: nowrap; }
-.justify-center { justify-content: center; }
-.justify-between { justify-content: space-between; }
-.align-center { align-items: center; }
-
-.grid-2 { 
-  display: grid; 
-  grid-template-columns: repeat(2, 1fr); 
-  gap: 2rem; 
+.text-center {
+  text-align: center;
 }
+
+.text-left {
+  text-align: left;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-mono {
+  font-family: $font-mono;
+}
+
+.text-sans {
+  font-family: $font-sans;
+}
+
+.text-primary {
+  color: $text-primary;
+}
+
+.text-secondary {
+  color: $text-secondary;
+}
+
+.text-muted {
+  color: $text-muted;
+}
+
+.text-accent {
+  color: $text-accent;
+}
+
+.text-cyan {
+  color: $neon-cyan;
+}
+
+.text-magenta {
+  color: $neon-magenta;
+}
+
+.text-purple {
+  color: $neon-purple;
+}
+
+.mb-0 {
+  margin-bottom: 0;
+}
+
+.mb-1 {
+  margin-bottom: 1rem;
+}
+
+.mb-2 {
+  margin-bottom: 2rem;
+}
+
+.mb-3 {
+  margin-bottom: 3rem;
+}
+
+.mt-0 {
+  margin-top: 0;
+}
+
+.mt-1 {
+  margin-top: 1rem;
+}
+
+.mt-2 {
+  margin-top: 2rem;
+}
+
+.mt-3 {
+  margin-top: 3rem;
+}
+
+.p-1 {
+  padding: 1rem;
+}
+
+.p-2 {
+  padding: 2rem;
+}
+
+.p-3 {
+  padding: 3rem;
+}
+
+.d-block {
+  display: block;
+}
+
+.d-inline {
+  display: inline;
+}
+
+.d-inline-block {
+  display: inline-block;
+}
+
+.d-flex {
+  display: flex;
+}
+
+.d-grid {
+  display: grid;
+}
+
+.d-none {
+  display: none;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.flex-nowrap {
+  flex-wrap: nowrap;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.align-center {
+  align-items: center;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+}
+
+@media (max-width: 768px) {
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===================================
+   IMPORT COMPONENT STYLES
+   =================================== */
+
+@import "events";
