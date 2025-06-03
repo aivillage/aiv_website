@@ -1,66 +1,20 @@
-/* === Shared Event Card Base === */
-.event-item {
-  display: flex;
-  gap: 1.5rem;
-  padding: 1.5rem;
-  margin-bottom: 2.5rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  align-items: flex-start;
-  transition: transform 0.2s ease, box-shadow 0.3s ease;
-    height: 100%; /* allow card to grow to parent */
-  flex: 1;       /* stretch if inside a flex column */
-  display: flex;
-  flex-direction: row; /* already applied */
-}
+/* === Event-specific overrides and additions === */
 
-.event-item:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
-}
-
-/* === Past and Future Event Cards === */
+/* Ensure event items use dark theme consistently */
 .event-item {
   background: rgba(26, 0, 41, 0.6) !important;
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(138, 43, 226, 0.4);
+  backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(138, 43, 226, 0.4) !important;
 }
 
 .event-date {
-  background-color: #2a0040;
-  color: #00ffff;
+  background-color: #2a0040 !important;
+  color: #00ffff !important;
 }
 
 .future-events .event-description,
 .past-events .event-description {
   color: #e6e6fa !important;
-}
-
-/* === Date Box === */
-.event-date {
-  min-width: 110px;
-  text-align: center;
-  font-size: 1.25rem;
-  font-weight: 700;
-  padding: 1rem;
-  border-radius: 8px;
-  line-height: 1.2;
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.event-month {
-  font-size: 1rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.event-day {
-  font-size: 1.6rem;
-  margin-top: 0.1rem;
 }
 
 /* === Event Content === */
@@ -85,7 +39,7 @@
 
 .event-description {
   font-size: 0.75rem;
-  margin-top: 0rem; 
+  margin-top: 0rem;
 }
 
 /* === Section Headings === */
@@ -93,8 +47,10 @@
   font-size: 1.2rem;
   margin-top: 1rem;
   margin-bottom: 1.5rem;
-  color: #003366;
-  background-color: #F2F2F2;
+  color: #00ffff !important;
+  background: rgba(42, 0, 64, 0.8) !important;
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(138, 43, 226, 0.4);
   padding: 0.5rem 1rem;
   border-radius: 6px;
   display: block;
@@ -102,11 +58,10 @@
   font-weight: 600;
   cursor: pointer;
   position: relative;
-  padding-left: 1.6rem; 
+  padding-left: 1.6rem;
   user-select: none;
   list-style: none;
 }
-
 
 .year-heading::-webkit-details-marker {
   display: none;
@@ -114,7 +69,7 @@
 
 /* Arrow icon */
 .year-heading::before {
-  content: "▶"; 
+  content: "▶";
   position: absolute;
   left: 0.5rem;
   top: 50%;
@@ -122,11 +77,11 @@
   transform-origin: 50% 50%;
   transition: transform 0.3s ease;
   font-size: 1rem;
-  color: #003366;
+  color: #00ffff !important;
 }
 
 /* Rotate arrow when open */
-details[open] > .year-heading::before {
+details[open]>.year-heading::before {
   transform: translateY(-50%) rotate(90deg);
 }
 
@@ -138,8 +93,8 @@ details[open] > .year-heading::before {
 }
 
 /* Expand when open */
-details[open] > .events-container {
-  max-height: 2000px; 
+details[open]>.events-container {
+  max-height: 2000px;
   transition: max-height 0.5s ease;
 }
 
@@ -158,7 +113,6 @@ details[open] > .events-container {
   .event-item {
     flex-direction: column;
     align-items: stretch;
-    
   }
 
   .event-date {
@@ -178,7 +132,8 @@ details[open] > .events-container {
   display: flex;
   gap: 2rem;
   justify-content: space-between;
-  align-items: stretch; /* ensures children grow to equal height */
+  align-items: stretch;
+  /* ensures children grow to equal height */
   margin-bottom: 0rem;
   flex-wrap: wrap;
 }
@@ -195,5 +150,5 @@ details[open] > .events-container {
   font-size: 1.4rem;
   margin-bottom: 1rem;
   margin-top: 1rem;
-  color: #003366;
+  color: #00ffff !important;
 }
