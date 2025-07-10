@@ -83,12 +83,19 @@ title: Home
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin: 2rem 0;">
   {% for sponsor in site.sponsors %}
   <div class="card" style="align-items: center;">
-    <div style="width: 240px; height: 240px; border-radius: 10%; background: #aaa; display: flex; align-items: center; justify-content:   center; border: 2px solid #00ff00; padding: 10px;">
-      <img 
-          src="{{ '/assets/images/logos/' | append: sponsor.logo | relative_url }}" 
-          alt="{{ sponsor.name }} logo">
-       </div>
-    <h4 style="color: #ffff00;">{{ sponsor.name }}</h4>
+    <div class="team-member" style="display: flex; gap: 1.5rem; background: #1a1a1a; padding: 1.5rem; border-radius: 5px; border-left: 4px solid #00ff00;">
+      <div class="sponsor-logo" style="flex-shrink: 0;">
+        <div style="width: 240px; height: 240px; border-radius: 10%; background: #aaa; display: flex; align-items: center; justify-content:   center; border: 2px solid #00ff00; padding: 10px;">
+          <img 
+              src="{{ '/assets/images/logos/' | append: sponsor.logo | relative_url }}" 
+              alt="{{ sponsor.name }} logo">
+        </div>
+      </div>
+
+      <div class="sponsor-info" style="flex: 1;">
+        <h4 style="color: #ffff00;">{{ sponsor.name }}</h4>
+      </div>
+    </div>
   </div>
   {% endfor %}
 
