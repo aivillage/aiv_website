@@ -13,6 +13,13 @@ title: Home
 ---
 
 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin: 2rem 0;">
+  <style>
+    @media (max-width: 768px) {
+      div[style*="grid-template-columns: 1fr 1fr"] {
+        grid-template-columns: 1fr !important;
+      }
+    }
+  </style>
   
   <div class="card">
     <h3 style="color: #00ff00; margin-top: 0;">🔥 Upcoming Events</h3>
