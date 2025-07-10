@@ -86,7 +86,7 @@ title: Home
     <img 
         src="{{ '/assets/images/logos/' | append: sponsor.logo | relative_url }}" 
         alt="{{ sponsor.name }} logo" 
-        style="width: 120px; height: 120px;">
+        style="width: 120px; height: 120px; border-radius: 10%; background: #333; border: 2px solid #00ff00;">
     <h4 style="color: #ffff00;">{{ sponsor.name }}</h4>
   </div>
   {% endfor %}
