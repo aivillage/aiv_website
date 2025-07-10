@@ -23,6 +23,8 @@ collections:
     permalink: /:collection/:name/
   volunteers:
     output: true
+  sponsors:
+    output: true
 
 # Defaults
 defaults:
