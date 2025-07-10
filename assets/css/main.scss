@@ -1296,6 +1296,221 @@ details {
    UTILITY CLASSES
    =================================== */
 
+
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+.text-mono { font-family: $font-mono; }
+.text-sans { font-family: $font-sans; }
+
+.text-primary { color: $text-primary; }
+.text-secondary { color: $text-secondary; }
+.text-muted { color: $text-muted; }
+.text-accent { color: $text-accent; }
+
+.text-cyan { color: $neon-cyan; }
+.text-magenta { color: $neon-magenta; }
+.text-purple { color: $neon-purple; }
+
+.mb-0 { margin-bottom: 0; }
+.mb-1 { margin-bottom: 1rem; }
+.mb-2 { margin-bottom: 2rem; }
+.mb-3 { margin-bottom: 3rem; }
+
+.mt-0 { margin-top: 0; }
+.mt-1 { margin-top: 1rem; }
+.mt-2 { margin-top: 2rem; }
+.mt-3 { margin-top: 3rem; }
+
+.p-1 { padding: 1rem; }
+.p-2 { padding: 2rem; }
+.p-3 { padding: 3rem; }
+
+.d-block { display: block; }
+.d-inline { display: inline; }
+.d-inline-block { display: inline-block; }
+.d-flex { display: flex; }
+.d-grid { display: grid; }
+.d-none { display: none; }
+
+.flex-wrap { flex-wrap: wrap; }
+.flex-nowrap { flex-wrap: nowrap; }
+.justify-center { justify-content: center; }
+.justify-between { justify-content: space-between; }
+.align-center { align-items: center; }
+
+.grid-2 { 
+  display: grid; 
+  grid-template-columns: repeat(2, 1fr); 
+  gap: 2rem; 
+}
+
+
+
+/* Mobile Navigation Styles */
+.site-header {
+  background: #1a1a1a;
+  padding: 1rem 0;
+  border-bottom: 2px solid #00ff00;
+  position: relative;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.site-title {
+  color: #00ff00;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 1.5rem;
+  text-decoration: none;
+  font-weight: bold;
+  z-index: 11;
+  position: relative;
+}
+
+.nav-menu {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.nav-menu a {
+  color: #888;
+  text-decoration: none;
+  font-family: "JetBrains Mono", monospace;
+  transition: color 0.3s ease;
+}
+
+.nav-menu a:hover {
+  color: #00ffff;
+}
+
+.nav-menu a.active {
+  color: #00ff00;
+}
+
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 2rem;
+  height: 2rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 11;
+}
+
+.hamburger span {
+  width: 2rem;
+  height: 0.25rem;
+  background: #00ff00;
+  border-radius: 10px;
+  transition: all 0.3s linear;
+  position: relative;
+  transform-origin: 1px;
+}
+
+@media (max-width: 768px) {
+  .site-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 1000;
+  }
+
+  body {
+    padding-top: 4rem;
+  }
+
+  .header-content {
+    position: relative;
+  }
+
+  .hamburger {
+    display: flex;
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .nav-menu {
+    visibility: hidden;
+    opacity: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100vh;
+    background: #1a1a1a;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    z-index: 10;
+    transition: all 0.3s ease-in-out;
+    pointer-events: none;
+    padding: 1rem;
+    overflow-y: auto;
+  }
+
+  .nav-menu.active {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .hamburger.active span:nth-child(1) {
+    transform: rotate(45deg);
+  }
+
+  .hamburger.active span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .hamburger.active span:nth-child(3) {
+    transform: rotate(-45deg);
+  }
+
+  .nav-menu a {
+    font-size: 1.5rem;
+    opacity: 0;
+    transform: translateY(20px);
+    transition:
+      opacity 0.3s ease,
+      transform 0.3s ease;
+    padding: 0.5rem 1rem;
+    width: 100%;
+    text-align: center;
+  }
+
+  .nav-menu.active a {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .nav-menu::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4rem;
+    background: #1a1a1a;
+    border-bottom: 2px solid #00ff00;
+  }
+
 .text-center {
   text-align: center;
 }
@@ -1449,3 +1664,5 @@ details {
    =================================== */
 
 @import "events";
+
+}
