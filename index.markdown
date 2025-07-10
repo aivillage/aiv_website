@@ -85,24 +85,6 @@ title: Home
 
 ---
 
-## 🎯 Sponsors
-
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin: 2rem 0;">
-  {% for sponsor in site.sponsors %}
-  <div class="card" style="align-items: center;">
-      <div style="width: 240px; height: 240px; border-radius: 10%; background: #fff; display: flex; align-items: center; justify-content:   center; border: 2px solid #00ff00; padding: 20px;">
-        <img 
-            src="{{ '/assets/images/logos/' | append: sponsor.logo | relative_url }}" 
-            alt="{{ sponsor.name }} logo">
-      </div>
-  </div>
-  {% endfor %}
-
-</div>
-
-{% endif %}
----
-
 ## 🎯 Mission
 
 We aim to bring more diverse viewpoints to AI security, grow a community of hackers, engineers, researchers, and policy makers, and encourage more people with a hacker mindset to assess machine learning systems. We have a strong presence at DEF CON, the world's longest-running and largest hacking conference.
@@ -125,6 +107,25 @@ We aim to bring more diverse viewpoints to AI security, grow a community of hack
   </div>
 
 </div>
+
+---
+
+## 🎯 Sponsors
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin: 2rem 0;">
+  {% for sponsor in site.sponsors %}
+  <div class="card" style="align-items: center;">
+      <div style="width: 240px; height: 240px; border-radius: 10%; background: #fff; display: flex; align-items: center; justify-content:   center; border: 2px solid #00ff00; padding: 20px;">
+        <img 
+            src="{{ '/assets/images/logos/' | append: sponsor.logo | relative_url }}" 
+            alt="{{ sponsor.name }} logo">
+      </div>
+  </div>
+  {% endfor %}
+
+</div>
+
+{% endif %}
 
 ---
 
