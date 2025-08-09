@@ -10,6 +10,8 @@ title: Home
   </p>
 </div>
 
+The GRT 3 will run online in about a month with partners. Please sign up [here](https://auth.aivillage.org/login) to recieve an email with more information. 
+
 ---
 
 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin: 2rem 0;">
