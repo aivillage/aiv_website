@@ -1,7 +1,7 @@
 ---
 first_name: Lauren
 last_name: Putvin
-position: Steering Committee Lead
+position: Steering Committee Member
 profile: lauren_putvin.jpg
 bio: true # If you don't want to include a bio, change this to false.
 ---
