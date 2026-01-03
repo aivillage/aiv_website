@@ -4,7 +4,7 @@ last_name: Reeves
 position: Steering Committee Member
 expertise: AI Systems Security, Security Engineering and Architecture
 affiliation: Google
-profile: breeves.jpg
+profile: breeves.jpeg
 bio: true # If you don't want to include a bio, change this to false.
 ---
 
