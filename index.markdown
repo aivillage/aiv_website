@@ -14,7 +14,7 @@ title: Home
 
 <a href="https://www.rsaconference.com/usa?utm_source=village-aivil&utm_medium=social&utm_campaign=xpage-us2026">
   <img 
-  src="{{ '/assets/images/rsa2026.jpg' | relative_url }}" 
+  src="{{ '/assets/images/rsac2026.jpg' | relative_url }}" 
   alt="RSA 2026 banner">
 </a>
 
