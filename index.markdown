@@ -10,7 +10,13 @@ title: Home
   </p>
 </div>
 
-The GRT 3 will run online in about a month with partners. Please sign up [here](https://auth.aivillage.org/login) to recieve an email with more information. 
+---
+
+<a href="https://www.rsaconference.com/usa?utm_source=village-aivil&utm_medium=social&utm_campaign=xpage-us2026">
+  <img 
+  src="{{ '/assets/images/rsa2026.jpg' | relative_url }}" 
+  alt="RSA 2026 banner">
+</a>
 
 ---
 
