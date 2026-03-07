@@ -25,6 +25,12 @@ layout: default
       </div>
     {% endif %}
   </header>
+  
+  {% if page.cover %}
+    <div class="post-cover-wrapper">
+      <img src="{{ page.cover | relative_url }}" alt="{{ page.title }}" class="post-cover">
+    </div>
+  {% endif %}
 
   <div class="post-content">
     {{ content }}
@@ -65,5 +71,6 @@ layout: default
         or join our <a href="/discord/">Discord</a> to discuss ideas.
       </p>
     </div>
+    
   </footer>
 </article>
