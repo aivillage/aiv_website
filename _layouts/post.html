@@ -27,7 +27,7 @@ layout: default
   </header>
   
   {% if page.cover %}
-    <div class="post-cover-wrapper">
+    <div class="post-cover-wrapper" style="display: flex; justify-content: center;">
       <img src="{{ page.cover | relative_url }}" alt="{{ page.title }}" class="post-cover">
     </div>
   {% endif %}
