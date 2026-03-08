@@ -4,7 +4,9 @@ title: "Hacking AI Browsers: How i hacked Perplexity"
 date: 2026-02-03 00:00:00 +0200
 author: Mohamed AbuMuslim
 category: "generative-red-team"
-image: /assets/images/2026-02-21-Hacking-AI-Browsers:-How-i-hacked-Perplexity/cover-1200x630.png
+image: 
+    path: /assets/images/2026-02-21-Hacking-AI-Browsers:-How-i-hacked-Perplexity/cover-1200x630.png
+    twitter:card: summary_large_image
 cover: /assets/images/2026-02-21-Hacking-AI-Browsers:-How-i-hacked-Perplexity/cover-1200x630.png
 media_subpath: /assets/images/2026-02-21-Hacking-AI-Browsers:-How-i-hacked-Perplexity/
 description: "I Hacked Perplexity and found: template injection, highlight injection, and chat-based data exfiltration. Here’s the story."
