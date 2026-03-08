@@ -12,9 +12,9 @@ description: "I Hacked Perplexity and found: template injection, highlight injec
 
 In this blog, I’ll walk through a few vulnerabilities I found while testing **Perplexity’s Comet** and **Chat:** 
 
-**Summary template injection** (**Comet**): I influenced the summarizer’s “visible content” field to manipulate the output.
-**Highlight/selection injection** (**Comet**): I showed that highlighted text can leak into the summary context/output.
-**Image-based chat exfiltration** (**Chat**): I confirmed outbound requests triggered via model output patterns.
+1. **Summary template injection** (**Comet**): I influenced the summarizer’s “visible content” field to manipulate the output.
+2. **Highlight/selection injection** (**Comet**): I showed that highlighted text can leak into the summary context/output.
+3. **Image-based chat exfiltration** (**Chat**): I confirmed outbound requests triggered via model output patterns.
 
 # Journey into hacking AI (and why summarizers keep betraying us)
 
@@ -72,7 +72,7 @@ Because PDFs are what people summarize when they’re lazy (me too). Someone sen
   <img src="/assets/images/2026-02-21-Hacking-AI-Browsers:-How-i-hacked-Perplexity/summarizing-a-document.png" width="1000" alt="Example impact of summary manipulation: contract terms or bank details changed"/>
 </p>
 
-I tried to influence the summarizer to say my name by translating ASCII and other stuff but didn’t work. After more tries I realized it always says ****visible content is…****  and sometimes it renders it like a header. That means the agent is following a structured summarization template.
+I tried to influence the summarizer to say my name by translating ASCII and other stuff but didn’t work. After more tries I realized it always says **visible content is…**  and sometimes it renders it like a header. That means the agent is following a structured summarization template.
 
 
 So I asked myself: what happens if I force **"visible content"** to become a value I assign?
