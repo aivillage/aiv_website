@@ -43,7 +43,7 @@ To get started, I downloaded Comet, mapped the features, focusing on two things:
 - The **AI chat assistant**
 - The **summarization feature** (because summarizers are where good security goes to die)
 
-### Target #1:  The Summarization Feature
+## Target #1:  The Summarization Feature
 
 Comet’s workflow is simple:
 
