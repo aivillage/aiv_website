@@ -57,7 +57,7 @@ paginate_path: "/blog/page:num/"
 # SEO
 twitter:
   username: aivillage_dc
-  card: summary
+  card: summary_large_image
 
 social:
   name: AI Village
@@ -67,3 +67,4 @@ social:
 
 
 future: true
+
