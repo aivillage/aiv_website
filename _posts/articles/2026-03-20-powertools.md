@@ -2,7 +2,7 @@
 layout: post
 title: Agents Are Powertools
 author: Sven Cattell
-date: 2026-20 09:00:00 +0900
+date: 2026-20 00:00:00 +0000
 category: "rsac"
 toc: true
 ---
