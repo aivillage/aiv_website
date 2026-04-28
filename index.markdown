@@ -142,9 +142,10 @@ We aim to bring more diverse viewpoints to AI security, grow a community of hack
 <div style="background: #1a1a1a; padding: 1.5rem; border-radius: 5px; border-left: 4px solid #00ff00;">
   <p><strong>Want to join our community?</strong></p>
   <ul>
-    <li>💬 <a href="https://discord.com/invite/GX5fhfT">Join our Discord</a> - Chat with fellow researchers and stay updated</li>
-    <li>🎪 <a href="{{ '/events/' | relative_url }}">Attend our events</a> - DEF CON, workshops, and more</li>
-    <li>✍️ <a href="https://github.com/aivillage/aiv_website">Contribute</a> - Share your research and insights</li>
-    <li>🙋 <a href="https://forms.gle/vCrz3zpR8xHCsTtJ8">Volunteer</a> - Help organize events and activities</li>
+    <li> <a href="https://discord.com/invite/GX5fhfT">Join our Discord</a> - Chat with fellow researchers and stay updated</li>
+    <li> <a href="https://linkedin.com/in/aivillage">Connect on LinkedIn</a> - Connect with us on LinkedIn!</li>
+    <li> <a href="{{ '/events/' | relative_url }}">Attend our events</a> - DEF CON, workshops, and more</li>
+    <li> <a href="https://github.com/aivillage/aiv_website">Contribute</a> - Share your research and insights</li>
+    <li> <a href="https://forms.gle/vCrz3zpR8xHCsTtJ8">Volunteer</a> - Help organize events and activities</li>
   </ul>
 </div>
