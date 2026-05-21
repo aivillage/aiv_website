@@ -1,0 +1,33 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Community" canonical="/community/" description="Ways to participate in the AI Village community.">
+  <h1>Community</h1>
+  <p>
+    AI Village is organized around events, technical writing, hands-on workshops, and discussion among people interested in AI security and privacy.
+  </p>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin: 1.5rem 0;">
+    <article class="card">
+      <h2 style="margin-top: 0;">Discuss</h2>
+      <p>Join the Discord for community discussion and event updates.</p>
+      <p><a href="/discord/">Discord onboarding</a></p>
+    </article>
+    <article class="card">
+      <h2 style="margin-top: 0;">Attend</h2>
+      <p>Review upcoming and past AI Village events, including available schedules and talks.</p>
+      <p><a href="/events/">Events archive</a></p>
+    </article>
+    <article class="card">
+      <h2 style="margin-top: 0;">Contribute</h2>
+      <p>Share site content, workshop material, or event support through the public contribution paths.</p>
+      <p><a href="https://github.com/aivillage/aiv_website" target="_blank" rel="noopener noreferrer">Website repository</a></p>
+    </article>
+  </div>
+
+  <div class="card" style="border-left: 4px solid #ff0000;">
+    <h2 style="margin-top: 0;">Before Participating</h2>
+    <p>Read the <a href="/about/conduct/">code of conduct</a> and help keep AI Village welcoming for participants, speakers, sponsors, and volunteers.</p>
+  </div>
+</BaseLayout>

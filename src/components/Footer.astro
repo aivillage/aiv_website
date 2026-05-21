@@ -1,0 +1,19 @@
+---
+import { footerNav, socialLinks } from "../data/navigation";
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-nav">
+        {footerNav.map((item) => <a href={item.href}>{item.label}</a>)}
+      </div>
+      <div class="social-links">
+        {socialLinks.map((item) => <a href={item.href} target="_blank" rel="noopener noreferrer">{item.label}</a>)}
+      </div>
+      <p>&copy; {year} AI Village. All rights reserved.</p>
+      <p class="text-mono">Securing AI, one hack at a time.</p>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,18 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import SponsorGrid from "../../components/SponsorGrid.astro";
+
+const sponsors = (await getCollection("sponsors")).filter((sponsor) => sponsor.data.active);
+---
+
+<BaseLayout title="Sponsors" canonical="/sponsors/" description="Current AI Village sponsors from the site sponsor collection.">
+  <h1>Sponsors</h1>
+  <p>
+    This page reflects sponsor information currently present in the AI Village website repository. It avoids publishing sponsorship tiers or benefits that are not yet represented in source content.
+  </p>
+  <SponsorGrid sponsors={sponsors} />
+  <p>
+    For sponsor updates or corrections, contact the AI Village team through the community channels.
+  </p>
+</BaseLayout>

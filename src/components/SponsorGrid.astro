@@ -1,0 +1,17 @@
+---
+import type { SponsorEntry } from "../utils/site";
+import { sponsorPath } from "../utils/site";
+
+const { sponsors } = Astro.props as { sponsors: SponsorEntry[] };
+---
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin: 2rem 0;">
+  {sponsors.map((sponsor) => (
+    <div class="card" style="align-items: center;">
+      <a href={sponsorPath(sponsor)} style="width: 240px; height: 240px; border-radius: 10%; background: #fff; display: flex; align-items: center; justify-content: center; border: 2px solid #00ff00; padding: 20px;">
+        {sponsor.data.logo && <img src={`/assets/images/logos/${sponsor.data.logo}`} alt={`${sponsor.data.name} logo`} />}
+      </a>
+      <h3><a href={sponsorPath(sponsor)}>{sponsor.data.name}</a></h3>
+    </div>
+  ))}
+</div>

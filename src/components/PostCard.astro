@@ -1,0 +1,23 @@
+---
+import type { BlogEntry } from "../utils/site";
+import { canonicalPostPath, excerptFromBody, formatDate } from "../utils/site";
+
+const { post } = Astro.props as { post: BlogEntry };
+const excerpt = post.data.description ?? post.data.excerpt ?? excerptFromBody(post.body ?? "", 30);
+---
+
+<article class="post-item">
+  <h2>
+    <a href={canonicalPostPath(post)}>{post.data.title}</a>
+  </h2>
+  <div class="post-meta">
+    {post.data.author && <span style="color: #00ff00;">{Array.isArray(post.data.author) ? post.data.author.join(", ") : post.data.author}</span>}
+    {post.data.author && post.data.date && " • "}
+    <time datetime={post.data.date.toISOString()}>{formatDate(post.data.date)}</time>
+    {post.data.category && <> • <span style="color: #ffff00;">#{post.data.category}</span></>}
+  </div>
+  <div class="post-excerpt">{excerpt}</div>
+  <div style="margin-top: 1rem;">
+    <a href={canonicalPostPath(post)} style="color: #00ffff;">Read more →</a>
+  </div>
+</article>
