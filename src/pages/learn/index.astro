@@ -1,0 +1,97 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const workshops = [
+  {
+    name: "Email Indirect",
+    href: "https://github.com/aivillage/workshops/tree/main/email-indirect",
+    description: "A challenge to fool an LLM into leaking calendar information.",
+  },
+  {
+    name: "Prompt Extraction",
+    href: "https://github.com/aivillage/workshops/tree/main/prompt-extraction",
+    description: "A challenge to extract a secret hidden in an LLM's system prompt.",
+  },
+  {
+    name: "RAG Poisoning",
+    href: "https://github.com/aivillage/workshops/tree/main/rag-poisoning",
+    description: "A challenge to poison a RAG knowledge base and make an AI assistant spread misinformation.",
+  },
+];
+
+const additionalWorkshopDirectories = [
+  { name: "LLM Embeddings", href: "https://github.com/aivillage/workshops/tree/main/llm-embeddings" },
+  { name: "YOLO L2", href: "https://github.com/aivillage/workshops/tree/main/yolo-l2" },
+];
+---
+
+<BaseLayout title="Learn" canonical="/learn/" description="Hands-on AI security workshop material from AI Village.">
+  <h1>Learn</h1>
+  <p>
+    AIV Learn surfaces the public AI Village workshop material: hands-on labs for people who want to explore AI security by doing, not only by reading.
+  </p>
+  <p>
+    This is not a complete curriculum. It is a clear entry point into the open workshop infrastructure that already exists and can grow into more structured learning paths.
+  </p>
+
+  <div class="card" style="border-left: 4px solid #00ff00;">
+    <h2 style="margin-top: 0;">Workshop Philosophy</h2>
+    <blockquote style="color: #ccc; font-size: 1.2rem; margin: 1rem 0;">
+      "get them excited to learn"
+    </blockquote>
+    <p>
+      AIV's workshop philosophy is not that every participant masters the skill in the room. The goal is to make the topic accessible, spark interest, and give people a path to continue learning.
+    </p>
+    <p style="color: #888; font-size: 0.95rem;">Source: AIV Workshops contributor guidelines.</p>
+  </div>
+
+  <hr />
+
+  <h2>Workshop Material</h2>
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin: 1.5rem 0;">
+    {workshops.map((workshop) => (
+      <article class="card">
+        <h3 style="margin-top: 0;"><a href={workshop.href} target="_blank" rel="noopener noreferrer">{workshop.name}</a></h3>
+        <p>{workshop.description}</p>
+      </article>
+    ))}
+  </div>
+  <p style="color: #888;">
+    Additional workshop directories in the public repository:
+    {additionalWorkshopDirectories.map((workshop, index) => (
+      <>
+        <a href={workshop.href} target="_blank" rel="noopener noreferrer">{workshop.name}</a>{index < additionalWorkshopDirectories.length - 1 ? ", " : "."}
+      </>
+    ))}
+  </p>
+
+  <hr />
+
+  <h2>How Workshops Run</h2>
+  <p>
+    The public workshop repository describes containerized workshops. Each workshop is expected to serve a single website, with per-user pod environments and a Rust deployment/proxy approach. LLM-backed workshops depend on configured LLM service environment variables.
+  </p>
+  <p>
+    The repository also notes practical constraints: workshops should be self-contained, include a `docker-compose.yml`, and fit resource limits.
+  </p>
+
+  <hr />
+
+  <h2>Experience Them</h2>
+  <p>
+    AI Village event pages include talks, demos, and workshops where that information is available in current site content. Start with the <a href="/events/">events archive</a> and join the <a href="/discord/">Discord</a> for community discussion.
+  </p>
+
+  <div class="card" style="border-left: 4px solid #00ffff;">
+    <h2 style="margin-top: 0;">Contribute</h2>
+    <p>
+      Workshop contributions should be self-contained containers connected by `docker-compose.yml` and serving a single website. Review the public workshop repository before proposing new material.
+    </p>
+    <p><a href="https://github.com/aivillage/workshops" target="_blank" rel="noopener noreferrer">Open the AIV workshops repository</a></p>
+  </div>
+
+  <h2>What's Next</h2>
+  <p>
+    The next step is editorial: organize workshop material into clearer learning paths without overstating it as a formal training platform.
+  </p>
+</BaseLayout>

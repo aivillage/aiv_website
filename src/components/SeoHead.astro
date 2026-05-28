@@ -1,0 +1,109 @@
+---
+import { site } from "../data/site";
+
+type Props = {
+  title?: string;
+  description?: string;
+  canonical?: string;
+  image?: string;
+  type?: "website" | "article" | "event";
+  publishedTime?: Date;
+  author?: string;
+  eventDate?: Date;
+  eventLocation?: string;
+  noindex?: boolean;
+};
+
+const {
+  title,
+  description = site.description,
+  canonical = "/",
+  image,
+  type = "website",
+  publishedTime,
+  author,
+  eventDate,
+  eventLocation,
+  noindex = false,
+} = Astro.props;
+
+const defaultImage = "/assets/images/aiv_logo.png";
+const pageTitle = title ? `${title} | ${site.title}` : site.title;
+const canonicalUrl = new URL(canonical, site.url).toString();
+const imageUrl = new URL(image ?? defaultImage, site.url).toString();
+const jsonLd =
+  canonical === "/"
+    ? [
+        {
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: site.title,
+          url: site.url,
+          description,
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          name: site.title,
+          url: site.url,
+          sameAs: site.social,
+        },
+      ]
+    : type === "event"
+      ? {
+          "@context": "https://schema.org",
+          "@type": "Event",
+          name: title ?? site.title,
+          url: canonicalUrl,
+          startDate: eventDate?.toISOString(),
+          description,
+          location: eventLocation ? { "@type": "Place", name: eventLocation } : undefined,
+        }
+      : type === "article"
+        ? {
+            "@context": "https://schema.org",
+            "@type": "BlogPosting",
+            headline: title ?? site.title,
+            description,
+            url: canonicalUrl,
+            mainEntityOfPage: canonicalUrl,
+            datePublished: publishedTime?.toISOString(),
+            author: author ? { "@type": "Person", name: author } : { "@type": "Organization", name: site.title },
+            publisher: { "@type": "Organization", name: site.title, url: site.url },
+            image: imageUrl,
+          }
+      : {
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          name: title ?? site.title,
+          description,
+          url: canonicalUrl,
+          mainEntityOfPage: canonicalUrl,
+        };
+---
+
+<meta charset="utf-8" />
+<meta name="generator" content={Astro.generator} />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{pageTitle}</title>
+<meta name="description" content={description} />
+{noindex && <meta name="robots" content="noindex,follow" />}
+<link rel="icon" href="/public/img/favicon.ico" sizes="any" />
+<link rel="icon" type="image/png" href="/public/img/favicon-32x32.png" sizes="32x32" />
+<link rel="icon" type="image/png" href="/public/img/favicon-16x16.png" sizes="16x16" />
+<link rel="apple-touch-icon" href="/public/img/favicon-32x32.png" />
+<link rel="canonical" href={canonicalUrl} />
+<meta property="og:title" content={title ?? site.title} />
+<meta property="og:locale" content="en_US" />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonicalUrl} />
+<meta property="og:site_name" content={site.title} />
+<meta property="og:type" content={type === "event" ? "website" : type} />
+{imageUrl && <meta property="og:image" content={imageUrl} />}
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:title" content={title ?? site.title} />
+<meta name="twitter:site" content={`@${site.twitter}`} />
+{imageUrl && <meta name="twitter:image" content={imageUrl} />}
+<link type="application/rss+xml" rel="alternate" href={new URL("/feed.xml", site.url).toString()} title={site.title} />
+<script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />

@@ -1,0 +1,27 @@
+---
+import { getCollection, render } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { schedulePath, type ScheduleEntry } from "../utils/site";
+
+export async function getStaticPaths() {
+  const schedules = await getCollection("schedules");
+
+  return [
+    ...schedules
+      .filter((schedule) => !schedulePath(schedule).endsWith(".html"))
+      .map((schedule) => ({ params: { legacyPage: schedulePath(schedule).replace(/^\//, "").replace(/\/$/, "") }, props: { entry: schedule } })),
+  ];
+}
+
+const { entry } = Astro.props as { entry: ScheduleEntry };
+const { Content } = await render(entry);
+const title = entry.data.title;
+const canonical = schedulePath(entry);
+---
+
+<BaseLayout title={title} canonical={canonical}>
+  <article class="post">
+    <header class="post-header"><h1>{title}</h1></header>
+    <div class="post-content"><Content /></div>
+  </article>
+</BaseLayout>

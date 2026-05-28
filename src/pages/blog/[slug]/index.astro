@@ -1,0 +1,35 @@
+---
+import { getCollection, render } from "astro:content";
+import PostLayout from "../../../layouts/PostLayout.astro";
+import { canonicalPostSlug, sortPosts } from "../../../utils/site";
+
+export async function getStaticPaths() {
+  const posts = sortPosts(await getCollection("blog", ({ data }) => !data.draft));
+  const seen = new Map<string, string>();
+
+  return await Promise.all(
+    posts.map(async (post, index) => {
+      const slug = canonicalPostSlug(post);
+      const existing = seen.get(slug);
+      if (existing) {
+        throw new Error(`Blog slug collision for "${slug}": ${existing} and ${post.id}`);
+      }
+      seen.set(slug, post.id);
+      const { Content } = await render(post);
+      return {
+        params: { slug },
+        props: {
+          post,
+          previous: index < posts.length - 1 ? posts[index + 1] : undefined,
+          next: index > 0 ? posts[index - 1] : undefined,
+          Content,
+        },
+      };
+    }),
+  );
+}
+
+const { post, previous, next, Content } = Astro.props;
+---
+
+<PostLayout post={post} previous={previous} next={next} Content={Content} />

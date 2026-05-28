@@ -1,0 +1,19 @@
+---
+import { getCollection, render } from "astro:content";
+import EventLayout from "../../layouts/EventLayout.astro";
+import { canonicalEventSlug, sortEventsAscending } from "../../utils/site";
+
+export async function getStaticPaths() {
+  const events = await getCollection("events");
+  return events.map((event) => ({ params: { slug: canonicalEventSlug(event) }, props: { event } }));
+}
+
+const { event } = Astro.props;
+const events = sortEventsAscending(await getCollection("events"));
+const index = events.findIndex((item) => item.id === event.id);
+const previous = index > 0 ? events[index - 1] : undefined;
+const next = index >= 0 && index < events.length - 1 ? events[index + 1] : undefined;
+const { Content } = await render(event);
+---
+
+<EventLayout event={event} previous={previous} next={next} Content={Content} />

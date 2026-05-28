@@ -1,0 +1,56 @@
+---
+import { getCollection, render } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import VolunteerCard from "../../components/VolunteerCard.astro";
+
+const volunteers = (await getCollection("volunteers")).sort((a, b) => {
+  const orderDiff = a.data.order - b.data.order;
+  return orderDiff === 0 ? a.id.localeCompare(b.id) : orderDiff;
+});
+const rendered = new Map();
+for (const volunteer of volunteers) {
+  rendered.set(volunteer.id, await render(volunteer));
+}
+---
+
+<BaseLayout title="About" canonical="/about/">
+  <h1>About AI Village</h1>
+  <div style="text-align: center; margin: 2rem 0;">
+    <p style="color: #888; font-size: 1.1rem;">
+      AI Village is a community of hackers and data scientists working to educate the world on the use and abuse of artificial intelligence in security and privacy.
+    </p>
+  </div>
+  <hr />
+  <h2>Mission</h2>
+  <p>
+    We aim to bring more diverse viewpoints to AI security, grow a community of hackers, engineers, researchers, and policy makers, and encourage more people with a hacker mindset to assess machine learning systems.
+  </p>
+  <p>
+    The site content reflects that mission through public events, technical posts, hands-on workshop material, and community discussion.
+  </p>
+  <p>
+    Community participation is governed by the <a href="/about/conduct/">AI Village code of conduct</a>.
+  </p>
+  <hr />
+  <h2>Leadership Team</h2>
+  <div class="team-grid" style="display: grid; gap: 2rem;">
+    {volunteers.map((volunteer, index) => {
+      const { Content } = rendered.get(volunteer.id);
+      return (
+        <>
+          <VolunteerCard volunteer={volunteer} Content={Content} />
+          {index < volunteers.length - 1 && <hr style="border: none; border-top: 1px solid #333; margin: 1rem 0;" />}
+        </>
+      );
+    })}
+  </div>
+  <hr />
+  <h2 id="-join-our-team">Join the Work</h2>
+  <div style="background: #1a1a1a; padding: 1.5rem; border-radius: 5px; border-left: 4px solid #ff0000; margin: 2rem 0;">
+    <h4 style="color: #ff0000; margin-top: 0;">Get Involved</h4>
+    <p>AI Village welcomes help from researchers, engineers, educators, organizers, and community builders.</p>
+    <div style="margin-top: 1.5rem;">
+      <a href="https://forms.gle/vCrz3zpR8xHCsTtJ8" target="_blank" rel="noopener noreferrer" style="color: #00ffff; font-weight: bold;">→ Submit a volunteer application</a>
+    </div>
+  </div>
+</BaseLayout>

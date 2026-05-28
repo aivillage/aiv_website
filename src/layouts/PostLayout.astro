@@ -1,0 +1,55 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import type { AstroComponentFactory } from "astro/runtime/server/index.js";
+import type { BlogEntry } from "../utils/site";
+import { canonicalPostPath, excerptFromBody, formatDate, isoDate, truncate } from "../utils/site";
+
+const { post, previous, next, Content } = Astro.props as {
+  post: BlogEntry;
+  previous?: BlogEntry;
+  next?: BlogEntry;
+  Content: AstroComponentFactory;
+};
+const url = canonicalPostPath(post);
+const author = Array.isArray(post.data.author) ? post.data.author.join(", ") : post.data.author;
+const shareUrl = new URL(url, Astro.site ?? "https://aivillage.org").toString();
+const description = post.data.description ?? post.data.excerpt ?? excerptFromBody(post.body ?? "", 30);
+---
+
+<BaseLayout title={post.data.title} description={description} canonical={url} image={post.data.cover} type="article" publishedTime={post.data.date} author={author}>
+  <article class="post">
+    <header class="post-header">
+      <h1>{post.data.title}</h1>
+      <div class="post-meta">
+        {author && <span class="post-author">By {author}</span>}
+        {author && post.data.date && " • "}
+        <time datetime={isoDate(post.data.date)}>{formatDate(post.data.date)}</time>
+        {post.data.category && <> • <span class="post-category">#{post.data.category}</span></>}
+      </div>
+      {post.data.description && <div class="post-description"><p>{post.data.description}</p></div>}
+    </header>
+    {post.data.cover && <div class="post-cover-wrapper" style="display: flex; justify-content: center;"><img src={post.data.cover} alt={post.data.title} class="post-cover" /></div>}
+    <div class="post-content">
+      <Content />
+    </div>
+    <footer class="post-footer">
+      <div class="post-footer-content">
+        <div class="post-navigation">
+          {previous && <a href={canonicalPostPath(previous)} class="nav-link prev-link">← {truncate(previous.data.title, 30)}</a>}
+          {previous && next && <span class="nav-separator">|</span>}
+          {next && <a href={canonicalPostPath(next)} class="nav-link next-link">{truncate(next.data.title, 30)} →</a>}
+        </div>
+        <div class="post-share">
+          <a href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(post.data.title)}&via=aivillage_dc`} target="_blank" class="share-link">Share on Twitter</a>
+        </div>
+      </div>
+      <div class="post-contribute">
+        <p>
+          📝 <strong>Want to contribute?</strong>
+          <a href="https://github.com/aivillage/aiv_website" target="_blank">Submit a pull request</a>
+          or join our <a href="/discord/">Discord</a> to discuss ideas.
+        </p>
+      </div>
+    </footer>
+  </article>
+</BaseLayout>

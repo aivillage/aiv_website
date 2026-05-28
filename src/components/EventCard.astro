@@ -1,0 +1,18 @@
+---
+import type { EventEntry } from "../utils/site";
+import { eventPath } from "../utils/site";
+import DateBadge from "./DateBadge.astro";
+
+const { event } = Astro.props as { event: EventEntry };
+---
+
+<article class="event-item">
+  <DateBadge date={event.data.date} />
+  <div class="event-content">
+    <h3 class="event__item">
+      <a class="event-link" href={eventPath(event)}>{event.data.title}</a>
+    </h3>
+    {event.data.location && <div class="event-location small-muted">{event.data.location}</div>}
+    {event.data.description && <div class="event-description">{event.data.description}</div>}
+  </div>
+</article>

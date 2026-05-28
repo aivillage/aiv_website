@@ -1,0 +1,50 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PostCard from "../../components/PostCard.astro";
+import EventCard from "../../components/EventCard.astro";
+import { sortPosts } from "../../utils/site";
+
+const posts = sortPosts((await getCollection("blog", ({ data }) => !data.draft)).filter((post) => {
+  const category = String(post.data.category ?? "").toLowerCase();
+  const title = post.data.title.toLowerCase();
+  return category.includes("generative") || title.includes("generative red team") || title.includes("grt");
+}));
+const events = (await getCollection("events")).filter((event) => `${event.data.title} ${event.body}`.toLowerCase().includes("generative red team") || `${event.data.title} ${event.body}`.toLowerCase().includes("grt"));
+---
+
+<BaseLayout title="Generative Red Team" canonical="/grt/" description="AI Village Generative Red Team posts, event links, and source-backed program context.">
+  <h1>Generative Red Team</h1>
+  <p>
+    Generative Red Team is AI Village's hands-on work around assessing generative AI systems and the evaluations used to measure them. The current site content frames the work through event announcements, recaps, and technical posts.
+  </p>
+  <p>
+    This page keeps the public claims narrow: it links the existing source material and gives visitors a single place to understand the program context without adding unsupported partner, scale, or outcome claims.
+  </p>
+
+  <div class="card" style="border-left: 4px solid #00ff00;">
+    <h2 style="margin-top: 0;">Program Threads</h2>
+    <ul>
+      <li>GRT history and lessons from the DEF CON 31 recap.</li>
+      <li>GRT2 context from the DEF CON 32 announcement and event page.</li>
+      <li>GRT3 framing around evaluations from the DEF CON 33 announcement.</li>
+    </ul>
+  </div>
+
+  <hr />
+
+  <h2>Read the Source Material</h2>
+  <div class="post-list">{posts.map((post) => <PostCard post={post} />)}</div>
+
+  <hr />
+
+  <h2>Related Events</h2>
+  <div class="events-list">{events.map((event) => <EventCard event={event} />)}</div>
+
+  <div class="card" style="border-left: 4px solid #00ffff; margin-top: 2rem;">
+    <h2 style="margin-top: 0;">Get Involved</h2>
+    <p>
+      For current participation details, use the public event pages and join the <a href="/discord/">AI Village Discord</a>.
+    </p>
+  </div>
+</BaseLayout>

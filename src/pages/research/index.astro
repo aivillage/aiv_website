@@ -1,0 +1,22 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PostCard from "../../components/PostCard.astro";
+import { sortPosts } from "../../utils/site";
+
+const researchPosts = sortPosts((await getCollection("blog", ({ data }) => !data.draft)).filter((post) => {
+  const haystack = `${post.data.title} ${post.data.category ?? ""} ${post.data.description ?? ""}`.toLowerCase();
+  return ["adversarial", "security", "threat", "moat", "browser", "gradient", "generative", "risk"].some((term) => haystack.includes(term));
+}));
+---
+
+<BaseLayout title="Research and Technical Work" canonical="/research/" description="Technical AI security posts and talks from AI Village site content.">
+  <h1>Research and Technical Work</h1>
+  <p>
+    This page indexes technical posts and talks from current AI Village site content. It is intentionally framed as technical work, not a formal publications program.
+  </p>
+  <p>
+    For talks and schedules, start with the <a href="/events/">events archive</a>. For hands-on labs, see <a href="/learn/">Learn</a>.
+  </p>
+  <div class="post-list">{researchPosts.map((post) => <PostCard post={post} />)}</div>
+</BaseLayout>

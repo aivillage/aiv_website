@@ -1,0 +1,10 @@
+---
+import { dateDay, dateMonth } from "../utils/site";
+
+const { date } = Astro.props as { date: Date };
+---
+
+<div class="event-date">
+  <div class="event-month">{dateMonth(date)}</div>
+  <div class="event-day">{dateDay(date)}</div>
+</div>

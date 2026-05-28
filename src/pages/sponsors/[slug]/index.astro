@@ -1,0 +1,28 @@
+---
+import { getCollection, render } from "astro:content";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import { sponsorPath, slugify } from "../../../utils/site";
+
+export async function getStaticPaths() {
+  const sponsors = await getCollection("sponsors");
+  return sponsors.map((sponsor) => ({ params: { slug: slugify(sponsor.data.name || sponsor.id) }, props: { sponsor } }));
+}
+
+const { sponsor } = Astro.props;
+const { Content } = await render(sponsor);
+const hasBody = Boolean(sponsor.body?.trim());
+---
+
+<BaseLayout title={sponsor.data.name} canonical={sponsorPath(sponsor)} description={`${sponsor.data.name} sponsor page for AI Village.`}>
+  <article class="post">
+    <header class="post-header">
+      {sponsor.data.logo && <img src={`/assets/images/logos/${sponsor.data.logo}`} alt={`${sponsor.data.name} logo`} style="max-width: 260px; max-height: 120px; object-fit: contain;" />}
+      <h1>{sponsor.data.name}</h1>
+      {sponsor.data.url && <p><a href={sponsor.data.url} target="_blank" rel="noopener noreferrer">{sponsor.data.url}</a></p>}
+    </header>
+    <div class="post-content">
+      {hasBody && <Content />}
+      <p><a href="/sponsors/">Back to sponsors</a></p>
+    </div>
+  </article>
+</BaseLayout>

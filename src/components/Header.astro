@@ -1,0 +1,44 @@
+---
+import { primaryNav } from "../data/navigation";
+import { site } from "../data/site";
+
+const currentPath = Astro.url.pathname;
+function isActive(url: string) {
+  if (url === "/") return currentPath === "/";
+  return currentPath.startsWith(url);
+}
+---
+
+<header class="site-header">
+  <div class="container">
+    <div class="header-content">
+      <a class="site-title" href="/">{site.title}</a>
+      <nav class="nav-menu" id="nav-menu">
+        {primaryNav.map((item) => <a href={item.href} class:list={[{ active: isActive(item.href) }]}>{item.label}</a>)}
+      </nav>
+      <button class="hamburger" aria-label="Toggle menu" aria-controls="nav-menu" aria-expanded="false" onclick="toggleMenu(this)">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<script is:inline>
+  // Called from the inline onclick attribute above; keeping this global preserves the existing static header behavior.
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  function toggleMenu(hamburger) {
+    const menu = document.getElementById("nav-menu");
+    hamburger.classList.toggle("active");
+    menu.classList.toggle("active");
+    const expanded = hamburger.classList.contains("active");
+    hamburger.setAttribute("aria-expanded", expanded ? "true" : "false");
+    document.body.style.overflow = expanded ? "hidden" : "";
+  }
+
+  const menuItems = document.querySelectorAll(".nav-menu a");
+  menuItems.forEach((item, index) => {
+    item.style.transitionDelay = `${index * 0.1}s`;
+  });
+</script>

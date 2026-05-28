@@ -1,0 +1,63 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import type { AstroComponentFactory } from "astro/runtime/server/index.js";
+import type { EventEntry } from "../utils/site";
+import { eventPath, formatDate, isoDate, truncate } from "../utils/site";
+import { scheduleRoutesForEvent } from "../data/schedules";
+
+const { event, previous, next, Content } = Astro.props as {
+  event: EventEntry;
+  previous?: EventEntry;
+  next?: EventEntry;
+  Content: AstroComponentFactory;
+};
+const url = eventPath(event);
+const shareUrl = new URL(url, Astro.site ?? "https://aivillage.org").toString();
+const scheduleLinks = scheduleRoutesForEvent(event.id);
+---
+
+<BaseLayout title={event.data.title} description={event.data.description} canonical={url} type="event" eventDate={event.data.date} eventLocation={event.data.location}>
+  <article class="event">
+    <header class="event-header" style="margin-bottom: 2rem;">
+      <h1 style="color: #00ff00; margin: 0 0 1rem 0;">{event.data.title}</h1>
+      <div class="event-meta" style="display: flex; flex-wrap: wrap; gap: 2rem; margin: 1rem 0; color: #888; font-family: 'JetBrains Mono', monospace;">
+        <div><strong style="color: #ffff00;">📅 Date:</strong> <time datetime={isoDate(event.data.date)}>{formatDate(event.data.date)}</time></div>
+        {event.data.location && <div><strong style="color: #ffff00;">📍 Location:</strong> {event.data.location}</div>}
+      </div>
+      {event.data.description && <div class="event-description" style="background: #1a1a1a; padding: 1rem; border-left: 4px solid #ff0000; border-radius: 0 5px 5px 0; margin: 1rem 0;"><p style="margin: 0; color: #ccc; font-size: 1.1rem;">{event.data.description}</p></div>}
+    </header>
+    <div class="event-content" style="line-height: 1.7;">
+      <Content />
+    </div>
+    {scheduleLinks.length > 0 && (
+      <section class="card" style="margin-top: 2rem;">
+        <h2 style="margin-top: 0;">Schedules and Talks</h2>
+        <ul>
+          {scheduleLinks.map((link) => <li><a href={link.path}>{link.label}</a></li>)}
+        </ul>
+      </section>
+    )}
+    <footer class="event-footer" style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid #333;">
+      <div style="text-align: center; margin: 2rem 0; padding: 1.5rem; background: #1a1a1a; border-radius: 5px;">
+        <p style="margin: 0 0 1rem 0; color: #00ff00; font-weight: bold;">🎪 Interested in attending or presenting at AI Village events?</p>
+        <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+          <a href="/discord/" style="color: #00ffff;">Join our Discord</a>
+          <span style="color: #666;">•</span>
+          <a href="https://forms.gle/vCrz3zpR8xHCsTtJ8" target="_blank" style="color: #00ffff;">Volunteer Application</a>
+          <span style="color: #666;">•</span>
+          <a href="/events/" style="color: #00ffff;">All Events</a>
+        </div>
+      </div>
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-top: 2rem;">
+        <div class="event-navigation">
+          {previous && <a href={eventPath(previous)} style="color: #00ffff;">← {truncate(previous.data.title, 30)}</a>}
+          {previous && next && <span style="color: #666; margin: 0 1rem;">|</span>}
+          {next && <a href={eventPath(next)} style="color: #00ffff;">{truncate(next.data.title, 30)} →</a>}
+        </div>
+        <div class="event-share">
+          <a href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(event.data.title)}&via=aivillage_dc`} target="_blank" style="color: #1DA1F2; margin: 0 0.5rem;">Share Event</a>
+        </div>
+      </div>
+    </footer>
+  </article>
+</BaseLayout>
