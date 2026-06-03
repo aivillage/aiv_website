@@ -54,14 +54,34 @@ const volunteers = defineCollection({
 
 const sponsors = defineCollection({
   loader: glob({ pattern: "**/*.{md,mdx,markdown}", base: "./src/content/sponsors" }),
-  schema: z.object({
-    name: z.string(),
-    logo: z.string().optional(),
-    url: z.url().optional(),
-    tier: z.string().optional(),
-    description: z.union([z.string(), z.boolean()]).optional(),
-    active: z.boolean().default(true),
-  }),
+  schema: z
+    .object({
+      name: z.string(),
+      status: z.enum(["current", "past"]),
+      logo: z.string().optional(),
+      url: z.url().optional(),
+      tier: z.string().optional(),
+      description: z.union([z.string(), z.boolean()]).optional(),
+    })
+    .superRefine((data, ctx) => {
+      if (data.status !== "current") return;
+
+      if (!data.logo) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["logo"],
+          message: "Current sponsors must include a logo.",
+        });
+      }
+
+      if (!data.url) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["url"],
+          message: "Current sponsors must include a URL.",
+        });
+      }
+    }),
 });
 
 const schedules = defineCollection({

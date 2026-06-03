@@ -3,11 +3,11 @@ import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import DateBadge from "../components/DateBadge.astro";
 import SponsorGrid from "../components/SponsorGrid.astro";
-import { canonicalPostPath, eventPath, excerptFromBody, formatShortDate, sortEventsAscending, sortPosts } from "../utils/site";
+import { canonicalPostPath, eventPath, excerptFromBody, formatShortDate, getCurrentSponsors, sortEventsAscending, sortPosts } from "../utils/site";
 
 const events = sortEventsAscending(await getCollection("events"));
 const posts = sortPosts(await getCollection("blog", ({ data }) => !data.draft));
-const sponsors = (await getCollection("sponsors")).filter((sponsor) => sponsor.data.active);
+const currentSponsors = getCurrentSponsors(await getCollection("sponsors"));
 const now = new Date();
 const upcomingEvent = events.find((event) => event.data.date.getTime() >= now.getTime());
 const latestPost = posts[0];
@@ -85,6 +85,34 @@ const latestPost = posts[0];
       <p>Building bridges between hackers, data scientists, researchers, and policy makers.</p>
     </div>
   </div>
+
+  {currentSponsors.length > 0 ? (
+    <>
+      <hr />
+
+      <section aria-labelledby="current-sponsors">
+        <h2 id="current-sponsors">CURRENT SPONSORS</h2>
+        <p>
+          Our Current Sponsors are the companies that actively contribute to the mission of AI Village. Learn how to join our community and see past sponsors here:
+          {" "}
+          <a href="/sponsors/">Sponsors</a>
+        </p>
+        <SponsorGrid sponsors={currentSponsors} linkMode="external" compact />
+      </section>
+    </>
+  ) : (
+    <>
+      <hr />
+
+      <section aria-labelledby="support-ai-village">
+        <h2 id="support-ai-village">SUPPORT AI VILLAGE</h2>
+        <p>
+          AI Village is supported by volunteers, researchers, builders, and organizations that contribute to AI security education and research.
+        </p>
+        <p><a href="/sponsors/" style="color: #00ffff;">Sponsor AI Village →</a></p>
+      </section>
+    </>
+  )}
 
   <hr />
 

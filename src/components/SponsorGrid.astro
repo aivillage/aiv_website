@@ -2,16 +2,51 @@
 import type { SponsorEntry } from "../utils/site";
 import { sponsorPath } from "../utils/site";
 
-const { sponsors } = Astro.props as { sponsors: SponsorEntry[] };
+type LinkMode = "external" | "detail" | "none";
+
+const { sponsors, linkMode = "external", compact = false } = Astro.props as {
+  sponsors: SponsorEntry[];
+  linkMode?: LinkMode;
+  compact?: boolean;
+};
+
+const gridStyle = compact
+  ? "display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin: 1.5rem 0;"
+  : "display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin: 2rem 0;";
+const cardStyle = compact ? "align-items: center; padding: 1rem;" : "align-items: center;";
+const logoBoxStyle = compact
+  ? "width: 150px; height: 100px; border-radius: 5px; background: #fff; display: flex; align-items: center; justify-content: center; border: 1px solid #00ff00; padding: 16px;"
+  : "width: 240px; height: 240px; border-radius: 10%; background: #fff; display: flex; align-items: center; justify-content: center; border: 2px solid #00ff00; padding: 20px;";
+const logoStyle = compact ? "max-width: 120px; max-height: 70px; object-fit: contain;" : "max-width: 200px; max-height: 200px; object-fit: contain;";
+const nameStyle = compact ? "font-size: 1rem; margin: 0.75rem 0 0;" : undefined;
 ---
 
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin: 2rem 0;">
-  {sponsors.map((sponsor) => (
-    <div class="card" style="align-items: center;">
-      <a href={sponsorPath(sponsor)} style="width: 240px; height: 240px; border-radius: 10%; background: #fff; display: flex; align-items: center; justify-content: center; border: 2px solid #00ff00; padding: 20px;">
-        {sponsor.data.logo && <img src={`/assets/images/logos/${sponsor.data.logo}`} alt={`${sponsor.data.name} logo`} />}
-      </a>
-      <h3><a href={sponsorPath(sponsor)}>{sponsor.data.name}</a></h3>
-    </div>
-  ))}
+<div style={gridStyle}>
+  {sponsors.map((sponsor) => {
+    const href = linkMode === "detail" ? sponsorPath(sponsor) : linkMode === "external" ? sponsor.data.url : undefined;
+    const target = linkMode === "external" && href ? "_blank" : undefined;
+    const rel = linkMode === "external" && href ? "noopener noreferrer" : undefined;
+    const logoContent = sponsor.data.logo ? (
+      <img src={`/assets/images/logos/${sponsor.data.logo}`} alt={`${sponsor.data.name} logo`} style={logoStyle} />
+    ) : (
+      <span>{sponsor.data.name}</span>
+    );
+
+    return (
+      <div class="card" style={cardStyle}>
+        {href ? (
+          <a href={href} target={target} rel={rel} style={logoBoxStyle}>
+            {logoContent}
+          </a>
+        ) : (
+          <div style={logoBoxStyle}>
+            {logoContent}
+          </div>
+        )}
+        <h3 style={nameStyle}>
+          {href ? <a href={href} target={target} rel={rel}>{sponsor.data.name}</a> : sponsor.data.name}
+        </h3>
+      </div>
+    );
+  })}
 </div>
