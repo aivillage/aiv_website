@@ -97,6 +97,18 @@ export function sponsorPath(sponsor: SponsorEntry) {
   return `/sponsors/${slugify(sponsor.data.name || stripDatePrefix(sponsor.id))}/`;
 }
 
+function sortSponsorsByName(sponsors: SponsorEntry[]) {
+  return [...sponsors].sort((a, b) => a.data.name.localeCompare(b.data.name));
+}
+
+export function getCurrentSponsors(sponsors: SponsorEntry[]) {
+  return sortSponsorsByName(sponsors.filter((sponsor) => sponsor.data.status === "current"));
+}
+
+export function getPastSponsors(sponsors: SponsorEntry[]) {
+  return sortSponsorsByName(sponsors.filter((sponsor) => sponsor.data.status === "past"));
+}
+
 export function schedulePath(schedule: ScheduleEntry) {
   const id = schedule.id.replace(/\.(md|mdx|markdown)$/i, "");
   const route = scheduleRouteForId(id);

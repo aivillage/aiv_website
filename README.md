@@ -61,7 +61,7 @@ Add volunteer profiles to `src/content/volunteers/` with `first_name`, `last_nam
 
 ### Sponsors
 
-Add sponsors to `src/content/sponsors/` with `name`, optional `logo`, `url`, `tier`, `description`, and `active`. Active sponsors appear at `/sponsors/`; each sponsor also gets a detail page at `/sponsors/<slug>/`.
+Add sponsors to `src/content/sponsors/` with `name`, required `status` (`current` or `past`), and optional `logo`, `url`, `tier`, and `description`. Current sponsors appear on the homepage and `/sponsors/`; past sponsors appear in the past sponsors section. Each sponsor also gets a detail page at `/sponsors/<slug>/`.
 
 ### Workshops
 

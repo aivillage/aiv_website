@@ -29,7 +29,9 @@ function loc(path: string) {
 export async function GET() {
   const events = sortEventsAscending(await getCollection("events"));
   const posts = [...(await getCollection("blog", ({ data }) => !data.draft))].sort((a, b) => a.data.date.getTime() - b.data.date.getTime());
-  const sponsors = (await getCollection("sponsors")).filter((sponsor) => sponsor.data.active);
+  const sponsors = (await getCollection("sponsors")).filter(
+    (sponsor) => sponsor.data.status === "current" || sponsor.data.status === "past",
+  );
   const schedules = await getCollection("schedules");
 
   const urls = Array.from(new Set([
