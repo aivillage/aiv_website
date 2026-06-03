@@ -2,39 +2,63 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 ---
 
-<BaseLayout title="Community" canonical="/community/" description="Ways to participate in the AI Village community.">
+<BaseLayout
+  title="Community"
+  canonical="/community/"
+  description="How to participate in, contribute to, and sponsor the AI Village community."
+>
   <h1>Community</h1>
   <p>
-    AI Village is organized around events, technical writing, hands-on workshops, and discussion among people interested in AI security and privacy.
+    AI Village is a community of hackers, researchers, and data scientists working to educate the world on the use and abuse of artificial intelligence in security and privacy. The community runs on events, technical writing, hands-on workshops, open discussion, and the organizations and people who support that work.
+  </p>
+  <p>
+    This page covers the ways to take part: participate in programs, contribute your work, or sponsor AI Village. New here? The <a href="/discord/">Discord</a> is the fastest way to reach the organizing team.
   </p>
 
-  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin: 1.5rem 0;">
-    <article class="card">
-      <h2 style="margin-top: 0;">Discuss</h2>
-      <p>Join the Discord for community discussion and event updates.</p>
-      <p><a href="/discord/">Discord onboarding</a></p>
-    </article>
-    <article class="card">
-      <h2 style="margin-top: 0;">Attend</h2>
-      <p>Review upcoming and past AI Village events, including available schedules and talks.</p>
-      <p><a href="/events/">Events archive</a></p>
-    </article>
-    <article class="card">
-      <h2 style="margin-top: 0;">Contribute</h2>
-      <p>Share site content, workshop material, or event support through the public contribution paths.</p>
-      <p><a href="https://github.com/aivillage/aiv_website" target="_blank" rel="noopener noreferrer">Website repository</a></p>
-    </article>
-  </div>
-
-  <div class="card" style="border-left: 4px solid #ff0000;">
-    <h2 style="margin-top: 0;">Before Participating</h2>
-    <p>Read the <a href="/about/conduct/">code of conduct</a> and help keep AI Village welcoming for participants, speakers, sponsors, and volunteers.</p>
-  </div>
-
-  <section aria-labelledby="community-support" style="margin-top: 1.5rem;">
-    <h2 id="community-support">Community Support</h2>
+  <section aria-labelledby="ways-to-contribute" style="margin-top: 2rem;">
+    <h2 id="ways-to-contribute">Ways to Get Involved</h2>
     <p>
-      AI Village is supported by current and past sponsors, volunteers, researchers, builders, and community partners. Current and past sponsor information is available on the <a href="/sponsors/">Sponsors page</a>.
+      There is no membership form. People become part of the AI Village ecosystem by showing up and contributing. Pick whichever fits.
     </p>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin: 1.5rem 0;">
+      <article class="card">
+        <h3 style="margin-top: 0;">Participate</h3>
+        <p>Join talks, hands-on events, and the Generative Red Team challenges at DEF CON and beyond.</p>
+        <p><a href="/events/">Events</a> · <a href="/grt/">Generative Red Team</a></p>
+      </article>
+      <article class="card">
+        <h3 style="margin-top: 0;">Discuss</h3>
+        <p>Trade ideas, ask questions, and keep up with announcements in the community Discord.</p>
+        <p><a href="/discord/">Discord onboarding</a></p>
+      </article>
+      <article class="card">
+        <h3 style="margin-top: 0;">Share Research</h3>
+        <p>Publish AI security and privacy work on the blog, or propose a talk or demo for an upcoming event.</p>
+        <p><a href="/blog/">Blog</a> · <a href="/research/">Research</a></p>
+      </article>
+      <article class="card">
+        <h3 style="margin-top: 0;">Build Workshops</h3>
+        <p>Contribute hands-on learning material that teaches people to test and secure AI systems.</p>
+        <p><a href="/learn/">Learn</a></p>
+      </article>
+      <article class="card">
+        <h3 style="margin-top: 0;">Improve the Site</h3>
+        <p>Fix content, add events, or ship features through the public website repository.</p>
+        <p><a href="https://github.com/aivillage/aiv_website" target="_blank" rel="noopener noreferrer">Website repository</a></p>
+      </article>
+      <article class="card">
+        <h3 style="margin-top: 0;">Sponsor</h3>
+        <p>Fund the programs that keep AI Village free and open for the community.</p>
+        <p><a href="/sponsors/#become-a-sponsor">Sponsor AI Village</a></p>
+      </article>
+    </div>
   </section>
+
+  <div class="card" style="border-left: 4px solid #ff0000; margin-top: 2.5rem;">
+    <h2 style="margin-top: 0;">Before Participating</h2>
+    <p style="margin-bottom: 0;">
+      Read the <a href="/about/conduct/">code of conduct</a> and help keep AI Village welcoming for participants, speakers, sponsors, and volunteers.
+    </p>
+  </div>
 </BaseLayout>
