@@ -24,6 +24,7 @@ export const staticRedirectGroups: RedirectGroup[] = [
       { from: "/events/defcon30/", to: "/events/defcon-30/" },
       { from: "/events/defcon32/", to: "/events/defcon-32/" },
       { from: "/events/defcon33/", to: "/events/defcon-33/" },
+      { from: "/events/defcon34/", to: "/events/defcon-34/" },
     ],
   },
   {

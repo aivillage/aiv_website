@@ -82,6 +82,7 @@ const eventSlugOverrides: Record<string, string> = {
   defcon30: "defcon-30",
   defcon32: "defcon-32",
   defcon33: "defcon-33",
+  defcon34: "defcon-34",
 };
 
 export function canonicalEventSlug(event: EventEntry) {
