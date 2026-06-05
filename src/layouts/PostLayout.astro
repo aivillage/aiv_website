@@ -3,7 +3,6 @@ import BaseLayout from "./BaseLayout.astro";
 import type { AstroComponentFactory } from "astro/runtime/server/index.js";
 import type { BlogEntry } from "../utils/site";
 import { canonicalPostPath, excerptFromBody, formatDate, isoDate, truncate } from "../utils/site";
-
 const { post, previous, next, Content } = Astro.props as {
   post: BlogEntry;
   previous?: BlogEntry;
@@ -15,7 +14,6 @@ const author = Array.isArray(post.data.author) ? post.data.author.join(", ") : p
 const shareUrl = new URL(url, Astro.site ?? "https://aivillage.org").toString();
 const description = post.data.description ?? post.data.excerpt ?? excerptFromBody(post.body ?? "", 30);
 ---
-
 <BaseLayout title={post.data.title} description={description} canonical={url} image={post.data.cover} type="article" publishedTime={post.data.date} author={author}>
   <article class="post">
     <header class="post-header">
@@ -52,4 +50,18 @@ const description = post.data.description ?? post.data.excerpt ?? excerptFromBod
       </div>
     </footer>
   </article>
+
+  {post.data.mermaid && (
+    <script type="module">
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+      mermaid.initialize({ startOnLoad: false, theme: 'dark' });
+      document.querySelectorAll('code.language-mermaid').forEach(el => {
+        const div = document.createElement('div');
+        div.className = 'mermaid';
+        div.textContent = el.textContent;
+        el.parentElement.replaceWith(div);
+      });
+      mermaid.run();
+    </script>
+  )}
 </BaseLayout>
