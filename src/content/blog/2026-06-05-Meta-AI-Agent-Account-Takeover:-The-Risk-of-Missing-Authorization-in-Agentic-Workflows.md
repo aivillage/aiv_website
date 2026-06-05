@@ -18,11 +18,11 @@ mermaid: true
 
 # Introduction
 
-AI agents are increasingly being connected to sensitive account-management workflows such as password resets, email changes, recovery flows, and support automation. That creates a new problem. The[...]
+AI agents are increasingly being connected to sensitive account-management workflows such as password resets, email changes, recovery flows, and support automation. That creates a new problem. The issue is not only whether the LLM can be tricked. The bigger issue is what the agent is allowed to do after it understands the user’s request.
 
 If an AI agent can call privileged tools without enforcing account ownership, step-up verification, and policy checks, a normal support interaction can become an account takeover path.
 
-This blog uses a simplified support agent to explain the risk. The vulnerability is not the LLM itself, but the missing authorization boundary between the user, the agent, and the privileged tool. The[...]
+This blog uses a simplified support agent to explain the risk. The vulnerability is not the LLM itself, but the missing authorization boundary between the user, the agent, and the privileged tool. The original draft described this as a missing authorization issue in agent workflows, especially around email-change and password-reset actions.
 
 ## **How the vulnerable agent looks**
 
@@ -49,12 +49,11 @@ def ai_support_chat(message: str) -> str:
     return "I can help with account recovery. What do you need?"
 ```
 
-This is simplified pseudocode, but the pattern is real. The agent understands the request, extracts parameters, and calls a privileged function. The dangerous part is that the tool performs the action[...]
+This is simplified pseudocode, but the pattern is real. The agent understands the request, extracts parameters, and calls a privileged function. The dangerous part is that the tool performs the action without verifying whether the current user is authorized to modify the target account.
 
 The issue is not that the agent can understand:
 
 > Change the email for @target_user to attacker@example.com
-> 
 
 The backend tool accepts that request and performs the mutation without checking ownership.
 
@@ -88,9 +87,9 @@ This is a classic broken access control issue, but agentic workflows make it eas
 
 ## **Designs I have seen while testing agentic workflows**
 
-While assessing agents and testing agentic workflows, I have seen different designs used to control privileged actions. Some designs place the authorization logic inside the tool itself. Others use a [...]
+While assessing agents and testing agentic workflows, I have seen different designs used to control privileged actions. Some designs place the authorization logic inside the tool itself. Others use a separate verification flow, and some route all tool calls through a policy layer before execution.
 
-There is no single perfect design that works for every product. The important point is that the agent should never have a direct path from understanding a user request to executing a privileged action[...]
+There is no single perfect design that works for every product. The important point is that the agent should never have a direct path from understanding a user request to executing a privileged action.
 
 Below are three designs I have seen or used when evaluating how agentic systems handle sensitive actions.
 
@@ -133,11 +132,11 @@ This reduces the agent's authority. The agent is no longer able to directly muta
 
 This design prevents the agent from directly changing the account email, but the verification flow itself can still become an abuse surface.
 
-If the agent can initiate recovery or verification flows for any username, an attacker may repeatedly trigger verification emails for a victim account. This does not directly give the attacker access,[...]
+If the agent can initiate recovery or verification flows for any username, an attacker may repeatedly trigger verification emails for a victim account. This does not directly give the attacker access, but it can still create user harassment, notification fatigue, and support noise.
 
 It can also create a phishing opportunity. For example, an attacker may flood the victim with legitimate verification emails, then follow up with a fake message pretending to be support.
 
-A safer implementation should not allow the agent to trigger verification flows freely. The system should verify that the requester is allowed to initiate the flow, apply rate limits, collapse duplica[...]
+A safer implementation should not allow the agent to trigger verification flows freely. The system should verify that the requester is allowed to initiate the flow, apply rate limits, collapse duplicate requests into one active verification, and avoid leaking whether the target account exists.
 
 ### **Second design: Privileged tools require verification**
 
@@ -184,7 +183,7 @@ sequenceDiagram
     Note over AI: Agent never sees auth_token
 ```
 
-This design is better than allowing the agent to execute privileged actions directly. The tool becomes responsible for enforcing the security boundary. Even if the agent is manipulated, the tool will [...]
+This design is better than allowing the agent to execute privileged actions directly. The tool becomes responsible for enforcing the security boundary. Even if the agent is manipulated, the tool will not complete the action without verification.
 
 #### How this design can still be abused
 
@@ -192,11 +191,11 @@ This design prevents direct account takeover because the email is not changed wi
 
 However, it can still be abused if there are no controls around how verification requests are created.
 
-An attacker could repeatedly trigger the `change_email` flow for a victim account, causing the platform to send many verification emails to the legitimate account owner. The attacker still cannot comp[...]
+An attacker could repeatedly trigger the `change_email` flow for a victim account, causing the platform to send many verification emails to the legitimate account owner. The attacker still cannot complete the email change, but the victim is now receiving repeated security messages.
 
 ### **Third design: A policy layer sits between the agent and tools**
 
-In this approach, the agent does not call privileged tools directly. Instead, all tool calls go through a policy layer. This is the approach I prefer because it creates a cleaner AI workflow instead o[...]
+In this approach, the agent does not call privileged tools directly. Instead, all tool calls go through a policy layer. This is the approach I prefer because it creates a cleaner AI workflow instead of stitching security checks randomly across the system.
 
 ```python
 # Policy engine sits between agent and tools
