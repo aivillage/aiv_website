@@ -52,7 +52,7 @@ const description = post.data.description ?? post.data.excerpt ?? excerptFromBod
   </article>
 
   {post.data.mermaid && (
-    <script type="module">
+    <script type="module" is:inline>
       import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
       mermaid.initialize({ startOnLoad: false, theme: 'dark' });
       document.querySelectorAll('code.language-mermaid').forEach(el => {
