@@ -9,16 +9,44 @@ const currentSponsors = getCurrentSponsors(sponsors);
 const pastSponsors = getPastSponsors(sponsors);
 ---
 
-<BaseLayout title="Sponsors" canonical="/sponsors/" description="Current and past AI Village sponsors from the site sponsor collection.">
+<BaseLayout title="Sponsors" canonical="/sponsors/" description="Why and how to sponsor AI Village, plus current and past sponsors.">
   <h1>Sponsors</h1>
   <p>
     AI Village acknowledges organizations that currently support, or have previously supported, the community's AI security education and research mission.
   </p>
-  <p>
-    Interested in supporting AI Village? Start with the <a href="/community/">community page</a> to connect with the organizing team.
-  </p>
 
-  <section aria-labelledby="current-sponsors">
+  <section aria-labelledby="become-a-sponsor" style="margin-top: 2rem;">
+    <h2 id="become-a-sponsor">Sponsor AI Village</h2>
+    <p>
+      AI Village runs as a community effort. Sponsorship covers the cost of the programs the community relies on and keeps them open to everyone. If your organization works on AI, security, or privacy, sponsoring is a direct way to support that mission and reach the people building and breaking these systems.
+    </p>
+
+    <h3>What your sponsorship supports</h3>
+    <p>Sponsor funding goes toward the work AI Village is known for, including:</p>
+    <ul>
+      <li>The <a href="/grt/">Generative Red Team</a> and other hands-on AI security challenges.</li>
+      <li>Hands-on <a href="/learn/">workshops</a> and learning material.</li>
+      <li>AI Village <a href="/events/">events</a> at DEF CON and other conferences.</li>
+      <li>Ongoing <a href="/research/">research</a> and community programming.</li>
+    </ul>
+
+    <h3>What sponsors receive</h3>
+    <p>
+      Current sponsors are recognized across the site: featured on the AI Village homepage and listed here on the Sponsors page, each with a dedicated sponsor page describing the organization. Sponsors are acknowledged as part of the community that makes this work possible.
+    </p>
+
+    <div class="card" style="margin-top: 1.5rem;">
+      <h3 style="margin-top: 0;">Become a Sponsor</h3>
+      <p>
+        Sponsorship levels and details are arranged directly with the organizing team. To start a conversation, reach out on Discord or through the AI Village GitHub organization, and the team will follow up with current options.
+      </p>
+      <p style="margin-bottom: 0;">
+        <a class="btn" href="/discord/">Reach the team on Discord</a>
+      </p>
+    </div>
+  </section>
+
+  <section aria-labelledby="current-sponsors" style="margin-top: 2.5rem;">
     <h2 id="current-sponsors">Current Sponsors</h2>
     {currentSponsors.length > 0 ? (
       <SponsorGrid sponsors={currentSponsors} linkMode="external" />
