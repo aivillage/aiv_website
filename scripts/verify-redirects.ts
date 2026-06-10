@@ -3,16 +3,24 @@ import { join, relative } from "node:path";
 
 const root = process.cwd();
 const dist = join(root, "dist");
-const redirectsFile = existsSync(join(dist, "_redirects")) ? join(dist, "_redirects") : join(root, "public/_redirects");
+const redirectsFile = join(root, "public/_redirects");
 const redirects = new Map<string, string>();
 
 for (const line of readFileSync(redirectsFile, "utf8").split("\n")) {
   const trimmed = line.trim();
   if (!trimmed || trimmed.startsWith("#")) continue;
-  const [from, to, status] = trimmed.split(/\s+/);
+  const [from, to, status, extra] = trimmed.split(/\s+/);
+  if (!from?.startsWith("/")) throw new Error(`Redirect source must be a root-relative path: ${trimmed}`);
+  if (!to?.startsWith("/")) throw new Error(`Redirect destination must be a root-relative path: ${trimmed}`);
   if (status !== "301") throw new Error(`Redirect ${from} must use 301 status`);
+  if (extra) throw new Error(`Redirect ${from} has unexpected extra fields`);
   if (from === to) throw new Error(`Redirect ${from} points to itself`);
+  if (redirects.has(from)) throw new Error(`Duplicate redirect source: ${from}`);
   redirects.set(from, to);
+}
+
+if (!existsSync(dist)) {
+  throw new Error("dist/ does not exist. Run `pnpm build` before verifying redirect destinations.");
 }
 
 function walk(dir: string, out: string[] = []) {
@@ -52,4 +60,4 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log(`Redirect verification passed for ${redirects.size} redirects.`);
+console.log(`Redirect verification passed for ${redirects.size} redirects from public/_redirects.`);

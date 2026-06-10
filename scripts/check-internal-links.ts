@@ -1,15 +1,16 @@
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join, relative } from "node:path";
 
-const patterns = [
-  /(?<![:/])\/[^"'\s)]+\/\d{4}\/\d{2}\/\d{2}\/[^"'\s)]+\.html/g,
-  /\/leadership\/?/g,
-  /\/leadership_team\/?/g,
-  /(?<!\/about)\/conduct\/?/g,
-  /\/events\/defcon33\/?/g,
-  /\/events\/2024_talks\/?/g,
-  /\/events\/DEFCON-China-1\/?/g,
-];
+const root = process.cwd();
+
+function redirectSources() {
+  return readFileSync(join(root, "public/_redirects"), "utf8")
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => line && !line.startsWith("#"))
+    .map((line) => line.split(/\s+/)[0])
+    .sort((a, b) => b.length - a.length);
+}
 
 function walk(dir: string, out: string[] = []) {
   for (const name of readdirSync(dir)) {
@@ -26,16 +27,26 @@ function stripFrontmatter(text: string) {
   return end === -1 ? text : `${"\n".repeat(text.slice(0, end + 4).split("\n").length - 1)}${text.slice(end + 4)}`;
 }
 
+function escapeRegExp(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function sourcePattern(source: string) {
+  return new RegExp(`(?<![A-Za-z0-9._~%-])${escapeRegExp(source)}(?![A-Za-z0-9._~%-])`, "g");
+}
+
 const failures: string[] = [];
-for (const file of walk(join(process.cwd(), "src"))) {
-  if (file.endsWith("src/data/redirects.ts")) continue;
+const sources = redirectSources();
+const patterns = sources.map((source) => ({ source, pattern: sourcePattern(source) }));
+
+for (const file of walk(join(root, "src"))) {
   const text = /\.(md|mdx)$/.test(file) ? stripFrontmatter(readFileSync(file, "utf8")) : readFileSync(file, "utf8");
   const lines = text.split("\n");
   lines.forEach((line, index) => {
-    for (const pattern of patterns) {
+    for (const { source, pattern } of patterns) {
       pattern.lastIndex = 0;
-      for (const match of line.matchAll(pattern)) {
-        failures.push(`${relative(process.cwd(), file)}:${index + 1}: ${match[0]}`);
+      if (pattern.test(line)) {
+        failures.push(`${relative(root, file)}:${index + 1}: ${source}`);
       }
     }
   });
