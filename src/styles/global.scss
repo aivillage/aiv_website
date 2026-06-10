@@ -1,62 +1,112 @@
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Inter:wght@300;400;500;600;700&display=swap');
 
 /* ===================================
-   VAPORWAVE PROFESSIONAL VARIABLES
+   DESIGN TOKENS
    =================================== */
 
 :root {
-  /* Vaporwave Professional Palette */
-  --bg-primary: #0a0014;
-  --bg-secondary: #1a0029;
-  --bg-tertiary: #2a0040;
-  --bg-glass: rgba(138, 43, 226, 0.1);
+  color-scheme: dark;
 
-  /* Neon accents */
-  --neon-cyan: #00ffff;
-  --neon-magenta: #ff00ff;
-  --neon-purple: #8a2be2;
-  --neon-pink: #ff1493;
-  --neon-blue: #4169e1;
+  --aiv-bg-canvas: #0a0014;
+  --aiv-bg-surface: #1a0029;
+  --aiv-bg-panel: #2a0040;
+  --aiv-bg-raised: #2a0040;
+  --aiv-line-subtle: rgba(138, 43, 226, 0.4);
+  --aiv-line-strong: rgba(0, 255, 255, 0.6);
+  --aiv-grid-color: rgba(0, 255, 255, 0.2);
 
-  /* Professional text colors */
-  --text-primary: #ffffff;
-  --text-secondary: #e6e6fa;
-  --text-accent: #00ffff;
-  --text-muted: #b19cd9;
+  --aiv-text-primary: #ffffff;
+  --aiv-text-secondary: #e6e6fa;
+  --aiv-text-muted: #b19cd9;
 
-  /* Grid and borders */
-  --grid-color: rgba(0, 255, 255, 0.2);
-  --border-primary: rgba(138, 43, 226, 0.4);
-  --border-accent: rgba(0, 255, 255, 0.6);
+  --aiv-action-primary: #00ffff;
+  --aiv-action-secondary: #ff00ff;
+  --aiv-warning: #ffff00;
+  --aiv-risk: #ff0000;
 
-  /* Fonts */
-  --font-mono: 'JetBrains Mono', monospace;
-  --font-sans: 'Inter', sans-serif;
+  --aiv-decoration-violet: #8a2be2;
+
+  --aiv-legacy-cyan: #00ffff;
+  --aiv-legacy-magenta: #ff00ff;
+  --aiv-legacy-green: #00ff00;
+  --aiv-legacy-yellow: #ffff00;
+  --aiv-legacy-red: #ff0000;
+  --aiv-legacy-charcoal: #1a1a1a;
+  --aiv-legacy-divider: #333333;
+  --aiv-legacy-bootstrap-muted: #6c757d;
+  --aiv-legacy-gray: #888888;
+  --aiv-legacy-dim: #666666;
+  --aiv-legacy-light-text: #cccccc;
+  --aiv-legacy-glass: rgba(138, 43, 226, 0.1);
+
+  --aiv-font-body: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --aiv-font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
 }
 
-// SCSS Variables for easier use
-$bg-primary: #0a0014;
-$bg-secondary: #1a0029;
-$bg-tertiary: #2a0040;
-$bg-glass: rgba(138, 43, 226, 0.1);
+.theme-institutional-next {
+  color-scheme: dark;
 
-$neon-cyan: #00ffff;
-$neon-magenta: #ff00ff;
-$neon-purple: #8a2be2;
-$neon-pink: #ff1493;
-$neon-blue: #4169e1;
+  --aiv-bg-canvas: #0B0D0E;
+  --aiv-bg-surface: #11161A;
+  --aiv-bg-panel: #182027;
+  --aiv-bg-raised: #202A32;
+  --aiv-line-subtle: #2A343D;
+  --aiv-line-strong: #3A4652;
+  --aiv-grid-color: rgba(155, 200, 165, 0.14);
 
-$text-primary: #ffffff;
-$text-secondary: #e6e6fa;
-$text-accent: #00ffff;
-$text-muted: #b19cd9;
+  --aiv-text-primary: #F4F1E8;
+  --aiv-text-secondary: #C7D0D9;
+  --aiv-text-muted: #8A96A3;
 
-$grid-color: rgba(0, 255, 255, 0.2);
-$border-primary: rgba(138, 43, 226, 0.4);
-$border-accent: rgba(0, 255, 255, 0.6);
+  --aiv-action-primary: #9BC8A5;
+  --aiv-action-secondary: #6EA8D9;
+  --aiv-warning: #D99A2B;
+  --aiv-risk: #E05F50;
 
-$font-mono: 'JetBrains Mono', monospace;
-$font-sans: 'Inter', sans-serif;
+  --aiv-decoration-violet: #8B5CF6;
+}
+
+.theme-light,
+.theme-print {
+  color-scheme: light;
+
+  --aiv-bg-canvas: #F7F3EA;
+  --aiv-bg-surface: #FFFFFF;
+  --aiv-bg-panel: #ECE6DA;
+  --aiv-bg-raised: #E2D8C8;
+  --aiv-line-subtle: #C9BFAF;
+  --aiv-line-strong: #9E9384;
+  --aiv-grid-color: rgba(39, 92, 69, 0.12);
+
+  --aiv-text-primary: #121619;
+  --aiv-text-secondary: #33404A;
+  --aiv-text-muted: #52606A;
+
+  --aiv-action-primary: #275C45;
+  --aiv-action-secondary: #24547A;
+  --aiv-warning: #87560A;
+  --aiv-risk: #9B302B;
+
+  --aiv-decoration-violet: #5B3AA1;
+
+  --aiv-legacy-cyan: #007A86;
+  --aiv-legacy-magenta: #9B1A8E;
+  --aiv-legacy-green: #007a2f;
+  --aiv-legacy-yellow: #87560A;
+  --aiv-legacy-red: #9B302B;
+  --aiv-legacy-charcoal: #FFFFFF;
+  --aiv-legacy-divider: #C9BFAF;
+  --aiv-legacy-bootstrap-muted: #52606A;
+  --aiv-legacy-gray: #52606A;
+  --aiv-legacy-dim: #6B7280;
+  --aiv-legacy-light-text: #33404A;
+  --aiv-legacy-glass: rgba(91, 58, 161, 0.1);
+}
+
+.theme-event {
+  --aiv-action-primary: var(--aiv-legacy-cyan);
+  --aiv-action-secondary: var(--aiv-legacy-magenta);
+}
 
 /* ===================================
    RESET AND BASE STYLES
@@ -79,11 +129,11 @@ html {
 }
 
 body {
-  font-family: $font-sans;
-  background: linear-gradient(135deg, #0a0014 0%, #1a0029 50%, #2a0040 100%) !important;
-  background-color: #0a0014 !important;
+  font-family: var(--aiv-font-body);
+  background: linear-gradient(135deg, var(--aiv-bg-canvas) 0%, var(--aiv-bg-surface) 50%, var(--aiv-bg-panel) 100%) !important;
+  background-color: var(--aiv-bg-canvas) !important;
   background-attachment: fixed !important;
-  color: $text-primary;
+  color: var(--aiv-text-primary);
   line-height: 1.6;
   margin: 0;
   padding: 0;
@@ -93,8 +143,8 @@ body {
 }
 
 html {
-  background: #0a0014 !important;
-  background-color: #0a0014 !important;
+  background: var(--aiv-bg-canvas) !important;
+  background-color: var(--aiv-bg-canvas) !important;
 }
 
 // Ensure all main containers inherit the dark background
@@ -118,8 +168,8 @@ body::before {
   width: 100%;
   height: 100%;
   background-image:
-    linear-gradient($grid-color 1px, transparent 1px),
-    linear-gradient(90deg, $grid-color 1px, transparent 1px);
+    linear-gradient(var(--aiv-grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--aiv-grid-color) 1px, transparent 1px);
   background-size: 50px 50px;
   animation: gridMove 20s linear infinite;
   pointer-events: none;
@@ -144,7 +194,7 @@ body::after {
   left: 0;
   width: 100%;
   height: 100%;
-  background: radial-gradient(ellipse at center, rgba(138, 43, 226, 0.1) 0%, transparent 70%);
+  background: radial-gradient(ellipse at center, color-mix(in srgb, var(--aiv-decoration-violet) 10%, transparent) 0%, transparent 70%);
   pointer-events: none;
   z-index: -1;
 }
@@ -159,8 +209,8 @@ h3,
 h4,
 h5,
 h6 {
-  color: $text-accent;
-  font-family: $font-mono;
+  color: var(--aiv-action-primary);
+  font-family: var(--aiv-font-mono);
   margin: 1.5em 0 0.75em 0;
   line-height: 1.2;
   font-weight: 500;
@@ -170,61 +220,61 @@ h6 {
 
 h1 {
   font-size: 2.5rem;
-  text-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+  text-shadow: 0 0 30px color-mix(in srgb, var(--aiv-action-primary) 50%, transparent);
   margin-top: 0;
 }
 
 h2 {
   font-size: 2rem;
-  color: $neon-magenta;
+  color: var(--aiv-action-secondary);
 }
 
 h3 {
   font-size: 1.5rem;
-  color: $text-accent;
+  color: var(--aiv-action-primary);
 }
 
 h4 {
   font-size: 1.25rem;
-  color: $text-accent;
+  color: var(--aiv-action-primary);
 }
 
 h5 {
   font-size: 1.1rem;
-  color: $text-accent;
+  color: var(--aiv-action-primary);
 }
 
 h6 {
   font-size: 1rem;
-  color: $text-accent;
+  color: var(--aiv-action-primary);
 }
 
 p {
   margin: 1em 0;
-  color: $text-secondary;
+  color: var(--aiv-text-secondary);
 }
 
 a {
-  color: $neon-cyan;
+  color: var(--aiv-action-primary);
   text-decoration: none;
   transition: all 0.3s ease;
 
   &:hover {
-    color: $neon-magenta;
+    color: var(--aiv-action-secondary);
     text-decoration: underline;
-    text-shadow: 0 0 10px rgba(255, 0, 255, 0.5);
+    text-shadow: 0 0 10px color-mix(in srgb, var(--aiv-action-secondary) 50%, transparent);
   }
 }
 
 strong,
 b {
-  color: $text-primary;
+  color: var(--aiv-text-primary);
   font-weight: 600;
 }
 
 em,
 i {
-  color: $text-secondary;
+  color: var(--aiv-text-secondary);
   font-style: italic;
 }
 
@@ -236,7 +286,7 @@ ul,
 ol {
   margin: 1em 0;
   padding-left: 2em;
-  color: $text-secondary;
+  color: var(--aiv-text-secondary);
 }
 
 ul {
@@ -244,7 +294,7 @@ ul {
 
   li::before {
     content: "▸ ";
-    color: $text-accent;
+    color: var(--aiv-action-primary);
     font-weight: bold;
     margin-right: 0.5em;
   }
@@ -258,9 +308,9 @@ ol {
 
     &::before {
       content: counter(item) ". ";
-      color: $text-accent;
+      color: var(--aiv-action-primary);
       font-weight: bold;
-      font-family: $font-mono;
+      font-family: var(--aiv-font-mono);
     }
   }
 }
@@ -275,30 +325,30 @@ li {
    =================================== */
 
 code {
-  font-family: $font-mono;
-  background: $bg-secondary;
+  font-family: var(--aiv-font-mono);
+  background: var(--aiv-bg-surface);
   padding: 0.2em 0.4em;
   border-radius: 4px;
-  color: $text-accent;
+  color: var(--aiv-action-primary);
   font-size: 0.9em;
-  border: 1px solid $border-primary;
+  border: 1px solid var(--aiv-line-subtle);
 }
 
 pre {
-  background: $bg-secondary;
+  background: var(--aiv-bg-surface);
   padding: 1.5em;
   border-radius: 8px;
   overflow-x: auto;
-  border-left: 4px solid $text-accent;
+  border-left: 4px solid var(--aiv-action-primary);
   backdrop-filter: blur(10px);
-  border: 1px solid $border-primary;
+  border: 1px solid var(--aiv-line-subtle);
   margin: 1.5em 0;
 
   code {
     background: none;
     padding: 0;
     border: none;
-    color: $text-secondary;
+    color: var(--aiv-text-secondary);
   }
 }
 
@@ -307,26 +357,26 @@ pre {
    =================================== */
 
 blockquote {
-  border-left: 4px solid $neon-magenta;
+  border-left: 4px solid var(--aiv-action-secondary);
   margin: 1.5em 0;
   padding: 1em 1.5em;
-  background: $bg-glass;
+  background: color-mix(in srgb, var(--aiv-decoration-violet) 10%, transparent);
   backdrop-filter: blur(10px);
   font-style: italic;
   border-radius: 0 8px 8px 0;
-  border: 1px solid $border-primary;
-  border-left: 4px solid $neon-magenta;
+  border: 1px solid var(--aiv-line-subtle);
+  border-left: 4px solid var(--aiv-action-secondary);
 
   p {
     margin: 0;
-    color: $text-secondary;
+    color: var(--aiv-text-secondary);
   }
 
   cite {
     display: block;
     margin-top: 1em;
-    color: $text-muted;
-    font-family: $font-mono;
+    color: var(--aiv-text-muted);
+    font-family: var(--aiv-font-mono);
     font-size: 0.9em;
 
     &::before {
@@ -356,8 +406,8 @@ blockquote {
 
 .site-header {
   backdrop-filter: blur(20px);
-  background: rgba(26, 0, 41, 0.8);
-  border-bottom: 1px solid $border-primary;
+  background: color-mix(in srgb, var(--aiv-bg-surface) 80%, transparent);
+  border-bottom: 1px solid var(--aiv-line-subtle);
   padding: 1rem 0;
   position: sticky;
   top: 0;
@@ -372,9 +422,9 @@ blockquote {
   }
 
   .site-title {
-    font-family: $font-mono;
+    font-family: var(--aiv-font-mono);
     font-size: 1.8rem;
-    color: $text-accent;
+    color: var(--aiv-action-primary);
     text-decoration: none;
     font-weight: 700;
     text-transform: uppercase;
@@ -382,12 +432,12 @@ blockquote {
 
     &::before {
       content: "> ";
-      color: $neon-magenta;
+      color: var(--aiv-action-secondary);
       animation: blink 2s infinite;
     }
 
     &:hover {
-      text-shadow: 0 0 20px rgba(0, 255, 255, 0.7);
+      text-shadow: 0 0 20px color-mix(in srgb, var(--aiv-action-primary) 70%, transparent);
     }
   }
 
@@ -399,8 +449,8 @@ blockquote {
     gap: 2rem;
 
     a {
-      color: $text-secondary;
-      font-family: $font-mono;
+      color: var(--aiv-text-secondary);
+      font-family: var(--aiv-font-mono);
       font-weight: 400;
       text-transform: uppercase;
       letter-spacing: 1px;
@@ -411,16 +461,16 @@ blockquote {
       text-decoration: none;
 
       &:hover {
-        color: $text-accent;
-        border-color: $border-accent;
-        background: $bg-glass;
-        box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+        color: var(--aiv-action-primary);
+        border-color: var(--aiv-action-primary);
+        background: color-mix(in srgb, var(--aiv-decoration-violet) 10%, transparent);
+        box-shadow: 0 0 20px color-mix(in srgb, var(--aiv-action-primary) 30%, transparent);
       }
 
       &.active {
-        color: $text-accent;
-        border-color: $border-accent;
-        background: $bg-glass;
+        color: var(--aiv-action-primary);
+        border-color: var(--aiv-action-primary);
+        background: color-mix(in srgb, var(--aiv-decoration-violet) 10%, transparent);
       }
     }
   }
@@ -444,9 +494,9 @@ blockquote {
    =================================== */
 
 .card {
-  background: rgba(26, 0, 41, 0.6);
+  background: color-mix(in srgb, var(--aiv-bg-surface) 60%, transparent);
   backdrop-filter: blur(20px);
-  border: 1px solid $border-primary;
+  border: 1px solid var(--aiv-line-subtle);
   border-radius: 12px;
   padding: 1.5rem;
   margin: 1rem 0;
@@ -461,13 +511,13 @@ blockquote {
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.1), transparent);
+    background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--aiv-action-primary) 10%, transparent), transparent);
     transition: left 0.5s ease;
   }
 
   &:hover {
-    border-color: $border-accent;
-    box-shadow: 0 10px 40px rgba(138, 43, 226, 0.3);
+    border-color: var(--aiv-action-primary);
+    box-shadow: 0 10px 40px color-mix(in srgb, var(--aiv-decoration-violet) 30%, transparent);
     transform: translateY(-5px);
 
     &::before {
@@ -479,7 +529,7 @@ blockquote {
   h4,
   h5,
   h6 {
-    color: $text-accent;
+    color: var(--aiv-action-primary);
     margin-top: 0;
   }
 
@@ -495,10 +545,10 @@ blockquote {
 .btn {
   display: inline-block;
   padding: 1rem 2rem;
-  border: 2px solid $text-accent;
-  color: $text-accent;
+  border: 2px solid var(--aiv-action-primary);
+  color: var(--aiv-action-primary);
   text-decoration: none;
-  font-family: $font-mono;
+  font-family: var(--aiv-font-mono);
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -516,14 +566,14 @@ blockquote {
     left: -100%;
     width: 100%;
     height: 100%;
-    background: $text-accent;
+    background: var(--aiv-action-primary);
     transition: left 0.3s ease;
     z-index: -1;
   }
 
   &:hover {
-    color: $bg-primary;
-    box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+    color: var(--aiv-bg-canvas);
+    box-shadow: 0 0 30px color-mix(in srgb, var(--aiv-action-primary) 50%, transparent);
     text-decoration: none;
 
     &::before {
@@ -532,15 +582,15 @@ blockquote {
   }
 
   &.secondary {
-    border-color: $neon-magenta;
-    color: $neon-magenta;
+    border-color: var(--aiv-action-secondary);
+    color: var(--aiv-action-secondary);
 
     &::before {
-      background: $neon-magenta;
+      background: var(--aiv-action-secondary);
     }
 
     &:hover {
-      box-shadow: 0 0 30px rgba(255, 0, 255, 0.5);
+      box-shadow: 0 0 30px color-mix(in srgb, var(--aiv-action-secondary) 50%, transparent);
     }
   }
 
@@ -569,28 +619,28 @@ blockquote {
   gap: 1rem;
   padding: 1.5rem;
   margin: 1rem 0;
-  background: rgba(26, 0, 41, 0.6);
+  background: color-mix(in srgb, var(--aiv-bg-surface) 60%, transparent);
   backdrop-filter: blur(20px);
-  border-left: 4px solid $neon-magenta;
+  border-left: 4px solid var(--aiv-action-secondary);
   border-radius: 0 12px 12px 0;
-  border: 1px solid $border-primary;
+  border: 1px solid var(--aiv-line-subtle);
   transition: all 0.3s ease;
 
   &:hover {
-    border-color: $border-accent;
-    box-shadow: 0 8px 30px rgba(138, 43, 226, 0.3);
+    border-color: var(--aiv-action-primary);
+    box-shadow: 0 8px 30px color-mix(in srgb, var(--aiv-decoration-violet) 30%, transparent);
     transform: translateY(-2px);
   }
 
   .event-date {
     min-width: 80px;
     text-align: center;
-    font-family: $font-mono;
+    font-family: var(--aiv-font-mono);
     flex-shrink: 0;
 
     .event-month {
-      background: $text-accent;
-      color: $bg-primary;
+      background: var(--aiv-action-primary);
+      color: var(--aiv-bg-canvas);
       padding: 0.25rem;
       font-size: 0.8rem;
       font-weight: 700;
@@ -599,13 +649,13 @@ blockquote {
     }
 
     .event-day {
-      background: $bg-tertiary;
-      color: $text-accent;
+      background: var(--aiv-bg-panel);
+      color: var(--aiv-action-primary);
       padding: 0.5rem;
       font-size: 1.5rem;
       font-weight: 700;
       border-radius: 0 0 4px 4px;
-      border: 1px solid $border-primary;
+      border: 1px solid var(--aiv-line-subtle);
       border-top: none;
     }
   }
@@ -616,18 +666,18 @@ blockquote {
     h3,
     h4 {
       margin: 0 0 0.5rem 0;
-      color: $text-accent;
+      color: var(--aiv-action-primary);
     }
 
     .event-location {
-      color: $text-muted;
+      color: var(--aiv-text-muted);
       font-size: 0.9rem;
       margin: 0.25rem 0;
-      font-family: $font-mono;
+      font-family: var(--aiv-font-mono);
     }
 
     .event-description {
-      color: $text-secondary;
+      color: var(--aiv-text-secondary);
       margin: 0.5rem 0 0 0;
       line-height: 1.6;
     }
@@ -640,9 +690,9 @@ blockquote {
 
 .post-list {
   .post-item {
-    background: rgba(26, 0, 41, 0.6);
+    background: color-mix(in srgb, var(--aiv-bg-surface) 60%, transparent);
     backdrop-filter: blur(20px);
-    border: 1px solid $border-primary;
+    border: 1px solid var(--aiv-line-subtle);
     border-radius: 12px;
     padding: 1.5rem;
     margin: 1.5rem 0;
@@ -657,14 +707,14 @@ blockquote {
       left: -100%;
       width: 100%;
       height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.1), transparent);
+      background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--aiv-action-primary) 10%, transparent), transparent);
       transition: left 0.5s ease;
     }
 
     &:hover {
-      border-color: $border-accent;
+      border-color: var(--aiv-action-primary);
       transform: translateY(-5px);
-      box-shadow: 0 10px 40px rgba(138, 43, 226, 0.3);
+      box-shadow: 0 10px 40px color-mix(in srgb, var(--aiv-decoration-violet) 30%, transparent);
 
       &::before {
         left: 100%;
@@ -675,25 +725,25 @@ blockquote {
       margin: 0 0 0.5rem 0;
 
       a {
-        color: $text-accent;
+        color: var(--aiv-action-primary);
         text-decoration: none;
 
         &:hover {
-          color: $neon-magenta;
-          text-shadow: 0 0 15px rgba(255, 0, 255, 0.5);
+          color: var(--aiv-action-secondary);
+          text-shadow: 0 0 15px color-mix(in srgb, var(--aiv-action-secondary) 50%, transparent);
         }
       }
     }
 
     .post-meta {
-      color: $text-muted;
+      color: var(--aiv-text-muted);
       font-size: 0.9rem;
       margin: 0.5rem 0;
-      font-family: $font-mono;
+      font-family: var(--aiv-font-mono);
     }
 
     .post-excerpt {
-      color: $text-secondary;
+      color: var(--aiv-text-secondary);
       margin: 1rem 0 0 0;
       line-height: 1.6;
     }
@@ -704,32 +754,32 @@ blockquote {
   margin-bottom: 2rem;
 
   .post-meta {
-    color: $text-muted;
-    font-family: $font-mono;
+    color: var(--aiv-text-muted);
+    font-family: var(--aiv-font-mono);
     font-size: 0.9rem;
     margin: 1rem 0;
 
     .post-author {
-      color: $text-accent;
+      color: var(--aiv-action-primary);
     }
 
     .post-category {
-      color: $neon-magenta;
+      color: var(--aiv-action-secondary);
     }
   }
 
   .post-description {
-    background: $bg-glass;
+    background: color-mix(in srgb, var(--aiv-decoration-violet) 10%, transparent);
     backdrop-filter: blur(10px);
     padding: 1rem;
-    border-left: 4px solid $text-accent;
+    border-left: 4px solid var(--aiv-action-primary);
     border-radius: 0 8px 8px 0;
     margin: 1rem 0;
-    border: 1px solid $border-primary;
+    border: 1px solid var(--aiv-line-subtle);
 
     p {
       margin: 0;
-      color: $text-secondary;
+      color: var(--aiv-text-secondary);
       font-style: italic;
     }
   }
@@ -743,14 +793,14 @@ blockquote {
     height: auto;
     border-radius: 8px;
     margin: 1rem 0;
-    border: 1px solid $border-primary;
+    border: 1px solid var(--aiv-line-subtle);
   }
 }
 
 .post-footer {
   margin-top: 3rem;
   padding-top: 2rem;
-  border-top: 1px solid $border-primary;
+  border-top: 1px solid var(--aiv-line-subtle);
 
   .post-footer-content {
     display: flex;
@@ -767,19 +817,19 @@ blockquote {
     align-items: center;
 
     .nav-link {
-      color: $text-accent;
-      font-family: $font-mono;
+      color: var(--aiv-action-primary);
+      font-family: var(--aiv-font-mono);
       font-size: 0.9rem;
       text-decoration: none;
 
       &:hover {
-        color: $neon-magenta;
-        text-shadow: 0 0 10px rgba(255, 0, 255, 0.5);
+        color: var(--aiv-action-secondary);
+        text-shadow: 0 0 10px color-mix(in srgb, var(--aiv-action-secondary) 50%, transparent);
       }
     }
 
     .nav-separator {
-      color: $text-muted;
+      color: var(--aiv-text-muted);
       margin: 0 0.5rem;
     }
   }
@@ -790,8 +840,8 @@ blockquote {
       text-decoration: none;
 
       &:hover {
-        color: $text-accent;
-        text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        color: var(--aiv-action-primary);
+        text-shadow: 0 0 10px color-mix(in srgb, var(--aiv-action-primary) 50%, transparent);
       }
     }
   }
@@ -800,25 +850,25 @@ blockquote {
     text-align: center;
     margin: 2rem 0;
     padding: 1.5rem;
-    background: $bg-glass;
+    background: color-mix(in srgb, var(--aiv-decoration-violet) 10%, transparent);
     backdrop-filter: blur(10px);
     border-radius: 8px;
-    border: 1px solid $border-primary;
+    border: 1px solid var(--aiv-line-subtle);
 
     p {
       margin: 0;
-      color: $text-secondary;
+      color: var(--aiv-text-secondary);
 
       strong {
-        color: $text-primary;
+        color: var(--aiv-text-primary);
       }
 
       a {
-        color: $text-accent;
+        color: var(--aiv-action-primary);
 
         &:hover {
-          color: $neon-cyan;
-          text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+          color: var(--aiv-action-primary);
+          text-shadow: 0 0 10px color-mix(in srgb, var(--aiv-action-primary) 50%, transparent);
         }
       }
     }
@@ -833,34 +883,34 @@ table {
   width: 100%;
   border-collapse: collapse;
   margin: 2rem 0;
-  background: rgba(26, 0, 41, 0.6);
+  background: color-mix(in srgb, var(--aiv-bg-surface) 60%, transparent);
   backdrop-filter: blur(20px);
   border-radius: 8px;
   overflow: hidden;
-  border: 1px solid $border-primary;
+  border: 1px solid var(--aiv-line-subtle);
 
   th,
   td {
     padding: 1rem;
     text-align: left;
-    border-bottom: 1px solid $border-primary;
+    border-bottom: 1px solid var(--aiv-line-subtle);
   }
 
   th {
-    background: rgba(42, 0, 64, 0.8);
-    color: $text-accent;
-    font-family: $font-mono;
+    background: color-mix(in srgb, var(--aiv-bg-panel) 80%, transparent);
+    color: var(--aiv-action-primary);
+    font-family: var(--aiv-font-mono);
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 1px;
   }
 
   td {
-    color: $text-secondary;
+    color: var(--aiv-text-secondary);
   }
 
   tr:hover {
-    background: rgba(0, 255, 255, 0.05);
+    background: color-mix(in srgb, var(--aiv-action-primary) 5%, transparent);
   }
 
   tr:last-child {
@@ -877,31 +927,31 @@ table {
 input,
 textarea,
 select {
-  background: rgba(26, 0, 41, 0.6);
+  background: color-mix(in srgb, var(--aiv-bg-surface) 60%, transparent);
   backdrop-filter: blur(20px);
-  border: 1px solid $border-primary;
+  border: 1px solid var(--aiv-line-subtle);
   border-radius: 6px;
   padding: 0.75rem;
-  color: $text-primary;
-  font-family: $font-sans;
+  color: var(--aiv-text-primary);
+  font-family: var(--aiv-font-body);
   width: 100%;
   margin-bottom: 1rem;
   transition: all 0.3s ease;
 
   &:focus {
     outline: none;
-    border-color: $border-accent;
-    box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+    border-color: var(--aiv-action-primary);
+    box-shadow: 0 0 20px color-mix(in srgb, var(--aiv-action-primary) 30%, transparent);
   }
 
   &::placeholder {
-    color: $text-muted;
+    color: var(--aiv-text-muted);
   }
 }
 
 label {
-  color: $text-secondary;
-  font-family: $font-mono;
+  color: var(--aiv-text-secondary);
+  font-family: var(--aiv-font-mono);
   font-size: 0.9rem;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -914,16 +964,16 @@ label {
    =================================== */
 
 .site-footer {
-  background: rgba(10, 0, 20, 0.9);
+  background: color-mix(in srgb, var(--aiv-bg-canvas) 90%, transparent);
   backdrop-filter: blur(20px);
-  border-top: 1px solid $border-primary;
+  border-top: 1px solid var(--aiv-line-subtle);
   padding: 2rem 0;
   margin-top: 4rem;
 
   .footer-content {
     text-align: center;
-    color: $text-muted;
-    font-family: $font-mono;
+    color: var(--aiv-text-muted);
+    font-family: var(--aiv-font-mono);
 
     .footer-nav,
     .social-links {
@@ -934,13 +984,13 @@ label {
       margin: 1rem 0;
 
       a {
-        color: $text-muted;
+        color: var(--aiv-text-muted);
         text-decoration: none;
         transition: all 0.3s ease;
 
         &:hover {
-          color: $text-accent;
-          text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+          color: var(--aiv-action-primary);
+          text-shadow: 0 0 10px color-mix(in srgb, var(--aiv-action-primary) 50%, transparent);
         }
       }
     }
@@ -958,31 +1008,31 @@ label {
 
 // Details/Summary
 details {
-  background: rgba(26, 0, 41, 0.6);
+  background: color-mix(in srgb, var(--aiv-bg-surface) 60%, transparent);
   backdrop-filter: blur(20px);
-  border: 1px solid $border-primary;
+  border: 1px solid var(--aiv-line-subtle);
   border-radius: 8px;
   margin: 1rem 0;
   overflow: hidden;
 
   summary {
-    background: rgba(42, 0, 64, 0.8);
+    background: color-mix(in srgb, var(--aiv-bg-panel) 80%, transparent);
     padding: 1rem;
     cursor: pointer;
     transition: all 0.3s ease;
-    border-bottom: 1px solid $border-primary;
-    color: $text-accent;
-    font-family: $font-mono;
+    border-bottom: 1px solid var(--aiv-line-subtle);
+    color: var(--aiv-action-primary);
+    font-family: var(--aiv-font-mono);
     font-weight: 500;
 
     &:hover {
-      background: rgba(42, 0, 64, 1);
-      color: $text-primary;
+      background: var(--aiv-bg-panel);
+      color: var(--aiv-text-primary);
     }
   }
 
   &[open] summary {
-    border-bottom: 1px solid $border-primary;
+    border-bottom: 1px solid var(--aiv-line-subtle);
   }
 
   .details-content {
@@ -994,12 +1044,12 @@ details {
 .team-member {
   display: flex;
   gap: 1.5rem;
-  background: rgba(26, 0, 41, 0.6);
+  background: color-mix(in srgb, var(--aiv-bg-surface) 60%, transparent);
   backdrop-filter: blur(20px);
   padding: 1.5rem;
   border-radius: 12px;
-  border-left: 4px solid $text-accent;
-  border: 1px solid $border-primary;
+  border-left: 4px solid var(--aiv-action-primary);
+  border: 1px solid var(--aiv-line-subtle);
   margin: 1rem 0;
 
   .member-photo {
@@ -1010,11 +1060,11 @@ details {
       height: 120px;
       border-radius: 50%;
       object-fit: cover;
-      border: 2px solid $text-accent;
+      border: 2px solid var(--aiv-action-primary);
       transition: all 0.3s ease;
 
       &:hover {
-        box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+        box-shadow: 0 0 30px color-mix(in srgb, var(--aiv-action-primary) 50%, transparent);
         transform: scale(1.05);
       }
     }
@@ -1025,12 +1075,12 @@ details {
 
     h3 {
       margin: 0 0 0.5rem 0;
-      color: $text-accent;
+      color: var(--aiv-action-primary);
     }
 
     .member-position {
-      color: $neon-magenta;
-      font-family: $font-mono;
+      color: var(--aiv-action-secondary);
+      font-family: var(--aiv-font-mono);
       font-size: 0.9rem;
       margin: 0.25rem 0;
       font-weight: bold;
@@ -1038,12 +1088,12 @@ details {
 
     .member-affiliation,
     .member-expertise {
-      color: $text-muted;
+      color: var(--aiv-text-muted);
       font-size: 0.9rem;
       margin: 0.25rem 0;
 
       strong {
-        color: $text-secondary;
+        color: var(--aiv-text-secondary);
       }
     }
   }
@@ -1055,7 +1105,7 @@ details {
 
   &:hover {
     transform: translateX(10px);
-    box-shadow: 0 5px 20px rgba(138, 43, 226, 0.3);
+    box-shadow: 0 5px 20px color-mix(in srgb, var(--aiv-decoration-violet) 30%, transparent);
   }
 }
 
@@ -1069,25 +1119,25 @@ details {
   a,
   span {
     padding: 0.5rem 1rem;
-    border: 1px solid $border-primary;
-    background: rgba(26, 0, 41, 0.6);
+    border: 1px solid var(--aiv-line-subtle);
+    background: color-mix(in srgb, var(--aiv-bg-surface) 60%, transparent);
     backdrop-filter: blur(20px);
-    color: $text-secondary;
+    color: var(--aiv-text-secondary);
     text-decoration: none;
     border-radius: 4px;
     transition: all 0.3s ease;
-    font-family: $font-mono;
+    font-family: var(--aiv-font-mono);
 
     &:hover {
-      border-color: $border-accent;
-      color: $text-accent;
-      box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+      border-color: var(--aiv-action-primary);
+      color: var(--aiv-action-primary);
+      box-shadow: 0 0 15px color-mix(in srgb, var(--aiv-action-primary) 30%, transparent);
     }
 
     &.current {
-      background: $text-accent;
-      color: $bg-primary;
-      border-color: $text-accent;
+      background: var(--aiv-action-primary);
+      color: var(--aiv-bg-canvas);
+      border-color: var(--aiv-action-primary);
     }
   }
 }
@@ -1095,13 +1145,13 @@ details {
 @media (max-width: 768px) {
   // Force dark vaporwave background on all mobile devices
   html {
-    background: $bg-primary !important;
-    background-color: $bg-primary !important;
+    background: var(--aiv-bg-canvas) !important;
+    background-color: var(--aiv-bg-canvas) !important;
   }
   
   body {
-    background: linear-gradient(135deg, $bg-primary 0%, $bg-secondary 50%, $bg-tertiary 100%) !important;
-    background-color: $bg-primary !important;
+    background: linear-gradient(135deg, var(--aiv-bg-canvas) 0%, var(--aiv-bg-surface) 50%, var(--aiv-bg-panel) 100%) !important;
+    background-color: var(--aiv-bg-canvas) !important;
     background-attachment: fixed !important;
     min-height: 100vh !important;
   }
@@ -1131,9 +1181,9 @@ details {
   .card,
   .event-item,
   .post-item {
-    background: $bg-glass !important;
+    background: color-mix(in srgb, var(--aiv-decoration-violet) 10%, transparent) !important;
     backdrop-filter: blur(20px) !important;
-    border: 1px solid $border-primary !important;
+    border: 1px solid var(--aiv-line-subtle) !important;
   }
   
   .container {
@@ -1302,17 +1352,17 @@ details {
 .text-left { text-align: left; }
 .text-right { text-align: right; }
 
-.text-mono { font-family: $font-mono; }
-.text-sans { font-family: $font-sans; }
+.text-mono { font-family: var(--aiv-font-mono); }
+.text-sans { font-family: var(--aiv-font-body); }
 
-.text-primary { color: $text-primary; }
-.text-secondary { color: $text-secondary; }
-.text-muted { color: $text-muted; }
-.text-accent { color: $text-accent; }
+.text-primary { color: var(--aiv-text-primary); }
+.text-secondary { color: var(--aiv-text-secondary); }
+.text-muted { color: var(--aiv-text-muted); }
+.text-accent { color: var(--aiv-action-primary); }
 
-.text-cyan { color: $neon-cyan; }
-.text-magenta { color: $neon-magenta; }
-.text-purple { color: $neon-purple; }
+.text-cyan { color: var(--aiv-action-primary); }
+.text-magenta { color: var(--aiv-action-secondary); }
+.text-purple { color: var(--aiv-decoration-violet); }
 
 .mb-0 { margin-bottom: 0; }
 .mb-1 { margin-bottom: 1rem; }
@@ -1351,9 +1401,9 @@ details {
 
 /* Mobile Navigation Styles */
 .site-header {
-  background: #1a1a1a;
+  background: var(--aiv-legacy-charcoal);
   padding: 1rem 0;
-  border-bottom: 2px solid #00ff00;
+  border-bottom: 2px solid var(--aiv-legacy-green);
   position: relative;
 }
 
@@ -1367,8 +1417,8 @@ details {
 }
 
 .site-title {
-  color: #00ff00;
-  font-family: "JetBrains Mono", monospace;
+  color: var(--aiv-legacy-green);
+  font-family: var(--aiv-font-mono);
   font-size: 1.5rem;
   text-decoration: none;
   font-weight: bold;
@@ -1383,18 +1433,18 @@ details {
 }
 
 .nav-menu a {
-  color: #888;
+  color: var(--aiv-legacy-gray);
   text-decoration: none;
-  font-family: "JetBrains Mono", monospace;
+  font-family: var(--aiv-font-mono);
   transition: color 0.3s ease;
 }
 
 .nav-menu a:hover {
-  color: #00ffff;
+  color: var(--aiv-action-primary);
 }
 
 .nav-menu a.active {
-  color: #00ff00;
+  color: var(--aiv-legacy-green);
 }
 
 .hamburger {
@@ -1413,7 +1463,7 @@ details {
 .hamburger span {
   width: 2rem;
   height: 0.25rem;
-  background: #00ff00;
+  background: var(--aiv-legacy-green);
   border-radius: 10px;
   transition: all 0.3s linear;
   position: relative;
@@ -1454,7 +1504,7 @@ details {
     left: 0;
     right: 0;
     height: 100vh;
-    background: #1a1a1a;
+    background: var(--aiv-legacy-charcoal);
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -1508,8 +1558,8 @@ details {
     left: 0;
     right: 0;
     height: 4rem;
-    background: #1a1a1a;
-    border-bottom: 2px solid #00ff00;
+    background: var(--aiv-legacy-charcoal);
+    border-bottom: 2px solid var(--aiv-legacy-green);
   }
 }
 

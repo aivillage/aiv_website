@@ -11,13 +11,13 @@ const excerpt = post.data.description ?? post.data.excerpt ?? excerptFromBody(po
     <a href={canonicalPostPath(post)}>{post.data.title}</a>
   </h2>
   <div class="post-meta">
-    {post.data.author && <span style="color: #00ff00;">{Array.isArray(post.data.author) ? post.data.author.join(", ") : post.data.author}</span>}
+    {post.data.author && <span style="color: var(--aiv-legacy-green);">{Array.isArray(post.data.author) ? post.data.author.join(", ") : post.data.author}</span>}
     {post.data.author && post.data.date && " • "}
     <time datetime={post.data.date.toISOString()}>{formatDate(post.data.date)}</time>
-    {post.data.category && <> • <span style="color: #ffff00;">#{post.data.category}</span></>}
+    {post.data.category && <> • <span style="color: var(--aiv-warning);">#{post.data.category}</span></>}
   </div>
   <div class="post-excerpt">{excerpt}</div>
   <div style="margin-top: 1rem;">
-    <a href={canonicalPostPath(post)} style="color: #00ffff;">Read more →</a>
+    <a href={canonicalPostPath(post)} style="color: var(--aiv-action-primary);">Read more →</a>
   </div>
 </article>
