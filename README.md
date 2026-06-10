@@ -40,18 +40,11 @@ Canonical blog URLs use:
 
 Use `slug` or `canonicalSlug` to set the canonical slug. The build fails on slug collisions.
 
-Historical inbound paths belong in `legacyUrls`:
-
-```yaml
-legacyUrls:
-  - /old-category/2026/03/19/example.html
-```
-
-`prebuild` generates Cloudflare 301 redirects from `legacyUrls` and the historical Jekyll URL derivation logic.
+The migration redirect set is complete. New Astro-native posts should not receive fabricated Jekyll-style legacy URLs. If a real historical URL needs to be preserved, add it explicitly to `public/_redirects`; redirect front matter is not used to generate redirects.
 
 ### Events
 
-Add events to `src/content/events/` with `title`, `date`, and optional `description` and `location`. Event detail pages build at `/events/<slug>/`. Obvious legacy aliases are handled in `src/data/redirects.ts`.
+Add events to `src/content/events/` with `title`, `date`, and optional `description` and `location`. Event detail pages build at `/events/<slug>/`. Real legacy aliases are handled explicitly in `public/_redirects`.
 
 Schedule and talk pages are mapped in `src/data/schedules.ts` and rendered from `src/content/schedules/`.
 
@@ -71,9 +64,17 @@ Content schemas validate front matter at build time. Missing required fields fai
 
 ## Redirects
 
-Redirects are generated during `prebuild` into `public/_redirects` and copied to `dist/_redirects`.
+Redirects are manually maintained in `public/_redirects`. Treat that file as the source of truth for Cloudflare Pages redirects now that the migration is complete.
 
 Cloudflare Pages applies `_redirects` as host-level redirects. Local Astro preview does not prove true 301 behavior. True redirect status verification requires a Cloudflare Pages preview or production deployment.
+
+`pnpm build` copies `public/_redirects` into `dist/_redirects` and validates that the committed redirect file is well-formed, has no chains, and points at built routes. It does not regenerate or rewrite `public/_redirects`.
+
+When adding a redirect:
+
+- Add only real historical or manually verified inbound paths.
+- Do not add fabricated Jekyll-style redirects for new Astro-native posts.
+- Point source content at canonical URLs, not redirect sources.
 
 Useful local checks:
 
@@ -94,7 +95,7 @@ Configure deployment through the Cloudflare dashboard or Git integration:
 - Build output directory: `dist`
 - Preview deployments: enabled
 - Custom domain: `aivillage.org`
-- Redirect rules: generated at `public/_redirects` and applied by Cloudflare Pages
+- Redirect rules: manually maintained at `public/_redirects` and applied by Cloudflare Pages
 
 No GitHub Pages workflow is used because strict server-side 301 redirects require host-level redirect support.
 
