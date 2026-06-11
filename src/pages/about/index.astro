@@ -16,7 +16,7 @@ for (const volunteer of volunteers) {
 <BaseLayout title="About" canonical="/about/">
   <h1>About AI Village</h1>
   <div style="text-align: center; margin: 2rem 0;">
-    <p style="color: #888; font-size: 1.1rem;">
+    <p style="color: var(--aiv-legacy-gray); font-size: 1.1rem;">
       AI Village is a community of hackers and data scientists working to educate the world on the use and abuse of artificial intelligence in security and privacy.
     </p>
   </div>
@@ -39,18 +39,18 @@ for (const volunteer of volunteers) {
       return (
         <>
           <VolunteerCard volunteer={volunteer} Content={Content} />
-          {index < volunteers.length - 1 && <hr style="border: none; border-top: 1px solid #333; margin: 1rem 0;" />}
+          {index < volunteers.length - 1 && <hr style="border: none; border-top: 1px solid var(--aiv-legacy-divider); margin: 1rem 0;" />}
         </>
       );
     })}
   </div>
   <hr />
   <h2 id="-join-our-team">Join the Work</h2>
-  <div style="background: #1a1a1a; padding: 1.5rem; border-radius: 5px; border-left: 4px solid #ff0000; margin: 2rem 0;">
-    <h4 style="color: #ff0000; margin-top: 0;">Get Involved</h4>
+  <div style="background: var(--aiv-legacy-charcoal); padding: 1.5rem; border-radius: 5px; border-left: 4px solid var(--aiv-risk); margin: 2rem 0;">
+    <h4 style="color: var(--aiv-risk); margin-top: 0;">Get Involved</h4>
     <p>AI Village welcomes help from researchers, engineers, educators, organizers, and community builders.</p>
     <div style="margin-top: 1.5rem;">
-      <a href="https://forms.gle/vCrz3zpR8xHCsTtJ8" target="_blank" rel="noopener noreferrer" style="color: #00ffff; font-weight: bold;">→ Submit a volunteer application</a>
+      <a href="https://forms.gle/vCrz3zpR8xHCsTtJ8" target="_blank" rel="noopener noreferrer" style="color: var(--aiv-action-primary); font-weight: bold;">→ Submit a volunteer application</a>
     </div>
   </div>
 </BaseLayout>

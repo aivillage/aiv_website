@@ -2,19 +2,19 @@
 
 /* Ensure event items use dark theme consistently */
 .event-item {
-  background: rgba(26, 0, 41, 0.6) !important;
+  background: color-mix(in srgb, var(--aiv-bg-surface) 60%, transparent) !important;
   backdrop-filter: blur(20px) !important;
-  border: 1px solid rgba(138, 43, 226, 0.4) !important;
+  border: 1px solid color-mix(in srgb, var(--aiv-decoration-violet) 40%, transparent) !important;
 }
 
 .event-date {
-  background-color: #2a0040 !important;
-  color: #00ffff !important;
+  background-color: var(--aiv-bg-panel) !important;
+  color: var(--aiv-action-primary) !important;
 }
 
 .future-events .event-description,
 .past-events .event-description {
-  color: #e6e6fa !important;
+  color: var(--aiv-text-secondary) !important;
 }
 
 /* === Event Content === */
@@ -33,7 +33,7 @@
   padding: 0;
   font-style: italic;
   font-size: 0.75rem;
-  color: #6c757d;
+  color: var(--aiv-legacy-bootstrap-muted);
   margin-top: 0.25rem;
 }
 
@@ -47,10 +47,10 @@
   font-size: 1.2rem;
   margin-top: 1rem;
   margin-bottom: 1.5rem;
-  color: #00ffff !important;
-  background: rgba(42, 0, 64, 0.8) !important;
+  color: var(--aiv-action-primary) !important;
+  background: color-mix(in srgb, var(--aiv-bg-panel) 80%, transparent) !important;
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(138, 43, 226, 0.4);
+  border: 1px solid color-mix(in srgb, var(--aiv-decoration-violet) 40%, transparent);
   padding: 0.5rem 1rem;
   border-radius: 6px;
   display: block;
@@ -77,7 +77,7 @@
   transform-origin: 50% 50%;
   transition: transform 0.3s ease;
   font-size: 1rem;
-  color: #00ffff !important;
+  color: var(--aiv-action-primary) !important;
 }
 
 /* Rotate arrow when open */
@@ -103,9 +103,9 @@ details[open]>.events-container {
   font-size: 1.3rem;
   margin-bottom: 0.85rem;
   font-weight: bold;
-  border-bottom: 1px solid rgba(0, 255, 255, 0.45);
+  border-bottom: 1px solid color-mix(in srgb, var(--aiv-action-primary) 45%, transparent);
   padding-bottom: 0.4rem;
-  color: #00ff00;
+  color: var(--aiv-legacy-green);
 }
 
 /* === Mobile Layout Adjustments === */
@@ -150,5 +150,5 @@ details[open]>.events-container {
   font-size: 1.4rem;
   margin-bottom: 1rem;
   margin-top: 1rem;
-  color: #00ffff !important;
+  color: var(--aiv-action-primary) !important;
 }
