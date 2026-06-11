@@ -10,7 +10,7 @@ const posts = sortPosts(await getCollection("blog", ({ data }) => !data.draft));
 <BaseLayout title="Blog" canonical="/blog/">
   <h1>Blog</h1>
   <div style="text-align: center; margin: 2rem 0;">
-    <p style="color: var(--aiv-legacy-gray); font-size: 1.1rem;">
+    <p style="color: var(--aiv-text-muted); font-size: 1.1rem;">
       Research insights, event recaps, and perspectives on AI security from our community.
     </p>
   </div>
@@ -18,10 +18,10 @@ const posts = sortPosts(await getCollection("blog", ({ data }) => !data.draft));
   <div class="post-list">
     {posts.map((post) => <PostCard post={post} />)}
   </div>
-  {posts.length === 0 && <div class="card" style="text-align: center;"><h3 style="color: var(--aiv-legacy-gray);">No blog posts yet</h3><p style="color: var(--aiv-legacy-dim);">Check back soon for updates from the AI Village community!</p></div>}
+  {posts.length === 0 && <div class="card" style="text-align: center;"><h3 style="color: var(--aiv-text-muted);">No blog posts yet</h3><p style="color: var(--aiv-text-muted);">Check back soon for updates from the AI Village community!</p></div>}
   <hr />
-  <div style="background: var(--aiv-legacy-charcoal); padding: 1.5rem; border-radius: 5px; border-left: 4px solid var(--aiv-legacy-green); margin: 2rem 0;">
-    <h4 style="color: var(--aiv-legacy-green); margin-top: 0;">📝 Want to Contribute?</h4>
+  <div style="background: var(--aiv-card-bg); border: 1px solid var(--aiv-card-border); box-shadow: var(--aiv-card-shadow); padding: 1.5rem; border-radius: 5px; border-left: 4px solid var(--aiv-action-primary); margin: 2rem 0;">
+    <h4 style="color: var(--aiv-action-primary); margin-top: 0;">📝 Want to Contribute?</h4>
     <p>We welcome guest posts from the community! Topics we're interested in:</p>
     <ul>
       <li>AI security research and findings</li>
