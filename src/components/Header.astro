@@ -16,6 +16,22 @@ function isActive(url: string) {
       <nav class="nav-menu" id="nav-menu">
         {primaryNav.map((item) => <a href={item.href} class:list={[{ active: isActive(item.href) }]}>{item.label}</a>)}
       </nav>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch color mode" title="Switch color mode">
+        <svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2"></path>
+          <path d="M12 20v2"></path>
+          <path d="m4.93 4.93 1.41 1.41"></path>
+          <path d="m17.66 17.66 1.41 1.41"></path>
+          <path d="M2 12h2"></path>
+          <path d="M20 12h2"></path>
+          <path d="m6.34 17.66-1.41 1.41"></path>
+          <path d="m19.07 4.93-1.41 1.41"></path>
+        </svg>
+        <svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+          <path d="M20.99 12.66A8.99 8.99 0 1 1 11.34 3.01a7 7 0 1 0 9.65 9.65Z"></path>
+        </svg>
+      </button>
       <button class="hamburger" aria-label="Toggle menu" aria-controls="nav-menu" aria-expanded="false" onclick="toggleMenu(this)">
         <span></span>
         <span></span>
@@ -41,4 +57,60 @@ function isActive(url: string) {
   menuItems.forEach((item, index) => {
     item.style.transitionDelay = `${index * 0.1}s`;
   });
+
+  const themeToggle = document.getElementById("theme-toggle");
+  const productionThemes = new Set(["institutional-dark", "institutional-light"]);
+  const systemTheme = window.matchMedia("(prefers-color-scheme: dark)");
+
+  function savedTheme() {
+    try {
+      const value = localStorage.getItem("aiv-theme");
+      if (productionThemes.has(value)) return value;
+      if (value && value !== "auto") localStorage.removeItem("aiv-theme");
+    } catch {
+      return null;
+    }
+
+    return null;
+  }
+
+  function currentEffectiveMode() {
+    const theme = document.documentElement.dataset.theme;
+    if (theme === "institutional-dark") return "dark";
+    if (theme === "institutional-light") return "light";
+    return systemTheme.matches ? "dark" : "light";
+  }
+
+  function updateThemeToggle() {
+    if (!(themeToggle instanceof HTMLButtonElement)) return;
+
+    const mode = currentEffectiveMode();
+    const nextMode = mode === "dark" ? "light" : "dark";
+    const label = `Switch to ${nextMode} mode`;
+
+    themeToggle.dataset.effectiveTheme = mode;
+    themeToggle.setAttribute("aria-label", label);
+    themeToggle.setAttribute("title", label);
+  }
+
+  if (themeToggle instanceof HTMLButtonElement) {
+    updateThemeToggle();
+
+    themeToggle.addEventListener("click", () => {
+      const nextTheme = currentEffectiveMode() === "dark" ? "institutional-light" : "institutional-dark";
+      document.documentElement.dataset.theme = nextTheme;
+
+      try {
+        localStorage.setItem("aiv-theme", nextTheme);
+      } catch {
+        // Ignore storage failures; the current page still updates immediately.
+      }
+
+      updateThemeToggle();
+    });
+
+    systemTheme.addEventListener("change", () => {
+      if (!savedTheme()) updateThemeToggle();
+    });
+  }
 </script>

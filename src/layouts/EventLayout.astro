@@ -19,12 +19,12 @@ const scheduleLinks = scheduleRoutesForEvent(event.id);
 <BaseLayout title={event.data.title} description={event.data.description} canonical={url} type="event" eventDate={event.data.date} eventLocation={event.data.location}>
   <article class="event">
     <header class="event-header" style="margin-bottom: 2rem;">
-      <h1 style="color: var(--aiv-legacy-green); margin: 0 0 1rem 0;">{event.data.title}</h1>
-      <div class="event-meta" style="display: flex; flex-wrap: wrap; gap: 2rem; margin: 1rem 0; color: var(--aiv-legacy-gray); font-family: var(--aiv-font-mono);">
+      <h1 style="color: var(--aiv-action-primary); margin: 0 0 1rem 0;">{event.data.title}</h1>
+      <div class="event-meta" style="display: flex; flex-wrap: wrap; gap: 2rem; margin: 1rem 0; color: var(--aiv-text-muted); font-family: var(--aiv-font-mono);">
         <div><strong style="color: var(--aiv-warning);">📅 Date:</strong> <time datetime={isoDate(event.data.date)}>{formatDate(event.data.date)}</time></div>
         {event.data.location && <div><strong style="color: var(--aiv-warning);">📍 Location:</strong> {event.data.location}</div>}
       </div>
-      {event.data.description && <div class="event-description" style="background: var(--aiv-legacy-charcoal); padding: 1rem; border-left: 4px solid var(--aiv-risk); border-radius: 0 5px 5px 0; margin: 1rem 0;"><p style="margin: 0; color: var(--aiv-legacy-light-text); font-size: 1.1rem;">{event.data.description}</p></div>}
+      {event.data.description && <div class="event-description" style="background: var(--aiv-nested-bg); padding: 1rem; border: 1px solid var(--aiv-nested-border); border-left: 4px solid var(--aiv-action-primary); border-radius: 0 5px 5px 0; margin: 1rem 0;"><p style="margin: 0; color: var(--aiv-text-secondary); font-size: 1.1rem;">{event.data.description}</p></div>}
     </header>
     <div class="event-content" style="line-height: 1.7;">
       <Content />
@@ -37,25 +37,25 @@ const scheduleLinks = scheduleRoutesForEvent(event.id);
         </ul>
       </section>
     )}
-    <footer class="event-footer" style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--aiv-legacy-divider);">
-      <div style="text-align: center; margin: 2rem 0; padding: 1.5rem; background: var(--aiv-legacy-charcoal); border-radius: 5px;">
-        <p style="margin: 0 0 1rem 0; color: var(--aiv-legacy-green); font-weight: bold;">🎪 Interested in attending or presenting at AI Village events?</p>
+    <footer class="event-footer" style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--aiv-rule-color);">
+      <div style="text-align: center; margin: 2rem 0; padding: 1.5rem; background: var(--aiv-card-bg); border: 1px solid var(--aiv-card-border); box-shadow: var(--aiv-card-shadow); border-radius: 5px;">
+        <p style="margin: 0 0 1rem 0; color: var(--aiv-brand-primary); font-weight: bold;">🎪 Interested in attending or presenting at AI Village events?</p>
         <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
           <a href="/discord/" style="color: var(--aiv-action-primary);">Join our Discord</a>
-          <span style="color: var(--aiv-legacy-dim);">•</span>
+          <span style="color: var(--aiv-text-muted);">•</span>
           <a href="https://forms.gle/vCrz3zpR8xHCsTtJ8" target="_blank" style="color: var(--aiv-action-primary);">Volunteer Application</a>
-          <span style="color: var(--aiv-legacy-dim);">•</span>
+          <span style="color: var(--aiv-text-muted);">•</span>
           <a href="/events/" style="color: var(--aiv-action-primary);">All Events</a>
         </div>
       </div>
       <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-top: 2rem;">
         <div class="event-navigation">
           {previous && <a href={eventPath(previous)} style="color: var(--aiv-action-primary);">← {truncate(previous.data.title, 30)}</a>}
-          {previous && next && <span style="color: var(--aiv-legacy-dim); margin: 0 1rem;">|</span>}
+          {previous && next && <span style="color: var(--aiv-text-muted); margin: 0 1rem;">|</span>}
           {next && <a href={eventPath(next)} style="color: var(--aiv-action-primary);">{truncate(next.data.title, 30)} →</a>}
         </div>
         <div class="event-share">
-          <a href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(event.data.title)}&via=aivillage_dc`} target="_blank" style="color: #1DA1F2; margin: 0 0.5rem;">Share Event</a>
+          <a href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(event.data.title)}&via=aivillage_dc`} target="_blank" style="color: var(--aiv-action-primary); margin: 0 0.5rem;">Share Event</a>
         </div>
       </div>
     </footer>

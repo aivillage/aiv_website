@@ -19,8 +19,24 @@ type Props = {
 ---
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="auto">
   <head>
+    <script is:inline>
+      (() => {
+        const allowed = new Set(["auto", "institutional-dark", "institutional-light"]);
+        let selectedTheme = "auto";
+
+        try {
+          const savedTheme = localStorage.getItem("aiv-theme");
+          if (allowed.has(savedTheme)) selectedTheme = savedTheme;
+          else if (savedTheme) localStorage.removeItem("aiv-theme");
+        } catch {
+          selectedTheme = "auto";
+        }
+
+        document.documentElement.dataset.theme = selectedTheme;
+      })();
+    </script>
     <SeoHead {...Astro.props} />
   </head>
   <body>

@@ -16,7 +16,7 @@ const latestPost = posts[0];
 <BaseLayout title="Home" canonical="/">
   <div style="text-align: center; margin: 3rem 0;">
     <h1 class="glitch cursor" data-text="AI VILLAGE">AI VILLAGE</h1>
-    <p style="font-size: 1.2rem; color: var(--aiv-legacy-gray); font-family: var(--aiv-font-mono);">
+    <p style="font-size: 1.2rem; color: var(--aiv-text-muted); font-family: var(--aiv-font-mono);">
       A community of hackers and data scientists working to educate the world on the use and abuse of artificial intelligence in security and privacy.
     </p>
   </div>
@@ -33,9 +33,9 @@ const latestPost = posts[0];
     </style>
 
     <div class="card">
-      <h3 style="color: var(--aiv-legacy-green); margin-top: 0;">🔥 Upcoming Events</h3>
+      <h3 style="color: var(--aiv-brand-primary); margin-top: 0;">🔥 Upcoming Events</h3>
       {upcomingEvent ? (
-        <div class="event-item" style="background: var(--aiv-legacy-charcoal); border-left: 4px solid var(--aiv-risk);">
+        <div class="event-item" style="background: var(--aiv-nested-bg); border: 1px solid var(--aiv-nested-border); border-left: 4px solid var(--aiv-card-hover-border);">
           <DateBadge date={upcomingEvent.data.date} />
           <div class="event-content">
             <h4 style="margin: 0;"><a href={eventPath(upcomingEvent)}>{upcomingEvent.data.title}</a></h4>
@@ -44,23 +44,23 @@ const latestPost = posts[0];
           </div>
         </div>
       ) : (
-        <p style="color: var(--aiv-legacy-gray);">No upcoming events at this time.</p>
+        <p style="color: var(--aiv-text-muted);">No upcoming events at this time.</p>
       )}
       <p style="margin-top: 1rem;"><a href="/events/" style="color: var(--aiv-action-primary);">→ View all events</a></p>
     </div>
 
     <div class="card">
-      <h3 style="color: var(--aiv-legacy-green); margin-top: 0;">📝 Latest Blog Post</h3>
+      <h3 style="color: var(--aiv-brand-primary); margin-top: 0;">📝 Latest Blog Post</h3>
       {latestPost ? (
         <>
           <h4 style="margin: 0.5rem 0;"><a href={canonicalPostPath(latestPost)}>{latestPost.data.title}</a></h4>
-          <div style="color: var(--aiv-legacy-gray); font-size: 0.9rem; font-family: var(--aiv-font-mono); margin: 0.5rem 0;">
+          <div style="color: var(--aiv-text-muted); font-size: 0.9rem; font-family: var(--aiv-font-mono); margin: 0.5rem 0;">
             By {Array.isArray(latestPost.data.author) ? latestPost.data.author.join(", ") : latestPost.data.author} • {formatShortDate(latestPost.data.date)}
           </div>
           <div style="margin: 1rem 0;">{latestPost.data.description ?? excerptFromBody(latestPost.body ?? "", 20)}</div>
         </>
       ) : (
-        <p style="color: var(--aiv-legacy-gray);">No blog posts yet.</p>
+        <p style="color: var(--aiv-text-muted);">No blog posts yet.</p>
       )}
       <p style="margin-top: 1rem;"><a href="/blog/" style="color: var(--aiv-action-primary);">→ Read all posts</a></p>
     </div>
@@ -73,7 +73,7 @@ const latestPost = posts[0];
 
   <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin: 2rem 0;">
     <div class="card" style="text-align: center;">
-      <h4 style="color: var(--aiv-warning);">🛡️ Security Research</h4>
+      <h4 style="color: var(--aiv-accent-blue);">🛡️ Security Research</h4>
       <p>Exploring vulnerabilities and defenses in AI systems through hands-on research and experimentation.</p>
     </div>
     <div class="card" style="text-align: center;">
@@ -81,7 +81,7 @@ const latestPost = posts[0];
       <p>Teaching the security community about AI risks and the AI community about security practices.</p>
     </div>
     <div class="card" style="text-align: center;">
-      <h4 style="color: var(--aiv-warning);">🤝 Community</h4>
+      <h4 style="color: var(--aiv-action-secondary);">🤝 Community</h4>
       <p>Building bridges between hackers, data scientists, researchers, and policy makers.</p>
     </div>
   </div>
@@ -117,7 +117,7 @@ const latestPost = posts[0];
   <hr />
 
   <h2 id="-get-involved">🚀 Get Involved</h2>
-  <div style="background: var(--aiv-legacy-charcoal); padding: 1.5rem; border-radius: 5px; border-left: 4px solid var(--aiv-legacy-green);">
+  <div style="background: var(--aiv-card-bg); border: 1px solid var(--aiv-card-border); box-shadow: var(--aiv-card-shadow); padding: 1.5rem; border-radius: 5px; border-left: 4px solid var(--aiv-action-secondary);">
     <p><strong>Want to join our community?</strong></p>
     <ul>
       <li><a href="https://discord.com/invite/GX5fhfT">Join our Discord</a> - Chat with fellow researchers and stay updated</li>
