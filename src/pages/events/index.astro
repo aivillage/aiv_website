@@ -24,7 +24,7 @@ const pastByYear = [...groupByYear(pastEvents)].sort(([a], [b]) => b.localeCompa
     </p>
     <br />
     <section class="future-events">
-      <div class="event__subtitle">Upcoming Events</div>
+      <h2 class="event__subtitle">Upcoming Events</h2>
       {futureEvents.length > 0 ? futureByYear.map(([year, yearEvents]) => (
         <details class="year-section" open>
           <summary class="year-heading">{year}</summary>
@@ -34,7 +34,7 @@ const pastByYear = [...groupByYear(pastEvents)].sort(([a], [b]) => b.localeCompa
     </section>
     <br />
     <section class="past-events">
-      <div class="event__subtitle">Past Events</div>
+      <h2 class="event__subtitle">Past Events</h2>
       {pastByYear.map(([year, yearEvents]) => (
         <details class="year-section" open>
           <summary class="year-heading">{year}</summary>
@@ -44,7 +44,7 @@ const pastByYear = [...groupByYear(pastEvents)].sort(([a], [b]) => b.localeCompa
     </section>
     <br />
     <section class="schedule-archive">
-      <div class="event__subtitle">Schedules and Talks</div>
+      <h2 class="event__subtitle">Schedules and Talks</h2>
       <div class="card">
         <ul>
           {scheduleRoutes.map((schedule) => <li><a href={schedule.path}>{schedule.label}</a></li>)}

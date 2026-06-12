@@ -289,33 +289,42 @@ h4,
 h5,
 h6 {
   color: var(--aiv-text-primary);
-  font-family: var(--aiv-font-mono);
+  font-family: var(--aiv-font-body);
   margin: 1.5em 0 0.75em 0;
-  line-height: 1.2;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+  line-height: 1.1;
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: normal;
+  text-wrap: balance;
 }
 
 h1 {
-  font-size: 2.5rem;
+  font-size: clamp(2.25rem, 4vw, 3.75rem);
   color: var(--aiv-text-primary);
+  font-weight: 700;
+  line-height: 1.05;
   text-shadow: none;
   margin-top: 0;
 }
 
-h1.glitch {
+.brand-display {
+  font-family: var(--aiv-font-mono);
+  font-size: clamp(3rem, 5vw, 4.25rem);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
   color: var(--aiv-brand-primary);
 }
 
 h2 {
-  font-size: 2rem;
+  font-size: clamp(1.75rem, 3vw, 2.75rem);
   color: var(--aiv-action-primary);
+  font-weight: 700;
 }
 
 h3 {
-  font-size: 1.5rem;
+  font-size: clamp(1.25rem, 2vw, 1.75rem);
   color: var(--aiv-text-primary);
+  font-weight: 600;
 }
 
 h4 {
@@ -448,6 +457,32 @@ pre {
   }
 }
 
+kbd,
+samp,
+.meta,
+.post-meta,
+.event-meta,
+.event-date,
+.date-badge,
+.tag,
+.badge,
+.eyebrow,
+.label,
+.member-position,
+.event-location,
+.text-mono,
+table th {
+  font-family: var(--aiv-font-mono);
+}
+
+.eyebrow,
+.label,
+.badge,
+.tag {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
 /* ===================================
    BLOCKQUOTES
    =================================== */
@@ -524,7 +559,7 @@ blockquote {
     text-decoration: none;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 2px;
+    letter-spacing: 0.08em;
 
     &::before {
       content: "> ";
@@ -549,7 +584,7 @@ blockquote {
       font-family: var(--aiv-font-mono);
       font-weight: 400;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 0.08em;
       padding: 0.5rem 1rem;
       border: 1px solid transparent;
       border-radius: 4px;
@@ -657,7 +692,7 @@ blockquote {
   font-family: var(--aiv-font-mono);
   font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.08em;
   border-radius: 6px;
   transition: all 0.3s ease;
   position: relative;
@@ -831,6 +866,8 @@ blockquote {
 
     h2 {
       margin: 0 0 0.5rem 0;
+      font-size: clamp(1.35rem, 2vw, 1.85rem);
+      line-height: 1.15;
 
       a {
         color: var(--aiv-action-primary);
@@ -895,6 +932,10 @@ blockquote {
 .post-content {
   line-height: 1.7;
 
+  h2 {
+    color: var(--aiv-text-primary);
+  }
+
   img {
     max-width: 100%;
     height: auto;
@@ -902,6 +943,10 @@ blockquote {
     margin: 1rem 0;
     border: 1px solid var(--aiv-card-border);
   }
+}
+
+.event > .event-content h2 {
+  color: var(--aiv-text-primary);
 }
 
 .post-footer {
@@ -1008,7 +1053,7 @@ table {
     font-family: var(--aiv-font-mono);
     font-weight: 500;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 0.08em;
   }
 
   td {
@@ -1060,7 +1105,7 @@ label {
   font-family: var(--aiv-font-mono);
   font-size: 0.9rem;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.08em;
   margin-bottom: 0.5rem;
   display: block;
 }
@@ -1182,7 +1227,7 @@ details {
 
     h3 {
       margin: 0 0 0.5rem 0;
-      color: var(--aiv-brand-primary);
+      color: var(--aiv-text-primary);
     }
 
     .member-position {
