@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from "astro:content";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
+import PageShell from "../../../components/layout/PageShell.astro";
 import { sponsorPath, slugify } from "../../../utils/site";
 
 export async function getStaticPaths() {
@@ -14,6 +15,7 @@ const hasBody = Boolean(sponsor.body?.trim());
 ---
 
 <BaseLayout title={sponsor.data.name} canonical={sponsorPath(sponsor)} description={`${sponsor.data.name} sponsor page for AI Village.`}>
+  <PageShell>
   <article class="post">
     <header class="post-header">
       {sponsor.data.logo && <img src={`/assets/images/logos/${sponsor.data.logo}`} alt={`${sponsor.data.name} logo`} style="max-width: 260px; max-height: 120px; object-fit: contain;" />}
@@ -25,4 +27,5 @@ const hasBody = Boolean(sponsor.body?.trim());
       <p><a href="/sponsors/">Back to sponsors</a></p>
     </div>
   </article>
+  </PageShell>
 </BaseLayout>

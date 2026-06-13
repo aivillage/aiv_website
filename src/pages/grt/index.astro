@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageShell from "../../components/layout/PageShell.astro";
 import PostCard from "../../components/PostCard.astro";
 import EventCard from "../../components/EventCard.astro";
 import { sortPosts } from "../../utils/site";
@@ -14,6 +15,7 @@ const events = (await getCollection("events")).filter((event) => `${event.data.t
 ---
 
 <BaseLayout title="Generative Red Team" canonical="/grt/" description="AI Village Generative Red Team posts, event links, and source-backed program context.">
+  <PageShell>
   <h1>Generative Red Team</h1>
   <p>
     Generative Red Team is AI Village's hands-on work around assessing generative AI systems and the evaluations used to measure them. The current site content frames the work through event announcements, recaps, and technical posts.
@@ -47,4 +49,5 @@ const events = (await getCollection("events")).filter((event) => `${event.data.t
       For current participation details, use the public event pages and join the <a href="/discord/">AI Village Discord</a>.
     </p>
   </div>
+  </PageShell>
 </BaseLayout>

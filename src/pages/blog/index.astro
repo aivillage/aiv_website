@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageShell from "../../components/layout/PageShell.astro";
 import PostCard from "../../components/PostCard.astro";
 import { sortPosts } from "../../utils/site";
 
@@ -12,6 +13,7 @@ const posts = sortPosts(await getCollection("blog", ({ data }) => !data.draft));
   canonical="/blog/"
   description="AI Village blog posts on AI security research, adversarial machine learning, generative red teaming, workshops, and community updates."
 >
+  <PageShell>
   <section class="blog-index">
     <h1>Blog</h1>
     <div class="page-intro">
@@ -41,4 +43,5 @@ const posts = sortPosts(await getCollection("blog", ({ data }) => !data.draft));
       </p>
     </div>
   </section>
+  </PageShell>
 </BaseLayout>

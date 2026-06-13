@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageShell from "../../components/layout/PageShell.astro";
 import EventCard from "../../components/EventCard.astro";
 import { groupByYear, sortEventsAscending, sortEventsDescending } from "../../utils/site";
 import { scheduleRoutes } from "../../data/schedules";
@@ -19,6 +20,7 @@ const pastByYear = [...groupByYear(pastEvents)].sort(([a], [b]) => b.localeCompa
   canonical="/events/"
   description="Upcoming and past AI Village events, DEF CON village archives, schedules, talks, workshops, and volunteer information."
 >
+  <PageShell>
   <section class="content events-page">
     <h1>Events</h1>
     <p>
@@ -57,4 +59,5 @@ const pastByYear = [...groupByYear(pastEvents)].sort(([a], [b]) => b.localeCompa
       </div>
     </section>
   </section>
+  </PageShell>
 </BaseLayout>

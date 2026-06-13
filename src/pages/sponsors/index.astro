@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageShell from "../../components/layout/PageShell.astro";
 import SponsorGrid from "../../components/SponsorGrid.astro";
 import { getCurrentSponsors, getPastSponsors } from "../../utils/site";
 
@@ -10,6 +11,7 @@ const pastSponsors = getPastSponsors(sponsors);
 ---
 
 <BaseLayout title="Sponsors" canonical="/sponsors/" description="Why and how to sponsor AI Village, plus current and past sponsors.">
+  <PageShell>
   <h1>Sponsors</h1>
   <p>
     AI Village acknowledges organizations that currently support, or have previously supported, the community's AI security education and research mission.
@@ -63,4 +65,5 @@ const pastSponsors = getPastSponsors(sponsors);
       <p>Past sponsor information is being finalized.</p>
     )}
   </section>
+  </PageShell>
 </BaseLayout>

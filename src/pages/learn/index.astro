@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageShell from "../../components/layout/PageShell.astro";
 
 const workshops = [
   {
@@ -26,6 +27,7 @@ const additionalWorkshopDirectories = [
 ---
 
 <BaseLayout title="Learn" canonical="/learn/" description="Hands-on AI security workshop material from AI Village.">
+  <PageShell>
   <h1>Learn</h1>
   <p>
     AIV Learn surfaces the public AI Village workshop material: hands-on labs for people who want to explore AI security by doing, not only by reading.
@@ -94,4 +96,5 @@ const additionalWorkshopDirectories = [
   <p>
     The next step is editorial: organize workshop material into clearer learning paths without overstating it as a formal training platform.
   </p>
+  </PageShell>
 </BaseLayout>

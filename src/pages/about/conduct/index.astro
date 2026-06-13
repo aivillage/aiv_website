@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../../../layouts/BaseLayout.astro";
+import PageShell from "../../../components/layout/PageShell.astro";
 ---
 
 <BaseLayout
@@ -7,6 +8,7 @@ import BaseLayout from "../../../layouts/BaseLayout.astro";
   canonical="/about/conduct/"
   description="AI Village code of conduct for delegates, speakers, sponsors, volunteers, and community participants."
 >
+  <PageShell>
   <h1>Code of Conduct</h1>
   <p>All delegates, speakers, sponsors and volunteers at AI Village are required to agree with the following code of conduct. Organizers will enforce this code throughout the event.</p>
   <h2>The Short Version</h2>
@@ -21,4 +23,5 @@ import BaseLayout from "../../../layouts/BaseLayout.astro";
   <p>Village staff will be happy to help participants contact hotel/venue security or local law enforcement, provide escorts, or otherwise assist those experiencing harassment to feel safe for the duration of the village. We value your attendance.</p>
   <p>We expect participants to follow these rules at all village venues and village-related social events.</p>
   <p>Borrowed with love from CAMLIS.org</p>
+  </PageShell>
 </BaseLayout>

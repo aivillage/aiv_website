@@ -555,6 +555,68 @@ blockquote {
   padding: 0 2rem;
 }
 
+.aiv-container {
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: 2rem;
+}
+
+.aiv-container--prose {
+  max-width: var(--aiv-measure-prose);
+}
+
+.aiv-container--wide {
+  max-width: 1200px;
+}
+
+.aiv-container--full {
+  max-width: none;
+}
+
+.aiv-section {
+  width: 100%;
+}
+
+.aiv-section--tone-canvas {
+  background: var(--aiv-bg-canvas);
+}
+
+.aiv-section--tone-surface {
+  background: var(--aiv-bg-surface);
+}
+
+.aiv-section--tone-panel {
+  background: var(--aiv-bg-panel);
+}
+
+.aiv-section--tone-accent {
+  background: var(--aiv-nested-bg);
+}
+
+.aiv-section--padding-none {
+  padding-block: 0;
+}
+
+.aiv-section--padding-sm {
+  padding-block: 1rem;
+}
+
+.aiv-section--padding-md {
+  padding-block: 2rem;
+}
+
+.aiv-section--padding-lg {
+  padding-block: 3rem;
+}
+
+.aiv-section--padding-xl {
+  padding-block: 4rem;
+}
+
+.aiv-page-shell {
+  width: 100%;
+}
+
 .main-content {
   padding: 2rem 0;
   min-height: calc(100vh - 200px);

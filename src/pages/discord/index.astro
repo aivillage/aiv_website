@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageShell from "../../components/layout/PageShell.astro";
 ---
 
 <BaseLayout
@@ -7,6 +8,7 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
   canonical="/discord/"
   description="Join the AI Village Discord community for AI security research discussion, events, journal clubs, roles, and community support."
 >
+  <PageShell>
   <h1>Discord Community</h1>
   <div style="text-align: center; margin: 2rem 0;">
     <h2 style="color: var(--aiv-action-primary);">Join the AI Village Discord</h2>
@@ -71,4 +73,5 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
     <ul><li><strong>Contact Officers or Board members</strong> directly via DM</li><li><strong>Use the server reporting system</strong> for serious issues</li><li><strong>Remember:</strong> We have zero tolerance for harassment</li></ul>
     <p style="margin-bottom: 0;">Our community is dedicated to providing a safe and welcoming environment for everyone.</p>
   </div>
+  </PageShell>
 </BaseLayout>

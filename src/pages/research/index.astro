@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageShell from "../../components/layout/PageShell.astro";
 import PostCard from "../../components/PostCard.astro";
 import { sortPosts } from "../../utils/site";
 
@@ -11,6 +12,7 @@ const researchPosts = sortPosts((await getCollection("blog", ({ data }) => !data
 ---
 
 <BaseLayout title="Research and Technical Work" canonical="/research/" description="Technical AI security posts and talks from AI Village site content.">
+  <PageShell>
   <h1>Research and Technical Work</h1>
   <p>
     This page indexes technical posts and talks from current AI Village site content. It is intentionally framed as technical work, not a formal publications program.
@@ -19,4 +21,5 @@ const researchPosts = sortPosts((await getCollection("blog", ({ data }) => !data
     For talks and schedules, start with the <a href="/events/">events archive</a>. For hands-on labs, see <a href="/learn/">Learn</a>.
   </p>
   <div class="post-list">{researchPosts.map((post) => <PostCard post={post} />)}</div>
+  </PageShell>
 </BaseLayout>

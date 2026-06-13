@@ -1,8 +1,10 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageShell from "../../components/layout/PageShell.astro";
 ---
 
 <BaseLayout title="DEFCON 31" canonical="/defcon31/" description="AI Village DEF CON 31 talks, demos, and Prompt Detective information.">
+  <PageShell>
   <article class="post">
     <header class="post-header">
       <h1>DEFCON 31</h1>
@@ -214,4 +216,5 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
       </p>
     </div>
   </article>
+  </PageShell>
 </BaseLayout>

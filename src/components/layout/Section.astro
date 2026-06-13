@@ -1,0 +1,16 @@
+---
+import Container from "./Container.astro";
+
+type Props = {
+  tone?: "canvas" | "surface" | "panel" | "accent";
+  width?: "prose" | "wide" | "full";
+  padding?: "none" | "sm" | "md" | "lg" | "xl";
+  class?: string;
+};
+
+const { tone = "canvas", width = "wide", padding = "lg", class: className } = Astro.props;
+---
+
+<section class:list={["aiv-section", `aiv-section--tone-${tone}`, `aiv-section--padding-${padding}`, className]}>
+  {width === "full" ? <slot /> : <Container width={width}><slot /></Container>}
+</section>

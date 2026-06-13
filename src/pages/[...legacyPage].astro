@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
+import PageShell from "../components/layout/PageShell.astro";
 import { schedulePath, type ScheduleEntry } from "../utils/site";
 
 export async function getStaticPaths() {
@@ -20,8 +21,10 @@ const canonical = schedulePath(entry);
 ---
 
 <BaseLayout title={title} canonical={canonical}>
+  <PageShell>
   <article class="post">
     <header class="post-header"><h1>{title}</h1></header>
     <div class="post-content"><Content /></div>
   </article>
+  </PageShell>
 </BaseLayout>

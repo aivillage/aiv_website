@@ -1,11 +1,14 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import PageShell from "../components/layout/PageShell.astro";
 ---
 
 <BaseLayout title="404" canonical="/404.html">
+  <PageShell>
   <div class="card" style="text-align: center;">
     <h1>404</h1>
     <p style="color: var(--aiv-text-muted);">Page not found.</p>
     <p><a href="/" style="color: var(--aiv-action-primary);">Return home</a></p>
   </div>
+  </PageShell>
 </BaseLayout>
