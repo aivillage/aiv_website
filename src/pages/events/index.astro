@@ -13,7 +13,11 @@ const futureByYear = [...groupByYear(futureEvents)].sort(([a], [b]) => a.localeC
 const pastByYear = [...groupByYear(pastEvents)].sort(([a], [b]) => b.localeCompare(a));
 ---
 
-<BaseLayout title="Events" canonical="/events/">
+<BaseLayout
+  title="Events"
+  canonical="/events/"
+  description="Upcoming and past AI Village events, DEF CON village archives, schedules, talks, workshops, and volunteer information."
+>
   <section class="content events-page">
     <h1>Events</h1>
     <p>

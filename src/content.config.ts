@@ -2,6 +2,14 @@ import { defineCollection } from "astro:content";
 import { glob } from "astro/loaders";
 import { z } from "astro/zod";
 
+const image = z.union([
+  z.string(),
+  z.object({
+    path: z.string(),
+    alt: z.string().optional(),
+  }),
+]);
+
 const blog = defineCollection({
   loader: glob({ pattern: "**/*.{md,mdx,markdown}", base: "./src/content/blog" }),
   schema: z.object({
@@ -13,7 +21,7 @@ const blog = defineCollection({
     tags: z.array(z.string()).default([]),
     description: z.string().optional(),
     excerpt: z.string().optional(),
-    image: z.any().optional(),
+    image: image.optional(),
     cover: z.string().optional(),
     author_profile: z.boolean().optional(),
     draft: z.boolean().default(false),

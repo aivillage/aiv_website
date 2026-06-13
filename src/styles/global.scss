@@ -1014,6 +1014,17 @@ blockquote {
   }
 }
 
+.post-cover-wrapper {
+  margin: 1rem 0;
+}
+
+.post-cover {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid var(--aiv-card-border);
+  border-radius: 8px;
+}
+
 .event > .event-content h2 {
   color: var(--aiv-text-primary);
 }
