@@ -12,31 +12,33 @@ const posts = sortPosts(await getCollection("blog", ({ data }) => !data.draft));
   canonical="/blog/"
   description="AI Village blog posts on AI security research, adversarial machine learning, generative red teaming, workshops, and community updates."
 >
-  <h1>Blog</h1>
-  <div class="page-intro" style="text-align: left; margin: 2rem 0;">
-    <p style="color: var(--aiv-text-muted); font-size: 1.1rem;">
-      Research insights, event recaps, and perspectives on AI security from our community.
-    </p>
-  </div>
-  <hr />
-  <div class="post-list">
-    {posts.map((post) => <PostCard post={post} />)}
-  </div>
-  {posts.length === 0 && <div class="card" style="text-align: center;"><h3 style="color: var(--aiv-text-muted);">No blog posts yet</h3><p style="color: var(--aiv-text-muted);">Check back soon for updates from the AI Village community!</p></div>}
-  <hr />
-  <div style="background: var(--aiv-card-bg); border: 1px solid var(--aiv-card-border); box-shadow: var(--aiv-card-shadow); padding: 1.5rem; border-radius: 5px; border-left: 4px solid var(--aiv-action-primary); margin: 2rem 0;">
-    <h4 style="color: var(--aiv-action-primary); margin-top: 0;">📝 Want to Contribute?</h4>
-    <p>We welcome guest posts from the community! Topics we're interested in:</p>
-    <ul>
-      <li>AI security research and findings</li>
-      <li>Tool releases and tutorials</li>
-      <li>Event recaps and conference reports</li>
-      <li>Opinion pieces on AI ethics and policy</li>
-      <li>Technical deep dives and case studies</li>
-    </ul>
-    <p>
-      <a href="https://github.com/aivillage/aiv_website" target="_blank" rel="noopener noreferrer" style="color: var(--aiv-action-primary);">Submit a pull request →</a>
-      or reach out on Discord to discuss your ideas.
-    </p>
-  </div>
+  <section class="blog-index">
+    <h1>Blog</h1>
+    <div class="page-intro">
+      <p>
+        Research insights, event recaps, and perspectives on AI security from our community.
+      </p>
+    </div>
+    <hr />
+    <div class="post-list">
+      {posts.map((post) => <PostCard post={post} />)}
+    </div>
+    {posts.length === 0 && <div class="card" style="text-align: center;"><h3 style="color: var(--aiv-text-muted);">No blog posts yet</h3><p style="color: var(--aiv-text-muted);">Check back soon for updates from the AI Village community!</p></div>}
+    <hr />
+    <div class="blog-contribute">
+      <h4>📝 Want to Contribute?</h4>
+      <p>We welcome guest posts from the community! Topics we're interested in:</p>
+      <ul>
+        <li>AI security research and findings</li>
+        <li>Tool releases and tutorials</li>
+        <li>Event recaps and conference reports</li>
+        <li>Opinion pieces on AI ethics and policy</li>
+        <li>Technical deep dives and case studies</li>
+      </ul>
+      <p>
+        <a href="https://github.com/aivillage/aiv_website" target="_blank" rel="noopener noreferrer">Submit a pull request →</a>
+        or reach out on Discord to discuss your ideas.
+      </p>
+    </div>
+  </section>
 </BaseLayout>

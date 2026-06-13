@@ -9,6 +9,8 @@
   --aiv-font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
   --aiv-measure-prose: 72ch;
   --aiv-measure-wide: 96ch;
+  --aiv-measure-blog: 1120px;
+  --aiv-measure-blog-prose: 78ch;
 }
 
 :root,
@@ -899,6 +901,43 @@ blockquote {
    BLOG POST STYLES
    =================================== */
 
+.blog-index,
+.post {
+  width: 100%;
+  max-width: var(--aiv-measure-blog);
+  margin-inline: auto;
+}
+
+.blog-index {
+  .page-intro {
+    margin: 2rem 0;
+
+    p {
+      color: var(--aiv-text-muted);
+      font-size: 1.1rem;
+    }
+  }
+}
+
+.blog-contribute {
+  background: var(--aiv-card-bg);
+  border: 1px solid var(--aiv-card-border);
+  border-left: 4px solid var(--aiv-action-primary);
+  box-shadow: var(--aiv-card-shadow);
+  padding: 1.5rem;
+  border-radius: 5px;
+  margin: 2rem 0;
+
+  h4 {
+    color: var(--aiv-action-primary);
+    margin-top: 0;
+  }
+
+  a {
+    color: var(--aiv-action-primary);
+  }
+}
+
 .post-list {
   .post-item {
     background: var(--aiv-card-bg);
@@ -964,6 +1003,8 @@ blockquote {
 }
 
 .post-header {
+  max-width: var(--aiv-measure-blog-prose);
+  margin-inline: auto;
   margin-bottom: 2rem;
 
   .post-meta {
@@ -1000,6 +1041,26 @@ blockquote {
 
 .post-content {
   line-height: 1.7;
+
+  >p,
+  >ul,
+  >ol,
+  >blockquote,
+  >h2,
+  >h3,
+  >h4,
+  >h5,
+  >h6 {
+    max-width: var(--aiv-measure-blog-prose);
+    margin-inline: auto;
+  }
+
+  >pre,
+  >table,
+  >.mermaid {
+    max-width: var(--aiv-measure-blog);
+    margin-inline: auto;
+  }
 
   h2 {
     color: var(--aiv-text-primary);
