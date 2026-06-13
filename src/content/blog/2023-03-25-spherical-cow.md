@@ -2,7 +2,7 @@
 layout: post
 title: The Spherical Cow of ML Security
 author: Sven Cattell
-date: 2023-03-25 09:00:00 +0900
+date: 2023-03-25
 category: "adversarial ml"
 canonicalSlug: spherical-cow
 legacyUrls:
@@ -27,7 +27,7 @@ The contract between the vendor and customer/stakeholders should explicitly lay 
 
 Unlike a lot of spherical cows in physics, this one has a close analog in security. Malware models are embedded in anti-virus or Enterprise Detection and Response (EDR) systems and those systems come with these guarantees. They provide guarantees on the false positive rate, too many false alert causes [alert fatigue](https://en.wikipedia.org/wiki/Alarm_fatigue), and on the false negative rate as misses cost their customers time and money. Companies track the performance in the product, but they are also regularly externally tested by several organizations, most prominently by [MITRE](https://attackevals.mitre-engenuity.org/). They all have response time guarantees for critical issues. Patches for a problem that the product misses come in several flavors targeting different layers of the [security onion](https://twitter.com/joshua_saxe/status/1550545466072264704). Dmitrijs Trizna has an excelent write up about these layers [here](https://twitter.com/TDataScience/status/1649314578474336256).
 
-# Real World Issues
+## Real World Issues
 
 ## The Contract and Power Dynamics 
 
@@ -49,13 +49,13 @@ If a model isn't performing well the only ways to fix it is to retrain or finetu
 
 The three recommendations above does not address privacy issues, or model theft. This [has happened](https://nvd.nist.gov/vuln/detail/CVE-2019-20634), and is hard to defend against. These types of attacks require extracting information usually through an extremely high volume of queries. If the responses from the system include more information than is needed, the number of queries can be drastically reduced. The proofpudding attack relied on Proofpoint responding with more info than they needed to. The best practices to combat this inherent flaw in ML systems is to have an API limit, and minimize the information in the response. This is contrary to the movement to make ML more explainable, as responses with explainability techniques can be used to [steal models faster](https://arxiv.org/pdf/2107.08909.pdf). As with everything there are trade offs. 
 
-# Real World Non-Issues
+## Real World Non-Issues
 
 A lot of AI security research is focused on threat models that aren't realistic. Adversarial examples are great, but they may not show up in the real world all that often. Though, adversarial patches, examples, and other attacks against the fundamental ML are extremely interesting from a theoretical perspective. It's better to focus on the model manipulations the attackers actually use. 
 
 The [EMBER paper](https://arxiv.org/pdf/1804.04637.pdf) consolidated much of the literature on malware detection models. The subsequent followup [contests](https://www.robustintelligence.com/blog-posts/ml-security-evasion-competition-2022) and new samples from the field showed that people used the information from this paper to try new attacks. Adding benign & useless imports to the import table, and packing the binary became more common since this application. Adversarially crafted malware sample using some [academic research](https://arxiv.org/abs/2003.13526) probably exist, but is so much harder than the simple manual techniques that it's rare.
 
-# Conclusion
+## Conclusion
 
 While there are real world constraints preventing this from applying perfectly, this is still a valuable framework for addressing ML risks. Optimizing for the greatest efficacy that your customers care about, and creating ways of measuring it (even if they're just approximations) forces you to ignore the shiny exciting things that may not affect the customer. The final point incentivizes finding issues quickly, preferably before they impact your customer, and starting a remediation process that is as fast as possible. 
 

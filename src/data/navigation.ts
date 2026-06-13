@@ -17,7 +17,7 @@ export const footerNav = [
 
 export const socialLinks = [
   { label: "GitHub", href: "https://github.com/aivillage" },
-  { label: "LinkedIn", href: "https://linkedin.com/in/aivillage" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/company/aivillage" },
   { label: "X/Twitter", href: "https://twitter.com/aivillage_dc" },
   { label: "Discord", href: "/discord/" },
 ] as const;

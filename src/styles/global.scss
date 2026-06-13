@@ -223,6 +223,26 @@ body {
   position: relative;
 }
 
+.skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 2000;
+  transform: translateY(-150%);
+  background: var(--aiv-bg-raised);
+  color: var(--aiv-text-primary);
+  border: 2px solid var(--aiv-focus-ring);
+  border-radius: 4px;
+  padding: 0.6rem 0.9rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+  outline: none;
+}
+
 html {
   background: var(--aiv-bg-canvas) !important;
   background-color: var(--aiv-bg-canvas) !important;
@@ -991,6 +1011,57 @@ blockquote {
     border-radius: 8px;
     margin: 1rem 0;
     border: 1px solid var(--aiv-card-border);
+  }
+}
+
+.post-cover-wrapper {
+  margin: 1rem 0;
+}
+
+.post-cover {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid var(--aiv-card-border);
+  border-radius: 8px;
+}
+
+.mermaid {
+  color: var(--aiv-text-primary);
+
+  .flowchart-link,
+  .edgePath path,
+  marker path {
+    stroke: var(--aiv-action-primary) !important;
+  }
+
+  .edgeLabel,
+  .edgeLabel p,
+  .edgeLabel span {
+    color: var(--aiv-text-primary) !important;
+    background: var(--aiv-bg-surface) !important;
+  }
+
+  .edgeLabel rect,
+  .labelBkg {
+    fill: var(--aiv-bg-surface) !important;
+    opacity: 0.96 !important;
+  }
+
+  .label,
+  .nodeLabel,
+  .label span,
+  foreignObject,
+  text {
+    color: var(--aiv-text-primary) !important;
+    fill: var(--aiv-text-primary) !important;
+  }
+
+  .node rect,
+  .node circle,
+  .node ellipse,
+  .node polygon,
+  .node path {
+    stroke: var(--aiv-nested-border) !important;
   }
 }
 
@@ -1837,6 +1908,27 @@ details {
 @media (max-width: 768px) {
   .grid-2 {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  body::before {
+    animation: none !important;
+  }
+
+  .card:hover,
+  .event-item:hover,
+  .post-item:hover {
+    transform: none;
   }
 }
 

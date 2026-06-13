@@ -3,7 +3,7 @@
 layout: post
 title: Threat Modeling LLM Applications
 author: Gavin Klondike
-date: 2023-06-06 09:00:00 +0900
+date: 2023-06-06
 category: "large language models"
 canonicalSlug: threat-modeling-llm
 legacyUrls:

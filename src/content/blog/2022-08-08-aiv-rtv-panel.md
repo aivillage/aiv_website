@@ -2,7 +2,7 @@
 layout: post
 title: The Use of AI/ML in Offensive Security Operations
 author: Omar Santos
-date: 2022-08-08 00:00:00 +0000
+date: 2022-08-08
 category: "defcon 30"
 toc: true
 canonicalSlug: aiv-rtv-panel
@@ -13,7 +13,7 @@ legacyUrls:
 
 The [Red Team Village](https://redteamvillage.io/) and the AI Village will host a panel from different industry experts to discuss the use of artificial intelligence and machine learning in offensive security operations. More details coming soon!
 
-# Panelists
+## Panelists
 
 ## Moderator: Omar Santos
 

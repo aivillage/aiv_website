@@ -7,6 +7,6 @@ export const site = {
   social: [
     "https://twitter.com/aivillage_dc",
     "https://github.com/aivillage",
-    "https://linkedin.com/in/aivillage",
+    "https://www.linkedin.com/company/aivillage",
   ],
 } as const;

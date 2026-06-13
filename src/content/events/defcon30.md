@@ -10,11 +10,11 @@ layout: post
 ## AI Village @ DEF CON 30, Safe Mode
 *Friday, August 11, 2022 9:00 AM PST to Sunday, August 14, 2022 4:00 PM PST*
 
-# ML Evasion
+## ML Evasion
 
 The ML Evasion competition is back! Hyrum Anderson, Eugene Neelou, and Zoltan Balazs are running the Machine Learning Security Evasion Competition again this year. The competition starts August 12, but you should register for it earlier on the 25th. This is one of the premier ML security contests and has has inspired excellent research. See the [announcement](https://www.robustintelligence.com/blog-post/ml-security-evasion-competition-2022) here for more details, and register [here](https://mlsec.io/).
 
-# AI Art
+## AI Art
 
 We will have a booth for generative art, come make your own [DALL-E style](https://openai.com/dall-e-2/) art. We're devoting Saturday afternoon to art! If you want to show your art, please get in touch on the discord!
 

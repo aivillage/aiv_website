@@ -2,7 +2,7 @@
 layout: post
 title: Dimensionality and Adversarial Examples
 author: Sven Cattell
-date: 2018-05-01 09:00:00 +0900
+date: 2018-05-01
 category: "adversarial ml"
 toc: true
 canonicalSlug: dimensionality-and-adversarial
@@ -16,8 +16,7 @@ Welcome to AI Village’s series on adversarial examples. This will focus on ima
 ## Introduction
 Adversarial examples are minor modifications made to a piece of data such that when it’s feed into a machine learning model it incorrectly handles the data. This might be a problem in self driving cars. Someone who disliked self driving trucks could release a large adversarial bumper sticker that confused the vision system and leads to self driving trucks crashing. This is also a problem in malware detection, trivial modifications to the raw bytes of a malware file, like changing the header, could lead to a deep learning system misclassifying the malware sample as benign. Providing a proper defense is crucial for a safe deployment of machine learning in our lives. We define it mathematically as:
 
-**Definition:** Let $$f: \mathbb{R}^N \to \{L_1,L_2, \dots L_n\}$$ be a function whose range is a discrete set of labels, let $$x$$ such that $$f(x) = L_i$$, and let $$\hat{x}$$ such that $$% <![CDATA[
-\lVert x-\hat{x} \rVert_p < \epsilon %]]>$$ such that $$f(\hat{x}) = L_j$$ and $$i \neq j$$. Then $$\hat{x}$$ is an adversarial example with threshold $$\epsilon$$.
+**Definition:** Let $$f: \mathbb{R}^N \to \{L_1,L_2, \dots L_n\}$$ be a function whose range is a discrete set of labels, let $$x$$ such that $$f(x) = L_i$$, and let $$\hat{x}$$ such that $$\lVert x-\hat{x} \rVert_p < \epsilon$$ such that $$f(\hat{x}) = L_j$$ and $$i \neq j$$. Then $$\hat{x}$$ is an adversarial example with threshold $$\epsilon$$.
 
 This mathematical definition is inadequate to cover everything we’d like to call an adversarial example. It doesn’t cover per-pixel classification or segmentation and most NLP situations. However, much of the literature is focused on this mathematical definition. The definition will look familiar to all former calculus students, it is based on the idea of continuity and it relates adversarial examples to discontinuities. Most machine learning systems are continuous (specifically, almost differentiable) by construction, so them showing discontinuous behavior is alarming. It’s not that the math is wrong, it’s just that these systems are demonstrating something related to [chaos](https://en.wikipedia.org/wiki/Chaos_theory). It’s not the same, but to explain why and why it’s likely intractable, we have to make sense of the curse of dimensionality.
 

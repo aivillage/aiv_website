@@ -7,7 +7,11 @@ import { sortPosts } from "../../utils/site";
 const posts = sortPosts(await getCollection("blog", ({ data }) => !data.draft));
 ---
 
-<BaseLayout title="Blog" canonical="/blog/">
+<BaseLayout
+  title="Blog"
+  canonical="/blog/"
+  description="AI Village blog posts on AI security research, adversarial machine learning, generative red teaming, workshops, and community updates."
+>
   <h1>Blog</h1>
   <div class="page-intro" style="text-align: left; margin: 2rem 0;">
     <p style="color: var(--aiv-text-muted); font-size: 1.1rem;">
@@ -31,7 +35,7 @@ const posts = sortPosts(await getCollection("blog", ({ data }) => !data.draft));
       <li>Technical deep dives and case studies</li>
     </ul>
     <p>
-      <a href="https://github.com/aivillage/aiv_website" target="_blank" style="color: var(--aiv-action-primary);">Submit a pull request →</a>
+      <a href="https://github.com/aivillage/aiv_website" target="_blank" rel="noopener noreferrer" style="color: var(--aiv-action-primary);">Submit a pull request →</a>
       or reach out on Discord to discuss your ideas.
     </p>
   </div>

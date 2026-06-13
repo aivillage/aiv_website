@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Hacking AI Browsers: How i hacked Perplexity"
-date: 2026-02-03 00:00:00 +0200
+date: 2026-02-03
 author: Mohamed AbuMuslim
 category: "generative-red-team"
 legacySlug: Hacking-AI-Browsers-How-i-hacked-Perplexity
@@ -24,7 +24,7 @@ In this blog, I’ll walk through a few vulnerabilities I found while testing **
 2. **Highlight/selection injection** (**Comet**): I showed that highlighted text can leak into the summary context/output.
 3. **Image-based chat exfiltration** (**Chat**): I confirmed outbound requests triggered via model output patterns.
 
-# Journey into hacking AI (and why summarizers keep betraying us)
+## Journey into hacking AI (and why summarizers keep betraying us)
 
 ## Introduction
 

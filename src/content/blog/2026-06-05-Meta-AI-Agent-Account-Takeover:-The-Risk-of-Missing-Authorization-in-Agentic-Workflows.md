@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Meta AI Agent Account Takeover: The Risk of Missing Authorization in Agentic Workflows"
-date: 2026-06-05 00:00:00 +0200
+date: 2026-06-05
 author: Mohamed AbuMuslim
 categories:
   - agentic-workflows
@@ -16,7 +16,7 @@ media_subpath: /assets/images/2026-06-05-Meta-AI-Agent-Account-Takeover/
 mermaid: true
 ---
 
-# Introduction
+## Introduction
 
 AI agents are increasingly being connected to sensitive account-management workflows such as password resets, email changes, recovery flows, and support automation. That creates a new problem. The issue is not only whether the LLM can be tricked. The bigger issue is what the agent is allowed to do after it understands the user’s request.
 
@@ -198,7 +198,7 @@ An attacker could repeatedly trigger the `change_email` flow for a victim accoun
 In this approach, the agent does not call privileged tools directly. Instead, all tool calls go through a policy layer. This is the approach I prefer because it creates a cleaner AI workflow instead of stitching security checks randomly across the system.
 
 ```python
-# Policy engine sits between agent and tools
+## Policy engine sits between agent and tools
 SECURITY_POLICY = {
     "change_email":    {"requires": "owns_account",   "auto": False},
     "reset_password":  {"requires": "verified_token", "auto": False},
@@ -349,7 +349,7 @@ A lot of teams treat the agent like a smart interface, but then accidentally giv
 
 The real impact usually comes from what sits behind the prompt. If the agent gets tricked and nothing sensitive happens, the impact is limited. If the agent gets tricked and can touch account recovery, identity settings, payments, roles, or internal workflows, then the prompt becomes the entry point into something much bigger.
 
-# **Final thoughts**
+## **Final thoughts**
 
 What brought us here is the rush to adopt new technology without understanding the new attack surface it creates.
 
