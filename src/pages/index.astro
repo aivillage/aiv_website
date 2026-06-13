@@ -1,138 +1,479 @@
 ---
 import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import PageShell from "../components/layout/PageShell.astro";
-import DateBadge from "../components/DateBadge.astro";
-import SponsorGrid from "../components/SponsorGrid.astro";
-import { canonicalPostPath, eventPath, excerptFromBody, formatShortDate, getCurrentSponsors, sortEventsAscending, sortPosts } from "../utils/site";
-import { volunteerApplicationUrl } from "../data/site";
+import Section from "../components/layout/Section.astro";
+import Button from "../components/ui/Button.astro";
+import Card from "../components/ui/Card.astro";
+import SectionHeading from "../components/ui/SectionHeading.astro";
+import ProofStrip from "../components/content/ProofStrip.astro";
+import ProgramCard from "../components/content/ProgramCard.astro";
+import ResourceCard from "../components/content/ResourceCard.astro";
+import ActivityCard from "../components/content/ActivityCard.astro";
+import {
+  canonicalPostPath,
+  eventPath,
+  excerptFromBody,
+  formatShortDate,
+  getCurrentSponsors,
+  sortEventsAscending,
+  sortEventsDescending,
+  sortPosts,
+} from "../utils/site";
 
-const events = sortEventsAscending(await getCollection("events"));
+const events = await getCollection("events");
 const posts = sortPosts(await getCollection("blog", ({ data }) => !data.draft));
 const currentSponsors = getCurrentSponsors(await getCollection("sponsors"));
 const now = new Date();
-const upcomingEvent = events.find((event) => event.data.date.getTime() >= now.getTime());
+const upcomingEvent = sortEventsAscending(events.filter((event) => event.data.date.getTime() >= now.getTime()))[0];
+const latestEvent = sortEventsDescending(events)[0];
+const featuredEvent = upcomingEvent ?? latestEvent;
 const latestPost = posts[0];
+const additionalPost = posts[1];
+
+const proofItems = [
+  { label: "DEF CON Village" },
+  { label: "Generative Red Team" },
+  { label: "Hands-on workshops" },
+  { label: "Open resources" },
+  { label: "Community research" },
+  { label: "Public AI security education" },
+];
+
+const workCards = [
+  {
+    title: "Red-team AI systems",
+    description: "Run and learn from practical exercises that expose how AI systems fail, where defenses help, and what responsible testing looks like.",
+  },
+  {
+    title: "Teach AI security",
+    description: "Publish workshops, labs, and learning material for people moving from curiosity to hands-on AI security practice.",
+  },
+  {
+    title: "Host community events",
+    description: "Bring hackers, builders, researchers, and policy-minded practitioners together at DEF CON and other community events.",
+  },
+  {
+    title: "Publish field notes and resources",
+    description: "Share technical writing, recaps, and open resources from the people doing the work.",
+  },
+];
+
+const programs = [
+  {
+    title: "Generative Red Team",
+    href: "/grt/",
+    description: "A public red-team program focused on understanding and exercising real AI system failure modes.",
+    ctaLabel: "Explore GRT",
+  },
+  {
+    title: "Workshops & Labs",
+    href: "/learn/",
+    description: "Hands-on learning material for AI security, adversarial thinking, and practical experimentation.",
+    ctaLabel: "Start learning",
+  },
+  {
+    title: "Events & Challenges",
+    href: "/events/",
+    description: "Find upcoming events, DEF CON activity, schedules, recaps, and community challenges.",
+    ctaLabel: "View events",
+  },
+  {
+    title: "Research & Field Notes",
+    href: "/research/",
+    description: "Technical writing, event recaps, and practical AI security observations.",
+    ctaLabel: "Read field notes",
+  },
+];
 ---
 
 <BaseLayout
   title="Home"
   canonical="/"
-  description="AI Village is a community of hackers and data scientists advancing AI security and privacy education through research, events, workshops, and red teaming."
+  description="AI Village is a hacker-rooted public-interest AI security community for hands-on education, red-team practice, workshops, events, and open resources."
 >
-  <PageShell>
-    <div class="home-hero page-intro" style="text-align: center; margin: 3rem auto;">
-      <h1 class="brand-display" data-text="AI VILLAGE">AI VILLAGE</h1>
-      <p style="font-size: 1.2rem; color: var(--aiv-text-muted);">
-        A community of hackers and data scientists working to educate the world on the use and abuse of artificial intelligence in security and privacy.
-      </p>
-    </div>
-
-    <hr />
-
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin: 2rem 0;">
-      <style>
-        @media (max-width: 768px) {
-          div[style*="grid-template-columns: 1fr 1fr"] {
-            grid-template-columns: 1fr !important;
-          }
-        }
-      </style>
-
-      <div class="card">
-        <h3 style="margin-top: 0;">🔥 Upcoming Events</h3>
-        {upcomingEvent ? (
-          <div class="event-item" style="background: var(--aiv-nested-bg); border: 1px solid var(--aiv-nested-border); border-left: 4px solid var(--aiv-card-hover-border);">
-            <DateBadge date={upcomingEvent.data.date} />
-            <div class="event-content">
-              <h4 style="margin: 0;"><a href={eventPath(upcomingEvent)}>{upcomingEvent.data.title}</a></h4>
-              {upcomingEvent.data.location && <div class="event-location">📍 {upcomingEvent.data.location}</div>}
-              {upcomingEvent.data.description && <div class="event-description">{upcomingEvent.data.description}</div>}
-            </div>
-          </div>
-        ) : (
-          <p style="color: var(--aiv-text-muted);">No upcoming events at this time.</p>
-        )}
-        <p style="margin-top: 1rem;"><a href="/events/" style="color: var(--aiv-action-primary);">→ View all events</a></p>
+  <Section class="home-hero-section" tone="canvas" width="wide" padding="xl">
+    <div class="home-hero">
+      <div class="home-hero__content">
+        <p class="home-hero__eyebrow">Public-interest AI security</p>
+        <h1>AI security, tested in public.</h1>
+        <p class="home-hero__body">
+          AI Village brings hackers, researchers, engineers, and policymakers together through hands-on AI security education, red-team exercises, workshops, events, and open resources.
+        </p>
+        <div class="home-hero__actions" aria-label="Homepage primary actions">
+          <Button href="#programs">Explore Programs</Button>
+          <Button href="/learn/" variant="secondary">Start Learning</Button>
+          <Button href="/sponsors/" variant="secondary">Sponsor AI Village</Button>
+        </div>
       </div>
 
-      <div class="card">
-        <h3 style="margin-top: 0;">📝 Latest Blog Post</h3>
-        {latestPost ? (
+      {featuredEvent && (
+        <Card as="section" class="home-hero-panel" tone="nested" padding="lg">
+          <p class="home-hero-panel__eyebrow">{upcomingEvent ? "Upcoming event" : "Recent event"}</p>
+          <h2>{featuredEvent.data.title}</h2>
+          <p class="home-hero-panel__meta">
+            {formatShortDate(featuredEvent.data.date)}
+            {featuredEvent.data.location && <> · {featuredEvent.data.location}</>}
+          </p>
+          {featuredEvent.data.description && <p>{featuredEvent.data.description}</p>}
+          <Button href={eventPath(featuredEvent)} variant="secondary" size="sm">View event</Button>
+        </Card>
+      )}
+    </div>
+    <div class="home-hero-proof">
+      <ProofStrip items={proofItems} />
+    </div>
+  </Section>
+
+  <Section tone="surface" width="wide" padding="xl">
+    <div class="home-section-stack">
+      <SectionHeading
+        eyebrow="What we do"
+        title="Practical AI security, built in public."
+        description="AI Village connects education, experimentation, and community practice so people can understand, test, and secure AI systems."
+      />
+      <div class="home-card-grid home-card-grid--two">
+        {workCards.map((item) => (
+          <Card as="article" class="home-work-card">
+            <h3>{item.title}</h3>
+            <p>{item.description}</p>
+          </Card>
+        ))}
+      </div>
+    </div>
+  </Section>
+
+  <Section id="programs" tone="canvas" width="wide" padding="xl">
+    <div class="home-section-stack">
+      <SectionHeading
+        eyebrow="Programs"
+        title="Start where you can contribute."
+        description="Explore the major paths into AI Village: red teaming, workshops, events, and technical work."
+      />
+      <div class="home-card-grid home-card-grid--programs">
+        {programs.map((program) => (
+          <ProgramCard title={program.title} href={program.href} description={program.description} ctaLabel={program.ctaLabel} />
+        ))}
+      </div>
+    </div>
+  </Section>
+
+  <Section tone="surface" width="wide" padding="xl">
+    <div class="home-section-stack">
+      <SectionHeading
+        eyebrow="Current activity"
+        title="What is happening now."
+        description="Recent events, posts, and resources from the AI Village community."
+      />
+      <div class="home-card-grid home-card-grid--activity">
+        {featuredEvent && (
+          <ActivityCard
+            title={featuredEvent.data.title}
+            meta={`${upcomingEvent ? "Upcoming event" : "Recent event"} · ${formatShortDate(featuredEvent.data.date)}`}
+            description={featuredEvent.data.description}
+          >
+            {featuredEvent.data.location && <p class="home-activity-detail">{featuredEvent.data.location}</p>}
+            <Button href={eventPath(featuredEvent)} variant="ghost" size="sm">View Event</Button>
+          </ActivityCard>
+        )}
+        {(latestPost || additionalPost) && (
+          <div class="home-activity-posts">
+            {latestPost && (
+              <ResourceCard
+                title={latestPost.data.title}
+                href={canonicalPostPath(latestPost)}
+                meta={`Latest post · ${formatShortDate(latestPost.data.date)}`}
+                description={latestPost.data.description ?? latestPost.data.excerpt ?? excerptFromBody(latestPost.body ?? "", 22)}
+              />
+            )}
+            {additionalPost && (
+              <ResourceCard
+                title={additionalPost.data.title}
+                href={canonicalPostPath(additionalPost)}
+                meta={`Recent post · ${formatShortDate(additionalPost.data.date)}`}
+                description={additionalPost.data.description ?? additionalPost.data.excerpt ?? excerptFromBody(additionalPost.body ?? "", 22)}
+              />
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  </Section>
+
+  <Section tone="panel" width="wide" padding="xl">
+    <div class="home-cta-grid">
+      <Card as="section" class="home-cta-card" tone="nested" padding="lg">
+        {currentSponsors.length > 0 ? (
           <>
-            <h4 style="margin: 0.5rem 0;"><a href={canonicalPostPath(latestPost)}>{latestPost.data.title}</a></h4>
-            <div style="color: var(--aiv-text-muted); font-size: 0.9rem; font-family: var(--aiv-font-mono); margin: 0.5rem 0;">
-              By {Array.isArray(latestPost.data.author) ? latestPost.data.author.join(", ") : latestPost.data.author} • {formatShortDate(latestPost.data.date)}
+            <h2>Supported by organizations helping keep AI security education open.</h2>
+            <div class="home-sponsor-logos" aria-label="Current AI Village sponsors">
+              {currentSponsors.map((sponsor) => (
+                <a class="home-sponsor-logo" href={sponsor.data.url} target="_blank" rel="noopener noreferrer">
+                  <img src={`/assets/images/logos/${sponsor.data.logo}`} alt={`${sponsor.data.name} logo`} />
+                </a>
+              ))}
             </div>
-            <div style="margin: 1rem 0;">{latestPost.data.description ?? excerptFromBody(latestPost.body ?? "", 20)}</div>
+            <Button href="/sponsors/" variant="secondary">Sponsor AI Village</Button>
           </>
         ) : (
-          <p style="color: var(--aiv-text-muted);">No blog posts yet.</p>
+          <>
+            <h2>Help keep public-interest AI security education open.</h2>
+            <p>Sponsorship helps AI Village run workshops, events, open resources, and community infrastructure.</p>
+            <Button href="/sponsors/">Sponsor AI Village</Button>
+          </>
         )}
-        <p style="margin-top: 1rem;"><a href="/blog/" style="color: var(--aiv-action-primary);">→ Read all posts</a></p>
-      </div>
+      </Card>
+      <Card as="section" class="home-cta-card" tone="nested" padding="lg">
+        <h2>Join the AI Village community.</h2>
+        <p>Connect with people learning, testing, building, and securing AI systems in public.</p>
+        <div class="home-cta-card__actions">
+          <Button href="/community/">Join the Community</Button>
+          <Button href="/discord/" variant="secondary">Discord</Button>
+        </div>
+      </Card>
     </div>
-
-    <hr />
-
-    <h2 id="-mission">🎯 Mission</h2>
-    <p>We aim to bring more diverse viewpoints to AI security, grow a community of hackers, engineers, researchers, and policy makers, and encourage more people with a hacker mindset to assess machine learning systems. We have a strong presence at DEF CON, the world's longest-running and largest hacking conference.</p>
-
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin: 2rem 0;">
-      <div class="card" style="text-align: center;">
-        <h4>🛡️ Security Research</h4>
-        <p>Exploring vulnerabilities and defenses in AI systems through hands-on research and experimentation.</p>
-      </div>
-      <div class="card" style="text-align: center;">
-        <h4>🎓 Education</h4>
-        <p>Teaching the security community about AI risks and the AI community about security practices.</p>
-      </div>
-      <div class="card" style="text-align: center;">
-        <h4>🤝 Community</h4>
-        <p>Building bridges between hackers, data scientists, researchers, and policy makers.</p>
-      </div>
-    </div>
-
-    {currentSponsors.length > 0 ? (
-      <>
-        <hr />
-
-        <section aria-labelledby="current-sponsors">
-          <h2 id="current-sponsors">Current Sponsors</h2>
-          <p>
-            Our Current Sponsors are the companies that actively contribute to the mission of AI Village. Learn how to join our community and see past sponsors here:
-            {" "}
-            <a href="/sponsors/">Sponsors</a>
-          </p>
-          <SponsorGrid sponsors={currentSponsors} linkMode="external" compact />
-        </section>
-      </>
-    ) : (
-      <>
-        <hr />
-
-        <section aria-labelledby="support-ai-village">
-          <h2 id="support-ai-village">Support AI Village</h2>
-          <p>
-            AI Village is supported by volunteers, researchers, builders, and organizations that contribute to AI security education and research.
-          </p>
-          <p><a href="/sponsors/" style="color: var(--aiv-action-primary);">Sponsor AI Village →</a></p>
-        </section>
-      </>
-    )}
-
-    <hr />
-
-    <h2 id="-get-involved">🚀 Get involved</h2>
-    <div style="background: var(--aiv-card-bg); border: 1px solid var(--aiv-card-border); box-shadow: var(--aiv-card-shadow); padding: 1.5rem; border-radius: 5px; border-left: 4px solid var(--aiv-action-secondary);">
-      <p><strong>Want to join our community?</strong></p>
-      <ul>
-        <li><a href="https://discord.com/invite/GX5fhfT">Join our Discord</a> - Chat with fellow researchers and stay updated</li>
-        <li><a href="https://www.linkedin.com/company/aivillage">Connect on LinkedIn</a> - Connect with us on LinkedIn!</li>
-        <li><a href="/events/">Attend our events</a> - DEF CON, workshops, and more</li>
-        <li><a href="https://github.com/aivillage/aiv_website">Contribute</a> - Share your research and insights</li>
-        <li><a href="https://forms.gle/vCrz3zpR8xHCsTtJ8">Volunteer</a> - Help organize events and activities</li>
-      </ul>
-    </div>
-  </PageShell>
+  </Section>
 </BaseLayout>
+
+<style>
+  .home-hero {
+    display: grid;
+    gap: 1.25rem;
+    isolation: isolate;
+    padding-block: clamp(0.5rem, 3vw, 2.5rem);
+    position: relative;
+  }
+
+  .home-hero__content::before {
+    background-image:
+      linear-gradient(color-mix(in srgb, var(--aiv-action-primary) 56%, transparent) 1px, transparent 1px),
+      linear-gradient(90deg, color-mix(in srgb, var(--aiv-action-primary) 56%, transparent) 1px, transparent 1px);
+    background-size: 32px 32px;
+    content: "";
+    inset: 0;
+    mask-image: radial-gradient(
+      ellipse 82% 70% at 38% 44%,
+      var(--aiv-text-primary) 0%,
+      var(--aiv-text-primary) 32%,
+      transparent 78%
+    );
+    opacity: 0.48;
+    pointer-events: none;
+    position: absolute;
+    z-index: -1;
+  }
+
+  :global(html[data-theme="institutional-light"]) .home-hero__content::before {
+    opacity: 0.36;
+  }
+
+  .home-hero > * {
+    position: relative;
+  }
+
+  .home-hero__content {
+    display: grid;
+    gap: 1.25rem;
+    isolation: isolate;
+    position: relative;
+  }
+
+  .home-hero__eyebrow {
+    color: var(--aiv-action-secondary);
+    font-family: var(--aiv-font-mono);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    margin: 0;
+    text-transform: uppercase;
+  }
+
+  .home-hero h1 {
+    font-size: clamp(2.75rem, 7vw, 6rem);
+    line-height: 0.95;
+    margin: 0;
+    max-width: 12ch;
+  }
+
+  .home-hero__body {
+    color: var(--aiv-text-secondary);
+    font-size: clamp(1.05rem, 2vw, 1.3rem);
+    margin: 0;
+    max-width: var(--aiv-measure-prose);
+  }
+
+  .home-hero__actions,
+  .home-cta-card__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  :global(.home-hero-panel.aiv-card) {
+    align-self: center;
+    background: var(--aiv-nested-bg) !important;
+    background-color: var(--aiv-nested-bg) !important;
+    display: grid;
+    gap: 0.85rem;
+  }
+
+  :global(.home-hero-panel h2),
+  :global(.home-hero-panel p) {
+    margin: 0;
+  }
+
+  .home-hero-panel__eyebrow,
+  .home-hero-panel__meta {
+    font-family: var(--aiv-font-mono);
+    font-size: 0.85rem;
+    font-weight: 700;
+  }
+
+  .home-hero-panel__eyebrow {
+    color: var(--aiv-action-secondary);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .home-hero-panel__meta,
+  :global(.home-hero-panel p:not(.home-hero-panel__eyebrow)) {
+    color: var(--aiv-text-secondary);
+  }
+
+  .home-hero-proof {
+    margin-top: clamp(2rem, 4vw, 4rem);
+  }
+
+  .home-section-stack {
+    display: grid;
+    gap: 2rem;
+  }
+
+  .home-card-grid {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .home-card-grid--two,
+  .home-card-grid--programs,
+  .home-card-grid--activity {
+    grid-template-columns: 1fr;
+  }
+
+  .home-activity-posts {
+    display: grid;
+    gap: 1rem;
+  }
+
+  :global(.home-work-card) {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .home-work-card h3,
+  .home-work-card p,
+  .home-cta-card h2,
+  .home-cta-card p {
+    margin: 0;
+  }
+
+  .home-work-card p,
+  .home-cta-card p,
+  .home-activity-detail {
+    color: var(--aiv-text-secondary);
+  }
+
+  .home-activity-detail {
+    font-family: var(--aiv-font-mono);
+    font-size: 0.9rem;
+    margin: 0;
+  }
+
+  .home-cta-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  :global(.home-cta-card) {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .home-sponsor-logos {
+    display: grid;
+    gap: 0.75rem;
+    grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+  }
+
+  .home-sponsor-logo {
+    align-items: center;
+    background: var(--aiv-bg-surface);
+    border: 1px solid var(--aiv-card-border);
+    border-radius: 6px;
+    display: flex;
+    justify-content: center;
+    min-height: 5rem;
+    padding: 1rem;
+  }
+
+  .home-sponsor-logo:focus-visible {
+    outline: 3px solid var(--aiv-focus-ring);
+    outline-offset: 3px;
+  }
+
+  .home-sponsor-logo img {
+    max-height: 3.5rem;
+    max-width: 100%;
+    object-fit: contain;
+  }
+
+  :global(.home-hero-proof .aiv-proof-strip) {
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 640px) {
+    :global(.home-hero-proof .aiv-proof-strip) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 900px) {
+    :global(.home-hero-section.aiv-section--padding-xl) {
+      padding-block: clamp(1.25rem, 2.2vw, 2.5rem) clamp(1rem, 1.6vw, 1.75rem);
+    }
+
+    .home-hero {
+      align-items: center;
+      gap: clamp(2rem, 5vw, 5rem);
+      grid-template-columns: minmax(0, 1.15fr) minmax(20rem, 0.85fr);
+      padding-block: 0;
+    }
+
+    .home-hero-proof {
+      margin-top: clamp(1rem, 2vw, 1.75rem);
+    }
+
+    .home-card-grid--two,
+    .home-card-grid--programs {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .home-card-grid--activity {
+      align-items: stretch;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    }
+
+    :global(.home-card-grid--activity > .aiv-activity-card) {
+      min-height: 100%;
+    }
+
+    :global(.home-hero-proof .aiv-proof-strip) {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 820px) {
+    .home-cta-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

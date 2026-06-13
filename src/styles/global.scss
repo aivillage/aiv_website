@@ -262,33 +262,6 @@ article,
    ANIMATED BACKGROUND EFFECTS
    =================================== */
 
-// Animated grid background
-body::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image:
-    linear-gradient(var(--aiv-grid-color) 1px, transparent 1px),
-    linear-gradient(90deg, var(--aiv-grid-color) 1px, transparent 1px);
-  background-size: 50px 50px;
-  animation: gridMove 20s linear infinite;
-  pointer-events: none;
-  z-index: -2;
-}
-
-@keyframes gridMove {
-  0% {
-    transform: translate(0, 0);
-  }
-
-  100% {
-    transform: translate(50px, 50px);
-  }
-}
-
 // Glowing gradient overlay
 body::after {
   content: '';
@@ -1884,10 +1857,12 @@ details {
   position: relative;
 }
 
-.header-content {
+.site-header .header-content {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  flex-wrap: nowrap;
+  gap: clamp(0.75rem, 1.5vw, 1.25rem);
+  justify-content: flex-start;
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 1rem;
@@ -1895,6 +1870,7 @@ details {
 
 .site-title {
   color: var(--aiv-brand-primary);
+  flex: 0 0 auto;
   font-family: var(--aiv-font-mono);
   font-size: 1.5rem;
   text-decoration: none;
@@ -1907,6 +1883,7 @@ details {
   display: flex;
   gap: clamp(0.5rem, 1.8vw, 1.5rem);
   align-items: center;
+  margin-left: auto;
 }
 
 .theme-toggle {
@@ -1915,7 +1892,7 @@ details {
   justify-content: center;
   width: 2.25rem;
   height: 2.25rem;
-  margin-left: auto;
+  margin-left: 0;
   padding: 0;
   color: var(--aiv-text-secondary);
   background: var(--aiv-bg-surface);
@@ -2027,7 +2004,7 @@ details {
   transform-origin: 1px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .site-header {
     position: fixed;
     top: 0;
@@ -2138,10 +2115,6 @@ details {
     animation-iteration-count: 1 !important;
     scroll-behavior: auto !important;
     transition-duration: 0.01ms !important;
-  }
-
-  body::before {
-    animation: none !important;
   }
 
   .card:hover,

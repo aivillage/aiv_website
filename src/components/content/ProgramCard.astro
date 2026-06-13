@@ -14,7 +14,7 @@ type Props = {
 const { title, description, href, eyebrow, ctaLabel = "Learn more", class: className } = Astro.props as Props;
 ---
 
-<Card class:list={["aiv-program-card", className]} as="article" interactive={Boolean(href)}>
+<Card class:list={["aiv-program-card", className]} as="article">
   {eyebrow && <p class="aiv-program-card__eyebrow">{eyebrow}</p>}
   <h3 class="aiv-program-card__title">{title}</h3>
   {description && <p class="aiv-program-card__description">{description}</p>}

@@ -1,6 +1,6 @@
 ---
 type ProofItem = {
-  value: string;
+  value?: string;
   label: string;
   detail?: string;
 };
@@ -17,7 +17,7 @@ const { items = [], class: className } = Astro.props as Props;
   {items.length > 0 ? (
     items.map((item) => (
       <div class="aiv-proof-strip__item">
-        <strong class="aiv-proof-strip__value">{item.value}</strong>
+        {item.value && <strong class="aiv-proof-strip__value">{item.value}</strong>}
         <span class="aiv-proof-strip__label">{item.label}</span>
         {item.detail && <span class="aiv-proof-strip__detail">{item.detail}</span>}
       </div>
@@ -50,7 +50,9 @@ const { items = [], class: className } = Astro.props as Props;
 
   .aiv-proof-strip__label {
     color: var(--aiv-text-primary);
+    font-family: var(--aiv-font-mono);
     font-weight: 700;
+    letter-spacing: 0.04em;
   }
 
   .aiv-proof-strip__detail {
