@@ -1,0 +1,60 @@
+---
+type ProofItem = {
+  value: string;
+  label: string;
+  detail?: string;
+};
+
+type Props = {
+  items?: ProofItem[];
+  class?: string;
+};
+
+const { items = [], class: className } = Astro.props as Props;
+---
+
+<div class:list={["aiv-proof-strip", className]}>
+  {items.length > 0 ? (
+    items.map((item) => (
+      <div class="aiv-proof-strip__item">
+        <strong class="aiv-proof-strip__value">{item.value}</strong>
+        <span class="aiv-proof-strip__label">{item.label}</span>
+        {item.detail && <span class="aiv-proof-strip__detail">{item.detail}</span>}
+      </div>
+    ))
+  ) : (
+    <slot />
+  )}
+</div>
+
+<style>
+  .aiv-proof-strip {
+    border-block: 1px solid var(--aiv-rule-color);
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    padding-block: 1.25rem;
+  }
+
+  .aiv-proof-strip__item {
+    display: grid;
+    gap: 0.2rem;
+  }
+
+  .aiv-proof-strip__value {
+    color: var(--aiv-brand-primary);
+    font-family: var(--aiv-font-mono);
+    font-size: clamp(1.4rem, 2vw, 2rem);
+    line-height: 1.1;
+  }
+
+  .aiv-proof-strip__label {
+    color: var(--aiv-text-primary);
+    font-weight: 700;
+  }
+
+  .aiv-proof-strip__detail {
+    color: var(--aiv-text-muted);
+    font-size: 0.95rem;
+  }
+</style>

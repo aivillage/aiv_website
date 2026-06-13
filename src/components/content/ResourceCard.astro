@@ -1,0 +1,51 @@
+---
+import Card from "../ui/Card.astro";
+
+type Props = {
+  title: string;
+  description?: string;
+  href: string;
+  meta?: string;
+  class?: string;
+};
+
+const { title, description, href, meta, class: className } = Astro.props as Props;
+---
+
+<Card class:list={["aiv-resource-card", className]} href={href}>
+  {meta && <p class="aiv-resource-card__meta">{meta}</p>}
+  <h3 class="aiv-resource-card__title">{title}</h3>
+  {description && <p class="aiv-resource-card__description">{description}</p>}
+  <span class="aiv-resource-card__link">Read more</span>
+</Card>
+
+<style>
+  :global(.aiv-resource-card) {
+    display: grid;
+    gap: 0.65rem;
+  }
+
+  .aiv-resource-card__meta {
+    color: var(--aiv-text-muted);
+    font-family: var(--aiv-font-mono);
+    font-size: 0.85rem;
+    margin: 0;
+  }
+
+  .aiv-resource-card__title {
+    color: var(--aiv-action-primary);
+    margin: 0;
+  }
+
+  .aiv-resource-card__description {
+    color: var(--aiv-text-secondary);
+    margin: 0;
+  }
+
+  .aiv-resource-card__link {
+    color: var(--aiv-action-primary);
+    font-family: var(--aiv-font-mono);
+    font-size: 0.9rem;
+    font-weight: 700;
+  }
+</style>
