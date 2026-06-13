@@ -1,5 +1,5 @@
 ---
-import { primaryNav } from "../data/navigation";
+import { primaryNav, sponsorCta } from "../data/navigation";
 import { site } from "../data/site";
 
 const currentPath = Astro.url.pathname;
@@ -18,6 +18,13 @@ function isActive(url: string) {
           const active = isActive(item.href);
           return <a href={item.href} class:list={[{ active }]} aria-current={active ? "page" : undefined}>{item.label}</a>;
         })}
+        <a
+          class:list={["nav-sponsor-cta", { active: isActive(sponsorCta.href) }]}
+          href={sponsorCta.href}
+          aria-current={isActive(sponsorCta.href) ? "page" : undefined}
+        >
+          {sponsorCta.label}
+        </a>
       </nav>
       <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch color mode" title="Switch color mode">
         <svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24" focusable="false">

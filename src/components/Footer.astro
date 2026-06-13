@@ -1,19 +1,35 @@
 ---
-import { footerNav, socialLinks } from "../data/navigation";
+import { footerNavSections } from "../data/navigation";
 const year = new Date().getFullYear();
 ---
 
 <footer class="site-footer">
   <div class="container">
     <div class="footer-content">
-      <div class="footer-nav">
-        {footerNav.map((item) => <a href={item.href}>{item.label}</a>)}
+      <div class="footer-brand">
+        <a class="footer-title" href="/">AI Village</a>
+        <p class="text-mono">Securing AI, one hack at a time.</p>
       </div>
-      <div class="social-links">
-        {socialLinks.map((item) => <a href={item.href} target="_blank" rel="noopener noreferrer">{item.label}</a>)}
+      <div class="footer-sitemap">
+        {footerNavSections.map((section) => (
+          <nav class="footer-nav-section" aria-label={`${section.title} footer links`}>
+            <h2>{section.title}</h2>
+            <ul>
+              {section.links.map((item) => {
+                const external = "external" in item && item.external;
+                return (
+                  <li>
+                    <a href={item.href} target={external ? "_blank" : undefined} rel={external ? "noopener noreferrer" : undefined}>
+                      {item.label}
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
+        ))}
       </div>
-      <p>&copy; {year} AI Village. All rights reserved.</p>
-      <p class="text-mono">Securing AI, one hack at a time.</p>
+      <p class="footer-copyright">&copy; {year} AI Village. All rights reserved.</p>
     </div>
   </div>
 </footer>
