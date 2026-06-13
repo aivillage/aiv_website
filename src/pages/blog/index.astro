@@ -9,7 +9,7 @@ const posts = sortPosts(await getCollection("blog", ({ data }) => !data.draft));
 
 <BaseLayout title="Blog" canonical="/blog/">
   <h1>Blog</h1>
-  <div style="text-align: center; margin: 2rem 0;">
+  <div class="page-intro" style="text-align: left; margin: 2rem 0;">
     <p style="color: var(--aiv-text-muted); font-size: 1.1rem;">
       Research insights, event recaps, and perspectives on AI security from our community.
     </p>

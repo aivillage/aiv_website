@@ -46,11 +46,11 @@
 }
 
 /* === Section Headings === */
-.year-heading {
+.events-page .year-heading {
   font-size: 1.2rem;
   margin-top: 1rem;
   margin-bottom: 1.5rem;
-  color: var(--aiv-action-primary) !important;
+  color: var(--aiv-text-secondary);
   font-family: var(--aiv-font-mono);
   background: var(--aiv-nested-bg) !important;
   backdrop-filter: blur(20px);
@@ -67,12 +67,12 @@
   list-style: none;
 }
 
-.year-heading::-webkit-details-marker {
+.events-page .year-heading::-webkit-details-marker {
   display: none;
 }
 
 /* Arrow icon */
-.year-heading::before {
+.events-page .year-heading::before {
   content: "▶";
   position: absolute;
   left: 0.5rem;
@@ -85,7 +85,7 @@
 }
 
 /* Rotate arrow when open */
-details[open]>.year-heading::before {
+.events-page details[open]>.year-heading::before {
   transform: translateY(-50%) rotate(90deg);
 }
 
@@ -103,14 +103,14 @@ details[open]>.events-container {
 }
 
 /* === Event Subtitle === */
-.event__subtitle {
+.events-page .event__subtitle {
   font-size: clamp(1.5rem, 2.5vw, 2.15rem);
   margin-top: 1.5rem;
   margin-bottom: 0.85rem;
   font-weight: 700;
   border-bottom: 1px solid var(--aiv-rule-color);
   padding-bottom: 0.4rem;
-  color: var(--aiv-action-primary);
+  color: var(--aiv-brand-primary);
 }
 
 /* === Mobile Layout Adjustments === */
