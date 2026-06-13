@@ -7,6 +7,8 @@
 :root {
   --aiv-font-body: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --aiv-font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+  --aiv-measure-prose: 72ch;
+  --aiv-measure-wide: 96ch;
 }
 
 :root,
@@ -40,15 +42,15 @@ html[data-theme="auto"] {
 
   --aiv-decoration-violet: #665980;
 
-  --aiv-card-bg: #121D27;
-  --aiv-card-border: #3D4B56;
-  --aiv-card-hover-border: #5F7586;
-  --aiv-nested-bg: #192631;
-  --aiv-nested-border: #3D4B56;
-  --aiv-rule-color: #3D4B56;
+  --aiv-card-bg: #111C26;
+  --aiv-card-border: #586C7A;
+  --aiv-card-hover-border: #6B8090;
+  --aiv-nested-bg: #1C2C37;
+  --aiv-nested-border: #627889;
+  --aiv-rule-color: #536573;
   --aiv-focus-ring: #67B1D7;
-  --aiv-card-shadow: none;
-  --aiv-card-hover-shadow: none;
+  --aiv-card-shadow: 0 1px 0 rgba(244, 239, 227, 0.03), 0 12px 28px rgba(0, 0, 0, 0.18);
+  --aiv-card-hover-shadow: 0 1px 0 rgba(244, 239, 227, 0.04), 0 16px 36px rgba(0, 0, 0, 0.24);
 
   --aiv-brand-discord-bg: #4752C4;
   --aiv-brand-discord-text: #FFFFFF;
@@ -84,14 +86,14 @@ html[data-theme="institutional-light"] {
   --aiv-decoration-violet: #594071;
 
   --aiv-card-bg: #FFFFFF;
-  --aiv-card-border: #7B96A3;
-  --aiv-card-hover-border: #6F8794;
+  --aiv-card-border: #758F9C;
+  --aiv-card-hover-border: #6D8490;
   --aiv-nested-bg: #EAF2F6;
-  --aiv-nested-border: #6F8794;
-  --aiv-rule-color: #AABBC4;
+  --aiv-nested-border: #758F9C;
+  --aiv-rule-color: #758F9C;
   --aiv-focus-ring: #0E6285;
-  --aiv-card-shadow: 0 1px 2px rgba(16, 24, 32, 0.05), 0 8px 22px rgba(16, 24, 32, 0.045);
-  --aiv-card-hover-shadow: 0 2px 4px rgba(16, 24, 32, 0.06), 0 12px 30px rgba(16, 24, 32, 0.06);
+  --aiv-card-shadow: 0 1px 2px rgba(16, 24, 32, 0.06), 0 10px 24px rgba(16, 24, 32, 0.055);
+  --aiv-card-hover-shadow: 0 2px 4px rgba(16, 24, 32, 0.075), 0 14px 34px rgba(16, 24, 32, 0.075);
 
   --aiv-brand-discord-bg: #4752C4;
   --aiv-brand-discord-text: #FFFFFF;
@@ -128,14 +130,14 @@ html[data-theme="institutional-light"] {
     --aiv-decoration-violet: #594071;
 
     --aiv-card-bg: #FFFFFF;
-    --aiv-card-border: #7B96A3;
-    --aiv-card-hover-border: #6F8794;
+    --aiv-card-border: #758F9C;
+    --aiv-card-hover-border: #6D8490;
     --aiv-nested-bg: #EAF2F6;
-    --aiv-nested-border: #6F8794;
-    --aiv-rule-color: #AABBC4;
+    --aiv-nested-border: #758F9C;
+    --aiv-rule-color: #758F9C;
     --aiv-focus-ring: #0E6285;
-    --aiv-card-shadow: 0 1px 2px rgba(16, 24, 32, 0.05), 0 8px 22px rgba(16, 24, 32, 0.045);
-    --aiv-card-hover-shadow: 0 2px 4px rgba(16, 24, 32, 0.06), 0 12px 30px rgba(16, 24, 32, 0.06);
+    --aiv-card-shadow: 0 1px 2px rgba(16, 24, 32, 0.06), 0 10px 24px rgba(16, 24, 32, 0.055);
+    --aiv-card-hover-shadow: 0 2px 4px rgba(16, 24, 32, 0.075), 0 14px 34px rgba(16, 24, 32, 0.075);
 
     --aiv-brand-discord-bg: #4752C4;
     --aiv-brand-discord-text: #FFFFFF;
@@ -172,15 +174,15 @@ html[data-theme="institutional-light"] {
 
     --aiv-decoration-violet: #665980;
 
-    --aiv-card-bg: #121D27;
-    --aiv-card-border: #3D4B56;
-    --aiv-card-hover-border: #5F7586;
-    --aiv-nested-bg: #192631;
-    --aiv-nested-border: #3D4B56;
-    --aiv-rule-color: #3D4B56;
+    --aiv-card-bg: #111C26;
+    --aiv-card-border: #586C7A;
+    --aiv-card-hover-border: #6B8090;
+    --aiv-nested-bg: #1C2C37;
+    --aiv-nested-border: #627889;
+    --aiv-rule-color: #536573;
     --aiv-focus-ring: #67B1D7;
-    --aiv-card-shadow: none;
-    --aiv-card-hover-shadow: none;
+    --aiv-card-shadow: 0 1px 0 rgba(244, 239, 227, 0.03), 0 12px 28px rgba(0, 0, 0, 0.18);
+    --aiv-card-hover-shadow: 0 1px 0 rgba(244, 239, 227, 0.04), 0 16px 36px rgba(0, 0, 0, 0.24);
 
     --aiv-brand-discord-bg: #4752C4;
     --aiv-brand-discord-text: #FFFFFF;
@@ -289,33 +291,42 @@ h4,
 h5,
 h6 {
   color: var(--aiv-text-primary);
-  font-family: var(--aiv-font-mono);
+  font-family: var(--aiv-font-body);
   margin: 1.5em 0 0.75em 0;
-  line-height: 1.2;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+  line-height: 1.1;
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: normal;
+  text-wrap: balance;
 }
 
 h1 {
-  font-size: 2.5rem;
+  font-size: clamp(2.25rem, 4vw, 3.75rem);
   color: var(--aiv-text-primary);
+  font-weight: 700;
+  line-height: 1.05;
   text-shadow: none;
   margin-top: 0;
 }
 
-h1.glitch {
+.brand-display {
+  font-family: var(--aiv-font-mono);
+  font-size: clamp(3rem, 5vw, 4.25rem);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
   color: var(--aiv-brand-primary);
 }
 
 h2 {
-  font-size: 2rem;
-  color: var(--aiv-action-primary);
+  font-size: clamp(1.75rem, 3vw, 2.75rem);
+  color: var(--aiv-text-primary);
+  font-weight: 600;
 }
 
 h3 {
-  font-size: 1.5rem;
+  font-size: clamp(1.25rem, 2vw, 1.75rem);
   color: var(--aiv-text-primary);
+  font-weight: 600;
 }
 
 h4 {
@@ -351,9 +362,14 @@ a {
 
 p a,
 li a {
+  color: var(--aiv-action-primary);
   text-decoration: underline;
   text-decoration-thickness: 0.08em;
   text-underline-offset: 0.16em;
+
+  &:hover {
+    color: var(--aiv-action-primary);
+  }
 }
 
 strong,
@@ -448,6 +464,32 @@ pre {
   }
 }
 
+kbd,
+samp,
+.meta,
+.post-meta,
+.event-meta,
+.event-date,
+.date-badge,
+.tag,
+.badge,
+.eyebrow,
+.label,
+.member-position,
+.event-location,
+.text-mono,
+table th {
+  font-family: var(--aiv-font-mono);
+}
+
+.eyebrow,
+.label,
+.badge,
+.tag {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
 /* ===================================
    BLOCKQUOTES
    =================================== */
@@ -496,6 +538,48 @@ blockquote {
   min-height: calc(100vh - 200px);
 }
 
+.main-content .container>p,
+.main-content .container>ul,
+.main-content .container>ol,
+.main-content .container>blockquote,
+.main-content .container>section>p,
+.main-content .container>section>ul,
+.main-content .container>section>ol,
+.main-content .container>section>blockquote,
+.main-content .container>section>section>p,
+.main-content .container>article>p,
+.main-content .container>article>ul,
+.main-content .container>article>ol,
+.post-content>p,
+.post-content>ul,
+.post-content>ol,
+.post-content>blockquote,
+.event>.event-content>p,
+.event>.event-content>ul,
+.event>.event-content>ol,
+.event>.event-content>blockquote {
+  max-width: var(--aiv-measure-prose);
+}
+
+.page-intro,
+.post-header .post-description,
+.event-header .event-description {
+  max-width: 78ch;
+  margin-inline: 0;
+  text-align: left;
+}
+
+.home-hero.page-intro {
+  max-width: var(--aiv-measure-wide);
+  margin-inline: auto;
+  text-align: center;
+}
+
+.post-header .post-description p,
+.event-header .event-description p {
+  max-width: var(--aiv-measure-prose);
+}
+
 /* ===================================
    HEADER AND NAVIGATION
    =================================== */
@@ -524,7 +608,7 @@ blockquote {
     text-decoration: none;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 2px;
+    letter-spacing: 0.08em;
 
     &::before {
       content: "> ";
@@ -549,7 +633,7 @@ blockquote {
       font-family: var(--aiv-font-mono);
       font-weight: 400;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 0.08em;
       padding: 0.5rem 1rem;
       border: 1px solid transparent;
       border-radius: 4px;
@@ -657,7 +741,7 @@ blockquote {
   font-family: var(--aiv-font-mono);
   font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.08em;
   border-radius: 6px;
   transition: all 0.3s ease;
   position: relative;
@@ -831,6 +915,8 @@ blockquote {
 
     h2 {
       margin: 0 0 0.5rem 0;
+      font-size: clamp(1.35rem, 2vw, 1.85rem);
+      line-height: 1.15;
 
       a {
         color: var(--aiv-action-primary);
@@ -895,6 +981,10 @@ blockquote {
 .post-content {
   line-height: 1.7;
 
+  h2 {
+    color: var(--aiv-text-primary);
+  }
+
   img {
     max-width: 100%;
     height: auto;
@@ -902,6 +992,10 @@ blockquote {
     margin: 1rem 0;
     border: 1px solid var(--aiv-card-border);
   }
+}
+
+.event > .event-content h2 {
+  color: var(--aiv-text-primary);
 }
 
 .post-footer {
@@ -1008,7 +1102,7 @@ table {
     font-family: var(--aiv-font-mono);
     font-weight: 500;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 0.08em;
   }
 
   td {
@@ -1060,7 +1154,7 @@ label {
   font-family: var(--aiv-font-mono);
   font-size: 0.9rem;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.08em;
   margin-bottom: 0.5rem;
   display: block;
 }
@@ -1182,7 +1276,7 @@ details {
 
     h3 {
       margin: 0 0 0.5rem 0;
-      color: var(--aiv-brand-primary);
+      color: var(--aiv-text-primary);
     }
 
     .member-position {

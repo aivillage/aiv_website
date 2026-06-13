@@ -19,7 +19,7 @@ const scheduleLinks = scheduleRoutesForEvent(event.id);
 <BaseLayout title={event.data.title} description={event.data.description} canonical={url} type="event" eventDate={event.data.date} eventLocation={event.data.location}>
   <article class="event">
     <header class="event-header" style="margin-bottom: 2rem;">
-      <h1 style="color: var(--aiv-action-primary); margin: 0 0 1rem 0;">{event.data.title}</h1>
+      <h1 style="margin: 0 0 1rem 0;">{event.data.title}</h1>
       <div class="event-meta" style="display: flex; flex-wrap: wrap; gap: 2rem; margin: 1rem 0; color: var(--aiv-text-muted); font-family: var(--aiv-font-mono);">
         <div><strong style="color: var(--aiv-warning);">📅 Date:</strong> <time datetime={isoDate(event.data.date)}>{formatDate(event.data.date)}</time></div>
         {event.data.location && <div><strong style="color: var(--aiv-warning);">📍 Location:</strong> {event.data.location}</div>}

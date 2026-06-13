@@ -15,7 +15,8 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "verify:redirects": "tsx scripts/verify-redirects.ts",
-    "check:internal-links": "tsx scripts/check-internal-links.ts"
+    "check:internal-links": "tsx scripts/check-internal-links.ts",
+    "check:contrast": "node scripts/contrast-check.mjs"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.0.0",
