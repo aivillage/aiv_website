@@ -10,3 +10,5 @@ export const site = {
     "https://www.linkedin.com/company/aivillage",
   ],
 } as const;
+
+export const volunteerApplicationUrl = "https://forms.gle/sFyr1rVeqKAPXhG4A";
