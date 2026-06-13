@@ -2,7 +2,7 @@
 layout: post
 title: The AI RMF Does not Address Common Needs
 author: Sven Cattell
-date: 2022-09-30 09:00:00 +0900
+date: 2022-09-30
 category: "AI Security"
 canonicalSlug: airmf-response
 legacyUrls:

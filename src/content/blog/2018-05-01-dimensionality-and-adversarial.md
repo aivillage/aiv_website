@@ -2,7 +2,7 @@
 layout: post
 title: Dimensionality and Adversarial Examples
 author: Sven Cattell
-date: 2018-05-01 09:00:00 +0900
+date: 2018-05-01
 category: "adversarial ml"
 toc: true
 canonicalSlug: dimensionality-and-adversarial

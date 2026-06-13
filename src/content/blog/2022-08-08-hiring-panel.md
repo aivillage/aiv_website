@@ -2,7 +2,7 @@
 layout: post
 title: AI and Hiring Tech Panel
 author: Rachel See
-date: 2022-08-08 00:00:00 +0000
+date: 2022-08-08
 category: "defcon 30"
 toc: true
 canonicalSlug: hiring-panel
@@ -15,7 +15,7 @@ AI and ML is already being used to identify job candidates, screen resumes, asse
 
 This conversation, featuring perspectives from a government regulator, civil-rights advocates, and a hacker who’s told a client that their AI is breaking the law, will highlight some of the existing and pending efforts to regulate AI-powered employment tools, and will focus on regulatory, technical and societal solutions to this very-real problem.
 
-# Panelists
+## Panelists
 
 ## Moderator: Rachel See
 

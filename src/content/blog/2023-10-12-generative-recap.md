@@ -2,7 +2,7 @@
 layout: post
 title: Generative Red Team Recap
 author: Sven Cattell
-date: 2023-10-12 09:00:00 +0900
+date: 2023-10-12
 category: "defcon 31"
 toc: true
 canonicalSlug: generative-recap
@@ -12,7 +12,7 @@ legacyUrls:
 ---
 
 
-# Generative Red Team History
+## Generative Red Team History
 
 It’s long overdue for a retrospective on the Generative Red Team (GRT) at AI Village at DEFCON 31. I’ve posted parts of this other places, but I want a single spot to share the story and include all the lessons learnt.
 

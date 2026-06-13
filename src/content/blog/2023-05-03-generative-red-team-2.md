@@ -2,7 +2,7 @@
 layout: post
 title: AI Village Announcing Generative Red Team 2 at DEF CON 32
 author: AI Village, Sven Cattell
-date: 2024-06-10 09:00:00 +0900
+date: 2024-06-10
 category: "generative red team"
 canonicalSlug: generative-red-team-2
 legacyUrls:

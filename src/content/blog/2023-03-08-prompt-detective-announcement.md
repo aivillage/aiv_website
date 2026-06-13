@@ -2,7 +2,7 @@
 layout: post
 title: Prompt Detective at SXSW!
 author: Sven Cattell
-date: 2023-03-8 08:00:00 +0900
+date: 2023-03-08
 category: "AI Security"
 canonicalSlug: prompt-detective-announcement
 legacyUrls:
@@ -10,7 +10,7 @@ legacyUrls:
 
 ---
 
-# Prompt Detective Announcement
+## Prompt Detective Announcement
 
 Join us for an upcoming workshop on the benefits and limitations of large language models (LLMs) like GPT3, Bloom, , and a unique red teaming exercise where participants will try to get LLMs to misbehave!
 

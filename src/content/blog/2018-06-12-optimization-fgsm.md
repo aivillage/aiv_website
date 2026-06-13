@@ -2,7 +2,7 @@
 layout: post
 title: Gradient Attacks
 author: Sven Cattell
-date: 2018-06-12 09:00:00 +0900
+date: 2018-06-12
 category: "adversarial ml"
 canonicalSlug: optimization-fgsm
 legacyUrls:
@@ -16,7 +16,7 @@ We have made a library that demonstrates these attacks. There's a useful templat
 
 In the rest of that repo you can also find target models and datasets to play around with. We're using the [ResNet CIFAR10](https://github.com/comath/pytorch_adversarial/blob/master/attacks/targets/cifar10ResNet.py) model for these demonstrations, but if you don't have GPU handy you can use the [MNIST MLP model](https://github.com/comath/pytorch_adversarial/blob/master/attacks/targets/mnistMLP.py). If you're in a CTF you will be supplied with those models and an associated pickle so that we're all on the same page.
 
-# The Problem and Optimization
+## The Problem and Optimization
 
 Recall the definition: 
 
@@ -134,6 +134,6 @@ To see this attack, with the same epsilons as before:
 
 Clearly the most effective so far. However, you can see that we really should stick to low $$\epsilon$$s else it overwhelms the image.
 
-# Improvements
+## Improvements
 
 We can significantly improve these attacks if we were less greedy and took our time. If we took smaller steps, and constrained our movement we could do get similar success rates but remain bit closer to our original image. The next post will be a little shorter and cover these iterative methods.
