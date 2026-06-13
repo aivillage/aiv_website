@@ -1025,6 +1025,46 @@ blockquote {
   border-radius: 8px;
 }
 
+.mermaid {
+  color: var(--aiv-text-primary);
+
+  .flowchart-link,
+  .edgePath path,
+  marker path {
+    stroke: var(--aiv-action-primary) !important;
+  }
+
+  .edgeLabel,
+  .edgeLabel p,
+  .edgeLabel span {
+    color: var(--aiv-text-primary) !important;
+    background: var(--aiv-bg-surface) !important;
+  }
+
+  .edgeLabel rect,
+  .labelBkg {
+    fill: var(--aiv-bg-surface) !important;
+    opacity: 0.96 !important;
+  }
+
+  .label,
+  .nodeLabel,
+  .label span,
+  foreignObject,
+  text {
+    color: var(--aiv-text-primary) !important;
+    fill: var(--aiv-text-primary) !important;
+  }
+
+  .node rect,
+  .node circle,
+  .node ellipse,
+  .node polygon,
+  .node path {
+    stroke: var(--aiv-nested-border) !important;
+  }
+}
+
 .event > .event-content h2 {
   color: var(--aiv-text-primary);
 }
