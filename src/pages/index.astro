@@ -4,6 +4,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import DateBadge from "../components/DateBadge.astro";
 import SponsorGrid from "../components/SponsorGrid.astro";
 import { canonicalPostPath, eventPath, excerptFromBody, formatShortDate, getCurrentSponsors, sortEventsAscending, sortPosts } from "../utils/site";
+import { volunteerApplicationUrl } from "../data/site";
 
 const events = sortEventsAscending(await getCollection("events"));
 const posts = sortPosts(await getCollection("blog", ({ data }) => !data.draft));
@@ -128,7 +129,7 @@ const latestPost = posts[0];
       <li><a href="https://www.linkedin.com/company/aivillage">Connect on LinkedIn</a> - Connect with us on LinkedIn!</li>
       <li><a href="/events/">Attend our events</a> - DEF CON, workshops, and more</li>
       <li><a href="https://github.com/aivillage/aiv_website">Contribute</a> - Share your research and insights</li>
-      <li><a href="https://forms.gle/vCrz3zpR8xHCsTtJ8">Volunteer</a> - Help organize events and activities</li>
+      <li><a href={volunteerApplicationUrl}>Volunteer</a> - Help organize events and activities</li>
     </ul>
   </div>
 </BaseLayout>

@@ -4,6 +4,7 @@ import type { AstroComponentFactory } from "astro/runtime/server/index.js";
 import type { EventEntry } from "../utils/site";
 import { eventPath, formatDate, isoDate, truncate } from "../utils/site";
 import { scheduleRoutesForEvent } from "../data/schedules";
+import { volunteerApplicationUrl } from "../data/site";
 
 const { event, previous, next, Content } = Astro.props as {
   event: EventEntry;
@@ -43,7 +44,7 @@ const scheduleLinks = scheduleRoutesForEvent(event.id);
         <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
           <a href="/discord/" style="color: var(--aiv-action-primary);">Join our Discord</a>
           <span style="color: var(--aiv-text-muted);">•</span>
-          <a href="https://forms.gle/vCrz3zpR8xHCsTtJ8" target="_blank" rel="noopener noreferrer" style="color: var(--aiv-action-primary);">Volunteer Application</a>
+          <a href={volunteerApplicationUrl} target="_blank" rel="noopener noreferrer" style="color: var(--aiv-action-primary);">Volunteer Application</a>
           <span style="color: var(--aiv-text-muted);">•</span>
           <a href="/events/" style="color: var(--aiv-action-primary);">All Events</a>
         </div>

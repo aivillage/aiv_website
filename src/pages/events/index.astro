@@ -4,6 +4,7 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import EventCard from "../../components/EventCard.astro";
 import { groupByYear, sortEventsAscending, sortEventsDescending } from "../../utils/site";
 import { scheduleRoutes } from "../../data/schedules";
+import { volunteerApplicationUrl } from "../../data/site";
 
 const events = await getCollection("events");
 const now = new Date();
@@ -22,7 +23,7 @@ const pastByYear = [...groupByYear(pastEvents)].sort(([a], [b]) => b.localeCompa
     <h1>Events</h1>
     <p>
       If you would like to volunteer at an event
-      <a href="https://forms.gle/vCrz3zpR8xHCsTtJ8" target="_blank" rel="noopener noreferrer">
+      <a href={volunteerApplicationUrl} target="_blank" rel="noopener noreferrer">
         submit a general volunteer application here.
       </a>
     </p>

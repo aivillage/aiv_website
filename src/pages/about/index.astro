@@ -2,6 +2,7 @@
 import { getCollection, render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import VolunteerCard from "../../components/VolunteerCard.astro";
+import { volunteerApplicationUrl } from "../../data/site";
 
 const volunteers = (await getCollection("volunteers")).sort((a, b) => {
   const orderDiff = a.data.order - b.data.order;
@@ -54,7 +55,7 @@ for (const volunteer of volunteers) {
     <h4 style="color: var(--aiv-action-primary); margin-top: 0;">Get Involved</h4>
     <p>AI Village welcomes help from researchers, engineers, educators, organizers, and community builders.</p>
     <div style="margin-top: 1.5rem;">
-      <a href="https://forms.gle/vCrz3zpR8xHCsTtJ8" target="_blank" rel="noopener noreferrer" style="color: var(--aiv-action-primary); font-weight: bold;">→ Submit a volunteer application</a>
+      <a href={volunteerApplicationUrl} target="_blank" rel="noopener noreferrer" style="color: var(--aiv-action-primary); font-weight: bold;">→ Submit a volunteer application</a>
     </div>
   </div>
 </BaseLayout>
