@@ -14,7 +14,10 @@ function isActive(url: string) {
     <div class="header-content">
       <a class="site-title" href="/">{site.title}</a>
       <nav class="nav-menu" id="nav-menu">
-        {primaryNav.map((item) => <a href={item.href} class:list={[{ active: isActive(item.href) }]}>{item.label}</a>)}
+        {primaryNav.map((item) => {
+          const active = isActive(item.href);
+          return <a href={item.href} class:list={[{ active }]} aria-current={active ? "page" : undefined}>{item.label}</a>;
+        })}
       </nav>
       <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch color mode" title="Switch color mode">
         <svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24" focusable="false">
@@ -32,7 +35,7 @@ function isActive(url: string) {
           <path d="M20.99 12.66A8.99 8.99 0 1 1 11.34 3.01a7 7 0 1 0 9.65 9.65Z"></path>
         </svg>
       </button>
-      <button class="hamburger" aria-label="Toggle menu" aria-controls="nav-menu" aria-expanded="false" onclick="toggleMenu(this)">
+      <button id="menu-toggle" class="hamburger" aria-label="Toggle menu" aria-controls="nav-menu" aria-expanded="false">
         <span></span>
         <span></span>
         <span></span>
@@ -42,21 +45,52 @@ function isActive(url: string) {
 </header>
 
 <script is:inline>
-  // Called from the inline onclick attribute above; keeping this global preserves the existing static header behavior.
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  function toggleMenu(hamburger) {
-    const menu = document.getElementById("nav-menu");
-    hamburger.classList.toggle("active");
-    menu.classList.toggle("active");
-    const expanded = hamburger.classList.contains("active");
-    hamburger.setAttribute("aria-expanded", expanded ? "true" : "false");
-    document.body.style.overflow = expanded ? "hidden" : "";
+  const menu = document.getElementById("nav-menu");
+  const menuToggle = document.getElementById("menu-toggle");
+  const mobileNavigation = window.matchMedia("(max-width: 768px)");
+  let previousBodyOverflow = "";
+
+  function setMenuOpen(open, options = {}) {
+    if (!(menuToggle instanceof HTMLButtonElement) || !(menu instanceof HTMLElement)) return;
+
+    menuToggle.classList.toggle("active", open);
+    menu.classList.toggle("active", open);
+    menuToggle.setAttribute("aria-expanded", open ? "true" : "false");
+
+    if (open) {
+      previousBodyOverflow = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = previousBodyOverflow;
+      previousBodyOverflow = "";
+      if (options.restoreFocus) menuToggle.focus();
+    }
   }
 
   const menuItems = document.querySelectorAll(".nav-menu a");
   menuItems.forEach((item, index) => {
     item.style.transitionDelay = `${index * 0.1}s`;
   });
+
+  if (menuToggle instanceof HTMLButtonElement) {
+    menuToggle.addEventListener("click", () => {
+      setMenuOpen(menuToggle.getAttribute("aria-expanded") !== "true");
+    });
+
+    menuItems.forEach((item) => {
+      item.addEventListener("click", () => setMenuOpen(false));
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && menuToggle.getAttribute("aria-expanded") === "true") {
+        setMenuOpen(false, { restoreFocus: true });
+      }
+    });
+
+    mobileNavigation.addEventListener("change", (event) => {
+      if (!event.matches) setMenuOpen(false);
+    });
+  }
 
   const themeToggle = document.getElementById("theme-toggle");
   const productionThemes = new Set(["institutional-dark", "institutional-light"]);

@@ -41,8 +41,9 @@ type Props = {
     <SeoHead {...Astro.props} />
   </head>
   <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
     <Header />
-    <main class="main-content">
+    <main id="main-content" class="main-content">
       <div class="container">
         <slot />
       </div>

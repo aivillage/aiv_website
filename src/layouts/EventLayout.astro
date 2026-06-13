@@ -43,7 +43,7 @@ const scheduleLinks = scheduleRoutesForEvent(event.id);
         <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
           <a href="/discord/" style="color: var(--aiv-action-primary);">Join our Discord</a>
           <span style="color: var(--aiv-text-muted);">•</span>
-          <a href="https://forms.gle/vCrz3zpR8xHCsTtJ8" target="_blank" style="color: var(--aiv-action-primary);">Volunteer Application</a>
+          <a href="https://forms.gle/vCrz3zpR8xHCsTtJ8" target="_blank" rel="noopener noreferrer" style="color: var(--aiv-action-primary);">Volunteer Application</a>
           <span style="color: var(--aiv-text-muted);">•</span>
           <a href="/events/" style="color: var(--aiv-action-primary);">All Events</a>
         </div>
@@ -55,7 +55,7 @@ const scheduleLinks = scheduleRoutesForEvent(event.id);
           {next && <a href={eventPath(next)} style="color: var(--aiv-action-primary);">{truncate(next.data.title, 30)} →</a>}
         </div>
         <div class="event-share">
-          <a href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(event.data.title)}&via=aivillage_dc`} target="_blank" style="color: var(--aiv-action-primary); margin: 0 0.5rem;">Share Event</a>
+          <a href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(event.data.title)}&via=aivillage_dc`} target="_blank" rel="noopener noreferrer" style="color: var(--aiv-action-primary); margin: 0 0.5rem;">Share Event</a>
         </div>
       </div>
     </footer>
