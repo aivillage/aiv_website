@@ -2,7 +2,7 @@
 first_name: Bill
 last_name: Stout
 position: Steering Committee Member
-profile: 0001.png
+profile: bill_stout.jpg
 expertise: AI/ML Security, GenAI Red Teaming
 affiliation: AI Alliance, CoSAI TSC
 bio: true
