@@ -77,7 +77,7 @@ const sponsors = defineCollection({
 
       if (!data.logo) {
         ctx.addIssue({
-          code: z.ZodIssueCode.custom,
+          code: "custom",
           path: ["logo"],
           message: "Current sponsors must include a logo.",
         });
@@ -85,7 +85,7 @@ const sponsors = defineCollection({
 
       if (!data.url) {
         ctx.addIssue({
-          code: z.ZodIssueCode.custom,
+          code: "custom",
           path: ["url"],
           message: "Current sponsors must include a URL.",
         });
