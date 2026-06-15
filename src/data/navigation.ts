@@ -1,3 +1,5 @@
+import { volunteerApplicationUrl } from "./site";
+
 export const primaryNav = [
   { label: "Events", href: "/events/" },
   { label: "Blog", href: "/blog/" },
@@ -24,7 +26,7 @@ export const footerNavSections = [
     links: [
       { label: "Community", href: "/community/" },
       { label: "Discord", href: "/discord/" },
-      { label: "Volunteer Application", href: "https://forms.gle/vCrz3zpR8xHCsTtJ8", external: true },
+      { label: "Volunteer Application", href: volunteerApplicationUrl, external: true },
       { label: "Code of Conduct", href: "/about/conduct/" },
     ],
   },
