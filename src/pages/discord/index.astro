@@ -34,7 +34,7 @@ import PageShell from "../../components/layout/PageShell.astro";
   </div>
   <hr />
   <h2>📋 Community Guidelines</h2>
-  <div class="auto-grid auto-grid--wide">
+  <div class="responsive-grid responsive-grid--wide">
     <div class="card"><h4 class="text-risk mt-0">🚫 Basic Rules</h4><ul class="discord-list"><li>Stay on topic in specialized channels</li><li>No NSFW content permitted</li><li>No illegal behavior or solicitation</li><li>No spamming or channel disruption</li><li>Follow the AI Village <a href="/about/conduct/">Code of Conduct</a></li></ul></div>
     <div class="card"><h4 class="text-warning mt-0">💬 Communication</h4><ul class="discord-list"><li>Use threads for long discussions</li><li>Take off-topic conversations to #general</li><li>Be respectful and constructive</li><li>Help newcomers get oriented</li><li>Share knowledge and resources</li></ul></div>
   </div>
@@ -48,7 +48,7 @@ import PageShell from "../../components/layout/PageShell.astro";
   </div>
   <hr />
   <h2>🎯 Popular Channels</h2>
-  <div class="auto-grid auto-grid--wide">
+  <div class="responsive-grid responsive-grid--wide">
     {["#general:General discussion and off-topic conversations", "#research:AI security research discussions and paper reviews", "#events:Announcements and discussions about upcoming events", "#tools-and-code:Sharing tools, code, and technical resources", "#job-board:AI security job postings and career discussions", "#ctf-discussion:CTF announcements, team formation, and writeups"].map((item) => {
       const [name, text] = item.split(":");
       return <div class="card"><h4 class="mt-0">{name}</h4><p>{text}</p></div>;

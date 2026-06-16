@@ -1880,14 +1880,14 @@ details {
   gap: 2rem; 
 }
 
-.auto-grid {
+.responsive-grid {
   display: grid;
   gap: 1rem;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   margin: 1.5rem 0;
 }
 
-.auto-grid--wide {
+.responsive-grid--wide {
   gap: 1.5rem;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   margin: 2rem 0;
