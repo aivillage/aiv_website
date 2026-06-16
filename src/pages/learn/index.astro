@@ -36,29 +36,29 @@ const additionalWorkshopDirectories = [
     This is not a complete curriculum. It is a clear entry point into the open workshop infrastructure that already exists and can grow into more structured learning paths.
   </p>
 
-  <div class="card" style="border-left: 4px solid var(--aiv-action-primary);">
-    <h2 style="margin-top: 0;">Workshop Philosophy</h2>
-    <blockquote style="color: var(--aiv-text-secondary); font-size: 1.2rem; margin: 1rem 0;">
+  <div class="card card--accent-primary">
+    <h2 class="mt-0">Workshop Philosophy</h2>
+    <blockquote class="learn-quote">
       "get them excited to learn"
     </blockquote>
     <p>
       AIV's workshop philosophy is not that every participant masters the skill in the room. The goal is to make the topic accessible, spark interest, and give people a path to continue learning.
     </p>
-    <p style="color: var(--aiv-text-muted); font-size: 0.95rem;">Source: AIV Workshops contributor guidelines.</p>
+    <p class="text-muted text-small">Source: AIV Workshops contributor guidelines.</p>
   </div>
 
   <hr />
 
   <h2>Workshop Material</h2>
-  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin: 1.5rem 0;">
+  <div class="auto-grid">
     {workshops.map((workshop) => (
       <article class="card">
-        <h3 style="margin-top: 0;"><a href={workshop.href} target="_blank" rel="noopener noreferrer">{workshop.name}</a></h3>
+        <h3 class="mt-0"><a href={workshop.href} target="_blank" rel="noopener noreferrer">{workshop.name}</a></h3>
         <p>{workshop.description}</p>
       </article>
     ))}
   </div>
-  <p style="color: var(--aiv-text-muted);">
+  <p class="text-muted">
     Additional workshop directories in the public repository:
     {additionalWorkshopDirectories.map((workshop, index) => (
       <>
@@ -84,8 +84,8 @@ const additionalWorkshopDirectories = [
     AI Village event pages include talks, demos, and workshops where that information is available in current site content. Start with the <a href="/events/">events archive</a> and join the <a href="/discord/">Discord</a> for community discussion.
   </p>
 
-  <div class="card" style="border-left: 4px solid var(--aiv-action-primary);">
-    <h2 style="margin-top: 0;">Contribute</h2>
+  <div class="card card--accent-primary">
+    <h2 class="mt-0">Contribute</h2>
     <p>
       Workshop contributions should be self-contained containers connected by `docker-compose.yml` and serving a single website. Review the public workshop repository before proposing new material.
     </p>
@@ -98,3 +98,11 @@ const additionalWorkshopDirectories = [
   </p>
   </PageShell>
 </BaseLayout>
+
+<style>
+  .learn-quote {
+    color: var(--aiv-text-secondary);
+    font-size: 1.2rem;
+    margin: 1rem 0;
+  }
+</style>

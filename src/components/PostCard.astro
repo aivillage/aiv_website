@@ -11,13 +11,31 @@ const excerpt = post.data.description ?? post.data.excerpt ?? excerptFromBody(po
     <a href={canonicalPostPath(post)}>{post.data.title}</a>
   </h2>
   <div class="post-meta">
-    {post.data.author && <span style="color: var(--aiv-text-muted);">{Array.isArray(post.data.author) ? post.data.author.join(", ") : post.data.author}</span>}
+    {post.data.author && <span class="post-card__author">{Array.isArray(post.data.author) ? post.data.author.join(", ") : post.data.author}</span>}
     {post.data.author && post.data.date && " • "}
     <time datetime={post.data.date.toISOString()}>{formatDate(post.data.date)}</time>
-    {post.data.category && <> • <span style="color: var(--aiv-warning);">#{post.data.category}</span></>}
+    {post.data.category && <> • <span class="post-card__category">#{post.data.category}</span></>}
   </div>
   <div class="post-excerpt">{excerpt}</div>
-  <div style="margin-top: 1rem;">
-    <a href={canonicalPostPath(post)} style="color: var(--aiv-action-primary);">Read more →</a>
+  <div class="post-card__action">
+    <a href={canonicalPostPath(post)}>Read more →</a>
   </div>
 </article>
+
+<style>
+  .post-card__author {
+    color: var(--aiv-text-muted);
+  }
+
+  .post-card__category {
+    color: var(--aiv-warning);
+  }
+
+  .post-card__action {
+    margin-top: 1rem;
+  }
+
+  .post-card__action a {
+    color: var(--aiv-action-primary);
+  }
+</style>

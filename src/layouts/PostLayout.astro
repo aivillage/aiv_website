@@ -28,7 +28,7 @@ const description = post.data.description ?? post.data.excerpt ?? excerptFromBod
         </div>
         {post.data.description && <div class="post-description"><p>{post.data.description}</p></div>}
       </header>
-      {post.data.cover && <div class="post-cover-wrapper" style="display: flex; justify-content: center;"><img src={post.data.cover} alt={post.data.title} class="post-cover" /></div>}
+      {post.data.cover && <div class="post-cover-wrapper"><img src={post.data.cover} alt={post.data.title} class="post-cover" /></div>}
       <div class="post-content">
         <Content />
       </div>

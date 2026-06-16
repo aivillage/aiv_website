@@ -21,47 +21,140 @@ const scheduleLinks = scheduleRoutesForEvent(event.id);
 <BaseLayout title={event.data.title} description={event.data.description} canonical={url} type="event" eventDate={event.data.date} eventLocation={event.data.location}>
   <PageShell>
     <article class="event">
-      <header class="event-header" style="margin-bottom: 2rem;">
-        <h1 style="margin: 0 0 1rem 0;">{event.data.title}</h1>
-        <div class="event-meta" style="display: flex; flex-wrap: wrap; gap: 2rem; margin: 1rem 0; color: var(--aiv-text-muted); font-family: var(--aiv-font-mono);">
-          <div><strong style="color: var(--aiv-warning);">📅 Date:</strong> <time datetime={isoDate(event.data.date)}>{formatDate(event.data.date)}</time></div>
-          {event.data.location && <div><strong style="color: var(--aiv-warning);">📍 Location:</strong> {event.data.location}</div>}
+      <header class="event-header event-layout__header">
+        <h1>{event.data.title}</h1>
+        <div class="event-meta event-layout__meta">
+          <div><strong>📅 Date:</strong> <time datetime={isoDate(event.data.date)}>{formatDate(event.data.date)}</time></div>
+          {event.data.location && <div><strong>📍 Location:</strong> {event.data.location}</div>}
         </div>
-        {event.data.description && <div class="event-description" style="background: var(--aiv-nested-bg); padding: 1rem; border: 1px solid var(--aiv-nested-border); border-left: 4px solid var(--aiv-action-primary); border-radius: 0 5px 5px 0; margin: 1rem 0;"><p style="margin: 0; color: var(--aiv-text-secondary); font-size: 1.1rem;">{event.data.description}</p></div>}
+        {event.data.description && <div class="event-description content-note content-note--accent-primary event-layout__description"><p>{event.data.description}</p></div>}
       </header>
-      <div class="event-content" style="line-height: 1.7;">
+      <div class="event-content event-layout__content">
         <Content />
       </div>
       {scheduleLinks.length > 0 && (
-        <section class="card" style="margin-top: 2rem;">
-          <h2 style="margin-top: 0;">Schedules and Talks</h2>
+        <section class="card event-layout__schedule">
+          <h2>Schedules and Talks</h2>
           <ul>
             {scheduleLinks.map((link) => <li><a href={link.path}>{link.label}</a></li>)}
           </ul>
         </section>
       )}
-      <footer class="event-footer" style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--aiv-rule-color);">
-        <div style="text-align: center; margin: 2rem 0; padding: 1.5rem; background: var(--aiv-card-bg); border: 1px solid var(--aiv-card-border); box-shadow: var(--aiv-card-shadow); border-radius: 5px;">
-          <p style="margin: 0 0 1rem 0; color: var(--aiv-brand-primary); font-weight: bold;">🎪 Interested in attending or presenting at AI Village events?</p>
-          <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
-            <a href="/discord/" style="color: var(--aiv-action-primary);">Join our Discord</a>
-            <span style="color: var(--aiv-text-muted);">•</span>
-            <a href={volunteerApplicationUrl} target="_blank" rel="noopener noreferrer" style="color: var(--aiv-action-primary);">Volunteer Application</a>
-            <span style="color: var(--aiv-text-muted);">•</span>
-            <a href="/events/" style="color: var(--aiv-action-primary);">All Events</a>
+      <footer class="event-footer event-layout__footer">
+        <div class="card card--center event-layout__cta">
+          <p>🎪 Interested in attending or presenting at AI Village events?</p>
+          <div class="event-layout__cta-links">
+            <a href="/discord/">Join our Discord</a>
+            <span aria-hidden="true">•</span>
+            <a href={volunteerApplicationUrl} target="_blank" rel="noopener noreferrer">Volunteer Application</a>
+            <span aria-hidden="true">•</span>
+            <a href="/events/">All Events</a>
           </div>
         </div>
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-top: 2rem;">
+        <div class="event-layout__footer-row">
           <div class="event-navigation">
-            {previous && <a href={eventPath(previous)} style="color: var(--aiv-action-primary);">← {truncate(previous.data.title, 30)}</a>}
-            {previous && next && <span style="color: var(--aiv-text-muted); margin: 0 1rem;">|</span>}
-            {next && <a href={eventPath(next)} style="color: var(--aiv-action-primary);">{truncate(next.data.title, 30)} →</a>}
+            {previous && <a href={eventPath(previous)}>← {truncate(previous.data.title, 30)}</a>}
+            {previous && next && <span aria-hidden="true">|</span>}
+            {next && <a href={eventPath(next)}>{truncate(next.data.title, 30)} →</a>}
           </div>
           <div class="event-share">
-            <a href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(event.data.title)}&via=aivillage_dc`} target="_blank" rel="noopener noreferrer" style="color: var(--aiv-action-primary); margin: 0 0.5rem;">Share Event</a>
+            <a href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(event.data.title)}&via=aivillage_dc`} target="_blank" rel="noopener noreferrer">Share Event</a>
           </div>
         </div>
       </footer>
     </article>
   </PageShell>
 </BaseLayout>
+
+<style>
+  .event-layout__header {
+    margin-bottom: 2rem;
+  }
+
+  .event-layout__header h1 {
+    margin: 0 0 1rem;
+  }
+
+  .event-layout__meta {
+    color: var(--aiv-text-muted);
+    display: flex;
+    flex-wrap: wrap;
+    font-family: var(--aiv-font-mono);
+    gap: 2rem;
+    margin: 1rem 0;
+  }
+
+  .event-layout__meta strong {
+    color: var(--aiv-warning);
+  }
+
+  .event-layout__description p {
+    color: var(--aiv-text-secondary);
+    font-size: 1.1rem;
+    margin: 0;
+  }
+
+  .event-layout__content {
+    line-height: 1.7;
+  }
+
+  .event-layout__schedule {
+    margin-top: 2rem;
+  }
+
+  .event-layout__schedule h2 {
+    margin-top: 0;
+  }
+
+  .event-layout__footer {
+    border-top: 1px solid var(--aiv-rule-color);
+    margin-top: 3rem;
+    padding-top: 2rem;
+  }
+
+  .event-layout__cta {
+    margin: 2rem 0;
+  }
+
+  .event-layout__cta p {
+    color: var(--aiv-brand-primary);
+    font-weight: 700;
+    margin: 0 0 1rem;
+  }
+
+  .event-layout__cta-links,
+  .event-layout__footer-row {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .event-layout__cta-links {
+    justify-content: center;
+  }
+
+  .event-layout__cta-links a,
+  .event-navigation a,
+  .event-share a {
+    color: var(--aiv-action-primary);
+  }
+
+  .event-layout__cta-links span,
+  .event-navigation span {
+    color: var(--aiv-text-muted);
+  }
+
+  .event-layout__footer-row {
+    justify-content: space-between;
+    margin-top: 2rem;
+  }
+
+  .event-navigation span {
+    margin-inline: 1rem;
+  }
+
+  .event-share a {
+    margin-inline: 0.5rem;
+  }
+</style>

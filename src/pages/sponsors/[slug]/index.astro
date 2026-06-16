@@ -18,7 +18,7 @@ const hasBody = Boolean(sponsor.body?.trim());
   <PageShell>
   <article class="post">
     <header class="post-header">
-      {sponsor.data.logo && <img src={`/assets/images/logos/${sponsor.data.logo}`} alt={`${sponsor.data.name} logo`} style="max-width: 260px; max-height: 120px; object-fit: contain;" />}
+      {sponsor.data.logo && <img class="sponsor-detail-logo" src={`/assets/images/logos/${sponsor.data.logo}`} alt={`${sponsor.data.name} logo`} />}
       <h1>{sponsor.data.name}</h1>
       {sponsor.data.url && <p><a href={sponsor.data.url} target="_blank" rel="noopener noreferrer">{sponsor.data.url}</a></p>}
     </header>
@@ -29,3 +29,11 @@ const hasBody = Boolean(sponsor.body?.trim());
   </article>
   </PageShell>
 </BaseLayout>
+
+<style>
+  .sponsor-detail-logo {
+    max-height: 120px;
+    max-width: 260px;
+    object-fit: contain;
+  }
+</style>

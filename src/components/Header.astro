@@ -75,9 +75,6 @@ function isActive(url: string) {
   }
 
   const menuItems = document.querySelectorAll(".nav-menu a");
-  menuItems.forEach((item, index) => {
-    item.style.transitionDelay = `${index * 0.1}s`;
-  });
 
   if (menuToggle instanceof HTMLButtonElement) {
     menuToggle.addEventListener("click", () => {

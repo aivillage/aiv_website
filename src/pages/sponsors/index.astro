@@ -17,7 +17,7 @@ const pastSponsors = getPastSponsors(sponsors);
     AI Village acknowledges organizations that currently support, or have previously supported, the community's AI security education and research mission.
   </p>
 
-  <section aria-labelledby="become-a-sponsor" style="margin-top: 2rem;">
+  <section class="mt-2" aria-labelledby="become-a-sponsor">
     <h2 id="become-a-sponsor">Sponsor AI Village</h2>
     <p>
       AI Village runs as a community effort. Sponsorship covers the cost of the programs the community relies on and keeps them open to everyone. If your organization works on AI, security, or privacy, sponsoring is a direct way to support that mission and reach the people building and breaking these systems.
@@ -37,18 +37,18 @@ const pastSponsors = getPastSponsors(sponsors);
       Current sponsors are recognized across the site: featured on the AI Village homepage and listed here on the Sponsors page, each with a dedicated sponsor page describing the organization. Sponsors are acknowledged as part of the community that makes this work possible.
     </p>
 
-    <div class="card" style="margin-top: 1.5rem;">
-      <h3 style="margin-top: 0;">Become a Sponsor</h3>
+    <div class="card sponsor-contact-card">
+      <h3 class="mt-0">Become a Sponsor</h3>
       <p>
         Sponsorship levels and details are arranged directly with the organizing team. To start a conversation, reach out on Discord or through the AI Village GitHub organization, and the team will follow up with current options.
       </p>
-      <p style="margin-bottom: 0;">
+      <p class="mb-0">
         <a class="btn" href="/discord/">Reach the team on Discord</a>
       </p>
     </div>
   </section>
 
-  <section aria-labelledby="current-sponsors" style="margin-top: 2.5rem;">
+  <section class="sponsor-section" aria-labelledby="current-sponsors">
     <h2 id="current-sponsors">Current Sponsors</h2>
     {currentSponsors.length > 0 ? (
       <SponsorGrid sponsors={currentSponsors} linkMode="external" />
@@ -67,3 +67,13 @@ const pastSponsors = getPastSponsors(sponsors);
   </section>
   </PageShell>
 </BaseLayout>
+
+<style>
+  .sponsor-contact-card {
+    margin-top: 1.5rem;
+  }
+
+  .sponsor-section {
+    margin-top: 2.5rem;
+  }
+</style>
