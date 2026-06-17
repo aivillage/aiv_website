@@ -9,12 +9,11 @@
   --aiv-font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
   --aiv-measure-prose: 72ch;
   --aiv-measure-wide: 96ch;
-  --aiv-measure-blog: 1120px;
-  --aiv-measure-blog-prose: 55rem;
+  --aiv-measure-blog: 55rem;
 }
 
 :root,
-html[data-theme="institutional-dark"],
+html[data-theme="dark"],
 html[data-theme="auto"] {
   color-scheme: dark;
 
@@ -58,7 +57,7 @@ html[data-theme="auto"] {
   --aiv-brand-discord-text: #FFFFFF;
 }
 
-html[data-theme="institutional-light"] {
+html[data-theme="light"] {
   color-scheme: light;
 
   --aiv-bg-canvas: #F8F9F6;
@@ -341,7 +340,6 @@ h6 {
 
 p {
   margin: 1em 0;
-  color: var(--aiv-text-secondary);
 }
 
 a {
@@ -466,7 +464,6 @@ samp,
 .tag,
 .badge,
 .eyebrow,
-.label,
 .member-position,
 .event-location,
 .text-mono,
@@ -475,7 +472,6 @@ table th {
 }
 
 .eyebrow,
-.label,
 .badge,
 .tag {
   text-transform: uppercase;
@@ -604,15 +600,19 @@ blockquote {
 .main-content .container>article>p,
 .main-content .container>article>ul,
 .main-content .container>article>ol,
-.post-content>p,
-.post-content>ul,
-.post-content>ol,
-.post-content>blockquote,
 .event>.event-content>p,
 .event>.event-content>ul,
 .event>.event-content>ol,
 .event>.event-content>blockquote {
   max-width: var(--aiv-measure-prose);
+}
+
+.main-content .container>p,
+.main-content .container>section>p,
+.main-content .container>section>section>p,
+.main-content .container>article>p,
+.event>.event-content>p {
+  color: var(--aiv-text-secondary);
 }
 
 .page-intro,
@@ -1055,7 +1055,7 @@ blockquote {
 }
 
 .post-header {
-  max-width: var(--aiv-measure-blog-prose);
+  max-width: var(--aiv-measure-blog);
   margin-inline: auto;
   margin-bottom: 2rem;
 
@@ -1104,16 +1104,33 @@ blockquote {
   >h5,
   >h6 {
     width: 100%;
-    max-width: var(--aiv-measure-blog-prose);
+    max-width: var(--aiv-measure-blog);
     margin-inline: auto;
   }
 
   >pre,
   >table,
+  >.expressive-code,
   >.mermaid {
     width: 100%;
-    max-width: var(--aiv-measure-blog-prose);
+    max-width: var(--aiv-measure-blog);
     margin-inline: auto;
+  }
+
+  >.katex-display {
+    width: 100%;
+    max-width: var(--aiv-measure-blog);
+    margin-inline: auto;
+    overflow-x: auto;
+  }
+
+  >p {
+    color: var(--aiv-text-secondary);
+  }
+
+  >.expressive-code,
+  >.mermaid {
+    overflow-x: auto;
   }
 
   h2 {
@@ -1137,7 +1154,7 @@ blockquote {
   display: flex;
   justify-content: center;
   width: 100%;
-  max-width: var(--aiv-measure-blog-prose);
+  max-width: var(--aiv-measure-blog);
   margin: 1rem auto;
 }
 
@@ -1151,48 +1168,12 @@ blockquote {
   border-radius: 8px;
 }
 
-.mermaid {
-  color: var(--aiv-text-primary);
+.post-content .mermaid {
+  width: 100%;
 
   svg {
     max-width: 100%;
     height: auto;
-  }
-
-  .flowchart-link,
-  .edgePath path,
-  marker path {
-    stroke: var(--aiv-action-primary) !important;
-  }
-
-  .edgeLabel,
-  .edgeLabel p,
-  .edgeLabel span {
-    color: var(--aiv-text-primary) !important;
-    background: var(--aiv-bg-surface) !important;
-  }
-
-  .edgeLabel rect,
-  .labelBkg {
-    fill: var(--aiv-bg-surface) !important;
-    opacity: 0.96 !important;
-  }
-
-  .label,
-  .nodeLabel,
-  .label span,
-  foreignObject,
-  text {
-    color: var(--aiv-text-primary) !important;
-    fill: var(--aiv-text-primary) !important;
-  }
-
-  .node rect,
-  .node circle,
-  .node ellipse,
-  .node polygon,
-  .node path {
-    stroke: var(--aiv-nested-border) !important;
   }
 }
 

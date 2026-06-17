@@ -24,18 +24,36 @@ type Props = {
   <head>
     <script is:inline>
       (() => {
-        const allowed = new Set(["auto", "institutional-dark", "institutional-light"]);
+        const legacyThemes = new Map([
+          ["institutional-dark", "dark"],
+          ["institutional-light", "light"],
+        ]);
+        const allowed = new Set(["auto", "dark", "light"]);
         let selectedTheme = "auto";
 
         try {
-          const savedTheme = localStorage.getItem("aiv-theme");
+          let savedTheme = localStorage.getItem("aiv-theme");
+          if (legacyThemes.has(savedTheme)) {
+            savedTheme = legacyThemes.get(savedTheme);
+            localStorage.setItem("aiv-theme", savedTheme);
+          }
+
           if (allowed.has(savedTheme)) selectedTheme = savedTheme;
           else if (savedTheme) localStorage.removeItem("aiv-theme");
         } catch {
           selectedTheme = "auto";
         }
 
-        document.documentElement.dataset.theme = selectedTheme;
+        const effectiveTheme =
+          selectedTheme === "auto"
+            ? window.matchMedia("(prefers-color-scheme: dark)").matches
+              ? "dark"
+              : "light"
+            : selectedTheme;
+
+        document.documentElement.dataset.themePreference = selectedTheme;
+        document.documentElement.dataset.theme = effectiveTheme;
+        document.documentElement.dataset.ecTheme = effectiveTheme;
       })();
     </script>
     <SeoHead {...Astro.props} />

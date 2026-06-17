@@ -7,8 +7,8 @@ const globalStylesPath = resolve(__dirname, "../src/styles/global.scss");
 const source = readFileSync(globalStylesPath, "utf8");
 
 const themeBlocks = {
-  "institutional-dark": extractBlock(":root,\nhtml[data-theme=\"institutional-dark\"],\nhtml[data-theme=\"auto\"]"),
-  "institutional-light": extractBlock("html[data-theme=\"institutional-light\"]"),
+  dark: extractBlock(":root,\nhtml[data-theme=\"dark\"],\nhtml[data-theme=\"auto\"]"),
+  light: extractBlock("html[data-theme=\"light\"]"),
 };
 
 const themes = Object.fromEntries(

@@ -13,7 +13,6 @@ image:
   alt: "AI agent authorization and account takeover research"
 cover: /assets/images/2026-06-05-Meta-AI-Agent-Account-Takeover/3df9f9e4-ee6d-4e4b-b79e-4be2f4d9de7e.jpg
 media_subpath: /assets/images/2026-06-05-Meta-AI-Agent-Account-Takeover/
-mermaid: true
 ---
 
 ## Introduction
