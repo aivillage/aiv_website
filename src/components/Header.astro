@@ -97,12 +97,33 @@ function isActive(url: string) {
   }
 
   const themeToggle = document.getElementById("theme-toggle");
-  const productionThemes = new Set(["institutional-dark", "institutional-light"]);
+  const legacyThemes = new Map([
+    ["institutional-dark", "dark"],
+    ["institutional-light", "light"],
+  ]);
+  const productionThemes = new Set(["dark", "light"]);
   const systemTheme = window.matchMedia("(prefers-color-scheme: dark)");
+
+  function effectiveTheme(theme) {
+    if (theme === "dark" || theme === "light") return theme;
+    return systemTheme.matches ? "dark" : "light";
+  }
+
+  function applyTheme(theme) {
+    document.documentElement.dataset.themePreference = theme;
+    const mode = effectiveTheme(theme);
+    document.documentElement.dataset.theme = mode;
+    document.documentElement.dataset.ecTheme = mode;
+  }
 
   function savedTheme() {
     try {
-      const value = localStorage.getItem("aiv-theme");
+      let value = localStorage.getItem("aiv-theme");
+      if (legacyThemes.has(value)) {
+        value = legacyThemes.get(value);
+        localStorage.setItem("aiv-theme", value);
+      }
+
       if (productionThemes.has(value)) return value;
       if (value && value !== "auto") localStorage.removeItem("aiv-theme");
     } catch {
@@ -113,10 +134,7 @@ function isActive(url: string) {
   }
 
   function currentEffectiveMode() {
-    const theme = document.documentElement.dataset.theme;
-    if (theme === "institutional-dark") return "dark";
-    if (theme === "institutional-light") return "light";
-    return systemTheme.matches ? "dark" : "light";
+    return effectiveTheme(document.documentElement.dataset.theme);
   }
 
   function updateThemeToggle() {
@@ -135,8 +153,8 @@ function isActive(url: string) {
     updateThemeToggle();
 
     themeToggle.addEventListener("click", () => {
-      const nextTheme = currentEffectiveMode() === "dark" ? "institutional-light" : "institutional-dark";
-      document.documentElement.dataset.theme = nextTheme;
+      const nextTheme = currentEffectiveMode() === "dark" ? "light" : "dark";
+      applyTheme(nextTheme);
 
       try {
         localStorage.setItem("aiv-theme", nextTheme);
@@ -148,7 +166,8 @@ function isActive(url: string) {
     });
 
     systemTheme.addEventListener("change", () => {
-      if (!savedTheme()) updateThemeToggle();
+      if (!savedTheme()) applyTheme("auto");
+      updateThemeToggle();
     });
   }
 </script>

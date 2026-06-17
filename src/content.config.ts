@@ -29,7 +29,6 @@ const blog = defineCollection({
     canonicalSlug: z.string().optional(),
     legacySlug: z.string().optional(),
     legacyUrls: z.array(z.string()).default([]),
-    mermaid: z.boolean().optional(),
   }),
 });
 

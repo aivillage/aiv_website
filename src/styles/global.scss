@@ -9,12 +9,11 @@
   --aiv-font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
   --aiv-measure-prose: 72ch;
   --aiv-measure-wide: 96ch;
-  --aiv-measure-blog: 1120px;
-  --aiv-measure-blog-prose: 78ch;
+  --aiv-measure-blog: 55rem;
 }
 
 :root,
-html[data-theme="institutional-dark"],
+html[data-theme="dark"],
 html[data-theme="auto"] {
   color-scheme: dark;
 
@@ -58,7 +57,7 @@ html[data-theme="auto"] {
   --aiv-brand-discord-text: #FFFFFF;
 }
 
-html[data-theme="institutional-light"] {
+html[data-theme="light"] {
   color-scheme: light;
 
   --aiv-bg-canvas: #F8F9F6;
@@ -341,7 +340,6 @@ h6 {
 
 p {
   margin: 1em 0;
-  color: var(--aiv-text-secondary);
 }
 
 a {
@@ -402,13 +400,10 @@ ul {
 }
 
 ol {
-  counter-reset: item;
+  list-style-type: decimal;
 
   li {
-    counter-increment: item;
-
-    &::before {
-      content: counter(item) ". ";
+    &::marker {
       color: var(--aiv-action-primary);
       font-weight: bold;
       font-family: var(--aiv-font-mono);
@@ -469,7 +464,6 @@ samp,
 .tag,
 .badge,
 .eyebrow,
-.label,
 .member-position,
 .event-location,
 .text-mono,
@@ -478,7 +472,6 @@ table th {
 }
 
 .eyebrow,
-.label,
 .badge,
 .tag {
   text-transform: uppercase;
@@ -607,15 +600,19 @@ blockquote {
 .main-content .container>article>p,
 .main-content .container>article>ul,
 .main-content .container>article>ol,
-.post-content>p,
-.post-content>ul,
-.post-content>ol,
-.post-content>blockquote,
 .event>.event-content>p,
 .event>.event-content>ul,
 .event>.event-content>ol,
 .event>.event-content>blockquote {
   max-width: var(--aiv-measure-prose);
+}
+
+.main-content .container>p,
+.main-content .container>section>p,
+.main-content .container>section>section>p,
+.main-content .container>article>p,
+.event>.event-content>p {
+  color: var(--aiv-text-secondary);
 }
 
 .page-intro,
@@ -1058,7 +1055,7 @@ blockquote {
 }
 
 .post-header {
-  max-width: var(--aiv-measure-blog-prose);
+  max-width: var(--aiv-measure-blog);
   margin-inline: auto;
   margin-bottom: 2rem;
 
@@ -1106,15 +1103,34 @@ blockquote {
   >h4,
   >h5,
   >h6 {
-    max-width: var(--aiv-measure-blog-prose);
+    width: 100%;
+    max-width: var(--aiv-measure-blog);
     margin-inline: auto;
   }
 
   >pre,
   >table,
+  >.expressive-code,
   >.mermaid {
+    width: 100%;
     max-width: var(--aiv-measure-blog);
     margin-inline: auto;
+  }
+
+  >.katex-display {
+    width: 100%;
+    max-width: var(--aiv-measure-blog);
+    margin-inline: auto;
+    overflow-x: auto;
+  }
+
+  >p {
+    color: var(--aiv-text-secondary);
+  }
+
+  >.expressive-code,
+  >.mermaid {
+    overflow-x: auto;
   }
 
   h2 {
@@ -1122,10 +1138,14 @@ blockquote {
   }
 
   img {
+    display: block;
+    width: auto;
     max-width: 100%;
+    max-height: 60vh;
     height: auto;
+    object-fit: contain;
     border-radius: 8px;
-    margin: 1rem 0;
+    margin: 1rem auto;
     border: 1px solid var(--aiv-card-border);
   }
 }
@@ -1133,53 +1153,27 @@ blockquote {
 .post-cover-wrapper {
   display: flex;
   justify-content: center;
-  margin: 1rem 0;
+  width: 100%;
+  max-width: var(--aiv-measure-blog);
+  margin: 1rem auto;
 }
 
 .post-cover {
+  width: auto;
   max-width: 100%;
+  max-height: 60vh;
   height: auto;
+  object-fit: contain;
   border: 1px solid var(--aiv-card-border);
   border-radius: 8px;
 }
 
-.mermaid {
-  color: var(--aiv-text-primary);
+.post-content .mermaid {
+  width: 100%;
 
-  .flowchart-link,
-  .edgePath path,
-  marker path {
-    stroke: var(--aiv-action-primary) !important;
-  }
-
-  .edgeLabel,
-  .edgeLabel p,
-  .edgeLabel span {
-    color: var(--aiv-text-primary) !important;
-    background: var(--aiv-bg-surface) !important;
-  }
-
-  .edgeLabel rect,
-  .labelBkg {
-    fill: var(--aiv-bg-surface) !important;
-    opacity: 0.96 !important;
-  }
-
-  .label,
-  .nodeLabel,
-  .label span,
-  foreignObject,
-  text {
-    color: var(--aiv-text-primary) !important;
-    fill: var(--aiv-text-primary) !important;
-  }
-
-  .node rect,
-  .node circle,
-  .node ellipse,
-  .node polygon,
-  .node path {
-    stroke: var(--aiv-nested-border) !important;
+  svg {
+    max-width: 100%;
+    height: auto;
   }
 }
 
@@ -1597,14 +1591,14 @@ details {
     background: var(--aiv-bg-canvas) !important;
     background-color: var(--aiv-bg-canvas) !important;
   }
-  
+
   body {
     background: linear-gradient(135deg, var(--aiv-bg-canvas) 0%, var(--aiv-bg-surface) 50%, var(--aiv-bg-panel) 100%) !important;
     background-color: var(--aiv-bg-canvas) !important;
     background-attachment: fixed !important;
     min-height: 100vh !important;
   }
-  
+
   // Ensure main layout containers don't override the background
   .container,
   .main-content,
@@ -1616,7 +1610,7 @@ details {
     background: transparent !important;
     background-color: transparent !important;
   }
-  
+
   // Override any problematic white/light backgrounds from other stylesheets
   div:not(.card):not(.event-item):not(.post-item),
   section:not(.card):not(.aiv-section),
@@ -1641,7 +1635,7 @@ details {
   .aiv-section--tone-accent {
     background: var(--aiv-nested-bg) !important;
   }
-  
+
   // Preserve card styling but ensure it uses dark theme
   .card,
   .post-item {
@@ -1657,7 +1651,7 @@ details {
     border: 1px solid var(--aiv-nested-border) !important;
     box-shadow: var(--aiv-card-shadow) !important;
   }
-  
+
   .container {
     padding: 0 1rem;
   }
@@ -1874,10 +1868,10 @@ details {
 .justify-between { justify-content: space-between; }
 .align-center { align-items: center; }
 
-.grid-2 { 
-  display: grid; 
-  grid-template-columns: repeat(2, 1fr); 
-  gap: 2rem; 
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
 }
 
 .responsive-grid {
