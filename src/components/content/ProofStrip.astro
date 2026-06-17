@@ -14,8 +14,7 @@ type Props = {
 const { items = [], mobileHeading, class: className } = Astro.props as Props;
 ---
 
-<div class:list={["aiv-proof-strip", className]}>
-  {mobileHeading && <p class="aiv-proof-strip__heading">{mobileHeading}</p>}
+<div class:list={["aiv-proof-strip", className]} data-mobile-heading={mobileHeading}>
   {items.length > 0 ? (
     items.map((item) => (
       <div class="aiv-proof-strip__item">
@@ -36,10 +35,6 @@ const { items = [], mobileHeading, class: className } = Astro.props as Props;
     gap: 1rem;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     padding-block: 1.25rem;
-  }
-
-  .aiv-proof-strip__heading {
-    display: none;
   }
 
   .aiv-proof-strip__item {
@@ -67,17 +62,17 @@ const { items = [], mobileHeading, class: className } = Astro.props as Props;
   }
 
   @media (max-width: 639px) {
-    .aiv-proof-strip__heading {
+    .aiv-proof-strip[data-mobile-heading]::before {
       color: var(--aiv-action-secondary);
-      display: block;
+      content: attr(data-mobile-heading);
       font-family: var(--aiv-font-mono);
       font-size: 0.78rem;
       font-weight: 700;
+      grid-column: 1 / -1;
       letter-spacing: 0.08em;
       line-height: 1.3;
       margin: 0 0 0.95rem;
       text-transform: uppercase;
-      grid-column: 1 / -1;
     }
 
     .aiv-proof-strip__item {
