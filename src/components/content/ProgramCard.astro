@@ -19,13 +19,13 @@ const { title, description, href, eyebrow, ctaLabel = "Learn more", class: class
   <h3 class="aiv-program-card__title">{title}</h3>
   {description && <p class="aiv-program-card__description">{description}</p>}
   <slot />
-  {href && <Button class="aiv-program-card__action" href={href} variant="ghost" size="sm">{ctaLabel}</Button>}
+  {href && <div class="aiv-program-card__action"><Button href={href} variant="ghost" size="sm">{ctaLabel}</Button></div>}
 </Card>
 
 <style>
   :global(.aiv-program-card) {
     display: grid;
-    gap: 0.75rem;
+    gap: 0;
   }
 
   .aiv-program-card__eyebrow {
@@ -39,7 +39,7 @@ const { title, description, href, eyebrow, ctaLabel = "Learn more", class: class
   }
 
   .aiv-program-card__title {
-    margin: 0;
+    margin: 0 0 0.25rem;
   }
 
   .aiv-program-card__description {
@@ -49,6 +49,6 @@ const { title, description, href, eyebrow, ctaLabel = "Learn more", class: class
 
   .aiv-program-card__action {
     justify-self: start;
-    margin-top: 0.625rem;
+    margin-top: 0.25rem;
   }
 </style>
