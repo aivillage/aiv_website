@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageShell from "../../components/layout/PageShell.astro";
 import VolunteerCard from "../../components/VolunteerCard.astro";
 import { volunteerApplicationUrl } from "../../data/site";
 
@@ -19,9 +20,10 @@ for (const volunteer of volunteers) {
   canonical="/about/"
   description="Learn about AI Village's mission, leadership team, community work, and ways to participate in AI security education and research."
 >
+  <PageShell>
   <h1>About AI Village</h1>
-  <div class="page-intro" style="text-align: left; margin: 2rem 0;">
-    <p style="color: var(--aiv-text-muted); font-size: 1.1rem;">
+  <div class="page-intro about-intro">
+    <p class="text-muted text-lead">
       AI Village is a community of hackers and data scientists working to educate the world on the use and abuse of artificial intelligence in security and privacy.
     </p>
   </div>
@@ -38,24 +40,43 @@ for (const volunteer of volunteers) {
   </p>
   <hr />
   <h2>Leadership Team</h2>
-  <div class="team-grid" style="display: grid; gap: 2rem;">
+  <div class="team-grid">
     {volunteers.map((volunteer, index) => {
       const { Content } = rendered.get(volunteer.id);
       return (
         <>
           <VolunteerCard volunteer={volunteer} Content={Content} />
-          {index < volunteers.length - 1 && <hr style="border: none; border-top: 1px solid var(--aiv-rule-color); margin: 1rem 0;" />}
+          {index < volunteers.length - 1 && <hr class="team-grid__separator" />}
         </>
       );
     })}
   </div>
   <hr />
   <h2 id="-join-our-team">Join the Work</h2>
-  <div style="background: var(--aiv-card-bg); border: 1px solid var(--aiv-card-border); box-shadow: var(--aiv-card-shadow); padding: 1.5rem; border-radius: 5px; border-left: 4px solid var(--aiv-action-primary); margin: 2rem 0;">
-    <h4 style="color: var(--aiv-action-primary); margin-top: 0;">Get Involved</h4>
+  <div class="card card--accent-primary">
+    <h4 class="text-accent mt-0">Get Involved</h4>
     <p>AI Village welcomes help from researchers, engineers, educators, organizers, and community builders.</p>
-    <div style="margin-top: 1.5rem;">
-      <a href={volunteerApplicationUrl} target="_blank" rel="noopener noreferrer" style="color: var(--aiv-action-primary); font-weight: bold;">→ Submit a volunteer application</a>
+    <div class="mt-2">
+      <a class="text-accent text-strong" href={volunteerApplicationUrl} target="_blank" rel="noopener noreferrer">→ Submit a volunteer application</a>
     </div>
   </div>
+  </PageShell>
 </BaseLayout>
+
+<style>
+  .about-intro {
+    margin: 2rem 0;
+    text-align: left;
+  }
+
+  .team-grid {
+    display: grid;
+    gap: 2rem;
+  }
+
+  .team-grid__separator {
+    border: none;
+    border-top: 1px solid var(--aiv-rule-color);
+    margin: 1rem 0;
+  }
+</style>

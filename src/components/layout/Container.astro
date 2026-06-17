@@ -1,0 +1,12 @@
+---
+type Props = {
+  width?: "prose" | "wide" | "full";
+  class?: string;
+};
+
+const { width = "wide", class: className } = Astro.props;
+---
+
+<div class:list={["aiv-container", `aiv-container--${width}`, className]}>
+  <slot />
+</div>

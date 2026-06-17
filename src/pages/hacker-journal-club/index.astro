@@ -1,8 +1,10 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageShell from "../../components/layout/PageShell.astro";
 ---
 
 <BaseLayout title="Hacker Journal Clubs" canonical="/hacker-journal-club/" description="AI Village Hacker Journal Club information preserved from the legacy site.">
+  <PageShell>
   <article class="post">
     <header class="post-header">
       <h1>Hacker Journal Clubs</h1>
@@ -27,4 +29,5 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
       <p>Despite the increasing usage of artificial intelligence in critical applications, these systems are vulnerable to a plethora of failure models with regards to integrity, availability, confidentiality, fairness, and other requirements. We plan to analyze these systems in an interdisciplinary manner, analyzing different works in this field from both theoretical and practical perspectives.</p>
     </div>
   </article>
+  </PageShell>
 </BaseLayout>

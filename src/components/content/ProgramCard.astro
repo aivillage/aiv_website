@@ -1,0 +1,54 @@
+---
+import Card from "../ui/Card.astro";
+import Button from "../ui/Button.astro";
+
+type Props = {
+  title: string;
+  description?: string;
+  href?: string;
+  eyebrow?: string;
+  ctaLabel?: string;
+  class?: string;
+};
+
+const { title, description, href, eyebrow, ctaLabel = "Learn more", class: className } = Astro.props as Props;
+---
+
+<Card class:list={["aiv-program-card", className]} as="article">
+  {eyebrow && <p class="aiv-program-card__eyebrow">{eyebrow}</p>}
+  <h3 class="aiv-program-card__title">{title}</h3>
+  {description && <p class="aiv-program-card__description">{description}</p>}
+  <slot />
+  {href && <div class="aiv-program-card__action"><Button href={href} variant="ghost" size="sm">{ctaLabel}</Button></div>}
+</Card>
+
+<style>
+  :global(.aiv-program-card) {
+    display: grid;
+    gap: 0;
+  }
+
+  .aiv-program-card__eyebrow {
+    color: var(--aiv-action-secondary);
+    font-family: var(--aiv-font-mono);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    margin: 0;
+    text-transform: uppercase;
+  }
+
+  .aiv-program-card__title {
+    margin: 0 0 0.25rem;
+  }
+
+  .aiv-program-card__description {
+    color: var(--aiv-text-secondary);
+    margin: 0;
+  }
+
+  .aiv-program-card__action {
+    justify-self: start;
+    margin-top: 0.25rem;
+  }
+</style>

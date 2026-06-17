@@ -1,0 +1,136 @@
+---
+type Props = {
+  href?: string;
+  variant?: "primary" | "secondary" | "ghost";
+  size?: "sm" | "md" | "lg";
+  type?: "button" | "submit" | "reset";
+  target?: "_blank" | "_self" | "_parent" | "_top";
+  rel?: string;
+  ariaLabel?: string;
+  disabled?: boolean;
+  class?: string;
+};
+
+const {
+  href,
+  variant = "primary",
+  size = "md",
+  type = "button",
+  target,
+  rel,
+  ariaLabel,
+  disabled = false,
+  class: className,
+} = Astro.props as Props;
+const resolvedRel = rel ?? (target === "_blank" ? "noopener noreferrer" : undefined);
+const classes = ["aiv-button", `aiv-button--${variant}`, `aiv-button--${size}`, className];
+---
+
+{
+  href ? (
+    <a class:list={classes} href={disabled ? undefined : href} target={target} rel={resolvedRel} aria-label={ariaLabel} aria-disabled={disabled ? "true" : undefined} tabindex={disabled ? -1 : undefined}>
+      <slot />
+    </a>
+  ) : (
+    <button class:list={classes} type={type} aria-label={ariaLabel} disabled={disabled}>
+      <slot />
+    </button>
+  )
+}
+
+<style>
+  .aiv-button {
+    align-items: center;
+    border: 2px solid transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    display: inline-flex;
+    font-family: var(--aiv-font-mono);
+    font-weight: 700;
+    gap: 0.5rem;
+    justify-content: center;
+    letter-spacing: 0.08em;
+    line-height: 1.2;
+    min-height: 2.75rem;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition:
+      background-color 0.2s ease,
+      border-color 0.2s ease,
+      box-shadow 0.2s ease,
+      color 0.2s ease;
+  }
+
+  .aiv-button:hover {
+    text-decoration: none;
+  }
+
+  .aiv-button:focus-visible {
+    outline: 3px solid var(--aiv-focus-ring);
+    outline-offset: 3px;
+  }
+
+  .aiv-button[aria-disabled="true"],
+  .aiv-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.65;
+  }
+
+  .aiv-button--sm {
+    font-size: 0.85rem;
+    padding: 0.6rem 0.9rem;
+  }
+
+  .aiv-button--md {
+    font-size: 0.95rem;
+    padding: 0.8rem 1.15rem;
+  }
+
+  .aiv-button--lg {
+    font-size: 1rem;
+    padding: 1rem 1.5rem;
+  }
+
+  .aiv-button--primary {
+    background: var(--aiv-action-primary);
+    border-color: var(--aiv-action-primary);
+    color: var(--aiv-bg-canvas);
+  }
+
+  .aiv-button--primary:hover {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--aiv-action-primary) 22%, transparent);
+  }
+
+  .aiv-button--secondary {
+    background: transparent;
+    border-color: var(--aiv-action-secondary);
+    color: var(--aiv-action-secondary);
+  }
+
+  :global(html[data-theme="institutional-light"]) .aiv-button--secondary {
+    background: color-mix(in srgb, var(--aiv-action-secondary) 8%, transparent);
+    color: var(--aiv-text-primary);
+  }
+
+  .aiv-button--secondary:hover {
+    background: color-mix(in srgb, var(--aiv-action-secondary) 14%, transparent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--aiv-action-secondary) 18%, transparent);
+  }
+
+  .aiv-button--ghost {
+    background: transparent;
+    border-color: var(--aiv-card-border);
+    color: var(--aiv-action-primary);
+  }
+
+  .aiv-button--ghost:hover {
+    background: color-mix(in srgb, var(--aiv-bg-raised) 65%, transparent);
+    border-color: var(--aiv-card-hover-border);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .aiv-button {
+      transition: none;
+    }
+  }
+</style>

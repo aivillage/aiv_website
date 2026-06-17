@@ -7,25 +7,95 @@ const initials = `${volunteer.data.first_name.slice(0, 1)}${volunteer.data.last_
 const fullName = `${volunteer.data.first_name} ${volunteer.data.last_name}`;
 ---
 
-<div class="team-member" style="display: flex; gap: 1.5rem; background: var(--aiv-card-bg); border: 1px solid var(--aiv-card-border); box-shadow: var(--aiv-card-shadow); padding: 1.5rem; border-radius: 5px; border-left: 4px solid var(--aiv-action-secondary);">
-  <div class="member-photo" style="flex-shrink: 0;">
+<div class="team-member volunteer-card">
+  <div class="member-photo volunteer-card__photo">
     {volunteer.data.profile ? (
       <img
+        class="volunteer-card__image"
         src={`/assets/images/profiles/${volunteer.data.profile}`}
         alt={fullName}
-        style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 2px solid var(--aiv-card-hover-border);"
       />
     ) : (
-      <div style="width: 120px; height: 120px; border-radius: 50%; background: var(--aiv-nested-bg); display: flex; align-items: center; justify-content: center; border: 2px solid var(--aiv-card-hover-border);">
-        <span style="color: var(--aiv-brand-primary); font-size: 2rem; font-family: var(--aiv-font-mono);">{initials}</span>
+      <div class="volunteer-card__placeholder">
+        <span>{initials}</span>
       </div>
     )}
   </div>
-  <div class="member-info" style="flex: 1;">
-    <h3 style="margin: 0 0 0.5rem 0; color: var(--aiv-text-primary);">{fullName}</h3>
-    {volunteer.data.position && <div style="color: var(--aiv-action-secondary); font-family: var(--aiv-font-mono); font-size: 0.9rem; margin: 0.25rem 0;"><strong>{volunteer.data.position}</strong></div>}
-    {volunteer.data.affiliation && <div style="color: var(--aiv-text-muted); font-size: 0.9rem; margin: 0.25rem 0;"><strong>Affiliation:</strong> {volunteer.data.affiliation}</div>}
-    {volunteer.data.expertise && <div style="color: var(--aiv-text-muted); font-size: 0.9rem; margin: 0.25rem 0;"><strong>Expertise:</strong> {volunteer.data.expertise}</div>}
-    {volunteer.data.bio && Content && <div style="margin-top: 1rem; color: var(--aiv-text-secondary); line-height: 1.6;"><Content /></div>}
+  <div class="member-info volunteer-card__info">
+    <h3>{fullName}</h3>
+    {volunteer.data.position && <div class="volunteer-card__position"><strong>{volunteer.data.position}</strong></div>}
+    {volunteer.data.affiliation && <div class="volunteer-card__meta"><strong>Affiliation:</strong> {volunteer.data.affiliation}</div>}
+    {volunteer.data.expertise && <div class="volunteer-card__meta"><strong>Expertise:</strong> {volunteer.data.expertise}</div>}
+    {volunteer.data.bio && Content && <div class="volunteer-card__bio"><Content /></div>}
   </div>
 </div>
+
+<style>
+  .volunteer-card {
+    background: var(--aiv-card-bg);
+    border: 1px solid var(--aiv-card-border);
+    border-left: 4px solid var(--aiv-action-secondary);
+    border-radius: 5px;
+    box-shadow: var(--aiv-card-shadow);
+    display: flex;
+    gap: 1.5rem;
+    padding: 1.5rem;
+  }
+
+  .volunteer-card__photo {
+    flex-shrink: 0;
+  }
+
+  .volunteer-card__image,
+  .volunteer-card__placeholder {
+    border: 2px solid var(--aiv-card-hover-border);
+    border-radius: 50%;
+    height: 120px;
+    width: 120px;
+  }
+
+  .volunteer-card__image {
+    object-fit: cover;
+  }
+
+  .volunteer-card__placeholder {
+    align-items: center;
+    background: var(--aiv-nested-bg);
+    display: flex;
+    justify-content: center;
+  }
+
+  .volunteer-card__placeholder span {
+    color: var(--aiv-brand-primary);
+    font-family: var(--aiv-font-mono);
+    font-size: 2rem;
+  }
+
+  .volunteer-card__info {
+    flex: 1;
+  }
+
+  .volunteer-card__info h3 {
+    color: var(--aiv-text-primary);
+    margin: 0 0 0.5rem;
+  }
+
+  .volunteer-card__position {
+    color: var(--aiv-action-secondary);
+    font-family: var(--aiv-font-mono);
+    font-size: 0.9rem;
+    margin: 0.25rem 0;
+  }
+
+  .volunteer-card__meta {
+    color: var(--aiv-text-muted);
+    font-size: 0.9rem;
+    margin: 0.25rem 0;
+  }
+
+  .volunteer-card__bio {
+    color: var(--aiv-text-secondary);
+    line-height: 1.6;
+    margin-top: 1rem;
+  }
+</style>

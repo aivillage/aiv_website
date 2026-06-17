@@ -1,0 +1,102 @@
+---
+type Props = {
+  as?: "article" | "div" | "section";
+  href?: string;
+  tone?: "surface" | "panel" | "nested";
+  padding?: "sm" | "md" | "lg";
+  interactive?: boolean;
+  class?: string;
+};
+
+const { as = "article", href, tone = "surface", padding = "md", interactive = Boolean(href), class: className } = Astro.props as Props;
+const Tag = as;
+const classes = ["aiv-card", `aiv-card--tone-${tone}`, `aiv-card--padding-${padding}`, { "aiv-card--interactive": interactive }, className];
+---
+
+{
+  href ? (
+    <a class:list={classes} href={href}>
+      <slot />
+    </a>
+  ) : (
+    <Tag class:list={classes}>
+      <slot />
+    </Tag>
+  )
+}
+
+<style>
+  .aiv-card {
+    border: 1px solid var(--aiv-card-border);
+    border-radius: 8px;
+    box-shadow: var(--aiv-card-shadow);
+    color: var(--aiv-text-primary);
+    display: block;
+    position: relative;
+    text-decoration: none;
+  }
+
+  .aiv-card--tone-surface {
+    background: var(--aiv-card-bg);
+  }
+
+  .aiv-card--tone-panel {
+    background: var(--aiv-bg-panel);
+  }
+
+  .aiv-card--tone-nested {
+    background: var(--aiv-nested-bg);
+    border-color: var(--aiv-nested-border);
+  }
+
+  .aiv-card--padding-sm {
+    padding: 1rem;
+  }
+
+  .aiv-card--padding-md {
+    padding: 1.25rem;
+  }
+
+  .aiv-card--padding-lg {
+    padding: 1.5rem;
+  }
+
+  .aiv-card--interactive {
+    transition:
+      border-color 0.2s ease,
+      box-shadow 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  .aiv-card--interactive:hover {
+    border-color: var(--aiv-card-hover-border);
+    box-shadow: var(--aiv-card-hover-shadow);
+    text-decoration: none;
+    transform: translateY(-2px);
+  }
+
+  .aiv-card:focus-visible {
+    outline: 3px solid var(--aiv-focus-ring);
+    outline-offset: 3px;
+  }
+
+  .aiv-card :global(h2),
+  .aiv-card :global(h3),
+  .aiv-card :global(h4) {
+    margin-top: 0;
+  }
+
+  .aiv-card :global(p:last-child) {
+    margin-bottom: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .aiv-card--interactive {
+      transition: none;
+    }
+
+    .aiv-card--interactive:hover {
+      transform: none;
+    }
+  }
+</style>

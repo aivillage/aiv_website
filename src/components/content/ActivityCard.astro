@@ -1,0 +1,51 @@
+---
+import Card from "../ui/Card.astro";
+
+type Props = {
+  title: string;
+  description?: string;
+  meta?: string;
+  href?: string;
+  class?: string;
+};
+
+const { title, description, meta, href, class: className } = Astro.props as Props;
+---
+
+<Card class:list={["aiv-activity-card", className]} as="article" interactive={Boolean(href)}>
+  <div class="aiv-activity-card__body">
+    {meta && <p class="aiv-activity-card__meta">{meta}</p>}
+    <h3 class="aiv-activity-card__title">
+      {href ? <a href={href}>{title}</a> : title}
+    </h3>
+    {description && <p class="aiv-activity-card__description">{description}</p>}
+    <slot />
+  </div>
+</Card>
+
+<style>
+  :global(.aiv-activity-card) {
+    display: grid;
+  }
+
+  .aiv-activity-card__body {
+    display: grid;
+    gap: 0.55rem;
+  }
+
+  .aiv-activity-card__meta {
+    color: var(--aiv-warning);
+    font-family: var(--aiv-font-mono);
+    font-size: 0.85rem;
+    margin: 0;
+  }
+
+  .aiv-activity-card__title {
+    margin: 0;
+  }
+
+  .aiv-activity-card__description {
+    color: var(--aiv-text-secondary);
+    margin: 0;
+  }
+</style>

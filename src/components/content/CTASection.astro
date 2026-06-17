@@ -1,0 +1,61 @@
+---
+import Section from "../layout/Section.astro";
+import Button from "../ui/Button.astro";
+import SectionHeading from "../ui/SectionHeading.astro";
+
+type Props = {
+  eyebrow?: string;
+  title: string;
+  description?: string;
+  primaryHref?: string;
+  primaryLabel?: string;
+  secondaryHref?: string;
+  secondaryLabel?: string;
+  tone?: "canvas" | "surface" | "panel" | "accent";
+  width?: "prose" | "wide" | "full";
+  class?: string;
+};
+
+const {
+  eyebrow,
+  title,
+  description,
+  primaryHref,
+  primaryLabel,
+  secondaryHref,
+  secondaryLabel,
+  tone = "panel",
+  width = "wide",
+  class: className,
+} = Astro.props as Props;
+---
+
+<Section class:list={["aiv-cta-section", className]} tone={tone} width={width} padding="lg">
+  <div class="aiv-cta-section__inner">
+    <SectionHeading eyebrow={eyebrow} title={title} description={description} align="center" />
+    <slot />
+    {(primaryHref && primaryLabel) || (secondaryHref && secondaryLabel) ? (
+      <div class="aiv-cta-section__actions">
+        {primaryHref && primaryLabel && <Button href={primaryHref}>{primaryLabel}</Button>}
+        {secondaryHref && secondaryLabel && <Button href={secondaryHref} variant="secondary">{secondaryLabel}</Button>}
+      </div>
+    ) : null}
+  </div>
+</Section>
+
+<style>
+  .aiv-cta-section__inner {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    text-align: center;
+  }
+
+  .aiv-cta-section__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: center;
+  }
+</style>

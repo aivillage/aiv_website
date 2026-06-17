@@ -1,0 +1,51 @@
+---
+type Props = {
+  eyebrow?: string;
+  title: string;
+  description?: string;
+  align?: "start" | "center";
+  level?: 1 | 2 | 3;
+  class?: string;
+};
+
+const { eyebrow, title, description, align = "start", level = 2, class: className } = Astro.props as Props;
+const HeadingTag = `h${level}` as "h1" | "h2" | "h3";
+---
+
+<header class:list={["aiv-section-heading", `aiv-section-heading--${align}`, className]}>
+  {eyebrow && <p class="aiv-section-heading__eyebrow">{eyebrow}</p>}
+  <HeadingTag class="aiv-section-heading__title">{title}</HeadingTag>
+  {description && <p class="aiv-section-heading__description">{description}</p>}
+  <slot />
+</header>
+
+<style>
+  .aiv-section-heading {
+    max-width: var(--aiv-measure-prose);
+  }
+
+  .aiv-section-heading--center {
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  .aiv-section-heading__eyebrow {
+    color: var(--aiv-action-secondary);
+    font-family: var(--aiv-font-mono);
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    margin: 0 0 0.5rem;
+    text-transform: uppercase;
+  }
+
+  .aiv-section-heading__title {
+    margin: 0;
+  }
+
+  .aiv-section-heading__description {
+    color: var(--aiv-text-muted);
+    font-size: 1.05rem;
+    margin: 0.75rem 0 0;
+  }
+</style>
