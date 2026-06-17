@@ -1177,6 +1177,20 @@ blockquote {
   }
 }
 
+.post-content .expressive-code .frame > pre[data-language]::before {
+  right: 3.5rem !important;
+  opacity: 1 !important;
+}
+
+.post-content .expressive-code .copy button {
+  opacity: 0.75 !important;
+}
+
+.post-content .expressive-code .copy button:hover,
+.post-content .expressive-code .copy button:focus-visible {
+  opacity: 1 !important;
+}
+
 .event > .event-content h2 {
   color: var(--aiv-text-primary);
 }
