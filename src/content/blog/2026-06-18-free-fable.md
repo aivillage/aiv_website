@@ -8,7 +8,7 @@ canonicalSlug: free-fable
 description: "AI Village's statement on the US export control directive restricting access to Anthropic's Fable and Mythos models."
 ---
 
-# On Fable and Export Controls
+## On Fable and Export Controls
 
 Last week, the US government took the drastic step of issuing an export control directive to Anthropic to suspend global access to both Fable and Mythos for non-US citizens.  And this past Sunday, the AI Village was proud to help draft and sign the [open letter](https://freefable.org/) petitioning the government to reconsider its actions and return to a more grounded and transparent process of regulating both American models and AI companies.  While we do believe nation states have a right to regulate their companies and technologies, the current approach does far more harm than good to both the international and domestic cyber security environments.  
 
