@@ -36,4 +36,6 @@ reviewOwner: AI Village Learn
 lastReviewed: "2026-06-26"
 ---
 
-Offensive AI Security and Red Teaming is part of the AI Village Learn curriculum beta. Full lessons and exercises are being expanded over time.
+Offensive AI Security and Red Teaming is for practitioners working in authorized labs or approved assessment contexts. The public beta is intentionally narrow: it keeps rules of engagement and defensive report writing visible while more technique-heavy lab wrappers remain draft-gated for review. The expected artifacts are a rules-of-engagement note and a red-team report draft.
+
+The track exists because offensive learning can improve defensive understanding when it is scoped, authorized, and debriefed. It should not be read as permission to test real systems, third-party services, or other people's data. What is useful now is the safety framing, artifact expectations, and reporting orientation. Detailed debriefs, lab guidance, and more operational content are still being expanded for later review. The empty spots are deliberate safety boundaries, not missing launch promises.

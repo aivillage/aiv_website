@@ -1,7 +1,7 @@
 ---
 title: Prompting and Context
 slug: prompting-context
-summary: This beta module provides the learning goal, curated resources, and expected artifact.
+summary: Shows how prompts, context, and examples shape AI output in everyday workflows.
 tracks:
   - ai-practitioner
 stageStart: ai_literate
@@ -18,10 +18,10 @@ resources:
   - resource: anthropic-prompt-engineering
     role: optional
 securityLens: awareness
-securityLensText: ""
+securityLensText: "Do not paste secrets, credentials, customer data, or unreviewed third-party content into model context. Treat prompts as data movement, not just text entry."
 status: beta
 reviewOwner: AI Village Learn
 lastReviewed: "2026-06-26"
 ---
 
-This beta module provides the learning goal, curated resources, and expected artifact. Full exercises and debriefs are being expanded over time.
+This module helps practitioners move from casual prompting to deliberate context design. Use the curated resources to compare instructions, examples, constraints, and source material, then observe how each part changes the response. Your artifact is a reviewed prompt pattern for one work task, including what context is allowed, what context is excluded, and how the output should be checked. Use the module responsibly by treating every prompt as data handling. Avoid pasting sensitive information into tools that are not approved for that data, and do not assume the model can tell which source is reliable. A good prompt supports human judgment; it does not replace it.

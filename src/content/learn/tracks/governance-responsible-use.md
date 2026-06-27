@@ -37,4 +37,6 @@ reviewOwner: AI Village Learn
 lastReviewed: "2026-06-26"
 ---
 
-Governance and Responsible Use is part of the AI Village Learn curriculum beta. Full lessons and exercises are being expanded over time.
+Governance and Responsible Use is an announced Learn track for program leads, governance learners, and responsible-use reviewers. It belongs in Learn because AI adoption needs more than model knowledge: teams need risk frameworks, disclosure practices, licensing awareness, documentation, and review decisions that connect to real workflows. The planned artifacts are a responsible-use memo and a disclosure and licensing checklist.
+
+This track is coming soon, so it does not yet imply that usable lessons are available. Learners who need public material now should start with AI Fundamentals, AI Practitioner, and AI Security Core. The current page keeps the roadmap visible while the governance modules are drafted and reviewed.

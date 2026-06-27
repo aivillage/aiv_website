@@ -1,7 +1,6 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import DifficultyBadge from "./DifficultyBadge.astro";
-import RightsBadge from "./RightsBadge.astro";
 import StageBadge from "./StageBadge.astro";
 import { costLabels, formatLabel, refId } from "../../utils/learn";
 
@@ -23,10 +22,7 @@ const trackRefs = resource.data.tracks.map(refId).join(" ");
   <p class="learn-card__provider">{resource.data.provider}</p>
   <div class="learn-card__meta">
     <span>{formatLabel(resource.data.resourceType)}</span>
-    <RightsBadge value={resource.data.rightsMode} />
-    <span>{resource.data.maintenanceRisk} maintenance risk</span>
   </div>
-  {resource.data.caveats.length > 0 && <p class="text-muted text-small">{resource.data.caveats[0]}</p>}
 </article>
 
 <style>
@@ -40,6 +36,10 @@ const trackRefs = resource.data.tracks.map(refId).join(" ");
     gap: 0.75rem;
     min-height: 100%;
     padding: 1.15rem;
+  }
+
+  .learn-card[hidden] {
+    display: none;
   }
 
   .learn-card h3 {

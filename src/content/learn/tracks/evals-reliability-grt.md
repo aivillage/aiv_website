@@ -37,4 +37,6 @@ reviewOwner: AI Village Learn
 lastReviewed: "2026-06-26"
 ---
 
-Evals, Reliability, and GRT Research is part of the AI Village Learn curriculum beta. Full lessons and exercises are being expanded over time.
+Evals, Reliability, and GRT Research is for builders, researchers, and contributors who need to turn AI behavior into reviewable evidence. It covers eval concepts, Inspect-style components, running authorized evals, interpreting results, benchmark transparency, harnesses, and eval-card documentation. The learner should produce an eval card draft and a findings summary that state what was tested, what the result means, and what remains uncertain.
+
+Security is built in through adversarial cases, benchmark transparency, and careful claims about evidence. The track keeps GRT-style work inside the single Evals/GRT path rather than splitting it into a duplicate research track. What is useful now is the beta sequence and safe anchor modules for evaluation practice. More findings guidance and advanced contribution material are still being reviewed, and some higher-risk research modules remain draft-gated for manual review.

@@ -3,7 +3,7 @@ title: Email Indirect Prompt Injection
 slug: email-indirect
 sourceRepo: aivillage/workshops
 sourcePath: email-indirect
-summary: Metadata wrapper for the public email indirect prompt injection workshop.
+summary: Safety-bounded metadata for an email indirect prompt injection workshop, focused on tool-mediated data exposure review.
 stageStart: risk_evaluative_practitioner
 stageEnd: specialist_contributor
 difficulty: intermediate
@@ -34,4 +34,4 @@ reviewOwner: AI Village Learn
 lastReviewed: "2026-06-26"
 ---
 
-Lab wrapper guidance and defensive debriefs are pending review for the curriculum beta. Use only within the stated safety boundary.
+This lab entry frames email-based indirect prompt injection as an authorized training exercise, not a real-world testing invitation. Use only intentionally vulnerable workshop fixtures and approved training data. The expected artifact is a set of lab notes that explain the boundary, observed behavior, and defensive questions for review. Final debrief guidance remains draft.

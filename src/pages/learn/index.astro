@@ -4,10 +4,18 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import PageShell from "../../components/layout/PageShell.astro";
 import TrackCard from "../../components/learn/TrackCard.astro";
 import StatusBadge from "../../components/learn/StatusBadge.astro";
-import { byTrackKindThenTitle } from "../../utils/learn";
+import { byTrackKindThenTitle, canRenderLearnModule, refId } from "../../utils/learn";
 
 const tracks = (await getCollection("learnTracks", ({ data }) => data.status !== "draft")).sort(byTrackKindThenTitle);
+const modules = await getCollection("learnModules");
+const moduleBySlug = new Map(modules.flatMap((module) => [[module.data.slug, module], [module.id, module]]));
 const betaTracks = tracks.filter((track) => track.data.status === "beta").length;
+
+function publicModuleCount(track: (typeof tracks)[number]) {
+  return track.data.canonicalModules
+    .map((moduleRef) => moduleBySlug.get(refId(moduleRef)))
+    .filter((module) => module && canRenderLearnModule(module)).length;
+}
 ---
 
 <BaseLayout
@@ -55,7 +63,7 @@ const betaTracks = tracks.filter((track) => track.data.status === "beta").length
         Tracks represent learner intent. Stage describes demonstrated capability and artifact maturity. Difficulty describes the content item itself.
       </p>
       <div class="learn-grid">
-        {tracks.map((track) => <TrackCard track={track} />)}
+        {tracks.map((track) => <TrackCard track={track} publicModuleCount={publicModuleCount(track)} />)}
       </div>
     </section>
 

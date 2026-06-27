@@ -1,7 +1,7 @@
 ---
 title: AI-Assisted Coding
 slug: ai-assisted-coding
-summary: This beta module provides the learning goal, curated resources, and expected artifact.
+summary: Introduces AI coding assistance as a productivity tool that still requires tests, review, and ownership.
 tracks:
   - ai-practitioner
 stageStart: ai_literate
@@ -17,10 +17,10 @@ resources:
   - resource: openai-cookbook
     role: required
 securityLens: awareness
-securityLensText: ""
+securityLensText: "AI-generated code can be plausible, insecure, or incompatible with project constraints. Treat generated changes like untrusted contributions that need tests, review, and dependency checks."
 status: beta
 reviewOwner: AI Village Learn
 lastReviewed: "2026-06-26"
 ---
 
-This beta module provides the learning goal, curated resources, and expected artifact. Full exercises and debriefs are being expanded over time.
+This module introduces AI-assisted coding for learners who want practical help without giving up engineering discipline. The curated resources support code explanation, small refactors, test generation, and debugging. Your checkpoint is a small coding task where you record the prompt, the generated change, the tests or checks you ran, and what you rejected. Use the module responsibly by reading generated code before running it, avoiding secret sharing, and checking licenses and dependencies before reuse. AI coding tools are most useful when paired with clear requirements, narrow changes, and ordinary code review rather than broad unexamined rewrites. Keep the final change small enough that a human reviewer can explain why it is correct and acceptable.

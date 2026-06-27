@@ -1,7 +1,7 @@
 ---
 title: MCP Security Basics
 slug: mcp-security-basics
-summary: This beta module provides the learning goal, curated resources, and expected artifact.
+summary: Maps common MCP security concerns to practical design and review questions.
 tracks:
   - agentic-ai-advanced-builder
 stageStart: builder
@@ -19,10 +19,10 @@ resources:
   - resource: owasp-agentic-applications-top-10
     role: optional
 securityLens: required
-securityLensText: ""
+securityLensText: "MCP security depends on more than the model prompt. Review server exposure, token handling, user identity, tool descriptions, and whether one component can act with another component's authority."
 status: beta
 reviewOwner: AI Village Learn
 lastReviewed: "2026-06-26"
 ---
 
-This beta module provides the learning goal, curated resources, and expected artifact. Full exercises and debriefs are being expanded over time.
+This module turns MCP security concerns into practical review questions for builders. The curated resources help you examine server trust, local exposure, tool permissions, token handling, session isolation, and user approval. Your artifact is an MCP security checklist for one integration, including what the server can access, who can invoke it, and what evidence should be logged. Use the module responsibly by assuming that tool descriptions and context can be misunderstood or misused. The application should enforce permissions and scope outside the model. Start with least privilege, clear ownership, and test cases for confused-deputy and cross-session behavior. Keep the checklist specific to the integration so reviewers can test the boundary instead of debating abstractions.

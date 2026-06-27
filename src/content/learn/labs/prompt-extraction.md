@@ -3,7 +3,7 @@ title: Prompt Extraction
 slug: prompt-extraction
 sourceRepo: aivillage/workshops
 sourcePath: prompt-extraction
-summary: Metadata wrapper for the public prompt extraction workshop.
+summary: Safety-bounded metadata for an authorized prompt extraction workshop, focused on lab notes and defensive review.
 stageStart: risk_evaluative_practitioner
 stageEnd: specialist_contributor
 difficulty: intermediate
@@ -34,4 +34,4 @@ reviewOwner: AI Village Learn
 lastReviewed: "2026-06-26"
 ---
 
-Lab wrapper guidance and defensive debriefs are pending review for the curriculum beta. Use only within the stated safety boundary.
+This lab entry points to an authorized workshop context for learning how prompt extraction risks are discussed and documented. Use only the provided lab targets or approved local fixtures, keep notes inside the stated safety boundary, and produce lab notes that support defensive review. Final debrief guidance remains draft and will be handled in a later content pass.

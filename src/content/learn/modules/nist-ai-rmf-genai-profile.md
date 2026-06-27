@@ -1,7 +1,7 @@
 ---
 title: NIST AI RMF and GenAI Profile
 slug: nist-ai-rmf-genai-profile
-summary: This beta module provides the learning goal, curated resources, and expected artifact.
+summary: Connects NIST AI RMF and GenAI Profile concepts to reviewable AI system decisions.
 tracks:
   - ai-security-core
 stageStart: ai_literate
@@ -20,10 +20,10 @@ resources:
     role: optional
 requiredArtifact: NIST AI RMF and GenAI Profile artifact
 securityLens: primary
-securityLensText: ""
+securityLensText: "A risk framework is only useful if it maps to controls, owners, evidence, and review decisions. Use framework language to make accountability clearer, not to decorate a document."
 status: beta
 reviewOwner: AI Village Learn
 lastReviewed: "2026-06-26"
 ---
 
-This beta module provides the learning goal, curated resources, and expected artifact. Full exercises and debriefs are being expanded over time.
+This module introduces NIST AI RMF and the GenAI Profile as tools for organizing risk discussions. The curated resources help learners understand functions such as Govern, Map, Measure, and Manage without claiming that a short module creates compliance. Your artifact is a risk-review note that maps one AI use case to framework language, identifies owners, and names evidence that would support a decision. Use the module responsibly by keeping the framework tied to action. A framework reference should lead to controls, review cadence, documentation, or a decision to defer. Treat unresolved risks as open decisions rather than polished assurances. Keep the note practical by naming the next review action rather than stopping at framework terminology.

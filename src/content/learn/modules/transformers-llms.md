@@ -1,7 +1,7 @@
 ---
 title: Transformers and LLMs
 slug: transformers-llms
-summary: This beta module provides the learning goal, curated resources, and expected artifact.
+summary: Introduces transformers and language models as prediction systems with context-dependent behavior.
 tracks:
   - ai-fundamentals
 stageStart: explorer
@@ -19,10 +19,10 @@ resources:
   - resource: huggingface-llm-course
     role: optional
 securityLens: awareness
-securityLensText: ""
+securityLensText: "Language models respond to context, not just user intent. Treat system prompts, retrieved text, chat history, and pasted documents as inputs that can shape behavior and require review."
 status: beta
 reviewOwner: AI Village Learn
 lastReviewed: "2026-06-26"
 ---
 
-This beta module provides the learning goal, curated resources, and expected artifact. Full exercises and debriefs are being expanded over time.
+This module introduces transformers and large language models at the level needed to reason about modern AI applications. The curated resources explain tokens, attention, pretraining, context, and generation without turning the module into a model-building course. Your checkpoint is to describe what information is available to a model at inference time and what the model is not actually verifying. Use the module responsibly by keeping a clear boundary between fluent output and trustworthy output. Language models can be useful assistants, but their responses depend heavily on prompt wording, context, and training patterns. This module sets up later work on prompting, retrieval, tool use, and evaluation.

@@ -3,7 +3,7 @@ title: RAG Poisoning
 slug: rag-poisoning
 sourceRepo: aivillage/workshops
 sourcePath: rag-poisoning
-summary: Metadata wrapper for the public RAG poisoning workshop.
+summary: Safety-bounded metadata for a RAG poisoning workshop using sandboxed retrieval corpora.
 stageStart: risk_evaluative_practitioner
 stageEnd: specialist_contributor
 difficulty: advanced
@@ -34,4 +34,4 @@ reviewOwner: AI Village Learn
 lastReviewed: "2026-06-26"
 ---
 
-Lab wrapper guidance and defensive debriefs are pending review for the curriculum beta. Use only within the stated safety boundary.
+This lab entry is for controlled RAG poisoning practice against sandboxed corpora created for the exercise. It should help learners document how retrieval content can influence model behavior and what defensive review should inspect. The expected artifact is lab notes and a defensive debrief stub. Full debrief content remains draft and is not published in this pass.

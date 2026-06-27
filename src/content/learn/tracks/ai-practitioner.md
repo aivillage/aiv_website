@@ -35,4 +35,6 @@ reviewOwner: AI Village Learn
 lastReviewed: "2026-06-26"
 ---
 
-AI Practitioner is part of the AI Village Learn curriculum beta. Full lessons and exercises are being expanded over time.
+AI Practitioner is for people who want to use AI tools more effectively in everyday work while keeping review and responsibility clear. It covers prompting, research, writing, coding assistance, data hygiene, verification, and lightweight workflow policy. The learner should come away with a reviewed AI workflow example and a human-review checklist that can be discussed with a team.
+
+The track treats AI use as a practical work process, not a magic shortcut. Security is built in through data boundaries, source verification, and review decisions: what can be pasted into a tool, what must be checked, and who owns the final output. What is useful now is the module sequence, resource map, and public beta copy for the first workflows. Scenario exercises, team policy examples, and more practice activities are still being expanded, so learners should adapt the checkpoints to their own approved tools and risk level.

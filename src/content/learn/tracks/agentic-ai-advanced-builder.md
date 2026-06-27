@@ -37,4 +37,6 @@ reviewOwner: AI Village Learn
 lastReviewed: "2026-06-26"
 ---
 
-Agentic AI and Advanced Builder is part of the AI Village Learn curriculum beta. Full lessons and exercises are being expanded over time.
+Agentic AI and Advanced Builder is for builders who already understand basic AI application patterns and are deciding whether to add agents, tool orchestration, RAG loops, MCP integrations, or human approval gates. The track helps learners distinguish a predictable workflow from an agentic system and identify where autonomy changes risk. The expected artifacts are an agent boundary map and a human approval plan.
+
+Security is built in through scope, credentials, session boundaries, tool authority, logging, and containment. The track does not assume every workflow should become an agent. What is useful now is the beta module sequence and curated resources for making design decisions before adopting a framework. Deeper agent examples, containment patterns, and security checkpoints are still being expanded. Use the current copy to structure review conversations and small prototypes, not to justify broad autonomous deployment.

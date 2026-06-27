@@ -40,4 +40,6 @@ reviewOwner: AI Village Learn
 lastReviewed: "2026-06-26"
 ---
 
-AI Security Core is part of the AI Village Learn curriculum beta. Full lessons and exercises are being expanded over time.
+AI Security Core is for security practitioners, AppSec teams, and builders who need a first structured pass through AI-specific risks. The public beta keeps the first modules high-level and defensive: threat modeling, supply-chain review, control mapping, and framework alignment. The learner should produce an AI threat model outline and a risk issue write-up that can be reviewed with system owners.
+
+Security is the main subject here, but the track still serves the broader Learn program by translating AI concepts into practical review questions. Higher-risk topics such as prompt injection mechanics, leakage patterns, and poisoning behavior are kept draft-gated for manual review before they become public lessons. What is useful now is the track structure, anchor modules, and resource map for safe orientation. More examples, templates, and detailed module bodies are still being expanded and reviewed.

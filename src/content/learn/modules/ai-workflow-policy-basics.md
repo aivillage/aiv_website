@@ -1,7 +1,7 @@
 ---
 title: AI Workflow Policy Basics
 slug: ai-workflow-policy-basics
-summary: This beta module provides the learning goal, curated resources, and expected artifact.
+summary: Helps teams write lightweight AI workflow rules that match real use, risk, and review needs.
 tracks:
   - ai-practitioner
 stageStart: ai_literate
@@ -20,10 +20,10 @@ resources:
     role: optional
 requiredArtifact: AI Workflow Policy Basics artifact
 securityLens: awareness
-securityLensText: ""
+securityLensText: "A policy is useful only if people can follow it during real work. Connect allowed tools, allowed data, review steps, and ownership to specific workflows."
 status: beta
 reviewOwner: AI Village Learn
 lastReviewed: "2026-06-26"
 ---
 
-This beta module provides the learning goal, curated resources, and expected artifact. Full exercises and debriefs are being expanded over time.
+This checkpoint module helps practitioners turn scattered AI use into a lightweight workflow policy. The curated resources support decisions about approved tools, data boundaries, review expectations, and documentation. Your artifact is a one-page policy sketch for a real workflow, naming who can use AI, what data is allowed, what output requires review, and what evidence should be kept. Use the module responsibly by writing rules that are clear enough for normal users and specific enough for reviewers. Avoid blanket permission and blanket prohibition when a narrower workflow rule would be more useful. The goal is safer adoption that people can actually follow.

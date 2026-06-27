@@ -1,7 +1,7 @@
 ---
 title: Basic App Evals
 slug: basic-app-evals
-summary: This beta module provides the learning goal, curated resources, and expected artifact.
+summary: Introduces small evaluation sets that test whether an AI app behaves as intended.
 tracks:
   - ai-builder-core
 stageStart: ai_practitioner
@@ -17,10 +17,10 @@ resources:
   - resource: inspect-ai
     role: required
 securityLens: required
-securityLensText: ""
+securityLensText: "A benchmark score is not a security guarantee. Test the behavior your application actually depends on, including refusal, uncertainty, retrieval failure, and adversarial cases."
 status: beta
 reviewOwner: AI Village Learn
 lastReviewed: "2026-06-26"
 ---
 
-This beta module provides the learning goal, curated resources, and expected artifact. Full exercises and debriefs are being expanded over time.
+This module helps builders create basic evaluations for an AI application before relying on demos or impressions. The curated resources introduce test cases, expected behavior, scoring, and regression checks. Your artifact is a small eval plan with representative prompts, edge cases, expected outcomes, and notes on what failure would mean. Use the module responsibly by testing behavior that matters to the actual workflow, not only examples where the system looks good. Include cases involving missing context, ambiguous instructions, unsafe requests, and low-confidence output. Basic evals do not prove a system is safe, but they make review more concrete and repeatable.

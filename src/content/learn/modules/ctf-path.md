@@ -20,7 +20,7 @@ resources:
     role: optional
 securityLens: primary
 securityLensText: ""
-status: beta
+status: draft
 reviewOwner: AI Village Learn
 lastReviewed: "2026-06-26"
 ---

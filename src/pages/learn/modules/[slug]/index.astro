@@ -51,7 +51,9 @@ export async function getStaticPaths() {
 
   return modules.map((module) => {
     const relatedTracks = module.data.tracks.map((trackRef) => trackBySlug.get(refId(trackRef))).filter(Boolean) as CollectionEntry<"learnTracks">[];
-    const prerequisites = module.data.prerequisites.map((moduleRef) => moduleBySlug.get(refId(moduleRef))).filter(Boolean) as CollectionEntry<"learnModules">[];
+    const prerequisites = module.data.prerequisites
+      .map((moduleRef) => moduleBySlug.get(refId(moduleRef)))
+      .filter((prerequisite) => prerequisite && canRenderLearnModule(prerequisite)) as CollectionEntry<"learnModules">[];
     const resourceGroups = (["required", "optional", "deeper"] as const).map((role) => ({
       heading: resourceGroupLabels[role],
       resources: module.data.resources
@@ -72,6 +74,13 @@ export async function getStaticPaths() {
 
 const { module, tracks, prerequisites, resourceGroups, labs } = Astro.props;
 const { Content } = await render(module);
+const genericObjectivePatterns = [
+  /^Describe the main concepts for .+\.$/,
+  /^Identify the artifact or checkpoint this module supports\.$/,
+];
+const hasCustomLearningObjectives = module.data.learningObjectives.some(
+  (objective) => !genericObjectivePatterns.some((pattern) => pattern.test(objective)),
+);
 ---
 
 <BaseLayout title={module.data.title} canonical={modulePath(module)} description={module.data.summary}>
@@ -107,26 +116,24 @@ const { Content } = await render(module);
 
     <section class="learn-two-column">
       <div>
-        <h2>Learning Objectives</h2>
-        <ul>
-          {module.data.learningObjectives.map((objective) => <li>{objective}</li>)}
-        </ul>
+        {hasCustomLearningObjectives && (
+          <>
+            <h2>Learning Objectives</h2>
+            <ul>
+              {module.data.learningObjectives.map((objective) => <li>{objective}</li>)}
+            </ul>
+          </>
+        )}
       </div>
       <div>
-        <h2>Prerequisites</h2>
-        {
-          prerequisites.length > 0 ? (
+        {prerequisites.length > 0 && (
+          <>
+            <h2>Prerequisites</h2>
             <ul>
-              {prerequisites.map((prerequisite) => (
-                <li>
-                  {canRenderLearnModule(prerequisite) ? <a href={modulePath(prerequisite)}>{prerequisite.data.title}</a> : prerequisite.data.title}
-                </li>
-              ))}
+              {prerequisites.map((prerequisite) => <li><a href={modulePath(prerequisite)}>{prerequisite.data.title}</a></li>)}
             </ul>
-          ) : (
-            <p class="text-muted">No module prerequisites.</p>
-          )
-        }
+          </>
+        )}
         {module.data.requiredArtifact && (
           <>
             <h2>Required Artifact</h2>

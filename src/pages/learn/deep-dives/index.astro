@@ -4,14 +4,22 @@ import BaseLayout from "../../../layouts/BaseLayout.astro";
 import PageShell from "../../../components/layout/PageShell.astro";
 import TrackCard from "../../../components/learn/TrackCard.astro";
 import ResourceCard from "../../../components/learn/ResourceCard.astro";
-import { byTitle } from "../../../utils/learn";
+import { byTitle, canRenderLearnModule, refId } from "../../../utils/learn";
 
 const tracks = (await getCollection("learnTracks", ({ data }) => data.status !== "draft")).filter((track) =>
   ["agentic-ai-advanced-builder", "evals-reliability-grt", "offensive-ai-security-red-teaming"].includes(track.data.slug),
 );
+const modules = await getCollection("learnModules");
+const moduleBySlug = new Map(modules.flatMap((module) => [[module.data.slug, module], [module.id, module]]));
 const resources = (await getCollection("learnResources", ({ data }) => data.status !== "draft"))
   .filter((resource) => resource.data.difficulty === "advanced" || resource.data.difficulty === "expert")
   .sort(byTitle);
+
+function publicModuleCount(track: (typeof tracks)[number]) {
+  return track.data.canonicalModules
+    .map((moduleRef) => moduleBySlug.get(refId(moduleRef)))
+    .filter((module) => module && canRenderLearnModule(module)).length;
+}
 ---
 
 <BaseLayout title="Learn Deep Dives" canonical="/learn/deep-dives/" description="Advanced AI Village Learn beta tracks and resources.">
@@ -23,7 +31,7 @@ const resources = (await getCollection("learnResources", ({ data }) => data.stat
     <section>
       <h2>Advanced Tracks</h2>
       <div class="learn-grid">
-        {tracks.map((track) => <TrackCard track={track} />)}
+        {tracks.map((track) => <TrackCard track={track} publicModuleCount={publicModuleCount(track)} />)}
       </div>
     </section>
     <section>

@@ -1,7 +1,7 @@
 ---
 title: AI App Architecture
 slug: ai-app-architecture
-summary: This beta module provides the learning goal, curated resources, and expected artifact.
+summary: Introduces the core parts of an AI application and the boundaries between them.
 tracks:
   - ai-builder-core
 stageStart: ai_practitioner
@@ -18,10 +18,10 @@ resources:
   - resource: full-stack-deep-learning-llm-bootcamp
     role: optional
 securityLens: required
-securityLensText: ""
+securityLensText: "AI application architecture should make trust boundaries visible. Separate user input, model calls, retrieved context, tools, storage, and approvals so controls can be placed where decisions happen."
 status: beta
 reviewOwner: AI Village Learn
 lastReviewed: "2026-06-26"
 ---
 
-This beta module provides the learning goal, curated resources, and expected artifact. Full exercises and debriefs are being expanded over time.
+This module introduces the architecture of a small AI application: user interface, prompt assembly, model call, retrieval, tools, storage, logging, and evaluation. Use the curated resources to see how these pieces fit together before selecting a framework. Your artifact is a design sketch for a simple AI app that labels data flow, model inputs, outputs, and human review points. Use the module responsibly by keeping architecture decisions explicit. Do not hide authorization, privacy, or safety assumptions inside prompt text. A clear design sketch helps teams decide where validation, logging, access control, and fallback behavior belong before the prototype becomes hard to change.

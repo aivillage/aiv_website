@@ -7,9 +7,10 @@ import { canRenderLearnTrack, securityLensLabels, trackPath } from "../../utils/
 
 type Props = {
   track: CollectionEntry<"learnTracks">;
+  publicModuleCount?: number;
 };
 
-const { track } = Astro.props;
+const { track, publicModuleCount = track.data.canonicalModules.length } = Astro.props;
 const href = canRenderLearnTrack(track) ? trackPath(track) : "";
 ---
 
@@ -24,7 +25,7 @@ const href = canRenderLearnTrack(track) ? trackPath(track) : "";
   <p>{track.data.summary}</p>
   <div class="learn-card__meta">
     <span>{securityLensLabels[track.data.securityLens]}</span>
-    <span>{track.data.canonicalModules.length} modules</span>
+    <span>{publicModuleCount} public {publicModuleCount === 1 ? "module" : "modules"}</span>
   </div>
   <div class="learn-card__artifacts">
     {track.data.requiredArtifacts.map((artifact) => <ArtifactBadge value={artifact} />)}
