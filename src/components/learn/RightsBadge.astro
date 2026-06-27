@@ -1,0 +1,30 @@
+---
+import { rightsLabels } from "../../utils/learn";
+
+type Props = {
+  value: string;
+};
+
+const { value } = Astro.props;
+---
+
+<span class="learn-badge learn-badge--rights">{rightsLabels[value] || value}</span>
+
+<style>
+  .learn-badge {
+    align-items: center;
+    border: 1px solid var(--aiv-line-strong);
+    border-radius: 999px;
+    color: var(--aiv-text-secondary);
+    display: inline-flex;
+    font-size: 0.8rem;
+    font-weight: 700;
+    line-height: 1.2;
+    min-height: 1.8rem;
+    padding: 0.28rem 0.65rem;
+  }
+
+  .learn-badge--rights {
+    border-color: var(--aiv-line-strong);
+  }
+</style>

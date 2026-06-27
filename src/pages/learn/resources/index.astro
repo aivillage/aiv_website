@@ -1,0 +1,118 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import PageShell from "../../../components/layout/PageShell.astro";
+import ResourceCard from "../../../components/learn/ResourceCard.astro";
+import { byTitle, costLabels, difficultyLabels, entrySlug, formatLabel, stageLabels } from "../../../utils/learn";
+
+const resources = (await getCollection("learnResources", ({ data }) => data.status !== "draft")).sort(byTitle);
+const tracks = (await getCollection("learnTracks", ({ data }) => data.status !== "draft")).sort(byTitle);
+const stages = [...new Set(resources.map((resource) => resource.data.targetStage))];
+const difficulties = [...new Set(resources.map((resource) => resource.data.difficulty))];
+const resourceTypes = [...new Set(resources.map((resource) => resource.data.resourceType))].sort();
+const costs = [...new Set(resources.map((resource) => resource.data.cost))];
+---
+
+<BaseLayout title="Learn Resources" canonical="/learn/resources/" description="Browse the AI Village Learn beta resource catalog.">
+  <PageShell class="learn-page">
+    <h1>Resource Catalog</h1>
+    <p class="text-lead">
+      A deduped catalog of public resources linked from Learn modules. Required resources are controlled at the module level and must remain free.
+    </p>
+
+    <form class="learn-filters" aria-label="Resource filters">
+      <label>
+        Track
+        <select data-filter="track">
+          <option value="">All tracks</option>
+          {tracks.map((track) => <option value={entrySlug(track)}>{track.data.title}</option>)}
+        </select>
+      </label>
+      <label>
+        Stage
+        <select data-filter="stage">
+          <option value="">All stages</option>
+          {stages.map((stage) => <option value={stage}>{stageLabels[stage]}</option>)}
+        </select>
+      </label>
+      <label>
+        Difficulty
+        <select data-filter="difficulty">
+          <option value="">All difficulty</option>
+          {difficulties.map((difficulty) => <option value={difficulty}>{difficultyLabels[difficulty]}</option>)}
+        </select>
+      </label>
+      <label>
+        Type
+        <select data-filter="type">
+          <option value="">All types</option>
+          {resourceTypes.map((type) => <option value={type}>{formatLabel(type)}</option>)}
+        </select>
+      </label>
+      <label>
+        Cost
+        <select data-filter="cost">
+          <option value="">All costs</option>
+          {costs.map((cost) => <option value={cost}>{costLabels[cost]}</option>)}
+        </select>
+      </label>
+    </form>
+
+    <p class="text-muted" id="resource-count">{resources.length} resources shown</p>
+    <div class="learn-grid" data-resource-grid>
+      {resources.map((resource) => <ResourceCard resource={resource} />)}
+    </div>
+  </PageShell>
+</BaseLayout>
+
+<script>
+  const filters = Array.from(document.querySelectorAll<HTMLSelectElement>("[data-filter]"));
+  const cards = Array.from(document.querySelectorAll<HTMLElement>("[data-resource-grid] article"));
+  const count = document.getElementById("resource-count");
+
+  function updateResourceFilters() {
+    const selected = Object.fromEntries(filters.map((filter) => [filter.dataset.filter || "", filter.value]));
+    let shown = 0;
+
+    cards.forEach((card) => {
+      const matchesTrack = !selected.track || card.dataset.trackRefs?.split(" ").includes(selected.track);
+      const matchesStage = !selected.stage || card.dataset.stage === selected.stage;
+      const matchesDifficulty = !selected.difficulty || card.dataset.difficulty === selected.difficulty;
+      const matchesType = !selected.type || card.dataset.type === selected.type;
+      const matchesCost = !selected.cost || card.dataset.cost === selected.cost;
+      const visible = Boolean(matchesTrack && matchesStage && matchesDifficulty && matchesType && matchesCost);
+      card.toggleAttribute("hidden", !visible);
+      if (visible) shown += 1;
+    });
+
+    if (count) count.textContent = `${shown} ${shown === 1 ? "resource" : "resources"} shown`;
+  }
+
+  filters.forEach((filter) => filter.addEventListener("change", updateResourceFilters));
+</script>
+
+<style>
+  .learn-page {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .learn-filters {
+    display: grid;
+    gap: 0.9rem;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+
+  .learn-filters label {
+    color: var(--aiv-text-muted);
+    display: grid;
+    font-weight: 700;
+    gap: 0.35rem;
+  }
+
+  .learn-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+</style>

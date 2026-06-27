@@ -1,0 +1,34 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import PageShell from "../../../components/layout/PageShell.astro";
+import LabCard from "../../../components/learn/LabCard.astro";
+import { byTitle } from "../../../utils/learn";
+
+const labs = (await getCollection("learnLabs", ({ data }) => data.status !== "draft")).sort(byTitle);
+---
+
+<BaseLayout title="Learn Labs" canonical="/learn/labs/" description="Safety-bounded AI Village Learn lab metadata.">
+  <PageShell class="learn-page">
+    <h1>Lab Catalog</h1>
+    <p class="text-lead">
+      Lab entries expose metadata, safety boundaries, run modes, difficulty, and status. The curriculum beta does not add a hosted lab launcher, scoring system, or new vulnerable-agent stack.
+    </p>
+    <div class="learn-grid">
+      {labs.map((lab) => <LabCard lab={lab} />)}
+    </div>
+  </PageShell>
+</BaseLayout>
+
+<style>
+  .learn-page {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .learn-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+</style>

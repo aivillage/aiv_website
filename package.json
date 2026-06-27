@@ -9,7 +9,7 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro check && tsx scripts/check-markdown-headings.ts && astro build && tsx scripts/verify-redirects.ts && tsx scripts/check-internal-links.ts",
+    "build": "astro check && tsx scripts/check-learn-content.ts && tsx scripts/check-markdown-headings.ts && astro build && tsx scripts/verify-redirects.ts && tsx scripts/check-internal-links.ts",
     "preview": "astro preview",
     "check": "astro check",
     "lint": "eslint .",

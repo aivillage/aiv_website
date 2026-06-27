@@ -1,0 +1,34 @@
+---
+import { securityLensLabels } from "../../utils/learn";
+
+type Props = {
+  lens: string;
+  text?: string;
+};
+
+const { lens, text = "" } = Astro.props;
+const hasText = text.trim().length > 0;
+---
+
+{lens !== "none" && hasText && (
+  <aside class="security-lens">
+    <h2>{securityLensLabels[lens] || "Security Lens"}</h2>
+    <p>{text}</p>
+  </aside>
+)}
+
+<style>
+  .security-lens {
+    background: var(--aiv-nested-bg);
+    border: 1px solid var(--aiv-nested-border);
+    border-left: 4px solid var(--aiv-warning);
+    border-radius: 8px;
+    margin: 1.5rem 0;
+    padding: 1.25rem;
+  }
+
+  .security-lens h2 {
+    font-size: 1.15rem;
+    margin-top: 0;
+  }
+</style>

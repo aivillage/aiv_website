@@ -1,0 +1,43 @@
+---
+import { statusLabels } from "../../utils/learn";
+
+type Props = {
+  value: string;
+};
+
+const { value } = Astro.props;
+---
+
+<span class:list={["learn-badge", "learn-badge--status", `learn-badge--${value}`]}>{statusLabels[value] || value}</span>
+
+<style>
+  .learn-badge {
+    align-items: center;
+    border: 1px solid var(--aiv-line-strong);
+    border-radius: 999px;
+    color: var(--aiv-text-secondary);
+    display: inline-flex;
+    font-size: 0.8rem;
+    font-weight: 700;
+    line-height: 1.2;
+    min-height: 1.8rem;
+    padding: 0.28rem 0.65rem;
+  }
+
+  .learn-badge--beta,
+  .learn-badge--draft {
+    border-color: var(--aiv-warning);
+    color: var(--aiv-warning);
+  }
+
+  .learn-badge--stable {
+    border-color: var(--aiv-accent-field);
+    color: var(--aiv-accent-field);
+  }
+
+  .learn-badge--coming_soon,
+  .learn-badge--stale {
+    border-color: var(--aiv-text-muted);
+    color: var(--aiv-text-muted);
+  }
+</style>

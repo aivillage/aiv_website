@@ -1,0 +1,49 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import PageShell from "../../../components/layout/PageShell.astro";
+import TrackCard from "../../../components/learn/TrackCard.astro";
+import { byTrackKindThenTitle } from "../../../utils/learn";
+
+const tracks = (await getCollection("learnTracks", ({ data }) => data.status !== "draft")).sort(byTrackKindThenTitle);
+const groups = [
+  { title: "New to AI", kinds: ["foundation"], summary: "Start with shared vocabulary, notebooks, ML basics, LLMs, embeddings, and retrieval." },
+  { title: "Use AI Better at Work", kinds: ["practitioner", "governance"], summary: "Focus on prompting, review, workflow policy, responsible use, and risk frameworks." },
+  { title: "Build AI Systems", kinds: ["builder", "agentic"], summary: "Move through AI app architecture, RAG, tools, evals, agents, MCP, and containment." },
+  { title: "Secure and Evaluate AI", kinds: ["security", "defensive", "evals"], summary: "Work on AI security, authorized red teaming, defensive engineering, evals, reliability, and GRT-style findings." },
+];
+---
+
+<BaseLayout title="Choose Your Path" canonical="/learn/choose-your-path/" description="Choose an AI Village Learn beta track by learner intent.">
+  <PageShell class="learn-page">
+    <h1>Choose Your Path</h1>
+    <p class="text-lead">
+      Tracks are organized by learner intent, not by a single ladder. Choose the path that fits your current artifact goal.
+    </p>
+    {groups.map((group) => {
+      const groupTracks = tracks.filter((track) => group.kinds.includes(track.data.trackKind));
+      return (
+        <section>
+          <h2>{group.title}</h2>
+          <p>{group.summary}</p>
+          <div class="learn-grid">
+            {groupTracks.map((track) => <TrackCard track={track} />)}
+          </div>
+        </section>
+      );
+    })}
+  </PageShell>
+</BaseLayout>
+
+<style>
+  .learn-page {
+    display: grid;
+    gap: 2rem;
+  }
+
+  .learn-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+</style>

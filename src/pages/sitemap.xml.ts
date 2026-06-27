@@ -1,5 +1,6 @@
 import { getCollection } from "astro:content";
 import { site } from "../data/site";
+import { entrySlug } from "../utils/learn";
 import { canonicalPostPath, eventPath, schedulePath, sortEventsAscending, sponsorPath } from "../utils/site";
 
 const staticAssets = [
@@ -33,6 +34,7 @@ export async function GET() {
     (sponsor) => sponsor.data.status === "current" || sponsor.data.status === "past",
   );
   const schedules = await getCollection("schedules");
+  const learnTracks = await getCollection("learnTracks", ({ data }) => data.status !== "draft");
 
   const urls = Array.from(new Set([
     "/",
@@ -49,6 +51,13 @@ export async function GET() {
     "/grt/",
     "/hacker-journal-club/",
     "/learn/",
+    "/learn/start/",
+    "/learn/choose-your-path/",
+    ...learnTracks.map((track) => `/learn/tracks/${entrySlug(track)}/`),
+    "/learn/resources/",
+    "/learn/labs/",
+    "/learn/deep-dives/",
+    "/learn/contribute/",
     "/research/",
     "/sponsors/",
     ...sponsors.map(sponsorPath),

@@ -1,0 +1,52 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import PageShell from "../../../components/layout/PageShell.astro";
+
+const gates = [
+  "No link-dump PRs.",
+  "No resource without rights metadata.",
+  "No resource without targetStage and difficulty.",
+  "No required paid or freemium resource.",
+  "No module can be stable with missing required Security Lens prose.",
+  "No lab without a safetyBoundary.",
+  "No offensive lab can be stable without a defensive debrief.",
+  "No top-level track without requiredArtifacts.",
+  "No coming_soon or beta top-level track without whatExistsNow and whatComingNext.",
+  "No duplicate Evals/GRT and Research/GRT tracks.",
+  "No llm_verification promotion until license status is fixed.",
+  "No new original lab build unless a clear external gap exists.",
+];
+---
+
+<BaseLayout title="Contribute to Learn" canonical="/learn/contribute/" description="Publishing gates for AI Village Learn curriculum contributions.">
+  <PageShell class="learn-page">
+    <h1>Contribute to Learn</h1>
+    <p class="text-lead">
+      AI Village Learn is a curated curriculum beta, not an unreviewed link collection. Contributions need clear metadata, rights information, stage fit, and safety boundaries.
+    </p>
+
+    <section class="card card--accent-primary">
+      <h2 class="mt-0">Publishing Gates</h2>
+      <ul>
+        {gates.map((gate) => <li>{gate}</li>)}
+      </ul>
+    </section>
+
+    <section>
+      <h2>Content Scope</h2>
+      <p>
+        The curriculum beta separates metadata from reviewed lesson content. Security Lens prose, lab debriefs, threat-model templates, eval-card templates, risk-memo templates, and full course copy need separate review.
+      </p>
+      <p>
+        Contributions should keep Learn broad: AI fundamentals, practical use, builders, agents, security, defensive engineering, evals, governance, and contributor paths all belong here.
+      </p>
+    </section>
+  </PageShell>
+</BaseLayout>
+
+<style>
+  .learn-page {
+    display: grid;
+    gap: 2rem;
+  }
+</style>

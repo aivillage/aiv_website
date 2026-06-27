@@ -1,0 +1,66 @@
+---
+import type { CollectionEntry } from "astro:content";
+import DifficultyBadge from "./DifficultyBadge.astro";
+import RightsBadge from "./RightsBadge.astro";
+import StageBadge from "./StageBadge.astro";
+import { costLabels, formatLabel, refId } from "../../utils/learn";
+
+type Props = {
+  resource: CollectionEntry<"learnResources">;
+};
+
+const { resource } = Astro.props;
+const trackRefs = resource.data.tracks.map(refId).join(" ");
+---
+
+<article class="learn-card" data-track-refs={trackRefs} data-stage={resource.data.targetStage} data-difficulty={resource.data.difficulty} data-type={resource.data.resourceType} data-cost={resource.data.cost}>
+  <div class="learn-card__meta">
+    <StageBadge value={resource.data.targetStage} />
+    <DifficultyBadge value={resource.data.difficulty} />
+    <span>{costLabels[resource.data.cost]}</span>
+  </div>
+  <h3><a href={resource.data.canonicalUrl} target="_blank" rel="noopener noreferrer">{resource.data.title}</a></h3>
+  <p class="learn-card__provider">{resource.data.provider}</p>
+  <div class="learn-card__meta">
+    <span>{formatLabel(resource.data.resourceType)}</span>
+    <RightsBadge value={resource.data.rightsMode} />
+    <span>{resource.data.maintenanceRisk} maintenance risk</span>
+  </div>
+  {resource.data.caveats.length > 0 && <p class="text-muted text-small">{resource.data.caveats[0]}</p>}
+</article>
+
+<style>
+  .learn-card {
+    background: var(--aiv-card-bg);
+    border: 1px solid var(--aiv-card-border);
+    border-radius: 8px;
+    box-shadow: var(--aiv-card-shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    min-height: 100%;
+    padding: 1.15rem;
+  }
+
+  .learn-card h3 {
+    font-size: 1.08rem;
+    margin: 0;
+  }
+
+  .learn-card p {
+    margin: 0;
+  }
+
+  .learn-card__provider,
+  .learn-card__meta {
+    color: var(--aiv-text-muted);
+  }
+
+  .learn-card__meta {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 0.9rem;
+    gap: 0.5rem;
+  }
+</style>

@@ -1,0 +1,41 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import PageShell from "../../../components/layout/PageShell.astro";
+import TrackCard from "../../../components/learn/TrackCard.astro";
+import { byTrackKindThenTitle } from "../../../utils/learn";
+
+const tracks = (await getCollection("learnTracks", ({ data }) => data.status !== "draft")).sort(byTrackKindThenTitle);
+const starterTracks = tracks.filter((track) => ["foundation", "practitioner", "builder", "security", "governance"].includes(track.data.trackKind));
+---
+
+<BaseLayout title="Start Learning" canonical="/learn/start/" description="Starting points for the AI Village Learn curriculum beta.">
+  <PageShell class="learn-page">
+    <h1>Start Learning</h1>
+    <p class="text-lead">
+      Pick the track that matches what you are trying to do now. Stage is not a global prerequisite chain; prerequisites are listed on tracks and modules.
+    </p>
+    <div class="learn-grid">
+      {starterTracks.map((track) => <TrackCard track={track} />)}
+    </div>
+    <section class="card card--accent-muted">
+      <h2 class="mt-0">Beta Notes</h2>
+      <p>
+        Module detail lessons and authored security prose are being expanded. Use the track, resource, and lab catalogs as beta navigation while curriculum review continues.
+      </p>
+    </section>
+  </PageShell>
+</BaseLayout>
+
+<style>
+  .learn-page {
+    display: grid;
+    gap: 2rem;
+  }
+
+  .learn-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+</style>

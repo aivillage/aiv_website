@@ -1,0 +1,178 @@
+---
+import { getCollection } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import PageShell from "../../../../components/layout/PageShell.astro";
+import ArtifactBadge from "../../../../components/learn/ArtifactBadge.astro";
+import LabCard from "../../../../components/learn/LabCard.astro";
+import ModuleCard from "../../../../components/learn/ModuleCard.astro";
+import StageBadge from "../../../../components/learn/StageBadge.astro";
+import StatusBadge from "../../../../components/learn/StatusBadge.astro";
+import { entrySlug, refId, securityLensLabels } from "../../../../utils/learn";
+
+type Props = {
+  track: CollectionEntry<"learnTracks">;
+  modules: CollectionEntry<"learnModules">[];
+  labs: CollectionEntry<"learnLabs">[];
+  prerequisiteTracks: CollectionEntry<"learnTracks">[];
+};
+
+export async function getStaticPaths() {
+  const tracks = await getCollection("learnTracks", ({ data }) => data.status !== "draft");
+  const modules = await getCollection("learnModules");
+  const labs = await getCollection("learnLabs", ({ data }) => data.status !== "draft");
+  const trackBySlug = new Map(tracks.flatMap((track) => [[entrySlug(track), track], [track.id, track]]));
+  const moduleBySlug = new Map(modules.flatMap((module) => [[entrySlug(module), module], [module.id, module]]));
+  const labBySlug = new Map(labs.flatMap((lab) => [[entrySlug(lab), lab], [lab.id, lab]]));
+
+  return tracks.map((track) => {
+    const canonicalModules = track.data.canonicalModules
+      .map((moduleRef) => moduleBySlug.get(refId(moduleRef)))
+      .filter((module) => module && module.data.status !== "draft") as CollectionEntry<"learnModules">[];
+    const relatedLabs = canonicalModules.flatMap((module) => module.data.labs?.map((labRef) => labBySlug.get(refId(labRef))).filter((lab) => lab && lab.data.status !== "draft") || []) as CollectionEntry<"learnLabs">[];
+    const prerequisiteTracks = track.data.prerequisites.map((trackRef) => trackBySlug.get(refId(trackRef))).filter(Boolean) as CollectionEntry<"learnTracks">[];
+
+    return {
+      params: { slug: entrySlug(track) },
+      props: { track, modules: canonicalModules, labs: relatedLabs, prerequisiteTracks },
+    };
+  });
+}
+
+const { track, modules, labs, prerequisiteTracks } = Astro.props;
+---
+
+<BaseLayout title={track.data.title} canonical={`/learn/tracks/${entrySlug(track)}/`} description={track.data.summary}>
+  <PageShell class="learn-track-page">
+    <nav class="learn-breadcrumb" aria-label="Breadcrumb"><a href="/learn/">Learn</a> / <span>{track.data.title}</span></nav>
+
+    <header class="learn-track-header">
+      <div>
+        <div class="learn-meta-row">
+          <StatusBadge value={track.data.status} />
+          <StageBadge value={track.data.stageStart} />
+          <span>to</span>
+          <StageBadge value={track.data.stageEnd} />
+        </div>
+        <h1>{track.data.title}</h1>
+        <p class="text-lead">{track.data.summary}</p>
+      </div>
+      <div class="learn-side-panel">
+        <h2>Required Artifacts</h2>
+        <div class="learn-artifacts">
+          {track.data.requiredArtifacts.map((artifact) => <ArtifactBadge value={artifact} />)}
+        </div>
+      </div>
+    </header>
+
+    <section class="learn-two-column">
+      <div>
+        <h2>What This Track Is For</h2>
+        <p>{track.data.summary}</p>
+        <h2>Who Should Start Here</h2>
+        <ul>
+          {track.data.audiences.map((audience) => <li>{audience}</li>)}
+        </ul>
+        {prerequisiteTracks.length > 0 && (
+          <>
+            <h2>Track Prerequisites</h2>
+            <ul>
+              {prerequisiteTracks.map((prerequisite) => <li><a href={`/learn/tracks/${entrySlug(prerequisite)}/`}>{prerequisite.data.title}</a></li>)}
+            </ul>
+          </>
+        )}
+      </div>
+      <div>
+        <h2>Security Lens</h2>
+        <p>{securityLensLabels[track.data.securityLens]}</p>
+        {track.data.securityCheckpoints.length > 0 && (
+          <ul>
+            {track.data.securityCheckpoints.map((checkpoint) => <li>{checkpoint}</li>)}
+          </ul>
+        )}
+      </div>
+    </section>
+
+    <section class="learn-two-column">
+      <div class="card card--accent-primary">
+        <h2 class="mt-0">What Exists Now</h2>
+        <p>{track.data.whatExistsNow}</p>
+      </div>
+      <div class="card card--accent-muted">
+        <h2 class="mt-0">What Is Coming Next</h2>
+        <p>{track.data.whatComingNext}</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>Canonical Modules</h2>
+      {
+        modules.length > 0 ? (
+          <div class="learn-grid">{modules.map((module) => <ModuleCard module={module} />)}</div>
+        ) : track.data.status === "coming_soon" ? (
+          <p class="text-muted">Modules are being prepared for this track.</p>
+        ) : (
+          <p class="text-muted">No public modules are available for this track yet.</p>
+        )
+      }
+    </section>
+
+    <section>
+      <h2>Related Labs</h2>
+      {labs.length > 0 ? <div class="learn-grid">{labs.map((lab) => <LabCard lab={lab} />)}</div> : <p class="text-muted">No lab metadata is attached to this track yet.</p>}
+    </section>
+  </PageShell>
+</BaseLayout>
+
+<style>
+  .learn-track-page {
+    display: grid;
+    gap: 2rem;
+  }
+
+  .learn-breadcrumb,
+  .learn-meta-row {
+    align-items: center;
+    color: var(--aiv-text-muted);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .learn-track-header,
+  .learn-two-column {
+    display: grid;
+    gap: 1.25rem;
+    grid-template-columns: minmax(0, 1fr) minmax(260px, 0.55fr);
+  }
+
+  .learn-side-panel {
+    align-self: start;
+    background: var(--aiv-nested-bg);
+    border: 1px solid var(--aiv-nested-border);
+    border-radius: 8px;
+    padding: 1rem;
+  }
+
+  .learn-side-panel h2 {
+    font-size: 1.1rem;
+    margin-top: 0;
+  }
+
+  .learn-artifacts,
+  .learn-grid {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .learn-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+
+  @media (max-width: 780px) {
+    .learn-track-header,
+    .learn-two-column {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

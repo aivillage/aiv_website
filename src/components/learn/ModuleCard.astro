@@ -1,0 +1,67 @@
+---
+import type { CollectionEntry } from "astro:content";
+import ArtifactBadge from "./ArtifactBadge.astro";
+import DifficultyBadge from "./DifficultyBadge.astro";
+import StageBadge from "./StageBadge.astro";
+import StatusBadge from "./StatusBadge.astro";
+import { moduleTypeLabels, securityLensLabels } from "../../utils/learn";
+
+type Props = {
+  module: CollectionEntry<"learnModules">;
+};
+
+const { module } = Astro.props;
+---
+
+<article class="learn-card">
+  <div class="learn-card__meta">
+    <StatusBadge value={module.data.status} />
+    <DifficultyBadge value={module.data.difficulty} />
+    <span>{moduleTypeLabels[module.data.moduleType]}</span>
+  </div>
+  <h3>{module.data.title}</h3>
+  <p>{module.data.summary}</p>
+  <div class="learn-card__meta">
+    <StageBadge value={module.data.stageStart} />
+    <span>to</span>
+    <StageBadge value={module.data.stageEnd} />
+  </div>
+  <div class="learn-card__meta">
+    <span>{securityLensLabels[module.data.securityLens]}</span>
+    <span>{module.data.resources.length} resources</span>
+    {module.data.labs?.length ? <span>{module.data.labs.length} lab links</span> : null}
+  </div>
+  {module.data.requiredArtifact && <ArtifactBadge value={module.data.requiredArtifact} />}
+</article>
+
+<style>
+  .learn-card {
+    background: var(--aiv-card-bg);
+    border: 1px solid var(--aiv-card-border);
+    border-radius: 8px;
+    box-shadow: var(--aiv-card-shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    min-height: 100%;
+    padding: 1.15rem;
+  }
+
+  .learn-card h3 {
+    font-size: 1.12rem;
+    margin: 0;
+  }
+
+  .learn-card p {
+    margin: 0;
+  }
+
+  .learn-card__meta {
+    align-items: center;
+    color: var(--aiv-text-muted);
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 0.9rem;
+    gap: 0.5rem;
+  }
+</style>

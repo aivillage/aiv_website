@@ -16,7 +16,7 @@ export const footerNavSections = [
     title: "Programs",
     links: [
       { label: "Generative Red Team", href: "/grt/" },
-      { label: "Learn / Workshops", href: "/learn/" },
+      { label: "Learn", href: "/learn/" },
       { label: "Events", href: "/events/" },
       { label: "Research", href: "/research/" },
     ],

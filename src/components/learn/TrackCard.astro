@@ -1,0 +1,72 @@
+---
+import type { CollectionEntry } from "astro:content";
+import ArtifactBadge from "./ArtifactBadge.astro";
+import StageBadge from "./StageBadge.astro";
+import StatusBadge from "./StatusBadge.astro";
+import { entrySlug, securityLensLabels } from "../../utils/learn";
+
+type Props = {
+  track: CollectionEntry<"learnTracks">;
+};
+
+const { track } = Astro.props;
+const href = `/learn/tracks/${entrySlug(track)}/`;
+---
+
+<article class="learn-card">
+  <div class="learn-card__meta">
+    <StatusBadge value={track.data.status} />
+    <StageBadge value={track.data.stageStart} />
+    <span class="learn-card__range">to</span>
+    <StageBadge value={track.data.stageEnd} />
+  </div>
+  <h2><a href={href}>{track.data.title}</a></h2>
+  <p>{track.data.summary}</p>
+  <div class="learn-card__meta">
+    <span>{securityLensLabels[track.data.securityLens]}</span>
+    <span>{track.data.canonicalModules.length} modules</span>
+  </div>
+  <div class="learn-card__artifacts">
+    {track.data.requiredArtifacts.map((artifact) => <ArtifactBadge value={artifact} />)}
+  </div>
+</article>
+
+<style>
+  .learn-card {
+    background: var(--aiv-card-bg);
+    border: 1px solid var(--aiv-card-border);
+    border-radius: 8px;
+    box-shadow: var(--aiv-card-shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    min-height: 100%;
+    padding: 1.25rem;
+  }
+
+  .learn-card h2 {
+    font-size: 1.25rem;
+    margin: 0;
+  }
+
+  .learn-card p {
+    margin: 0;
+  }
+
+  .learn-card__meta,
+  .learn-card__artifacts {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .learn-card__meta {
+    color: var(--aiv-text-muted);
+    font-size: 0.9rem;
+  }
+
+  .learn-card__range {
+    color: var(--aiv-text-muted);
+  }
+</style>

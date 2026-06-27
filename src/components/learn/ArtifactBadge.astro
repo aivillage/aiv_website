@@ -1,0 +1,23 @@
+---
+type Props = {
+  value: string;
+};
+
+const { value } = Astro.props;
+---
+
+<span class="learn-artifact">{value}</span>
+
+<style>
+  .learn-artifact {
+    background: var(--aiv-nested-bg);
+    border: 1px solid var(--aiv-nested-border);
+    border-radius: 6px;
+    color: var(--aiv-text-secondary);
+    display: inline-flex;
+    font-family: var(--aiv-font-mono);
+    font-size: 0.82rem;
+    line-height: 1.35;
+    padding: 0.3rem 0.55rem;
+  }
+</style>
