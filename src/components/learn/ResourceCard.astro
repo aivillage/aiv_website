@@ -10,6 +10,8 @@ type Props = {
 
 const { resource } = Astro.props;
 const trackRefs = resource.data.tracks.map(refId).join(" ");
+const sourceLabel = resource.data.sourcePlatform === "youtube" ? "YouTube" : resource.data.sourcePlatform ? formatLabel(resource.data.sourcePlatform) : "";
+const creator = resource.data.creator || resource.data.attribution;
 ---
 
 <article class="learn-card" data-track-refs={trackRefs} data-stage={resource.data.targetStage} data-difficulty={resource.data.difficulty} data-type={resource.data.resourceType} data-cost={resource.data.cost}>
@@ -22,6 +24,9 @@ const trackRefs = resource.data.tracks.map(refId).join(" ");
   <p class="learn-card__provider">{resource.data.provider}</p>
   <div class="learn-card__meta">
     <span>{formatLabel(resource.data.resourceType)}</span>
+    {sourceLabel && <span>{sourceLabel}</span>}
+    {creator && <span>By {creator}</span>}
+    {resource.data.embedAllowed && <span>Official embed available</span>}
   </div>
 </article>
 

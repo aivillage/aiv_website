@@ -9,6 +9,7 @@ import LabCard from "../../../../components/learn/LabCard.astro";
 import SecurityLensCallout from "../../../../components/learn/SecurityLensCallout.astro";
 import StageBadge from "../../../../components/learn/StageBadge.astro";
 import StatusBadge from "../../../../components/learn/StatusBadge.astro";
+import YouTubeEmbed from "../../../../components/learn/YouTubeEmbed.astro";
 import {
   canRenderLearnLab,
   canRenderLearnModule,
@@ -31,10 +32,21 @@ type Props = {
   tracks: CollectionEntry<"learnTracks">[];
   prerequisites: CollectionEntry<"learnModules">[];
   resourceGroups: ResourceGroup[];
+  featuredEmbed?: CollectionEntry<"learnResources">;
   labs: CollectionEntry<"learnLabs">[];
 };
 
 export async function getStaticPaths() {
+  function canFeatureYouTubeEmbed(resource: CollectionEntry<"learnResources">) {
+    return Boolean(
+      resource.data.sourcePlatform === "youtube" &&
+      resource.data.embedAllowed &&
+      resource.data.featuredEmbed &&
+      !resource.data.ageRestricted &&
+      (resource.data.videoId || resource.data.playlistId),
+    );
+  }
+
   const resourceGroupLabels = {
     required: "Start here",
     optional: "Optional",
@@ -62,18 +74,25 @@ export async function getStaticPaths() {
         .map((resourceLink) => resourceBySlug.get(refId(resourceLink.resource)))
         .filter((resource) => resource && resource.data.status !== "draft") as CollectionEntry<"learnResources">[],
     }));
+    const publicResources = module.data.resources
+      .map((resourceLink) => resourceBySlug.get(refId(resourceLink.resource)))
+      .filter((resource) => resource && resource.data.status !== "draft") as CollectionEntry<"learnResources">[];
+    const hasComingSoonTrack = relatedTracks.some((track) => track.data.status === "coming_soon");
+    const featuredEmbed = module.data.status === "coming_soon" || hasComingSoonTrack
+      ? undefined
+      : publicResources.find(canFeatureYouTubeEmbed);
     const linkedLabs = (module.data.labs || [])
       .map((labRef) => labBySlug.get(refId(labRef)))
       .filter((lab) => lab && canRenderLearnLab(lab)) as CollectionEntry<"learnLabs">[];
 
     return {
       params: { slug: entrySlug(module) },
-      props: { module, tracks: relatedTracks, prerequisites, resourceGroups, labs: linkedLabs },
+      props: { module, tracks: relatedTracks, prerequisites, resourceGroups, featuredEmbed, labs: linkedLabs },
     };
   });
 }
 
-const { module, tracks, prerequisites, resourceGroups, labs } = Astro.props;
+const { module, tracks, prerequisites, resourceGroups, featuredEmbed, labs } = Astro.props;
 const { Content } = await render(module);
 const genericObjectivePatterns = [
   /^Describe the main concepts for .+\.$/,
@@ -146,6 +165,21 @@ const hasCustomLearningObjectives = module.data.learningObjectives.some(
 
     <section>
       <h2>Resources</h2>
+      {featuredEmbed && (
+        <div class="learn-featured-embed">
+          <YouTubeEmbed
+            title={featuredEmbed.data.title}
+            creator={featuredEmbed.data.creator || featuredEmbed.data.attribution || featuredEmbed.data.provider}
+            canonicalUrl={featuredEmbed.data.canonicalUrl}
+            channelUrl={featuredEmbed.data.channelUrl}
+            videoId={featuredEmbed.data.videoId}
+            playlistId={featuredEmbed.data.playlistId}
+            playlistUrl={featuredEmbed.data.playlistUrl}
+            mediaType={featuredEmbed.data.mediaType || featuredEmbed.data.resourceType}
+            embedPrivacyMode={featuredEmbed.data.embedPrivacyMode}
+          />
+        </div>
+      )}
       <div class="learn-resource-groups">
         {
           resourceGroups.map((group) => (
@@ -229,6 +263,7 @@ const hasCustomLearningObjectives = module.data.learningObjectives.some(
   }
 
   .learn-resource-groups,
+  .learn-featured-embed,
   .learn-grid {
     display: grid;
     gap: 0.75rem;

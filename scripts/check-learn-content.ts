@@ -11,6 +11,7 @@ type ResourceLink = {
 type EntryData = {
   slug?: string;
   status?: string;
+  canonicalUrl?: string;
   requiredArtifacts?: string[];
   canonicalModules?: Reference[];
   whatExistsNow?: string;
@@ -18,6 +19,13 @@ type EntryData = {
   resources?: ResourceLink[];
   cost?: string;
   rightsMode?: string;
+  sourcePlatform?: string;
+  creator?: string;
+  videoId?: string;
+  playlistId?: string;
+  embedAllowed?: boolean;
+  featuredEmbed?: boolean;
+  ageRestricted?: boolean;
   securityLens?: string;
   securityLensText?: string;
   safetyBoundary?: string;
@@ -29,6 +37,7 @@ type Entry = {
   file: string;
   slug: string;
   data: EntryData;
+  raw: string;
 };
 
 const root = process.cwd();
@@ -48,10 +57,11 @@ function walk(dir: string, out: string[] = []) {
 
 function loadCollection(collection: string) {
   return walk(join(learnRoot, collection)).map((file): Entry => {
-    const parsed = parseFrontmatter(readFileSync(file, "utf8"));
+    const raw = readFileSync(file, "utf8");
+    const parsed = parseFrontmatter(raw);
     const data = parsed.frontmatter && typeof parsed.frontmatter === "object" ? (parsed.frontmatter as EntryData) : {};
     const slug = data.slug || basename(file).replace(/\.(md|mdx|markdown)$/i, "");
-    return { collection, file, slug, data };
+    return { collection, file, slug, data, raw };
   });
 }
 
@@ -70,6 +80,14 @@ function fail(entry: Entry, message: string) {
 
 function stableSecurityLensFailure(data: EntryData) {
   return data.status === "stable" && data.securityLens !== "none" && !isPresent(data.securityLensText);
+}
+
+function isValidYouTubeVideoId(value: string | undefined) {
+  return !value || /^[A-Za-z0-9_-]{11}$/.test(value);
+}
+
+function isValidYouTubePlaylistId(value: string | undefined) {
+  return !value || /^PL[A-Za-z0-9_-]+$/.test(value);
 }
 
 function runParserRegression() {
@@ -107,6 +125,18 @@ for (const entry of allEntries) {
 
   if (entry.data.status === legacyComingSoonStatus) {
     fail(entry, "Use status 'coming_soon' instead of the legacy announced-path status.");
+  }
+
+  if (/<iframe\b/i.test(entry.raw)) {
+    fail(entry, "Do not hardcode iframe HTML in Learn content.");
+  }
+
+  if (/^embedUrl:/m.test(entry.raw)) {
+    fail(entry, "Do not use arbitrary embedUrl frontmatter; derive embeds from vetted IDs.");
+  }
+
+  if (/autoplay=1|controls=0|modestbranding|showinfo|autohide|theme=|enablejsapi=1|origin=/i.test(entry.raw)) {
+    fail(entry, "Do not include YouTube autoplay, deprecated player params, controls suppression, enablejsapi, or origin in Learn content.");
   }
 }
 
@@ -164,12 +194,52 @@ for (const module of modules) {
     if (resource.data.rightsMode === "unknown") {
       fail(module, `Required resource '${resourceId}' has unknown rightsMode.`);
     }
+
+    if (resource.data.ageRestricted) {
+      fail(module, `Required resource '${resourceId}' is age-restricted.`);
+    }
   }
 }
 
 for (const resource of resources) {
   if (resource.data.status !== "draft" && resource.data.rightsMode === "unknown") {
     fail(resource, "Non-draft resources must have known rightsMode.");
+  }
+
+  if (!isValidYouTubeVideoId(resource.data.videoId)) {
+    fail(resource, "YouTube videoId must be exactly 11 characters using letters, numbers, underscore, or hyphen.");
+  }
+
+  if (!isValidYouTubePlaylistId(resource.data.playlistId)) {
+    fail(resource, "YouTube playlistId must include the full PL-prefixed public playlist ID.");
+  }
+
+  if (resource.data.sourcePlatform === "youtube" && resource.data.embedAllowed && !resource.data.videoId && !resource.data.playlistId) {
+    fail(resource, "YouTube resources with embeds enabled must include a videoId or playlistId.");
+  }
+
+  if (resource.data.embedAllowed && resource.data.sourcePlatform !== "youtube") {
+    fail(resource, "Learn embed support is limited to official YouTube embeds.");
+  }
+
+  if (resource.data.embedAllowed && !isPresent(resource.data.creator)) {
+    fail(resource, "Embedded resources must include creator attribution.");
+  }
+
+  if (resource.data.embedAllowed && !isPresent(resource.data.canonicalUrl)) {
+    fail(resource, "Embedded resources must include a canonical source URL.");
+  }
+
+  if (resource.data.embedAllowed && resource.data.rightsMode !== "official_embed") {
+    fail(resource, "Embedded resources must use rightsMode: official_embed.");
+  }
+
+  if (resource.data.ageRestricted && resource.data.embedAllowed) {
+    fail(resource, "Age-restricted resources must not render embedded players.");
+  }
+
+  if (resource.data.featuredEmbed && !resource.data.embedAllowed) {
+    fail(resource, "featuredEmbed requires embedAllowed: true.");
   }
 }
 

@@ -30,6 +30,9 @@ export const securityLens = z.enum(["none", "awareness", "required", "primary"])
 
 export const status = z.enum(["draft", "coming_soon", "beta", "stable", "stale"]);
 
+const youtubeVideoId = /^[A-Za-z0-9_-]{11}$/;
+const youtubePlaylistId = /^PL[A-Za-z0-9_-]+$/;
+
 const image = z.union([
   z.string(),
   z.object({
@@ -239,6 +242,16 @@ const learnResources = defineCollection({
       provider: z.string(),
       canonicalUrl: z.url(),
       resourceType: z.enum(["video", "playlist", "course", "docs", "book", "lab", "tool", "paper", "standard", "repo"]),
+      mediaType: z.enum(["article", "course", "video", "playlist", "repo", "docs", "lab", "other"]).optional(),
+      sourcePlatform: z.enum(["youtube", "website", "github", "docs", "other"]).optional(),
+      creator: z.string().optional(),
+      channelUrl: z.url().optional(),
+      videoId: z.string().regex(youtubeVideoId, "YouTube video IDs must be exactly 11 characters.").optional(),
+      playlistId: z.string().regex(youtubePlaylistId, "YouTube playlist IDs must include the full PL-prefixed ID.").optional(),
+      playlistUrl: z.url().optional(),
+      featuredEmbed: z.boolean().default(false),
+      embedPrivacyMode: z.enum(["enhanced", "standard"]).default("enhanced"),
+      ageRestricted: z.boolean().default(false),
       modality: z.array(z.enum(["video", "text", "hands_on", "notebook", "interactive", "code"])),
       targetStage: stage,
       difficulty,
@@ -263,6 +276,54 @@ const learnResources = defineCollection({
           code: "custom",
           path: ["rightsMode"],
           message: "Beta and stable Learn resources must have known rights metadata.",
+        });
+      }
+
+      if (data.sourcePlatform === "youtube" && data.embedAllowed && !data.videoId && !data.playlistId) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["embedAllowed"],
+          message: "YouTube resources with embeds enabled must include a videoId or playlistId.",
+        });
+      }
+
+      if (data.embedAllowed && data.sourcePlatform !== "youtube") {
+        ctx.addIssue({
+          code: "custom",
+          path: ["sourcePlatform"],
+          message: "Learn embed support is limited to official YouTube embeds.",
+        });
+      }
+
+      if (data.embedAllowed && !data.creator?.trim()) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["creator"],
+          message: "Embedded resources must include creator attribution.",
+        });
+      }
+
+      if (data.embedAllowed && data.rightsMode !== "official_embed") {
+        ctx.addIssue({
+          code: "custom",
+          path: ["rightsMode"],
+          message: "Embedded resources must use rightsMode: official_embed.",
+        });
+      }
+
+      if (data.ageRestricted && data.embedAllowed) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["ageRestricted"],
+          message: "Age-restricted YouTube resources must not render embedded players.",
+        });
+      }
+
+      if (data.featuredEmbed && !data.embedAllowed) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["featuredEmbed"],
+          message: "featuredEmbed requires embedAllowed: true.",
         });
       }
     }),
