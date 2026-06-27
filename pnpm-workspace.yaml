@@ -2,5 +2,12 @@ allowBuilds:
   "@parcel/watcher": true
   esbuild: true
   sharp: true
+autoInstallPeers: false
 overrides:
   esbuild: 0.28.1
+  yaml: ^2.9.0
+peerDependencyRules:
+  allowedVersions:
+    "@expressive-code/core": 0.44.0
+  ignoreMissing:
+    - "@astrojs/starlight"
