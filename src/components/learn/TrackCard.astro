@@ -3,14 +3,14 @@ import type { CollectionEntry } from "astro:content";
 import ArtifactBadge from "./ArtifactBadge.astro";
 import StageBadge from "./StageBadge.astro";
 import StatusBadge from "./StatusBadge.astro";
-import { entrySlug, securityLensLabels } from "../../utils/learn";
+import { canRenderLearnTrack, securityLensLabels, trackPath } from "../../utils/learn";
 
 type Props = {
   track: CollectionEntry<"learnTracks">;
 };
 
 const { track } = Astro.props;
-const href = `/learn/tracks/${entrySlug(track)}/`;
+const href = canRenderLearnTrack(track) ? trackPath(track) : "";
 ---
 
 <article class="learn-card">
@@ -20,7 +20,7 @@ const href = `/learn/tracks/${entrySlug(track)}/`;
     <span class="learn-card__range">to</span>
     <StageBadge value={track.data.stageEnd} />
   </div>
-  <h2><a href={href}>{track.data.title}</a></h2>
+  <h2>{href ? <a href={href}>{track.data.title}</a> : track.data.title}</h2>
   <p>{track.data.summary}</p>
   <div class="learn-card__meta">
     <span>{securityLensLabels[track.data.securityLens]}</span>

@@ -1,7 +1,7 @@
 ---
 title: Basic App Evals
 slug: basic-app-evals
-summary: Curriculum beta module for Basic App Evals. Reviewed lessons and exercises are being expanded.
+summary: This beta module provides the learning goal, curated resources, and expected artifact.
 tracks:
   - ai-builder-core
 stageStart: ai_practitioner
@@ -23,4 +23,4 @@ reviewOwner: AI Village Learn
 lastReviewed: "2026-06-26"
 ---
 
-Reviewed lessons and exercises for Basic App Evals are being expanded as part of the curriculum beta.
+This beta module provides the learning goal, curated resources, and expected artifact. Full exercises and debriefs are being expanded over time.

@@ -1,7 +1,7 @@
 ---
 title: API-Based AI Apps
 slug: api-based-ai-apps
-summary: Curriculum beta module for API-Based AI Apps. Reviewed lessons and exercises are being expanded.
+summary: This beta module provides the learning goal, curated resources, and expected artifact.
 tracks:
   - ai-builder-core
 stageStart: ai_practitioner
@@ -23,4 +23,4 @@ reviewOwner: AI Village Learn
 lastReviewed: "2026-06-26"
 ---
 
-Reviewed lessons and exercises for API-Based AI Apps are being expanded as part of the curriculum beta.
+This beta module provides the learning goal, curated resources, and expected artifact. Full exercises and debriefs are being expanded over time.

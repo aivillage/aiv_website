@@ -22,7 +22,7 @@ securityCheckpoints:
   - Input/output boundary checkpoint
   - Retrieval and tool-use checkpoint
 whatExistsNow: The curriculum beta includes the builder curriculum metadata, module order, and starter resource map.
-whatComingNext: Reviewed lessons will add architecture notes, lab prompts, and security checkpoints.
+whatComingNext: Full lessons will add architecture notes, lab prompts, and security checkpoints.
 canonicalModules:
   - ai-app-architecture
   - api-based-ai-apps
@@ -36,4 +36,4 @@ reviewOwner: AI Village Learn
 lastReviewed: "2026-06-26"
 ---
 
-AI Builder Core is part of the AI Village Learn curriculum beta. Reviewed lessons and exercises are being expanded.
+AI Builder Core is part of the AI Village Learn curriculum beta. Full lessons and exercises are being expanded over time.

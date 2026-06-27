@@ -1,6 +1,6 @@
 import { getCollection } from "astro:content";
 import { site } from "../data/site";
-import { entrySlug } from "../utils/learn";
+import { canRenderLearnModule, canRenderLearnTrack, modulePath, trackPath } from "../utils/learn";
 import { canonicalPostPath, eventPath, schedulePath, sortEventsAscending, sponsorPath } from "../utils/site";
 
 const staticAssets = [
@@ -34,7 +34,8 @@ export async function GET() {
     (sponsor) => sponsor.data.status === "current" || sponsor.data.status === "past",
   );
   const schedules = await getCollection("schedules");
-  const learnTracks = await getCollection("learnTracks", ({ data }) => data.status !== "draft");
+  const learnTracks = await getCollection("learnTracks", canRenderLearnTrack);
+  const learnModules = await getCollection("learnModules", canRenderLearnModule);
 
   const urls = Array.from(new Set([
     "/",
@@ -53,7 +54,8 @@ export async function GET() {
     "/learn/",
     "/learn/start/",
     "/learn/choose-your-path/",
-    ...learnTracks.map((track) => `/learn/tracks/${entrySlug(track)}/`),
+    ...learnTracks.map(trackPath),
+    ...learnModules.map(modulePath),
     "/learn/resources/",
     "/learn/labs/",
     "/learn/deep-dives/",

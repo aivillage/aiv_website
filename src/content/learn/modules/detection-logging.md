@@ -1,7 +1,7 @@
 ---
 title: Detection and Logging
 slug: detection-logging
-summary: Curriculum beta module for Detection and Logging. Reviewed lessons and exercises are being expanded.
+summary: This beta module provides the learning goal, curated resources, and expected artifact.
 tracks:
   - defensive-ai-engineering
 stageStart: builder
@@ -23,4 +23,4 @@ reviewOwner: AI Village Learn
 lastReviewed: "2026-06-26"
 ---
 
-Reviewed lessons and exercises for Detection and Logging are being expanded as part of the curriculum beta.
+This beta module provides the learning goal, curated resources, and expected artifact. Full exercises and debriefs are being expanded over time.

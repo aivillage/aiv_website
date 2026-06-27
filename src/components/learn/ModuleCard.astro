@@ -4,13 +4,14 @@ import ArtifactBadge from "./ArtifactBadge.astro";
 import DifficultyBadge from "./DifficultyBadge.astro";
 import StageBadge from "./StageBadge.astro";
 import StatusBadge from "./StatusBadge.astro";
-import { moduleTypeLabels, securityLensLabels } from "../../utils/learn";
+import { canRenderLearnModule, modulePath, moduleTypeLabels } from "../../utils/learn";
 
 type Props = {
   module: CollectionEntry<"learnModules">;
 };
 
 const { module } = Astro.props;
+const href = canRenderLearnModule(module) ? modulePath(module) : "";
 ---
 
 <article class="learn-card">
@@ -19,7 +20,7 @@ const { module } = Astro.props;
     <DifficultyBadge value={module.data.difficulty} />
     <span>{moduleTypeLabels[module.data.moduleType]}</span>
   </div>
-  <h3>{module.data.title}</h3>
+  <h3>{href ? <a href={href}>{module.data.title}</a> : module.data.title}</h3>
   <p>{module.data.summary}</p>
   <div class="learn-card__meta">
     <StageBadge value={module.data.stageStart} />
@@ -27,7 +28,6 @@ const { module } = Astro.props;
     <StageBadge value={module.data.stageEnd} />
   </div>
   <div class="learn-card__meta">
-    <span>{securityLensLabels[module.data.securityLens]}</span>
     <span>{module.data.resources.length} resources</span>
     {module.data.labs?.length ? <span>{module.data.labs.length} lab links</span> : null}
   </div>

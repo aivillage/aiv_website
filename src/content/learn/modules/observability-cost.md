@@ -1,7 +1,7 @@
 ---
 title: Observability and Cost
 slug: observability-cost
-summary: Curriculum beta module for Observability and Cost. Reviewed lessons and exercises are being expanded.
+summary: This beta module provides the learning goal, curated resources, and expected artifact.
 tracks:
   - ai-builder-core
 stageStart: ai_practitioner
@@ -24,4 +24,4 @@ reviewOwner: AI Village Learn
 lastReviewed: "2026-06-26"
 ---
 
-Reviewed lessons and exercises for Observability and Cost are being expanded as part of the curriculum beta.
+This beta module provides the learning goal, curated resources, and expected artifact. Full exercises and debriefs are being expanded over time.

@@ -1,7 +1,7 @@
 ---
 title: Embeddings and Retrieval
 slug: embeddings-retrieval
-summary: Curriculum beta module for Embeddings and Retrieval. Reviewed lessons and exercises are being expanded.
+summary: This beta module provides the learning goal, curated resources, and expected artifact.
 tracks:
   - ai-fundamentals
 stageStart: explorer
@@ -24,4 +24,4 @@ reviewOwner: AI Village Learn
 lastReviewed: "2026-06-26"
 ---
 
-Reviewed lessons and exercises for Embeddings and Retrieval are being expanded as part of the curriculum beta.
+This beta module provides the learning goal, curated resources, and expected artifact. Full exercises and debriefs are being expanded over time.

@@ -24,7 +24,7 @@ securityCheckpoints:
 whatExistsNow: >-
   The curriculum beta includes governance metadata and resource links as a planned public-interest AI learning
   path.
-whatComingNext: Reviewed lessons will add governance and responsible-use lesson content.
+whatComingNext: Full lessons will add governance and responsible-use lesson content.
 canonicalModules:
   - security-vs-safety-vs-governance
   - ai-risk-frameworks
@@ -37,4 +37,4 @@ reviewOwner: AI Village Learn
 lastReviewed: "2026-06-26"
 ---
 
-Governance and Responsible Use is part of the AI Village Learn curriculum beta. Reviewed lessons and exercises are being expanded.
+Governance and Responsible Use is part of the AI Village Learn curriculum beta. Full lessons and exercises are being expanded over time.

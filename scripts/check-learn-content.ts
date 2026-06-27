@@ -73,7 +73,11 @@ function stableSecurityLensFailure(data: EntryData) {
 }
 
 function runParserRegression() {
-  const withBlockScalar = parseFrontmatter(`---\nstatus: stable\nsecurityLens: required\nsecurityLensText: |\n  Review the trust boundary before use.\n  Record assumptions.\n---\n`).frontmatter as EntryData;
+  const withBlockScalar = parseFrontmatter(`---\nsecurityLens: "required"\nsecurityLensText: >\n  This is multi-line Security Lens text.\n  The validator must read the full string.\nstatus: "stable"\n---\n`).frontmatter as EntryData;
+  const parsedText = withBlockScalar.securityLensText || "";
+  if (!parsedText.includes("This is multi-line Security Lens text.") || !parsedText.includes("The validator must read the full string.")) {
+    failures.push("Parser regression failed: block scalar securityLensText was not parsed as real text.");
+  }
   if (stableSecurityLensFailure(withBlockScalar)) {
     failures.push("Parser regression failed: stable module with block scalar securityLensText should pass.");
   }

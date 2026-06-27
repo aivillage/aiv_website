@@ -1,7 +1,7 @@
 ---
 title: RAG Poisoning Lab Wrapper
 slug: rag-poisoning-lab-wrapper
-summary: Curriculum beta module for RAG Poisoning Lab Wrapper. Reviewed lessons and exercises are being expanded.
+summary: This beta module provides the learning goal, curated resources, and expected artifact.
 tracks:
   - offensive-ai-security-red-teaming
 stageStart: risk_evaluative_practitioner
@@ -27,4 +27,4 @@ reviewOwner: AI Village Learn
 lastReviewed: "2026-06-26"
 ---
 
-Reviewed lessons and exercises for RAG Poisoning Lab Wrapper are being expanded as part of the curriculum beta.
+This beta module provides the learning goal, curated resources, and expected artifact. Full exercises and debriefs are being expanded over time.

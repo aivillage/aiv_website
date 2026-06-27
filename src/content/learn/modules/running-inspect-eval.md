@@ -1,7 +1,7 @@
 ---
 title: Running an Inspect Eval
 slug: running-inspect-eval
-summary: Curriculum beta module for Running an Inspect Eval. Reviewed lessons and exercises are being expanded.
+summary: This beta module provides the learning goal, curated resources, and expected artifact.
 tracks:
   - evals-reliability-grt
 stageStart: builder
@@ -27,4 +27,4 @@ reviewOwner: AI Village Learn
 lastReviewed: "2026-06-26"
 ---
 
-Reviewed lessons and exercises for Running an Inspect Eval are being expanded as part of the curriculum beta.
+This beta module provides the learning goal, curated resources, and expected artifact. Full exercises and debriefs are being expanded over time.

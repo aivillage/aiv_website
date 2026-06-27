@@ -1,5 +1,5 @@
 ---
-import { getCollection } from "astro:content";
+import { getCollection, render } from "astro:content";
 import type { CollectionEntry } from "astro:content";
 import BaseLayout from "../../../../layouts/BaseLayout.astro";
 import PageShell from "../../../../components/layout/PageShell.astro";
@@ -8,7 +8,7 @@ import LabCard from "../../../../components/learn/LabCard.astro";
 import ModuleCard from "../../../../components/learn/ModuleCard.astro";
 import StageBadge from "../../../../components/learn/StageBadge.astro";
 import StatusBadge from "../../../../components/learn/StatusBadge.astro";
-import { entrySlug, refId, securityLensLabels } from "../../../../utils/learn";
+import { canRenderLearnModule, canRenderLearnTrack, entrySlug, refId, securityLensLabels, trackPath } from "../../../../utils/learn";
 
 type Props = {
   track: CollectionEntry<"learnTracks">;
@@ -18,17 +18,18 @@ type Props = {
 };
 
 export async function getStaticPaths() {
-  const tracks = await getCollection("learnTracks", ({ data }) => data.status !== "draft");
+  const tracks = await getCollection("learnTracks", canRenderLearnTrack);
+  const allTracks = await getCollection("learnTracks");
   const modules = await getCollection("learnModules");
   const labs = await getCollection("learnLabs", ({ data }) => data.status !== "draft");
-  const trackBySlug = new Map(tracks.flatMap((track) => [[entrySlug(track), track], [track.id, track]]));
+  const trackBySlug = new Map(allTracks.flatMap((track) => [[entrySlug(track), track], [track.id, track]]));
   const moduleBySlug = new Map(modules.flatMap((module) => [[entrySlug(module), module], [module.id, module]]));
   const labBySlug = new Map(labs.flatMap((lab) => [[entrySlug(lab), lab], [lab.id, lab]]));
 
   return tracks.map((track) => {
     const canonicalModules = track.data.canonicalModules
       .map((moduleRef) => moduleBySlug.get(refId(moduleRef)))
-      .filter((module) => module && module.data.status !== "draft") as CollectionEntry<"learnModules">[];
+      .filter((module) => module && canRenderLearnModule(module)) as CollectionEntry<"learnModules">[];
     const relatedLabs = canonicalModules.flatMap((module) => module.data.labs?.map((labRef) => labBySlug.get(refId(labRef))).filter((lab) => lab && lab.data.status !== "draft") || []) as CollectionEntry<"learnLabs">[];
     const prerequisiteTracks = track.data.prerequisites.map((trackRef) => trackBySlug.get(refId(trackRef))).filter(Boolean) as CollectionEntry<"learnTracks">[];
 
@@ -40,9 +41,10 @@ export async function getStaticPaths() {
 }
 
 const { track, modules, labs, prerequisiteTracks } = Astro.props;
+const { Content } = await render(track);
 ---
 
-<BaseLayout title={track.data.title} canonical={`/learn/tracks/${entrySlug(track)}/`} description={track.data.summary}>
+<BaseLayout title={track.data.title} canonical={trackPath(track)} description={track.data.summary}>
   <PageShell class="learn-track-page">
     <nav class="learn-breadcrumb" aria-label="Breadcrumb"><a href="/learn/">Learn</a> / <span>{track.data.title}</span></nav>
 
@@ -77,7 +79,13 @@ const { track, modules, labs, prerequisiteTracks } = Astro.props;
           <>
             <h2>Track Prerequisites</h2>
             <ul>
-              {prerequisiteTracks.map((prerequisite) => <li><a href={`/learn/tracks/${entrySlug(prerequisite)}/`}>{prerequisite.data.title}</a></li>)}
+              {
+                prerequisiteTracks.map((prerequisite) => (
+                  <li>
+                    {canRenderLearnTrack(prerequisite) ? <a href={trackPath(prerequisite)}>{prerequisite.data.title}</a> : prerequisite.data.title}
+                  </li>
+                ))
+              }
             </ul>
           </>
         )}
@@ -91,6 +99,10 @@ const { track, modules, labs, prerequisiteTracks } = Astro.props;
           </ul>
         )}
       </div>
+    </section>
+
+    <section class="learn-content-body">
+      <Content />
     </section>
 
     <section class="learn-two-column">
@@ -163,6 +175,10 @@ const { track, modules, labs, prerequisiteTracks } = Astro.props;
   .learn-grid {
     display: grid;
     gap: 0.75rem;
+  }
+
+  .learn-content-body {
+    max-width: 76ch;
   }
 
   .learn-grid {

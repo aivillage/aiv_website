@@ -22,7 +22,7 @@ securityCheckpoints:
   - Sensitive data checkpoint
   - Verification and review checkpoint
 whatExistsNow: The curriculum beta includes the module shell and resource metadata for practical AI use.
-whatComingNext: Reviewed lessons will add scenarios, safe-use checklists, and practice activities.
+whatComingNext: Full lessons will add scenarios, safe-use checklists, and practice activities.
 canonicalModules:
   - prompting-context
   - ai-assisted-research
@@ -35,4 +35,4 @@ reviewOwner: AI Village Learn
 lastReviewed: "2026-06-26"
 ---
 
-AI Practitioner is part of the AI Village Learn curriculum beta. Reviewed lessons and exercises are being expanded.
+AI Practitioner is part of the AI Village Learn curriculum beta. Full lessons and exercises are being expanded over time.

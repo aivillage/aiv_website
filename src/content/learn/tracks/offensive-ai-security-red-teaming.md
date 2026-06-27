@@ -22,7 +22,7 @@ securityCheckpoints:
   - Authorization checkpoint
   - Defensive debrief checkpoint
 whatExistsNow: The curriculum beta includes safety-bounded lab wrappers and metadata for offensive AI security learning.
-whatComingNext: Reviewed lessons will add debriefs, reporting guidance, and safety text.
+whatComingNext: Full lessons will add debriefs, reporting guidance, and safety text.
 canonicalModules:
   - rules-of-engagement-lab-safety
   - prompt-injection-basics
@@ -36,4 +36,4 @@ reviewOwner: AI Village Learn
 lastReviewed: "2026-06-26"
 ---
 
-Offensive AI Security and Red Teaming is part of the AI Village Learn curriculum beta. Reviewed lessons and exercises are being expanded.
+Offensive AI Security and Red Teaming is part of the AI Village Learn curriculum beta. Full lessons and exercises are being expanded over time.

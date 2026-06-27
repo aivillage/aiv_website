@@ -23,7 +23,7 @@ securityCheckpoints:
   - Detection checkpoint
   - Incident response checkpoint
 whatExistsNow: The curriculum beta adds the track structure and planned module list for defensive AI engineering.
-whatComingNext: Reviewed lessons will prioritize defensive guidance, logging patterns, and debrief templates.
+whatComingNext: Full lessons will prioritize defensive guidance, logging patterns, and debrief templates.
 canonicalModules:
   - secure-ai-architecture
   - secure-rag
@@ -37,4 +37,4 @@ reviewOwner: AI Village Learn
 lastReviewed: "2026-06-26"
 ---
 
-Defensive AI Engineering is part of the AI Village Learn curriculum beta. Reviewed lessons and exercises are being expanded.
+Defensive AI Engineering is part of the AI Village Learn curriculum beta. Full lessons and exercises are being expanded over time.

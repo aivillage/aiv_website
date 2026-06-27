@@ -1,7 +1,7 @@
 ---
 title: Vector Search and Retrieval
 slug: vector-search-retrieval
-summary: Curriculum beta module for Vector Search and Retrieval. Reviewed lessons and exercises are being expanded.
+summary: This beta module provides the learning goal, curated resources, and expected artifact.
 tracks:
   - ai-builder-core
 stageStart: ai_practitioner
@@ -25,4 +25,4 @@ reviewOwner: AI Village Learn
 lastReviewed: "2026-06-26"
 ---
 
-Reviewed lessons and exercises for Vector Search and Retrieval are being expanded as part of the curriculum beta.
+This beta module provides the learning goal, curated resources, and expected artifact. Full exercises and debriefs are being expanded over time.

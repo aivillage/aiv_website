@@ -1,7 +1,7 @@
 ---
 title: AI Risk Frameworks
 slug: ai-risk-frameworks
-summary: Curriculum beta module for AI Risk Frameworks. Reviewed lessons and exercises are being expanded.
+summary: This beta module provides the learning goal, curated resources, and expected artifact.
 tracks:
   - governance-responsible-use
 stageStart: ai_literate
@@ -25,4 +25,4 @@ reviewOwner: AI Village Learn
 lastReviewed: "2026-06-26"
 ---
 
-Reviewed lessons and exercises for AI Risk Frameworks are being expanded as part of the curriculum beta.
+This beta module provides the learning goal, curated resources, and expected artifact. Full exercises and debriefs are being expanded over time.

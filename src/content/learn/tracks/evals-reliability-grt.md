@@ -22,7 +22,7 @@ securityCheckpoints:
   - Benchmark transparency checkpoint
   - Findings quality checkpoint
 whatExistsNow: The curriculum beta includes one combined Evals/GRT track without duplicating the Evals/GRT track.
-whatComingNext: Reviewed lessons will add eval-card and findings guidance.
+whatComingNext: Full lessons will add eval-card and findings guidance.
 canonicalModules:
   - what-is-an-eval
   - inspect-dataset-solver-scorer
@@ -37,4 +37,4 @@ reviewOwner: AI Village Learn
 lastReviewed: "2026-06-26"
 ---
 
-Evals, Reliability, and GRT Research is part of the AI Village Learn curriculum beta. Reviewed lessons and exercises are being expanded.
+Evals, Reliability, and GRT Research is part of the AI Village Learn curriculum beta. Full lessons and exercises are being expanded over time.

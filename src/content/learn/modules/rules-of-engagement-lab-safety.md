@@ -1,9 +1,7 @@
 ---
 title: Rules of Engagement and Lab Safety
 slug: rules-of-engagement-lab-safety
-summary: >-
-  Curriculum beta module for Rules of Engagement and Lab Safety. Reviewed lessons and exercises are being
-  expanded.
+summary: This beta module provides the learning goal, curated resources, and expected artifact.
 tracks:
   - offensive-ai-security-red-teaming
 stageStart: risk_evaluative_practitioner
@@ -24,4 +22,4 @@ reviewOwner: AI Village Learn
 lastReviewed: "2026-06-26"
 ---
 
-Reviewed lessons and exercises for Rules of Engagement and Lab Safety are being expanded as part of the curriculum beta.
+This beta module provides the learning goal, curated resources, and expected artifact. Full exercises and debriefs are being expanded over time.

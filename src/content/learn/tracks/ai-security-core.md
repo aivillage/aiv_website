@@ -22,7 +22,7 @@ securityCheckpoints:
   - Threat model checkpoint
   - Control mapping checkpoint
 whatExistsNow: The curriculum beta includes the AI security core structure with links to security-focused resources.
-whatComingNext: Reviewed lessons will add AI Village Security Lens guidance, examples, and templates.
+whatComingNext: Full lessons will add AI Village Security Lens guidance, examples, and templates.
 canonicalModules:
   - ai-threat-modeling
   - prompt-injection
@@ -40,4 +40,4 @@ reviewOwner: AI Village Learn
 lastReviewed: "2026-06-26"
 ---
 
-AI Security Core is part of the AI Village Learn curriculum beta. Reviewed lessons and exercises are being expanded.
+AI Security Core is part of the AI Village Learn curriculum beta. Full lessons and exercises are being expanded over time.

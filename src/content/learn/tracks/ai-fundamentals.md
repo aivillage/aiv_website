@@ -23,7 +23,7 @@ securityCheckpoints:
 whatExistsNow: >-
   The curriculum beta includes the track structure, module sequence, and resource links for a broad AI
   fundamentals path.
-whatComingNext: Reviewed lessons will add lesson prose, exercises, and lightweight security checkpoints.
+whatComingNext: Full lessons will add lesson prose, exercises, and lightweight security checkpoints.
 canonicalModules:
   - what-is-ai
   - python-notebook-readiness
@@ -36,4 +36,4 @@ reviewOwner: AI Village Learn
 lastReviewed: "2026-06-26"
 ---
 
-AI Fundamentals is part of the AI Village Learn curriculum beta. Reviewed lessons and exercises are being expanded.
+AI Fundamentals is part of the AI Village Learn curriculum beta. Full lessons and exercises are being expanded over time.

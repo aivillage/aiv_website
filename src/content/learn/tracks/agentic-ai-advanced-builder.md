@@ -23,7 +23,7 @@ securityCheckpoints:
   - MCP trust boundary checkpoint
   - Human approval checkpoint
 whatExistsNow: The curriculum beta makes the advanced agentic builder track visible as a beta learning path.
-whatComingNext: Reviewed lessons will add agent design notes, security checkpoints, and containment examples.
+whatComingNext: Full lessons will add agent design notes, security checkpoints, and containment examples.
 canonicalModules:
   - workflows-vs-agents
   - agent-fundamentals
@@ -37,4 +37,4 @@ reviewOwner: AI Village Learn
 lastReviewed: "2026-06-26"
 ---
 
-Agentic AI and Advanced Builder is part of the AI Village Learn curriculum beta. Reviewed lessons and exercises are being expanded.
+Agentic AI and Advanced Builder is part of the AI Village Learn curriculum beta. Full lessons and exercises are being expanded over time.

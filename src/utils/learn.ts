@@ -66,8 +66,29 @@ export function refId(ref: unknown) {
   return "";
 }
 
-export function entrySlug(entry: { id: string; data: { slug?: string } }) {
-  return entry.data.slug || entry.id.replace(/\.(md|mdx|markdown)$/i, "");
+export function entrySlug(entry: { id: string; data: object }) {
+  const slug = "slug" in entry.data && typeof entry.data.slug === "string" ? entry.data.slug : "";
+  return slug || entry.id.replace(/\.(md|mdx|markdown)$/i, "");
+}
+
+export function isPublicLearnEntry(entry: { data: { status?: string } }) {
+  return entry.data.status !== "draft";
+}
+
+export function canRenderLearnModule(entry: { data: { status?: string } }) {
+  return isPublicLearnEntry(entry);
+}
+
+export function canRenderLearnTrack(entry: { data: { status?: string } }) {
+  return isPublicLearnEntry(entry);
+}
+
+export function modulePath(entry: { id: string; data: object }) {
+  return `/learn/modules/${entrySlug(entry)}/`;
+}
+
+export function trackPath(entry: { id: string; data: object }) {
+  return `/learn/tracks/${entrySlug(entry)}/`;
 }
 
 export function byTitle<T extends { data: { title?: string; term?: string } }>(left: T, right: T) {
