@@ -3,9 +3,9 @@ import { getCollection } from "astro:content";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import PageShell from "../../../components/layout/PageShell.astro";
 import LabCard from "../../../components/learn/LabCard.astro";
-import { byTitle } from "../../../utils/learn";
+import { byTitle, canRenderLearnLab } from "../../../utils/learn";
 
-const labs = (await getCollection("learnLabs", ({ data }) => data.status !== "draft")).sort(byTitle);
+const labs = (await getCollection("learnLabs", canRenderLearnLab)).sort(byTitle);
 ---
 
 <BaseLayout title="Learn Labs" canonical="/learn/labs/" description="Safety-bounded AI Village Learn lab metadata.">

@@ -10,6 +10,7 @@ import SecurityLensCallout from "../../../../components/learn/SecurityLensCallou
 import StageBadge from "../../../../components/learn/StageBadge.astro";
 import StatusBadge from "../../../../components/learn/StatusBadge.astro";
 import {
+  canRenderLearnLab,
   canRenderLearnModule,
   canRenderLearnTrack,
   entrySlug,
@@ -63,7 +64,7 @@ export async function getStaticPaths() {
     }));
     const linkedLabs = (module.data.labs || [])
       .map((labRef) => labBySlug.get(refId(labRef)))
-      .filter((lab) => lab && lab.data.status !== "draft") as CollectionEntry<"learnLabs">[];
+      .filter((lab) => lab && canRenderLearnLab(lab)) as CollectionEntry<"learnLabs">[];
 
     return {
       params: { slug: entrySlug(module) },

@@ -1,0 +1,324 @@
+---
+import { getCollection, render } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import PageShell from "../../../../components/layout/PageShell.astro";
+import ArtifactBadge from "../../../../components/learn/ArtifactBadge.astro";
+import DifficultyBadge from "../../../../components/learn/DifficultyBadge.astro";
+import StageBadge from "../../../../components/learn/StageBadge.astro";
+import StatusBadge from "../../../../components/learn/StatusBadge.astro";
+import {
+  canRenderLearnLab,
+  canRenderLearnModule,
+  canRenderLearnTrack,
+  entrySlug,
+  formatLabel,
+  labPath,
+  modulePath,
+  refId,
+  trackPath,
+} from "../../../../utils/learn";
+
+type MappingGroup = {
+  label: string;
+  values: string[];
+};
+
+type Props = {
+  lab: CollectionEntry<"learnLabs">;
+  modules: CollectionEntry<"learnModules">[];
+  tracks: CollectionEntry<"learnTracks">[];
+  resources: CollectionEntry<"learnResources">[];
+  mappings: MappingGroup[];
+};
+
+export async function getStaticPaths() {
+  const mappingLabels = {
+    owasp: "OWASP",
+    mitreAtlas: "MITRE ATLAS",
+    nist: "NIST",
+  } as const;
+  const labs = await getCollection("learnLabs", canRenderLearnLab);
+  const modules = await getCollection("learnModules");
+  const tracks = await getCollection("learnTracks");
+  const resources = await getCollection("learnResources", ({ data }) => data.status !== "draft");
+  const trackBySlug = new Map(tracks.flatMap((track) => [[entrySlug(track), track], [track.id, track]]));
+
+  return labs.map((lab) => {
+    const labSlug = entrySlug(lab);
+    const relatedModules = modules.filter((module) =>
+      canRenderLearnModule(module) && (module.data.labs || []).some((labRef) => refId(labRef) === labSlug),
+    );
+    const relatedTracks = Array.from(
+      new Map(
+        relatedModules
+          .flatMap((module) => module.data.tracks.map((trackRef) => trackBySlug.get(refId(trackRef))).filter((track) => track && canRenderLearnTrack(track)) as CollectionEntry<"learnTracks">[])
+          .map((track) => [entrySlug(track), track]),
+      ).values(),
+    );
+    const relatedResources = Array.from(
+      new Map(
+        resources
+          .filter((resource) => entrySlug(resource) === labSlug || resource.data.canonicalFor.some((canonicalId) => canonicalId === labSlug || relatedModules.some((module) => entrySlug(module) === canonicalId)))
+          .map((resource) => [entrySlug(resource), resource]),
+      ).values(),
+    );
+    const mappings = (Object.entries(lab.data.mappings) as [keyof typeof mappingLabels, string[] | undefined][])
+      .filter(([, values]) => values && values.length > 0)
+      .map(([key, values]) => ({ label: mappingLabels[key], values: values || [] }));
+
+    return {
+      params: { slug: labSlug },
+      props: { lab, modules: relatedModules, tracks: relatedTracks, resources: relatedResources, mappings },
+    };
+  });
+}
+
+const { lab, modules, tracks, resources, mappings } = Astro.props;
+const { Content } = await render(lab);
+---
+
+<BaseLayout title={lab.data.title} canonical={labPath(lab)} description={lab.data.summary}>
+  <PageShell class="learn-lab-page">
+    <nav class="learn-breadcrumb" aria-label="Breadcrumb"><a href="/learn/">Learn</a> / <a href="/learn/labs/">Labs</a> / <span>{lab.data.title}</span></nav>
+
+    <header class="learn-lab-header">
+      <div>
+        <div class="learn-meta-row">
+          <StatusBadge value={lab.data.status} />
+          <DifficultyBadge value={lab.data.difficulty} />
+          {lab.data.isOffensive && <span class="learn-flag">Offensive</span>}
+        </div>
+        <h1>{lab.data.title}</h1>
+        <p class="text-lead">{lab.data.summary}</p>
+      </div>
+      <aside class="learn-side-panel">
+        <h2>Lab Status</h2>
+        <dl>
+          <div>
+            <dt>Debrief</dt>
+            <dd><span class:list={["learn-state-badge", `learn-state-badge--${lab.data.debriefStatus}`]}>{formatLabel(lab.data.debriefStatus)}</span></dd>
+          </div>
+          <div>
+            <dt>Instructor guide</dt>
+            <dd><span class:list={["learn-state-badge", `learn-state-badge--${lab.data.instructorGuideStatus}`]}>{formatLabel(lab.data.instructorGuideStatus)}</span></dd>
+          </div>
+          <div>
+            <dt>Setup</dt>
+            <dd><span class:list={["learn-state-badge", `learn-state-badge--${lab.data.setupStatus}`]}>{formatLabel(lab.data.setupStatus)}</span></dd>
+          </div>
+        </dl>
+      </aside>
+    </header>
+
+    <section class="learn-two-column">
+      <div>
+        <h2>Safety Boundary</h2>
+        <p>{lab.data.safetyBoundary}</p>
+        <h2>Expected Artifact</h2>
+        <ArtifactBadge value={lab.data.requiredArtifact} />
+      </div>
+      <div>
+        <h2>Run Modes</h2>
+        <p>{lab.data.runModes.map(formatLabel).join(", ")}</p>
+        <h2>Stage</h2>
+        <div class="learn-meta-row">
+          <StageBadge value={lab.data.stageStart} />
+          <span>to</span>
+          <StageBadge value={lab.data.stageEnd} />
+        </div>
+        <h2>Requirements</h2>
+        <ul>
+          <li>LLM: {lab.data.llmRequired ? "Required" : "Not required"}</li>
+          <li>GPU: {lab.data.gpuRequired ? "Required" : "Not required"}</li>
+          <li>Estimated time: {lab.data.estimatedMinutes} minutes</li>
+        </ul>
+      </div>
+    </section>
+
+    {(lab.data.concepts.length > 0 || lab.data.threatCategories.length > 0) && (
+      <section class="learn-two-column">
+        {lab.data.concepts.length > 0 && (
+          <div>
+            <h2>Concepts</h2>
+            <ul>
+              {lab.data.concepts.map((concept) => <li>{concept}</li>)}
+            </ul>
+          </div>
+        )}
+        {lab.data.threatCategories.length > 0 && (
+          <div>
+            <h2>Threat Categories</h2>
+            <ul>
+              {lab.data.threatCategories.map((category) => <li>{category}</li>)}
+            </ul>
+          </div>
+        )}
+      </section>
+    )}
+
+    {tracks.length > 0 && (
+      <section>
+        <h2>Related Tracks</h2>
+        <ul class="learn-link-list">
+          {tracks.map((track) => <li><a href={trackPath(track)}>{track.data.title}</a></li>)}
+        </ul>
+      </section>
+    )}
+
+    {modules.length > 0 && (
+      <section>
+        <h2>Related Modules</h2>
+        <ul class="learn-link-list">
+          {modules.map((module) => <li><a href={modulePath(module)}>{module.data.title}</a></li>)}
+        </ul>
+      </section>
+    )}
+
+    {resources.length > 0 && (
+      <section>
+        <h2>Resources</h2>
+        <ul class="learn-link-list">
+          {resources.map((resource) => <li><a href={resource.data.canonicalUrl} target="_blank" rel="noopener noreferrer">{resource.data.title}</a> <span>{resource.data.provider}</span></li>)}
+        </ul>
+      </section>
+    )}
+
+    {mappings.length > 0 && (
+      <section>
+        <h2>Mappings</h2>
+        <div class="learn-mapping-grid">
+          {mappings.map((mapping) => (
+            <div>
+              <h3>{mapping.label}</h3>
+              <ul>
+                {mapping.values.map((value) => <li>{value}</li>)}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <section class="learn-content-body">
+      <Content />
+    </section>
+  </PageShell>
+</BaseLayout>
+
+<style>
+  .learn-lab-page {
+    display: grid;
+    gap: 2rem;
+  }
+
+  .learn-breadcrumb,
+  .learn-meta-row {
+    align-items: center;
+    color: var(--aiv-text-muted);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .learn-lab-header,
+  .learn-two-column {
+    display: grid;
+    gap: 1.25rem;
+    grid-template-columns: minmax(0, 1fr) minmax(260px, 0.55fr);
+  }
+
+  .learn-side-panel,
+  .learn-mapping-grid > div {
+    background: var(--aiv-nested-bg);
+    border: 1px solid var(--aiv-nested-border);
+    border-radius: 8px;
+    padding: 1rem;
+  }
+
+  .learn-side-panel h2,
+  .learn-mapping-grid h3 {
+    font-size: 1.1rem;
+    margin-top: 0;
+  }
+
+  .learn-side-panel dl {
+    display: grid;
+    gap: 0.65rem;
+    margin: 0;
+  }
+
+  .learn-side-panel dt {
+    color: var(--aiv-text-muted);
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .learn-side-panel dd {
+    margin: 0;
+  }
+
+  .learn-state-badge {
+    align-items: center;
+    border: 1px solid var(--aiv-line-strong);
+    border-radius: 999px;
+    color: var(--aiv-text-secondary);
+    display: inline-flex;
+    font-size: 0.8rem;
+    font-weight: 700;
+    line-height: 1.2;
+    min-height: 1.8rem;
+    padding: 0.28rem 0.65rem;
+  }
+
+  .learn-state-badge--draft {
+    border-color: var(--aiv-warning);
+    color: var(--aiv-warning);
+  }
+
+  .learn-state-badge--published,
+  .learn-state-badge--tested {
+    border-color: var(--aiv-accent-field);
+    color: var(--aiv-accent-field);
+  }
+
+  .learn-state-badge--missing {
+    border-color: var(--aiv-text-muted);
+    color: var(--aiv-text-muted);
+  }
+
+  .learn-flag {
+    border: 1px solid var(--aiv-risk);
+    border-radius: 999px;
+    color: var(--aiv-risk);
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 0.28rem 0.65rem;
+  }
+
+  .learn-link-list,
+  .learn-mapping-grid {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .learn-link-list span {
+    color: var(--aiv-text-muted);
+  }
+
+  .learn-mapping-grid {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  }
+
+  .learn-content-body {
+    max-width: 76ch;
+  }
+
+  @media (max-width: 780px) {
+    .learn-lab-header,
+    .learn-two-column {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

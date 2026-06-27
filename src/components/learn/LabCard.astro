@@ -4,13 +4,14 @@ import ArtifactBadge from "./ArtifactBadge.astro";
 import DifficultyBadge from "./DifficultyBadge.astro";
 import StageBadge from "./StageBadge.astro";
 import StatusBadge from "./StatusBadge.astro";
-import { formatLabel } from "../../utils/learn";
+import { canRenderLearnLab, formatLabel, labPath } from "../../utils/learn";
 
 type Props = {
   lab: CollectionEntry<"learnLabs">;
 };
 
 const { lab } = Astro.props;
+const href = canRenderLearnLab(lab) ? labPath(lab) : "";
 ---
 
 <article class="learn-card">
@@ -19,7 +20,7 @@ const { lab } = Astro.props;
     <DifficultyBadge value={lab.data.difficulty} />
     {lab.data.isOffensive && <span class="learn-card__flag">Offensive</span>}
   </div>
-  <h3>{lab.data.title}</h3>
+  <h3>{href ? <a href={href}>{lab.data.title}</a> : lab.data.title}</h3>
   <p>{lab.data.summary}</p>
   <div class="learn-card__meta">
     <StageBadge value={lab.data.stageStart} />

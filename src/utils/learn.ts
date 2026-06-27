@@ -83,12 +83,20 @@ export function canRenderLearnTrack(entry: { data: { status?: string } }) {
   return isPublicLearnEntry(entry);
 }
 
+export function canRenderLearnLab(entry: { data: { status?: string } }) {
+  return isPublicLearnEntry(entry);
+}
+
 export function modulePath(entry: { id: string; data: object }) {
   return `/learn/modules/${entrySlug(entry)}/`;
 }
 
 export function trackPath(entry: { id: string; data: object }) {
   return `/learn/tracks/${entrySlug(entry)}/`;
+}
+
+export function labPath(entry: { id: string; data: object }) {
+  return `/learn/labs/${entrySlug(entry)}/`;
 }
 
 export function byTitle<T extends { data: { title?: string; term?: string } }>(left: T, right: T) {

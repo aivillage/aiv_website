@@ -1,6 +1,6 @@
 import { getCollection } from "astro:content";
 import { site } from "../data/site";
-import { canRenderLearnModule, canRenderLearnTrack, modulePath, trackPath } from "../utils/learn";
+import { canRenderLearnLab, canRenderLearnModule, canRenderLearnTrack, labPath, modulePath, trackPath } from "../utils/learn";
 import { canonicalPostPath, eventPath, schedulePath, sortEventsAscending, sponsorPath } from "../utils/site";
 
 const staticAssets = [
@@ -36,6 +36,7 @@ export async function GET() {
   const schedules = await getCollection("schedules");
   const learnTracks = await getCollection("learnTracks", canRenderLearnTrack);
   const learnModules = await getCollection("learnModules", canRenderLearnModule);
+  const learnLabs = await getCollection("learnLabs", canRenderLearnLab);
 
   const urls = Array.from(new Set([
     "/",
@@ -58,6 +59,7 @@ export async function GET() {
     ...learnModules.map(modulePath),
     "/learn/resources/",
     "/learn/labs/",
+    ...learnLabs.map(labPath),
     "/learn/deep-dives/",
     "/learn/contribute/",
     "/research/",

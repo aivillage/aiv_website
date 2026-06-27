@@ -8,7 +8,7 @@ import LabCard from "../../../../components/learn/LabCard.astro";
 import ModuleCard from "../../../../components/learn/ModuleCard.astro";
 import StageBadge from "../../../../components/learn/StageBadge.astro";
 import StatusBadge from "../../../../components/learn/StatusBadge.astro";
-import { canRenderLearnModule, canRenderLearnTrack, entrySlug, refId, securityLensLabels, trackPath } from "../../../../utils/learn";
+import { canRenderLearnLab, canRenderLearnModule, canRenderLearnTrack, entrySlug, refId, securityLensLabels, trackPath } from "../../../../utils/learn";
 
 type Props = {
   track: CollectionEntry<"learnTracks">;
@@ -21,7 +21,7 @@ export async function getStaticPaths() {
   const tracks = await getCollection("learnTracks", canRenderLearnTrack);
   const allTracks = await getCollection("learnTracks");
   const modules = await getCollection("learnModules");
-  const labs = await getCollection("learnLabs", ({ data }) => data.status !== "draft");
+  const labs = await getCollection("learnLabs", canRenderLearnLab);
   const trackBySlug = new Map(allTracks.flatMap((track) => [[entrySlug(track), track], [track.id, track]]));
   const moduleBySlug = new Map(modules.flatMap((module) => [[entrySlug(module), module], [module.id, module]]));
   const labBySlug = new Map(labs.flatMap((lab) => [[entrySlug(lab), lab], [lab.id, lab]]));
@@ -30,7 +30,7 @@ export async function getStaticPaths() {
     const canonicalModules = track.data.canonicalModules
       .map((moduleRef) => moduleBySlug.get(refId(moduleRef)))
       .filter((module) => module && canRenderLearnModule(module)) as CollectionEntry<"learnModules">[];
-    const relatedLabs = canonicalModules.flatMap((module) => module.data.labs?.map((labRef) => labBySlug.get(refId(labRef))).filter((lab) => lab && lab.data.status !== "draft") || []) as CollectionEntry<"learnLabs">[];
+    const relatedLabs = canonicalModules.flatMap((module) => module.data.labs?.map((labRef) => labBySlug.get(refId(labRef))).filter((lab) => lab && canRenderLearnLab(lab)) || []) as CollectionEntry<"learnLabs">[];
     const prerequisiteTracks = track.data.prerequisites.map((trackRef) => trackBySlug.get(refId(trackRef))).filter(Boolean) as CollectionEntry<"learnTracks">[];
 
     return {
