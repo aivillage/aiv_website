@@ -4,14 +4,19 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import PageShell from "../../components/layout/PageShell.astro";
 import TrackCard from "../../components/learn/TrackCard.astro";
 import StatusBadge from "../../components/learn/StatusBadge.astro";
-import { byTrackKindThenTitle, canRenderLearnModule, refId } from "../../utils/learn";
+import { byTrackKindThenTitle, canRenderLearnModule, entrySlug, isPlaylistResource, refId } from "../../utils/learn";
 
 const tracks = (await getCollection("learnTracks", ({ data }) => data.status !== "draft")).sort(byTrackKindThenTitle);
 const modules = await getCollection("learnModules");
 const resources = await getCollection("learnResources", ({ data }) => data.status !== "draft");
 const labs = await getCollection("learnLabs", ({ data }) => data.status !== "draft");
 const moduleBySlug = new Map(modules.flatMap((module) => [[module.data.slug, module], [module.id, module]]));
-const seriesCount = resources.filter((resource) => resource.data.resourceType === "playlist" || resource.data.mediaType === "playlist").length;
+const episodeCountBySeries = new Map<string, number>();
+for (const resource of resources) {
+  if (!resource.data.seriesSlug) continue;
+  episodeCountBySeries.set(resource.data.seriesSlug, (episodeCountBySeries.get(resource.data.seriesSlug) || 0) + 1);
+}
+const seriesCount = resources.filter((resource) => isPlaylistResource(resource) && (episodeCountBySeries.get(entrySlug(resource)) || 0) >= 2).length;
 const directOpenResources = resources.filter((resource) =>
   resource.data.accessMode === "direct_open" &&
   resource.data.reviewStatus === "accepted" &&
@@ -48,11 +53,6 @@ const navCards = [
     title: "Contribute",
     href: "/learn/contribute/",
     text: "Review the publishing gates before proposing resources, modules, or labs.",
-  },
-  {
-    title: "Deep dives",
-    href: "/learn/deep-dives/",
-    text: "Jump into advanced tracks for agents, evals, and authorized security work.",
   },
 ];
 
@@ -116,6 +116,17 @@ function publicModuleCount(track: (typeof tracks)[number]) {
       </div>
     </section>
 
+    <section class="learn-secondary-links" aria-label="Supporting Learn sections">
+      <div>
+        <h2>Advanced And Reference</h2>
+        <p>Use these after you have chosen a path or need supporting language for a module artifact.</p>
+      </div>
+      <div class="learn-secondary-actions">
+        <a href="/learn/deep-dives/">Deep dives</a>
+        <a href="/learn/glossary/">Glossary</a>
+      </div>
+    </section>
+
     <section>
       <h2>Tracks</h2>
       <p>
@@ -153,6 +164,7 @@ function publicModuleCount(track: (typeof tracks)[number]) {
 
   .learn-kicker,
   .learn-actions,
+  .learn-secondary-actions,
   .learn-nav-grid,
   .learn-stat-grid,
   .learn-grid {
@@ -170,6 +182,30 @@ function publicModuleCount(track: (typeof tracks)[number]) {
 
   .learn-actions {
     align-content: start;
+    justify-content: end;
+  }
+
+  .learn-secondary-links {
+    align-items: center;
+    background: var(--aiv-nested-bg);
+    border: 1px solid var(--aiv-nested-border);
+    border-radius: 8px;
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: minmax(0, 1fr) auto;
+    padding: 1rem;
+  }
+
+  .learn-secondary-links h2,
+  .learn-secondary-links p {
+    margin: 0;
+  }
+
+  .learn-secondary-links h2 {
+    font-size: 1.1rem;
+  }
+
+  .learn-secondary-actions {
     justify-content: end;
   }
 
@@ -249,11 +285,13 @@ function publicModuleCount(track: (typeof tracks)[number]) {
 
   @media (max-width: 780px) {
     .learn-hero,
+    .learn-secondary-links,
     .learn-stat-grid {
       grid-template-columns: 1fr;
     }
 
-    .learn-actions {
+    .learn-actions,
+    .learn-secondary-actions {
       justify-content: start;
     }
   }

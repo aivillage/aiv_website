@@ -93,6 +93,17 @@ const boilerplateBodyPatterns = [
 ];
 const bodyText = (resource.body || "").trim();
 const hasLearnerBody = Boolean(bodyText && !boilerplateBodyPatterns.some((pattern) => pattern.test(bodyText)));
+const primaryModuleLink = modules[0];
+const primaryModuleHref = primaryModuleLink
+  ? primaryModuleLink.track
+    ? trackScopedModulePath(primaryModuleLink.track, primaryModuleLink.module)
+    : modulePath(primaryModuleLink.module)
+  : "";
+const focusText = resource.data.watchFocus || `Use this ${formatLabel(resource.data.resourceType).toLowerCase()} to support the related Learn checkpoint.`;
+const checkpointText = resource.data.checkpointPrompt || "Write one note about how this resource changes your module artifact or question list.";
+const fallbackRationale = primaryModuleLink
+  ? `AI Village includes this resource because it supports the ${primaryModuleLink.module.data.title} module and gives learners source material for the module checkpoint.`
+  : `AI Village includes this resource as a learner-facing ${formatLabel(resource.data.resourceType).toLowerCase()} from ${resource.data.provider}. Use it with a concrete checkpoint instead of treating it as a catalog endpoint.`;
 ---
 
 <BaseLayout title={resource.data.title} canonical={resourcePath(resource)} description={`Learn resource from ${resource.data.provider}: ${resource.data.title}.`}>
@@ -109,11 +120,11 @@ const hasLearnerBody = Boolean(bodyText && !boilerplateBodyPatterns.some((patter
           {isUnderReview && <span class="learn-access-badge learn-access-badge--review">Under review</span>}
         </div>
         <h1>{resource.data.title}</h1>
-        <p class="text-lead">{resource.data.watchFocus || `A ${formatLabel(resource.data.resourceType).toLowerCase()} from ${resource.data.provider} used by AI Village Learn modules.`}</p>
+        <p class="text-lead">{fallbackRationale}</p>
         <p class="text-muted">By {creator}</p>
       </div>
       <aside class="learn-side-panel">
-        <h2>Source</h2>
+        <h2>Access</h2>
         <p>
           {isUnderReview
             ? "Under review. Use this as a secondary reference until source details are checked."
@@ -121,13 +132,15 @@ const hasLearnerBody = Boolean(bodyText && !boilerplateBodyPatterns.some((patter
               ? `${accessLabel}. Use this as an extra path, not as the core requirement.`
               : accessLabel}
         </p>
-        <a class="button" href={resource.data.canonicalUrl} target="_blank" rel="noopener noreferrer">Open original resource</a>
+        {primaryModuleLink && (
+          <a href={primaryModuleHref}>Continue in {primaryModuleLink.module.data.title}</a>
+        )}
       </aside>
     </header>
 
     {canEmbedVideo && (
       <section>
-        <h2>Featured Video</h2>
+        <h2>{actionLabel} Source</h2>
         <YouTubeEmbed
           title={resource.data.title}
           creator={creator}
@@ -139,6 +152,14 @@ const hasLearnerBody = Boolean(bodyText && !boilerplateBodyPatterns.some((patter
       </section>
     )}
 
+    {!canEmbedVideo && (
+      <section class="learn-callout">
+        <h2>{actionLabel} Source</h2>
+        <p>Open the original source when you are ready to use this resource.</p>
+        <a class="button" href={resource.data.canonicalUrl} target="_blank" rel="noopener noreferrer">Open original</a>
+      </section>
+    )}
+
     {isPlaylist && (
       <section class="learn-callout">
         <h2>Video Series</h2>
@@ -147,36 +168,20 @@ const hasLearnerBody = Boolean(bodyText && !boilerplateBodyPatterns.some((patter
       </section>
     )}
 
+    <section class="learn-content-body">
+      <h2>Why AIV Includes This</h2>
+      {hasLearnerBody ? <Content /> : <p>{resource.data.accessNotes || fallbackRationale}</p>}
+    </section>
+
     <section class="learn-two-column">
-      <div>
-        <h2>Why This Resource Is Here</h2>
-        {hasLearnerBody ? (
-          <div class="learn-content-body">
-            <Content />
-          </div>
-        ) : (
-          <div class="learn-content-body">
-            {resource.data.watchFocus && <p>{resource.data.watchFocus}</p>}
-            {resource.data.checkpointPrompt && <p>{resource.data.checkpointPrompt}</p>}
-            {resource.data.accessNotes && <p>{resource.data.accessNotes}</p>}
-            {!resource.data.watchFocus && !resource.data.checkpointPrompt && !resource.data.accessNotes && (
-              <p>This resource is curated for the related Learn module; use the focus and checkpoint below to guide review.</p>
-            )}
-          </div>
-        )}
-      </div>
-      <div>
+      <section class="learn-callout">
         <h2>{actionLabel} Focus</h2>
-        {resource.data.watchFocus ? <p>{resource.data.watchFocus}</p> : <p>Use the original source to support the related Learn module checkpoint.</p>}
+        <p>{focusText}</p>
+      </section>
+      <section class="learn-callout">
         <h2>Checkpoint Prompt</h2>
-        {resource.data.checkpointPrompt ? <p>{resource.data.checkpointPrompt}</p> : <p class="text-muted">Write one note about how this resource changes your module artifact or question list.</p>}
-        {resource.data.accessNotes && (
-          <>
-            <h2>Access Note</h2>
-            <p>{resource.data.accessNotes}</p>
-          </>
-        )}
-      </div>
+        <p>{checkpointText}</p>
+      </section>
     </section>
 
     {tracks.length > 0 && (
@@ -189,7 +194,7 @@ const hasLearnerBody = Boolean(bodyText && !boilerplateBodyPatterns.some((patter
     )}
 
     {modules.length > 0 && (
-      <section>
+      <section class="learn-callout">
         <h2>Continue in module</h2>
         <ul class="learn-link-list">
           {modules.map(({ module, track }) => (

@@ -2,11 +2,11 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import PageShell from "../../../components/layout/PageShell.astro";
-import { accessModeLabels, byTitle, entrySlug, seriesPath } from "../../../utils/learn";
+import { accessModeLabels, byTitle, entrySlug, isPlaylistResource, seriesPath } from "../../../utils/learn";
 
 const resources = await getCollection("learnResources", ({ data }) => data.status !== "draft");
 const series = resources
-  .filter((resource) => resource.data.resourceType === "playlist" || resource.data.mediaType === "playlist")
+  .filter(isPlaylistResource)
   .sort(byTitle);
 const episodeCountBySeries = new Map<string, number>();
 
@@ -14,6 +14,9 @@ for (const resource of resources) {
   if (!resource.data.seriesSlug) continue;
   episodeCountBySeries.set(resource.data.seriesSlug, (episodeCountBySeries.get(resource.data.seriesSlug) || 0) + 1);
 }
+
+const fullSeries = series.filter((item) => (episodeCountBySeries.get(entrySlug(item)) || 0) >= 2);
+const selectedEpisodePaths = series.filter((item) => (episodeCountBySeries.get(entrySlug(item)) || 0) === 1);
 ---
 
 <BaseLayout title="Learn Video Series" canonical="/learn/series/" description="Ordered AI Village Learn video series with episode checkpoints.">
@@ -23,9 +26,9 @@ for (const resource of resources) {
       Follow ordered video paths with a clear source link, episode list, and module-oriented checkpoints. Series pages link to the original creator and avoid loading embedded players by default.
     </p>
 
-    {series.length > 0 ? (
+    {fullSeries.length > 0 ? (
       <div class="learn-grid">
-        {series.map((item) => {
+        {fullSeries.map((item) => {
           const seriesSlug = entrySlug(item);
           const accessLabel = accessModeLabels[item.data.accessMode] || accessModeLabels.direct_open;
           const episodes = episodeCountBySeries.get(seriesSlug) || 0;
@@ -43,7 +46,6 @@ for (const resource of resources) {
                 <a href={item.data.canonicalUrl} target="_blank" rel="noopener noreferrer">Open original series</a>
                 {item.data.playlistUrl && <a href={item.data.playlistUrl} target="_blank" rel="noopener noreferrer">Open playlist</a>}
               </div>
-              {episodes === 0 && <p class="text-muted">Episode records have not been added yet.</p>}
             </article>
           );
         })}
@@ -52,6 +54,21 @@ for (const resource of resources) {
       <section class="learn-empty">
         <h2>No Series Yet</h2>
         <p>Video series records will appear here after episode metadata is ready.</p>
+      </section>
+    )}
+
+    {selectedEpisodePaths.length > 0 && (
+      <section class="learn-secondary-section">
+        <h2>Single Selected Episodes</h2>
+        <p>These playlists currently have one AI Village-selected episode. Use them as selected episode paths, not full series.</p>
+        <ul class="learn-link-list">
+          {selectedEpisodePaths.map((item) => (
+            <li>
+              <a href={seriesPath(item)}>{item.data.title}</a>
+              <span>1 selected episode</span>
+            </li>
+          ))}
+        </ul>
       </section>
     )}
   </PageShell>
@@ -72,6 +89,7 @@ for (const resource of resources) {
   }
 
   .learn-card,
+  .learn-secondary-section,
   .learn-empty {
     background: var(--aiv-card-bg);
     border: 1px solid var(--aiv-card-border);
@@ -82,18 +100,25 @@ for (const resource of resources) {
 
   .learn-card h2,
   .learn-card p,
+  .learn-secondary-section h2,
+  .learn-secondary-section p,
   .learn-empty h2,
   .learn-empty p {
     margin: 0;
   }
 
   .learn-card__meta,
-  .learn-card__actions {
+  .learn-card__actions,
+  .learn-link-list {
     align-items: center;
     color: var(--aiv-text-muted);
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
+  }
+
+  .learn-link-list {
+    display: grid;
   }
 
   .learn-access-badge {

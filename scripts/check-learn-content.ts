@@ -27,6 +27,8 @@ type EntryData = {
   accessMode?: string;
   accessNotes?: string;
   resourceType?: string;
+  mediaType?: string;
+  seriesSlug?: string;
   reviewStatus?: string;
   rightsMode?: string;
   sourcePlatform?: string;
@@ -141,6 +143,7 @@ const moduleBySlug = new Map(modules.map((entry) => [entry.slug, entry]));
 const resourceBySlug = new Map(resources.map((entry) => [entry.slug, entry]));
 const publicLiveModuleSlugs = new Set<string>();
 const publicResources = resources.filter((resource) => resource.data.status !== "draft");
+const publicEpisodeCountBySeries = new Map<string, number>();
 const canonicalUrlByResource = new Map<string, Entry[]>();
 const titleByResource = new Map<string, Entry[]>();
 const resourceIdsByModuleSlug = new Map<string, Set<string>>();
@@ -151,6 +154,20 @@ for (const module of modules) {
 }
 
 for (const resource of publicResources) {
+  if (!resource.data.seriesSlug) continue;
+  publicEpisodeCountBySeries.set(resource.data.seriesSlug, (publicEpisodeCountBySeries.get(resource.data.seriesSlug) || 0) + 1);
+}
+
+for (const resource of publicResources) {
+  if (resource.data.resourceType === "playlist" || resource.data.mediaType === "playlist") {
+    const episodeCount = publicEpisodeCountBySeries.get(resource.slug) || 0;
+    if (episodeCount === 0) {
+      warn(resource, "Public playlist resources should not be presented as full series until child episode records exist.");
+    } else if (episodeCount === 1) {
+      warn(resource, "Public playlist resources with one child episode should be treated as selected episode paths, not full series.");
+    }
+  }
+
   if (!hasField(resource, "accessMode")) {
     fail(resource, "Non-draft resources must include explicit accessMode.");
   }

@@ -79,6 +79,7 @@ export async function GET() {
     ...learnSeries.map(seriesPath),
     "/learn/labs/",
     ...learnLabs.map(labPath),
+    "/learn/glossary/",
     "/learn/deep-dives/",
     "/learn/contribute/",
     "/research/",

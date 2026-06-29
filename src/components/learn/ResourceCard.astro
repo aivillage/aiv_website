@@ -6,15 +6,14 @@ import { accessModeLabels, formatLabel, refId, resourceActionLabel, resourcePath
 
 type Props = {
   resource: CollectionEntry<"learnResources">;
+  usedInModuleTitle?: string;
 };
 
-const { resource } = Astro.props;
+const { resource, usedInModuleTitle } = Astro.props;
 const trackRefs = resource.data.tracks.map(refId).join(" ");
-const sourceLabel = resource.data.sourcePlatform === "youtube" ? "YouTube" : resource.data.sourcePlatform ? formatLabel(resource.data.sourcePlatform) : "";
 const creator = resource.data.creator || resource.data.attribution;
 const accessLabel = accessModeLabels[resource.data.accessMode] || accessModeLabels.direct_open;
 const actionLabel = resourceActionLabel(resource);
-const relatedTracks = resource.data.tracks.map((trackRef) => formatLabel(refId(trackRef).replace(/-/g, "_"))).slice(0, 2);
 const isUnderReview = resource.data.reviewStatus !== "accepted";
 const isOffRamp = resource.data.accessMode !== "direct_open";
 ---
@@ -28,18 +27,14 @@ const isOffRamp = resource.data.accessMode !== "direct_open";
   </div>
   <h3><a href={resourcePath(resource)}>{resource.data.title}</a></h3>
   <p class="learn-card__provider">
-    {resource.data.provider}
+    <span>{creator ? `${resource.data.provider} / ${creator}` : resource.data.provider}</span>
     <a href={resource.data.canonicalUrl} target="_blank" rel="noopener noreferrer">Open original</a>
   </p>
   {resource.data.watchFocus && <p>{resource.data.watchFocus}</p>}
-  {resource.data.checkpointPrompt && <p class="learn-card__checkpoint">{resource.data.checkpointPrompt}</p>}
   <div class="learn-card__meta">
     <span>{actionLabel}</span>
     <span>{formatLabel(resource.data.resourceType)}</span>
-    {sourceLabel && <span>{sourceLabel}</span>}
-    {creator && <span>By {creator}</span>}
-    {relatedTracks.length > 0 && <span>Track: {relatedTracks.join(", ")}</span>}
-    {resource.data.embedAllowed && <span>Official embed available</span>}
+    {usedInModuleTitle && <span>Used in {usedInModuleTitle}</span>}
   </div>
 </article>
 

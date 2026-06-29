@@ -9,6 +9,7 @@ import {
   entrySlug,
   findPublicCanonicalTracksForModule,
   formatLabel,
+  isPlaylistResource,
   modulePath,
   refId,
   resourcePath,
@@ -21,6 +22,7 @@ type Props = {
   series: CollectionEntry<"learnResources">;
   episodes: CollectionEntry<"learnResources">[];
   tracks: CollectionEntry<"learnTracks">[];
+  allTracks: CollectionEntry<"learnTracks">[];
   modules: CollectionEntry<"learnModules">[];
 };
 
@@ -29,7 +31,7 @@ export async function getStaticPaths() {
   const tracks = await getCollection("learnTracks", ({ data }) => data.status !== "draft");
   const modules = await getCollection("learnModules", ({ data }) => data.status !== "draft");
   const trackBySlug = new Map(tracks.flatMap((track) => [[entrySlug(track), track], [track.id, track]]));
-  const seriesResources = resources.filter((resource) => resource.data.resourceType === "playlist" || resource.data.mediaType === "playlist");
+  const seriesResources = resources.filter(isPlaylistResource);
 
   return seriesResources.map((series) => {
     const seriesSlug = entrySlug(series);
@@ -48,22 +50,28 @@ export async function getStaticPaths() {
 
     return {
       params: { slug: seriesSlug },
-      props: { series, episodes, tracks: relatedTracks, modules },
+      props: { series, episodes, tracks: relatedTracks, allTracks: tracks, modules },
     };
   });
 }
 
-const { series, episodes, tracks, modules } = Astro.props;
+const { series, episodes, tracks, allTracks, modules } = Astro.props;
 const creator = series.data.creator || series.data.attribution || series.data.provider;
 const accessLabel = accessModeLabels[series.data.accessMode] || accessModeLabels.direct_open;
+const episodeCount = episodes.length;
+const pathLabel = episodeCount === 0 ? "Episode Path Not Ready" : episodeCount === 1 ? "Single Selected Episode" : "AIV-Selected Episode Path";
 
 function episodeModules(episode: CollectionEntry<"learnResources">) {
-  const canonicalFor = new Set(episode.data.canonicalFor);
-  return modules.filter((module) => canonicalFor.has(entrySlug(module))).slice(0, 3);
+  const episodeSlug = entrySlug(episode);
+  const canonicalFor = new Set(episode.data.canonicalFor.map(refId));
+  return modules.filter((module) =>
+    canonicalFor.has(entrySlug(module)) ||
+    module.data.resources.some((link) => refId(link.resource) === episodeSlug)
+  ).slice(0, 3);
 }
 
 function episodeModulePath(module: CollectionEntry<"learnModules">) {
-  const canonicalTracks = findPublicCanonicalTracksForModule(module, tracks);
+  const canonicalTracks = findPublicCanonicalTracksForModule(module, allTracks);
   return canonicalTracks.length === 1 ? trackScopedModulePath(canonicalTracks[0], module) : modulePath(module);
 }
 ---
@@ -77,9 +85,16 @@ function episodeModulePath(module: CollectionEntry<"learnModules">) {
         <div class="learn-meta-row">
           <span>{formatLabel(series.data.resourceType)}</span>
           <span class="learn-access-badge">{accessLabel}</span>
+          <span>{pathLabel}</span>
         </div>
         <h1>{series.data.title}</h1>
-        <p class="text-lead">{series.data.watchFocus || `An ordered learning path from ${creator}.`}</p>
+        <p class="text-lead">
+          {episodeCount >= 2
+            ? series.data.watchFocus || `An ordered learning path from ${creator}.`
+            : episodeCount === 1
+              ? `AI Village has selected one episode from ${creator}. Treat this as a focused resource path, not a full series.`
+              : `Episode records for this playlist are not ready yet. Use the original source links as secondary context.`}
+        </p>
       </div>
       <aside class="learn-side-panel">
         <h2>Source</h2>
@@ -92,7 +107,11 @@ function episodeModulePath(module: CollectionEntry<"learnModules">) {
     <section class="learn-callout">
       <h2>How To Use This Series</h2>
       <p>
-        Watch episodes in order when you want the full path, or jump from a related module to the episode that supports its checkpoint. Each episode links to a resource detail page with focus and checkpoint notes.
+        {episodeCount >= 2
+          ? "Watch episodes in order when you want the full path, or jump from a related module to the episode that supports its checkpoint. Each episode links to a resource detail page with focus and checkpoint notes."
+          : episodeCount === 1
+            ? "Use the selected episode from its resource page or related module. The full source remains secondary until more AIV-selected episodes are mapped."
+            : "This playlist is not presented as a full Learn series until public episode records are mapped."}
       </p>
       {series.data.accessNotes && <p>{series.data.accessNotes}</p>}
     </section>
@@ -107,7 +126,7 @@ function episodeModulePath(module: CollectionEntry<"learnModules">) {
     )}
 
     <section>
-      <h2>Episodes</h2>
+      <h2>{episodeCount === 1 ? "Selected Episode" : "Episodes"}</h2>
       {episodes.length > 0 ? (
         <ol class="learn-episode-list">
           {episodes.map((episode) => {

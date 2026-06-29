@@ -131,6 +131,14 @@ export function seriesPath(entryOrSlug: { id: string; data: object } | string) {
   return `/learn/series/${slug}/`;
 }
 
+export function glossaryPath(entry: { id: string; data: object }) {
+  return `/learn/glossary/#${entrySlug(entry)}`;
+}
+
+export function isPlaylistResource(entry: { data: { resourceType?: string; mediaType?: string } }) {
+  return entry.data.resourceType === "playlist" || entry.data.mediaType === "playlist";
+}
+
 export function byTitle<T extends { data: { title?: string; term?: string } }>(left: T, right: T) {
   return (left.data.title || left.data.term || "").localeCompare(right.data.title || right.data.term || "");
 }

@@ -1,0 +1,89 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import PageShell from "../../../components/layout/PageShell.astro";
+import { byTitle, entrySlug, refId, trackPath } from "../../../utils/learn";
+
+const terms = (await getCollection("learnGlossary")).sort(byTitle);
+const tracks = await getCollection("learnTracks", ({ data }) => data.status !== "draft");
+const trackBySlug = new Map(tracks.flatMap((track) => [[entrySlug(track), track], [track.id, track]]));
+type LearnTrack = (typeof tracks)[number];
+---
+
+<BaseLayout title="Learn Glossary" canonical="/learn/glossary/" description="Compact AI Village Learn glossary terms used across tracks, modules, labs, and resources.">
+  <PageShell class="learn-page">
+    <nav class="learn-breadcrumb" aria-label="Breadcrumb"><a href="/learn/">Learn</a> / <span>Glossary</span></nav>
+    <header>
+      <h1>Glossary</h1>
+      <p class="text-lead">
+        Short definitions for recurring Learn terms. Use this as secondary reference while working through modules and labs.
+      </p>
+    </header>
+
+    {terms.length > 0 ? (
+      <div class="learn-term-list">
+        {terms.map((term) => {
+          const relatedTracks = term.data.tracks
+            .map((trackRef) => trackBySlug.get(refId(trackRef)))
+            .filter((track): track is LearnTrack => Boolean(track));
+
+          return (
+            <article class="learn-term" id={entrySlug(term)}>
+              <h2>{term.data.term}</h2>
+              <p>{term.data.definition}</p>
+              {term.data.securityLens && (
+                <p class="learn-security-note"><strong>Security Lens:</strong> {term.data.securityLens}</p>
+              )}
+              {relatedTracks.length > 0 && (
+                <p class="learn-related-tracks">
+                  Related tracks: {relatedTracks.map((track, index) => (
+                    <>
+                      {index > 0 && ", "}
+                      <a href={trackPath(track)}>{track.data.title}</a>
+                    </>
+                  ))}
+                </p>
+              )}
+            </article>
+          );
+        })}
+      </div>
+    ) : (
+      <section class="learn-empty">
+        <h2>No Glossary Terms Yet</h2>
+        <p>Glossary terms will appear here once reviewed for public Learn pages.</p>
+      </section>
+    )}
+  </PageShell>
+</BaseLayout>
+
+<style>
+  .learn-page,
+  .learn-term-list,
+  .learn-term {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .learn-breadcrumb,
+  .learn-related-tracks,
+  .learn-security-note {
+    color: var(--aiv-text-muted);
+  }
+
+  .learn-term,
+  .learn-empty {
+    background: var(--aiv-card-bg);
+    border: 1px solid var(--aiv-card-border);
+    border-radius: 8px;
+    box-shadow: var(--aiv-card-shadow);
+    padding: 1rem;
+  }
+
+  .learn-term h2,
+  .learn-term p,
+  .learn-empty h2,
+  .learn-empty p {
+    margin: 0;
+  }
+</style>

@@ -9,6 +9,16 @@ const resources = (await getCollection("learnResources", ({ data }) => data.stat
 const tracks = (await getCollection("learnTracks", ({ data }) => data.status !== "draft")).sort(byTitle);
 const publicModules = await getCollection("learnModules", ({ data }) => data.status !== "draft");
 const linkedResourceSlugs = new Set(publicModules.flatMap((module) => module.data.resources.map((link) => refId(link.resource))));
+const moduleByResourceSlug = new Map<string, string>();
+
+for (const module of publicModules.sort(byTitle)) {
+  for (const link of module.data.resources) {
+    const resourceSlug = refId(link.resource);
+    if (resourceSlug && !moduleByResourceSlug.has(resourceSlug)) {
+      moduleByResourceSlug.set(resourceSlug, module.data.title);
+    }
+  }
+}
 const stages = [...new Set(resources.map((resource) => resource.data.targetStage))];
 const difficulties = [...new Set(resources.map((resource) => resource.data.difficulty))];
 const resourceTypes = [...new Set(resources.map((resource) => resource.data.resourceType))].sort();
@@ -118,7 +128,7 @@ const shownResourceCount = resourceSections.reduce((sum, section) => sum + secti
           <h2>{section.title}</h2>
           <p>{section.text}</p>
           <div class="learn-grid">
-            {section.resources.map((resource) => <ResourceCard resource={resource} />)}
+            {section.resources.map((resource) => <ResourceCard resource={resource} usedInModuleTitle={moduleByResourceSlug.get(entrySlug(resource))} />)}
           </div>
         </section>
       ))}

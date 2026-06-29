@@ -116,6 +116,11 @@ const sourceUrl = lab.data.sourceRepo
         ) : (
           <p class="text-muted">No public source link is attached to this lab.</p>
         )}
+        {modules.length > 0 && (
+          <a href={modules[0].track ? trackScopedModulePath(modules[0].track, modules[0].module) : modulePath(modules[0].module)}>
+            Continue in {modules[0].module.data.title}
+          </a>
+        )}
       </aside>
     </header>
 
@@ -142,6 +147,10 @@ const sourceUrl = lab.data.sourceRepo
           <li>Estimated time: {lab.data.estimatedMinutes} minutes</li>
         </ul>
       </div>
+    </section>
+
+    <section class="learn-content-body">
+      <Content />
     </section>
 
     {(lab.data.concepts.length > 0 || lab.data.threatCategories.length > 0) && (
@@ -199,23 +208,21 @@ const sourceUrl = lab.data.sourceRepo
 
     {mappings.length > 0 && (
       <section>
-        <h2>Mappings</h2>
-        <div class="learn-mapping-grid">
-          {mappings.map((mapping) => (
-            <div>
-              <h3>{mapping.label}</h3>
-              <ul>
-                {mapping.values.map((value) => <li>{value}</li>)}
-              </ul>
-            </div>
-          ))}
-        </div>
+        <details class="learn-mapping-panel">
+          <summary>Framework mappings</summary>
+          <div class="learn-mapping-grid">
+            {mappings.map((mapping) => (
+              <div>
+                <h3>{mapping.label}</h3>
+                <ul>
+                  {mapping.values.map((value) => <li>{value}</li>)}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </details>
       </section>
     )}
-
-    <section class="learn-content-body">
-      <Content />
-    </section>
   </PageShell>
 </BaseLayout>
 
@@ -242,6 +249,7 @@ const sourceUrl = lab.data.sourceRepo
   }
 
   .learn-side-panel,
+  .learn-mapping-panel,
   .learn-mapping-grid > div {
     background: var(--aiv-nested-bg);
     border: 1px solid var(--aiv-nested-border);
@@ -263,8 +271,10 @@ const sourceUrl = lab.data.sourceRepo
   }
 
   .learn-side-panel h2,
+  .learn-mapping-panel summary,
   .learn-mapping-grid h3 {
     font-size: 1.1rem;
+    font-weight: 800;
     margin-top: 0;
   }
 

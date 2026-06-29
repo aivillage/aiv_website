@@ -6,6 +6,8 @@ import LabCard from "../../../components/learn/LabCard.astro";
 import { byTitle, canRenderLearnLab } from "../../../utils/learn";
 
 const labs = (await getCollection("learnLabs", canRenderLearnLab)).sort(byTitle);
+const offensiveLabs = labs.filter((lab) => lab.data.isOffensive);
+const otherLabs = labs.filter((lab) => !lab.data.isOffensive);
 ---
 
 <BaseLayout title="Learn Labs" canonical="/learn/labs/" description="Safety-bounded AI Village Learn lab metadata.">
@@ -14,9 +16,25 @@ const labs = (await getCollection("learnLabs", canRenderLearnLab)).sort(byTitle)
     <p class="text-lead">
       Hands-on Learn entries pair a bounded exercise with safety framing, run expectations, and a learner artifact. Labs link to source when a public workshop or repository is available.
     </p>
-    <div class="learn-grid">
-      {labs.map((lab) => <LabCard lab={lab} />)}
-    </div>
+    <p>
+      Labs work best from the module pages that introduce the relevant concepts, checkpoints, and review questions. Use this catalog when you need to return to a lab directly.
+    </p>
+    {offensiveLabs.length > 0 && (
+      <section>
+        <h2>Safety-Bounded Challenge Labs</h2>
+        <div class="learn-grid">
+          {offensiveLabs.map((lab) => <LabCard lab={lab} />)}
+        </div>
+      </section>
+    )}
+    {otherLabs.length > 0 && (
+      <section>
+        <h2>Evaluation And Reporting Labs</h2>
+        <div class="learn-grid">
+          {otherLabs.map((lab) => <LabCard lab={lab} />)}
+        </div>
+      </section>
+    )}
   </PageShell>
 </BaseLayout>
 
@@ -24,6 +42,11 @@ const labs = (await getCollection("learnLabs", canRenderLearnLab)).sort(byTitle)
   .learn-page {
     display: grid;
     gap: 1.5rem;
+  }
+
+  .learn-page section {
+    display: grid;
+    gap: 0.9rem;
   }
 
   .learn-grid {
