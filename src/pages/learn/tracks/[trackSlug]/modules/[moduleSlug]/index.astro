@@ -8,10 +8,10 @@ import {
   canRenderLearnTrack,
   entrySlug,
   findPublicCanonicalTracksForModule,
+  modulePath,
   moduleSequenceForTrack,
   previousNextModulesInTrack,
   refId,
-  trackScopedModulePath,
 } from "../../../../../../utils/learn";
 
 type ResourceGroup = {
@@ -115,7 +115,7 @@ export async function getStaticPaths() {
           resourceGroups,
           featuredEmbed,
           labs: linkedLabs,
-          canonical: trackScopedModulePath(track, module),
+          canonical: modulePath(module),
           trackContext: {
             track,
             moduleIndex: navigation.moduleIndex,

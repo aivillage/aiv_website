@@ -4,40 +4,16 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import PageShell from "../../components/layout/PageShell.astro";
 import TrackCard from "../../components/learn/TrackCard.astro";
 import StatusBadge from "../../components/learn/StatusBadge.astro";
-import { byTrackKindThenTitle, canRenderLearnModule, entrySlug, isPlaylistResource, refId } from "../../utils/learn";
+import { byTrackKindThenTitle, canRenderLearnModule, refId } from "../../utils/learn";
 
 const tracks = (await getCollection("learnTracks", ({ data }) => data.status !== "draft")).sort(byTrackKindThenTitle);
 const modules = await getCollection("learnModules");
-const resources = await getCollection("learnResources", ({ data }) => data.status !== "draft");
-const labs = await getCollection("learnLabs", ({ data }) => data.status !== "draft");
 const moduleBySlug = new Map(modules.flatMap((module) => [[module.data.slug, module], [module.id, module]]));
-const episodeCountBySeries = new Map<string, number>();
-for (const resource of resources) {
-  if (!resource.data.seriesSlug) continue;
-  episodeCountBySeries.set(resource.data.seriesSlug, (episodeCountBySeries.get(resource.data.seriesSlug) || 0) + 1);
-}
-const seriesCount = resources.filter((resource) => isPlaylistResource(resource) && (episodeCountBySeries.get(entrySlug(resource)) || 0) >= 2).length;
-const directOpenResources = resources.filter((resource) =>
-  resource.data.accessMode === "direct_open" &&
-  resource.data.reviewStatus === "accepted" &&
-  resource.data.loginRequired === false
-).length;
-const securityLensTracks = tracks.filter((track) => track.data.securityLens !== "none").length;
-const navCards = [
-  {
-    title: "Start here",
-    href: "/learn/start/",
-    text: "Begin with the broadest entry points and move into the first useful modules.",
-  },
-  {
-    title: "Choose your path",
-    href: "/learn/choose-your-path/",
-    text: "Find the track that matches your current role, artifact, or learning goal.",
-  },
+const browseCards = [
   {
     title: "Labs",
     href: "/learn/labs/",
-    text: "Use safety-bounded hands-on labs to produce notes, debriefs, and eval artifacts.",
+    text: "Use safety-bounded hands-on labs when a module calls for practice.",
   },
   {
     title: "Resources",
@@ -53,6 +29,28 @@ const navCards = [
     title: "Contribute",
     href: "/learn/contribute/",
     text: "Review the publishing gates before proposing resources, modules, or labs.",
+  },
+  {
+    title: "Glossary",
+    href: "/learn/glossary/",
+    text: "Look up shared terms used across tracks, modules, labs, and resources.",
+  },
+  {
+    title: "Deep dives",
+    href: "/learn/deep-dives/",
+    text: "Use longer reference notes after the main path gives you context.",
+  },
+];
+const primaryCards = [
+  {
+    title: "Start here",
+    href: "/learn/start/",
+    text: "Begin with the broadest entry points and move into the first useful modules.",
+  },
+  {
+    title: "Choose your path",
+    href: "/learn/choose-your-path/",
+    text: "Find the track that matches your current role, artifact, or learning goal.",
   },
 ];
 
@@ -83,13 +81,11 @@ function publicModuleCount(track: (typeof tracks)[number]) {
       <nav class="learn-actions" aria-label="Learn navigation">
         <a class="button" href="/learn/start/">Start here</a>
         <a class="button button--secondary" href="/learn/choose-your-path/">Choose your path</a>
-        <a class="button button--secondary" href="/learn/labs/">Labs</a>
-        <a class="button button--secondary" href="/learn/resources/">Resources</a>
       </nav>
     </section>
 
-    <section class="learn-nav-grid" aria-label="Learn sections">
-      {navCards.map((card) => (
+    <section class="learn-nav-grid learn-nav-grid--primary" aria-label="Primary Learn sections">
+      {primaryCards.map((card) => (
         <a class="learn-nav-card" href={card.href}>
           <h2>{card.title}</h2>
           <p>{card.text}</p>
@@ -97,33 +93,28 @@ function publicModuleCount(track: (typeof tracks)[number]) {
       ))}
     </section>
 
-    <section class="learn-stat-grid" aria-label="Learner signals">
-      <div>
-        <strong>{directOpenResources}</strong>
-        <span>free public resources</span>
-      </div>
-      <div>
-        <strong>{labs.length}</strong>
-        <span>hands-on labs</span>
-      </div>
-      <div>
-        <strong>{seriesCount}</strong>
-        <span>video series</span>
-      </div>
-      <div>
-        <strong>{securityLensTracks}</strong>
-        <span>tracks with security lens</span>
-      </div>
+    <section class="learn-flow-strip" aria-label="How Learn works">
+      <h2>How Learn Works</h2>
+      <ol>
+        <li>Track</li>
+        <li>Module</li>
+        <li>Resource/Lab</li>
+        <li>Checkpoint</li>
+      </ol>
     </section>
 
-    <section class="learn-secondary-links" aria-label="Supporting Learn sections">
+    <section class="learn-secondary-links" aria-label="Browse and reference">
       <div>
-        <h2>Advanced And Reference</h2>
-        <p>Use these after you have chosen a path or need supporting language for a module artifact.</p>
+        <h2>Browse And Reference</h2>
+        <p>Use catalogs after you have started a path, or when a module points you to a specific lab, resource, series, or reference page.</p>
       </div>
-      <div class="learn-secondary-actions">
-        <a href="/learn/deep-dives/">Deep dives</a>
-        <a href="/learn/glossary/">Glossary</a>
+      <div class="learn-nav-grid">
+        {browseCards.map((card) => (
+          <a class="learn-nav-card learn-nav-card--secondary" href={card.href}>
+            <h3>{card.title}</h3>
+            <p>{card.text}</p>
+          </a>
+        ))}
       </div>
     </section>
 
@@ -164,9 +155,7 @@ function publicModuleCount(track: (typeof tracks)[number]) {
 
   .learn-kicker,
   .learn-actions,
-  .learn-secondary-actions,
   .learn-nav-grid,
-  .learn-stat-grid,
   .learn-grid {
     align-items: center;
     display: flex;
@@ -186,13 +175,11 @@ function publicModuleCount(track: (typeof tracks)[number]) {
   }
 
   .learn-secondary-links {
-    align-items: center;
     background: var(--aiv-nested-bg);
     border: 1px solid var(--aiv-nested-border);
     border-radius: 8px;
     display: grid;
     gap: 1rem;
-    grid-template-columns: minmax(0, 1fr) auto;
     padding: 1rem;
   }
 
@@ -203,10 +190,6 @@ function publicModuleCount(track: (typeof tracks)[number]) {
 
   .learn-secondary-links h2 {
     font-size: 1.1rem;
-  }
-
-  .learn-secondary-actions {
-    justify-content: end;
   }
 
   .button {
@@ -232,6 +215,10 @@ function publicModuleCount(track: (typeof tracks)[number]) {
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   }
 
+  .learn-nav-grid--primary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .learn-nav-card {
     background: var(--aiv-card-bg);
     border: 1px solid var(--aiv-card-border);
@@ -249,31 +236,49 @@ function publicModuleCount(track: (typeof tracks)[number]) {
     margin: 0;
   }
 
+  .learn-nav-card h3 {
+    font-size: 1rem;
+    margin: 0;
+  }
+
+  .learn-nav-card--secondary {
+    background: var(--aiv-card-bg);
+    box-shadow: none;
+  }
+
   .learn-nav-card p {
     color: var(--aiv-text-muted);
     margin: 0;
   }
 
-  .learn-stat-grid {
-    align-items: stretch;
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-
-  .learn-stat-grid div {
+  .learn-flow-strip {
     background: var(--aiv-nested-bg);
     border: 1px solid var(--aiv-nested-border);
     border-radius: 8px;
     padding: 1rem;
   }
 
-  .learn-stat-grid strong,
-  .learn-stat-grid span {
-    display: block;
+  .learn-flow-strip h2 {
+    font-size: 1.1rem;
+    margin-top: 0;
   }
 
-  .learn-stat-grid strong {
-    font-size: 1.65rem;
+  .learn-flow-strip ol {
+    display: grid;
+    gap: 0.75rem;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .learn-flow-strip li {
+    background: var(--aiv-card-bg);
+    border: 1px solid var(--aiv-card-border);
+    border-radius: 8px;
+    font-weight: 800;
+    padding: 0.75rem;
+    text-align: center;
   }
 
   .learn-grid {
@@ -285,13 +290,12 @@ function publicModuleCount(track: (typeof tracks)[number]) {
 
   @media (max-width: 780px) {
     .learn-hero,
-    .learn-secondary-links,
-    .learn-stat-grid {
+    .learn-nav-grid--primary,
+    .learn-flow-strip ol {
       grid-template-columns: 1fr;
     }
 
-    .learn-actions,
-    .learn-secondary-actions {
+    .learn-actions {
       justify-content: start;
     }
   }

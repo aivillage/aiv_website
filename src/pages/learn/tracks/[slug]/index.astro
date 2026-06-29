@@ -147,6 +147,28 @@ const { Content } = await render(track);
       }
     </section>
 
+    {modules.length > 0 && (
+      <section class="learn-artifact-path-section">
+        <h2>Artifact Path</h2>
+        <p class="text-muted">Each module checkpoint contributes to the track-level artifacts.</p>
+        <ol class="learn-artifact-path">
+          {modules.map((module, index) => (
+            <li>
+              <div class="learn-module-path__number">{index + 1}</div>
+              <div>
+                <h3><a href={trackScopedModulePath(track, module)}>{module.data.title}</a></h3>
+                {module.data.requiredArtifact ? (
+                  <ArtifactBadge value={module.data.requiredArtifact} />
+                ) : (
+                  <p class="text-muted">Checkpoint being refined.</p>
+                )}
+              </div>
+            </li>
+          ))}
+        </ol>
+      </section>
+    )}
+
     <section class="learn-two-column">
       <div class="card card--accent-primary">
         <h2 class="mt-0">What Exists Now</h2>
@@ -201,6 +223,7 @@ const { Content } = await render(track);
   }
 
   .learn-artifacts,
+  .learn-artifact-path,
   .learn-grid,
   .learn-module-path {
     display: grid;
@@ -242,6 +265,28 @@ const { Content } = await render(track);
     list-style: none;
     margin: 0;
     padding: 0;
+  }
+
+  .learn-artifact-path {
+    list-style: none;
+    margin: 1rem 0 0;
+    padding: 0;
+  }
+
+  .learn-artifact-path li {
+    align-items: start;
+    background: var(--aiv-nested-bg);
+    border: 1px solid var(--aiv-nested-border);
+    border-radius: 8px;
+    display: grid;
+    gap: 0.85rem;
+    grid-template-columns: auto minmax(0, 1fr);
+    padding: 1rem;
+  }
+
+  .learn-artifact-path h3 {
+    font-size: 1rem;
+    margin: 0 0 0.45rem;
   }
 
   .learn-module-path li {

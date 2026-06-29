@@ -7,8 +7,6 @@ import ArtifactBadge from "./ArtifactBadge.astro";
 import DifficultyBadge from "./DifficultyBadge.astro";
 import LabCard from "./LabCard.astro";
 import SecurityLensCallout from "./SecurityLensCallout.astro";
-import StageBadge from "./StageBadge.astro";
-import StatusBadge from "./StatusBadge.astro";
 import YouTubeEmbed from "./YouTubeEmbed.astro";
 import {
   accessModeLabels,
@@ -136,12 +134,8 @@ function trackModuleHref(track: CollectionEntry<"learnTracks">) {
     <header class="learn-module-header">
       <div>
         <div class="learn-meta-row">
-          <StatusBadge value={learnModule.data.status} />
           {trackContext && <span>Module {trackContext.moduleIndex + 1} of {trackContext.moduleCount} · {trackContext.track.data.title}</span>}
           {globalTrackContext && <span>Module {globalTrackContext.moduleIndex + 1} of {globalTrackContext.moduleCount} · {globalTrackContext.track.data.title}</span>}
-          <StageBadge value={learnModule.data.stageStart} />
-          <span>to</span>
-          <StageBadge value={learnModule.data.stageEnd} />
           <DifficultyBadge value={learnModule.data.difficulty} />
           <span>{moduleTypeLabels[learnModule.data.moduleType]}</span>
         </div>

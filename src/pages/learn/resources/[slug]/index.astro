@@ -94,11 +94,6 @@ const boilerplateBodyPatterns = [
 const bodyText = (resource.body || "").trim();
 const hasLearnerBody = Boolean(bodyText && !boilerplateBodyPatterns.some((pattern) => pattern.test(bodyText)));
 const primaryModuleLink = modules[0];
-const primaryModuleHref = primaryModuleLink
-  ? primaryModuleLink.track
-    ? trackScopedModulePath(primaryModuleLink.track, primaryModuleLink.module)
-    : modulePath(primaryModuleLink.module)
-  : "";
 const focusText = resource.data.watchFocus || `Use this ${formatLabel(resource.data.resourceType).toLowerCase()} to support the related Learn checkpoint.`;
 const checkpointText = resource.data.checkpointPrompt || "Write one note about how this resource changes your module artifact or question list.";
 const fallbackRationale = primaryModuleLink
@@ -120,23 +115,39 @@ const fallbackRationale = primaryModuleLink
           {isUnderReview && <span class="learn-access-badge learn-access-badge--review">Under review</span>}
         </div>
         <h1>{resource.data.title}</h1>
-        <p class="text-lead">{fallbackRationale}</p>
         <p class="text-muted">By {creator}</p>
       </div>
-      <aside class="learn-side-panel">
-        <h2>Access</h2>
-        <p>
-          {isUnderReview
-            ? "Under review. Use this as a secondary reference until source details are checked."
-            : isOffRamp
-              ? `${accessLabel}. Use this as an extra path, not as the core requirement.`
-              : accessLabel}
-        </p>
-        {primaryModuleLink && (
-          <a href={primaryModuleHref}>Continue in {primaryModuleLink.module.data.title}</a>
-        )}
-      </aside>
     </header>
+
+    <section class="learn-content-body">
+      <h2>Why AIV Includes This</h2>
+      {hasLearnerBody ? <Content /> : <p>{resource.data.accessNotes || fallbackRationale}</p>}
+    </section>
+
+    <section class="learn-two-column">
+      <section class="learn-callout">
+        <h2>{actionLabel} Focus</h2>
+        <p>{focusText}</p>
+      </section>
+      <section class="learn-callout">
+        <h2>Checkpoint Prompt</h2>
+        <p>{checkpointText}</p>
+      </section>
+    </section>
+
+    {modules.length > 0 && (
+      <section class="learn-callout">
+        <h2>Continue in module</h2>
+        <ul class="learn-link-list">
+          {modules.map(({ module, track }) => (
+            <li>
+              <a href={track ? trackScopedModulePath(track, module) : modulePath(module)}>{module.data.title}</a>
+              {track && <span>{track.data.title}</span>}
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
 
     {canEmbedVideo && (
       <section>
@@ -168,42 +179,32 @@ const fallbackRationale = primaryModuleLink
       </section>
     )}
 
-    <section class="learn-content-body">
-      <h2>Why AIV Includes This</h2>
-      {hasLearnerBody ? <Content /> : <p>{resource.data.accessNotes || fallbackRationale}</p>}
-    </section>
-
-    <section class="learn-two-column">
-      <section class="learn-callout">
-        <h2>{actionLabel} Focus</h2>
-        <p>{focusText}</p>
-      </section>
-      <section class="learn-callout">
-        <h2>Checkpoint Prompt</h2>
-        <p>{checkpointText}</p>
-      </section>
-    </section>
-
-    {tracks.length > 0 && (
+    {(modules.length > 0 || tracks.length > 0) && (
       <section>
-        <h2>Related Tracks</h2>
-        <ul class="learn-link-list">
-          {tracks.map((track) => <li><a href={trackPath(track)}>{track.data.title}</a></li>)}
-        </ul>
-      </section>
-    )}
-
-    {modules.length > 0 && (
-      <section class="learn-callout">
-        <h2>Continue in module</h2>
-        <ul class="learn-link-list">
-          {modules.map(({ module, track }) => (
-            <li>
-              <a href={track ? trackScopedModulePath(track, module) : modulePath(module)}>{module.data.title}</a>
-              {track && <span>{track.data.title}</span>}
-            </li>
-          ))}
-        </ul>
+        <h2>Related Modules And Tracks</h2>
+        <div class="learn-related-grid">
+          {modules.length > 0 && (
+            <div>
+              <h3>Modules</h3>
+              <ul class="learn-link-list">
+                {modules.map(({ module, track }) => (
+                  <li>
+                    <a href={track ? trackScopedModulePath(track, module) : modulePath(module)}>{module.data.title}</a>
+                    {track && <span>{track.data.title}</span>}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {tracks.length > 0 && (
+            <div>
+              <h3>Tracks</h3>
+              <ul class="learn-link-list">
+                {tracks.map((track) => <li><a href={trackPath(track)}>{track.data.title}</a></li>)}
+              </ul>
+            </div>
+          )}
+        </div>
       </section>
     )}
   </PageShell>
@@ -228,10 +229,8 @@ const fallbackRationale = primaryModuleLink
   .learn-two-column {
     display: grid;
     gap: 1.25rem;
-    grid-template-columns: minmax(0, 1fr) minmax(260px, 0.55fr);
   }
 
-  .learn-side-panel,
   .learn-callout {
     background: var(--aiv-nested-bg);
     border: 1px solid var(--aiv-nested-border);
@@ -260,7 +259,6 @@ const fallbackRationale = primaryModuleLink
     padding: 0.12rem 0.45rem;
   }
 
-  .learn-side-panel h2,
   .learn-callout h2 {
     font-size: 1.1rem;
     margin-top: 0;
@@ -270,8 +268,18 @@ const fallbackRationale = primaryModuleLink
     max-width: 76ch;
   }
 
+  .learn-related-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  }
+
+  .learn-related-grid h3 {
+    font-size: 1rem;
+    margin-top: 0;
+  }
+
   @media (max-width: 780px) {
-    .learn-resource-header,
     .learn-two-column {
       grid-template-columns: 1fr;
     }

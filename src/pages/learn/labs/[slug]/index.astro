@@ -90,6 +90,9 @@ const { Content } = await render(lab);
 const sourceUrl = lab.data.sourceRepo
   ? `https://github.com/${lab.data.sourceRepo}${lab.data.sourcePath ? `/tree/main/${lab.data.sourcePath}` : ""}`
   : "";
+const isWorkshopBacked = lab.data.sourceRepo === "aivillage/workshops";
+const sourceHeading = isWorkshopBacked ? "Workshop Source" : "Source Reference";
+const sourceLinkLabel = isWorkshopBacked ? "Open workshop source" : "Open reference";
 ---
 
 <BaseLayout title={lab.data.title} canonical={labPath(lab)} description={lab.data.summary}>
@@ -106,31 +109,38 @@ const sourceUrl = lab.data.sourceRepo
         <h1>{lab.data.title}</h1>
         <p class="text-lead">{lab.data.summary}</p>
       </div>
-      <aside class="learn-side-panel">
-        <h2>Workshop Source</h2>
-        {sourceUrl ? (
-          <>
-            <p>{lab.data.sourceRepo}{lab.data.sourcePath ? ` / ${lab.data.sourcePath}` : ""}</p>
-            <a class="button" href={sourceUrl} target="_blank" rel="noopener noreferrer">Open workshop source</a>
-          </>
-        ) : (
-          <p class="text-muted">No public source link is attached to this lab.</p>
-        )}
-        {modules.length > 0 && (
-          <a href={modules[0].track ? trackScopedModulePath(modules[0].track, modules[0].module) : modulePath(modules[0].module)}>
-            Continue in {modules[0].module.data.title}
-          </a>
-        )}
-      </aside>
     </header>
+
+    {modules.length > 0 && (
+      <section class="learn-callout learn-callout--primary">
+        <h2>Continue in related module</h2>
+        <ul class="learn-link-list">
+          {modules.map(({ module, track }) => (
+            <li>
+              <a href={track ? trackScopedModulePath(track, module) : modulePath(module)}>{module.data.title}</a>
+              {track && <span>{track.data.title}</span>}
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
 
     <section class="learn-two-column">
       <div>
         <h2>Safety Boundary</h2>
         <p>{lab.data.safetyBoundary}</p>
+      </div>
+      <div>
         <h2>Expected Artifact</h2>
         <ArtifactBadge value={lab.data.requiredArtifact} />
       </div>
+    </section>
+
+    <section class="learn-content-body">
+      <Content />
+    </section>
+
+    <section class="learn-two-column">
       <div>
         <h2>Run Modes</h2>
         <p>{lab.data.runModes.map(formatLabel).join(", ")}</p>
@@ -147,62 +157,77 @@ const sourceUrl = lab.data.sourceRepo
           <li>Estimated time: {lab.data.estimatedMinutes} minutes</li>
         </ul>
       </div>
-    </section>
-
-    <section class="learn-content-body">
-      <Content />
-    </section>
-
-    {(lab.data.concepts.length > 0 || lab.data.threatCategories.length > 0) && (
-      <section class="learn-two-column">
+      {(lab.data.concepts.length > 0 || lab.data.threatCategories.length > 0) && (
+        <div>
         {lab.data.concepts.length > 0 && (
-          <div>
+          <>
             <h2>Concepts</h2>
             <ul>
               {lab.data.concepts.map((concept) => <li>{concept}</li>)}
             </ul>
-          </div>
+          </>
         )}
         {lab.data.threatCategories.length > 0 && (
-          <div>
+          <>
             <h2>Threat Categories</h2>
             <ul>
               {lab.data.threatCategories.map((category) => <li>{category}</li>)}
             </ul>
-          </div>
+          </>
         )}
+        </div>
+      )}
+    </section>
+
+    {sourceUrl && (
+      <section class="learn-callout learn-source-panel">
+        <h2>{sourceHeading}</h2>
+        <p>{lab.data.sourceRepo}{lab.data.sourcePath ? ` / ${lab.data.sourcePath}` : ""}</p>
+        <a class="button button--secondary" href={sourceUrl} target="_blank" rel="noopener noreferrer">{sourceLinkLabel}</a>
       </section>
     )}
 
-    {tracks.length > 0 && (
-      <section>
-        <h2>Related Tracks</h2>
-        <ul class="learn-link-list">
-          {tracks.map((track) => <li><a href={trackPath(track)}>{track.data.title}</a></li>)}
-        </ul>
+    {!sourceUrl && (
+      <section class="learn-callout learn-source-panel">
+        <h2>{sourceHeading}</h2>
+        <p class="text-muted">No public source link is attached to this lab.</p>
       </section>
     )}
 
-    {modules.length > 0 && (
+    {(tracks.length > 0 || modules.length > 0 || resources.length > 0) && (
       <section>
-        <h2>Continue in module</h2>
-        <ul class="learn-link-list">
-          {modules.map(({ module, track }) => (
-            <li>
-              <a href={track ? trackScopedModulePath(track, module) : modulePath(module)}>{module.data.title}</a>
-              {track && <span>{track.data.title}</span>}
-            </li>
-          ))}
-        </ul>
-      </section>
-    )}
-
-    {resources.length > 0 && (
-      <section>
-        <h2>Resources</h2>
-        <ul class="learn-link-list">
-          {resources.map((resource) => <li><a href={resource.data.canonicalUrl} target="_blank" rel="noopener noreferrer">{resource.data.title}</a> <span>{resource.data.provider}</span></li>)}
-        </ul>
+        <h2>Related Tracks, Modules, And Resources</h2>
+        <div class="learn-related-grid">
+          {tracks.length > 0 && (
+            <div>
+              <h3>Tracks</h3>
+              <ul class="learn-link-list">
+                {tracks.map((track) => <li><a href={trackPath(track)}>{track.data.title}</a></li>)}
+              </ul>
+            </div>
+          )}
+          {modules.length > 0 && (
+            <div>
+              <h3>Modules</h3>
+              <ul class="learn-link-list">
+                {modules.map(({ module, track }) => (
+                  <li>
+                    <a href={track ? trackScopedModulePath(track, module) : modulePath(module)}>{module.data.title}</a>
+                    {track && <span>{track.data.title}</span>}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {resources.length > 0 && (
+            <div>
+              <h3>Resources</h3>
+              <ul class="learn-link-list">
+                {resources.map((resource) => <li><a href={resource.data.canonicalUrl} target="_blank" rel="noopener noreferrer">{resource.data.title}</a> <span>{resource.data.provider}</span></li>)}
+              </ul>
+            </div>
+          )}
+        </div>
       </section>
     )}
 
@@ -241,20 +266,27 @@ const sourceUrl = lab.data.sourceRepo
     gap: 0.5rem;
   }
 
-  .learn-lab-header,
   .learn-two-column {
     display: grid;
     gap: 1.25rem;
     grid-template-columns: minmax(0, 1fr) minmax(260px, 0.55fr);
   }
 
-  .learn-side-panel,
+  .learn-callout,
   .learn-mapping-panel,
   .learn-mapping-grid > div {
     background: var(--aiv-nested-bg);
     border: 1px solid var(--aiv-nested-border);
     border-radius: 8px;
     padding: 1rem;
+  }
+
+  .learn-callout--primary {
+    border-color: var(--aiv-action-primary);
+  }
+
+  .learn-source-panel {
+    max-width: 76ch;
   }
 
   .button {
@@ -270,7 +302,12 @@ const sourceUrl = lab.data.sourceRepo
     text-decoration: none;
   }
 
-  .learn-side-panel h2,
+  .button--secondary {
+    background: transparent;
+    color: var(--aiv-action-primary);
+  }
+
+  .learn-callout h2,
   .learn-mapping-panel summary,
   .learn-mapping-grid h3 {
     font-size: 1.1rem;
@@ -288,6 +325,7 @@ const sourceUrl = lab.data.sourceRepo
   }
 
   .learn-link-list,
+  .learn-related-grid,
   .learn-mapping-grid {
     display: grid;
     gap: 0.75rem;
@@ -301,12 +339,15 @@ const sourceUrl = lab.data.sourceRepo
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   }
 
+  .learn-related-grid {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  }
+
   .learn-content-body {
     max-width: 76ch;
   }
 
   @media (max-width: 780px) {
-    .learn-lab-header,
     .learn-two-column {
       grid-template-columns: 1fr;
     }
