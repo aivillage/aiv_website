@@ -9,8 +9,8 @@ stageEnd: builder
 difficulty: advanced
 moduleType: concept
 learningObjectives:
-  - Describe the main concepts for Basic App Evals.
-  - Identify the artifact or checkpoint this module supports.
+  - Choose representative prompts, edge cases, and expected outcomes for a small AI app.
+  - Create a Team Knowledge Assistant eval plan tied to deployment or review decisions.
 prerequisites:
   - tool-calling-basics
 resources:

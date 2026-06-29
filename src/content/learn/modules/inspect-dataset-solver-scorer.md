@@ -9,8 +9,8 @@ stageEnd: specialist_contributor
 difficulty: intermediate
 moduleType: concept
 learningObjectives:
-  - Describe the main concepts for Inspect Dataset, Solver, and Scorer.
-  - Identify the artifact or checkpoint this module supports.
+  - Distinguish dataset, solver, and scorer responsibilities in an Inspect-style eval.
+  - Sketch an eval component map with dataset source, solver behavior, scorer rule, and limitations.
 prerequisites:
   - what-is-an-eval
 resources:
@@ -18,6 +18,7 @@ resources:
     role: required
 labs:
   - inspect-bahrain
+requiredArtifact: Eval component sketch
 securityLens: required
 securityLensText: "Evaluation components encode assumptions. Review datasets, solvers, and scorers for what they include, what they omit, and how they could reward behavior you do not want."
 status: beta

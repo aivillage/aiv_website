@@ -10,7 +10,7 @@ creator: LlamaIndex
 videoId: T0bgevj0vto
 playlistUrl: https://www.youtube.com/playlist?list=PLoYZGW8AgG1ac8mCe7o83zI5WjTHJB3SD
 playlistId: PLoYZGW8AgG1ac8mCe7o83zI5WjTHJB3SD
-featuredEmbed: true
+featuredEmbed: false
 embedPrivacyMode: enhanced
 ageRestricted: false
 seriesSlug: llamaindex-building-advanced-rag
@@ -24,12 +24,12 @@ targetStage: builder
 difficulty: advanced
 tracks:
   - agentic-ai-advanced-builder
-rightsMode: official_embed
+rightsMode: link_only
 license: LlamaIndex and YouTube terms
 cost: free
 loginRequired: false
 accessMode: direct_open
-embedAllowed: true
+embedAllowed: false
 attribution: LlamaIndex
 maintenanceRisk: medium
 caveats:

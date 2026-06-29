@@ -9,8 +9,8 @@ stageEnd: builder
 difficulty: intermediate
 moduleType: concept
 learningObjectives:
-  - Describe the main concepts for AI App Architecture.
-  - Identify the artifact or checkpoint this module supports.
+  - Label model, retrieval, tool, storage, logging, and review boundaries in an AI app.
+  - Draft a Team Knowledge Assistant architecture sketch with data flow and human review points.
 prerequisites: []
 resources:
   - resource: microsoft-genai-beginners

@@ -9,14 +9,14 @@ stageEnd: specialist_contributor
 difficulty: advanced
 moduleType: capstone
 learningObjectives:
-  - Describe the main concepts for Red-Team Report Writing.
-  - Identify the artifact or checkpoint this module supports.
+  - Structure authorized findings with scope, evidence, impact, assumptions, and remediation.
+  - Draft a red-team report that minimizes sensitive detail while supporting defensive action.
 prerequisites:
   - ctf-path
 resources:
   - resource: portswigger-web-llm-attacks
     role: required
-requiredArtifact: Red Team Report Writing artifact
+requiredArtifact: Red-team report draft
 securityLens: primary
 securityLensText: "A red-team report should help defenders reproduce, prioritize, and fix issues without spreading unnecessary operational detail. Keep evidence, impact, scope, and remediation clear."
 status: beta

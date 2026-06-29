@@ -9,8 +9,8 @@ stageEnd: builder
 difficulty: intermediate
 moduleType: concept
 learningObjectives:
-  - Describe the main concepts for API-Based AI Apps.
-  - Identify the artifact or checkpoint this module supports.
+  - Trace the request, response, credentials, and failure points in a basic AI API call.
+  - Draft an API call plan for the Team Knowledge Assistant with validation and review steps.
 prerequisites:
   - ai-app-architecture
 resources:

@@ -9,8 +9,8 @@ stageEnd: ai_literate
 difficulty: intro
 moduleType: concept
 learningObjectives:
-  - Describe the main concepts for What Is AI.
-  - Identify the artifact or checkpoint this module supports.
+  - Distinguish rule-based systems, search, ML, and generative models by how they produce behavior.
+  - Create an AI concept map that names inputs, outputs, limits, and human review points.
 prerequisites: []
 resources:
   - resource: cs50-ai

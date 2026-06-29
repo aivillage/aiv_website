@@ -9,10 +9,10 @@ stageEnd: risk_evaluative_practitioner
 difficulty: intermediate
 moduleType: concept
 learningObjectives:
-  - Describe the main concepts for Human Approval and Containment.
-  - Identify the artifact or checkpoint this module supports.
+  - Identify where an agentic workflow needs approval gates, containment, rollback, or stop conditions.
+  - Create an approval matrix plus containment policy for one bounded workflow.
 prerequisites:
-  - mcp-security-basics
+  - agentic-rag
 resources:
   - resource: langchain-human-in-the-loop
     role: required

@@ -20,13 +20,13 @@ targetStage: ai_practitioner
 difficulty: intro
 tracks:
   - ai-practitioner
-rightsMode: official_embed
+rightsMode: link_only
 license: YouTube terms
 cost: free
 loginRequired: false
 accessMode: direct_open
-embedAllowed: true
-featuredEmbed: true
+embedAllowed: false
+featuredEmbed: false
 embedPrivacyMode: enhanced
 ageRestricted: false
 attribution: Microsoft Developer

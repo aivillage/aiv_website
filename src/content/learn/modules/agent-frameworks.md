@@ -9,8 +9,8 @@ stageEnd: risk_evaluative_practitioner
 difficulty: intermediate
 moduleType: concept
 learningObjectives:
-  - Describe the main concepts for Agent Frameworks.
-  - Identify the artifact or checkpoint this module supports.
+  - Compare agent frameworks by fit, control surface, and operational burden.
+  - Draft a framework ADR that records assumptions, risks, and review criteria.
 prerequisites:
   - agent-fundamentals
 resources:

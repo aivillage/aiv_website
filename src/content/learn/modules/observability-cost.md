@@ -9,8 +9,8 @@ stageEnd: builder
 difficulty: advanced
 moduleType: concept
 learningObjectives:
-  - Describe the main concepts for Observability and Cost.
-  - Identify the artifact or checkpoint this module supports.
+  - Choose logs, traces, redaction rules, access controls, and cost signals for an AI app.
+  - Create a Team Knowledge Assistant observability checklist balancing debugging and data minimization.
 prerequisites:
   - basic-app-evals
 resources:

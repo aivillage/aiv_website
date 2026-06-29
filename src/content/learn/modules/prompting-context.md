@@ -9,8 +9,8 @@ stageEnd: ai_practitioner
 difficulty: intro
 moduleType: concept
 learningObjectives:
-  - Describe the main concepts for Prompting and Context.
-  - Identify the artifact or checkpoint this module supports.
+  - Build prompts with goal, context, constraints, examples, and review criteria.
+  - Produce a Prompt Frame that keeps sensitive data and unsupported claims out of scope.
 prerequisites: []
 resources:
   - resource: anthropic-prompt-engineering

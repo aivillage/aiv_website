@@ -1,6 +1,6 @@
 ---
 slug: anthropic-code-with-claude-XSZP9GhhuAc
-title: Anthropic Claude coding video XSZP9GhhuAc
+title: Prompting for Agents | Code w/ Claude
 provider: Anthropic
 canonicalUrl: https://www.youtube.com/watch?v=XSZP9GhhuAc
 resourceType: video

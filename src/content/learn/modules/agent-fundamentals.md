@@ -9,8 +9,8 @@ stageEnd: risk_evaluative_practitioner
 difficulty: intermediate
 moduleType: practice
 learningObjectives:
-  - Describe the main concepts for Agent Fundamentals.
-  - Identify the artifact or checkpoint this module supports.
+  - Explain how goals, loops, tools, memory, and stopping conditions shape an agent.
+  - Sketch a core agent loop with the controls a reviewer should inspect.
 prerequisites:
   - workflows-vs-agents
 resources:

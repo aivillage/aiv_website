@@ -9,10 +9,10 @@ stageEnd: risk_evaluative_practitioner
 difficulty: intermediate
 moduleType: concept
 learningObjectives:
-  - Describe the main concepts for Agent Observability and Evals.
-  - Identify the artifact or checkpoint this module supports.
+  - Identify traces, logs, eval cases, and failure evidence needed to review an agent.
+  - Draft an agent eval plan that covers normal, adversarial, and approval-gated tasks.
 prerequisites:
-  - agentic-rag
+  - human-approval-containment
 resources:
   - resource: anthropic-demystifying-agent-evals
     role: required

@@ -9,8 +9,8 @@ stageEnd: risk_evaluative_practitioner
 difficulty: advanced
 moduleType: concept
 learningObjectives:
-  - Describe the main concepts for NIST AI RMF and GenAI Profile.
-  - Identify the artifact or checkpoint this module supports.
+  - Map one AI use case to NIST AI RMF and GenAI Profile concepts without claiming compliance.
+  - Create a governance evidence map naming owners, controls, and review evidence.
 prerequisites:
   - mitre-atlas-mapping
 resources:
@@ -18,7 +18,7 @@ resources:
     role: required
   - resource: nist-genai-profile
     role: optional
-requiredArtifact: NIST AI RMF and GenAI Profile artifact
+requiredArtifact: Governance evidence map
 securityLens: primary
 securityLensText: "A risk framework is only useful if it maps to controls, owners, evidence, and review decisions. Use framework language to make accountability clearer, not to decorate a document."
 status: beta

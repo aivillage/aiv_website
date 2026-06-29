@@ -9,8 +9,8 @@ stageEnd: ai_literate
 difficulty: intermediate
 moduleType: concept
 learningObjectives:
-  - Describe the main concepts for Neural Network Intuition.
-  - Identify the artifact or checkpoint this module supports.
+  - Describe layers, weights, activations, training signals, and uncertainty at an intuitive level.
+  - Create a neural-network intuition sketch that explains what the model can and cannot show.
 prerequisites:
   - classical-ai-search
 resources:

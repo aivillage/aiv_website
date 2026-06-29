@@ -9,8 +9,8 @@ stageEnd: builder
 difficulty: advanced
 moduleType: concept
 learningObjectives:
-  - Describe the main concepts for Vector Search and Retrieval.
-  - Identify the artifact or checkpoint this module supports.
+  - Plan chunking, indexing, retrieval, source labeling, and fallback behavior for team documents.
+  - Draft a Team Knowledge Assistant retrieval plan with access and review controls.
 prerequisites:
   - rag-basics
 resources:

@@ -9,8 +9,8 @@ stageEnd: risk_evaluative_practitioner
 difficulty: advanced
 moduleType: practice
 learningObjectives:
-  - Describe the main concepts for MCP Fundamentals.
-  - Identify the artifact or checkpoint this module supports.
+  - Explain how MCP connects clients, servers, tools, resources, and authorization boundaries.
+  - Draw a protocol boundary diagram for one MCP-style integration.
 prerequisites:
   - agent-observability-evals
 resources:

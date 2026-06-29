@@ -9,13 +9,14 @@ stageEnd: specialist_contributor
 difficulty: intermediate
 moduleType: concept
 learningObjectives:
-  - Describe the main concepts for Interpreting Eval Results.
-  - Identify the artifact or checkpoint this module supports.
+  - Interpret eval scores alongside failures, uncertainty, sample limits, and examples.
+  - Write an eval interpretation note that separates evidence from what remains unproven.
 prerequisites:
   - custom-solvers-scoring
 resources:
   - resource: inspect-ai
     role: required
+requiredArtifact: Eval interpretation note
 securityLens: required
 securityLensText: "Eval interpretation should include uncertainty, sample limits, and failure examples. A clean chart can still hide behavior that matters for safety, reliability, or misuse review."
 status: beta

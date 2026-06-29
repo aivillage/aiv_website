@@ -9,12 +9,13 @@ stageEnd: specialist_contributor
 difficulty: intermediate
 moduleType: concept
 learningObjectives:
-  - Describe the main concepts for Rules of Engagement and Lab Safety.
-  - Identify the artifact or checkpoint this module supports.
+  - Define authorization, scope, target boundaries, data limits, and stop conditions before lab work.
+  - Write a rules-of-engagement note for a controlled AI security exercise.
 prerequisites: []
 resources:
   - resource: portswigger-web-llm-attacks
     role: required
+requiredArtifact: Rules-of-engagement note
 securityLens: primary
 securityLensText: "Offensive learning must start with authorization and containment. Define the allowed target, allowed data, allowed techniques, stop conditions, and defensive debrief before touching a lab."
 status: beta

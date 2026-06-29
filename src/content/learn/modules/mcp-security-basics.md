@@ -9,8 +9,8 @@ stageEnd: risk_evaluative_practitioner
 difficulty: advanced
 moduleType: practice
 learningObjectives:
-  - Describe the main concepts for MCP Security Basics.
-  - Identify the artifact or checkpoint this module supports.
+  - Identify MCP trust boundaries involving servers, scopes, tokens, resources, and tool descriptions.
+  - Draft an MCP threat model that prevents token passthrough and overbroad authority.
 prerequisites:
   - mcp-fundamentals
 resources:

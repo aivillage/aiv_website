@@ -2,8 +2,8 @@
 title: Agentic AI and Advanced Builder
 slug: agentic-ai-advanced-builder
 summary: >-
-  An advanced builder path for workflows, agents, agentic RAG, observability, MCP, MCP security basics, and
-  human approval containment.
+  An advanced builder path for workflows, agents, agentic RAG, human approval containment, observability, MCP,
+  and MCP security basics.
 trackKind: agentic
 stageStart: builder
 stageEnd: risk_evaluative_practitioner
@@ -16,7 +16,6 @@ prerequisites:
   - ai-builder-core
 requiredArtifacts:
   - Agent Risk Note
-  - Human approval and containment plan
 securityLens: required
 securityCheckpoints:
   - Tool authority checkpoint
@@ -29,10 +28,10 @@ canonicalModules:
   - agent-fundamentals
   - agent-frameworks
   - agentic-rag
+  - human-approval-containment
   - agent-observability-evals
   - mcp-fundamentals
   - mcp-security-basics
-  - human-approval-containment
 reviewOwner: AI Village Learn
 lastReviewed: "2026-06-26"
 ---

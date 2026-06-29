@@ -9,8 +9,8 @@ stageEnd: ai_literate
 difficulty: intro
 moduleType: concept
 learningObjectives:
-  - Describe the main concepts for Classical AI Search.
-  - Identify the artifact or checkpoint this module supports.
+  - Model a small search problem in terms of states, actions, goals, and constraints.
+  - Sketch a search problem that includes invalid paths or unacceptable outcomes.
 prerequisites:
   - ml-basics
 resources:

@@ -1,6 +1,6 @@
 ---
 slug: anthropic-code-with-claude-ysPbXH0LpIE
-title: Anthropic Claude coding video ysPbXH0LpIE
+title: Prompting 101 | Code w/ Claude
 provider: Anthropic
 canonicalUrl: https://www.youtube.com/watch?v=ysPbXH0LpIE
 resourceType: video

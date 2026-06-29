@@ -9,14 +9,14 @@ stageEnd: ai_practitioner
 difficulty: intro
 moduleType: checkpoint
 learningObjectives:
-  - Describe the main concepts for AI Workflow Policy Basics.
-  - Identify the artifact or checkpoint this module supports.
+  - Define approved AI use, data boundaries, review expectations, and retained evidence for a workflow.
+  - Write a one-page AI workflow policy that a team could apply in practice.
 prerequisites:
   - verification-human-review
 resources:
-  - resource: nist-ai-rmf
-    role: required
   - resource: nist-genai-profile
+    role: required
+  - resource: nist-ai-rmf
     role: optional
   - resource: microsoft-using-generative-ai-responsibly
     role: deeper

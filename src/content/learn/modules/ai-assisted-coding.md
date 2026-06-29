@@ -9,8 +9,8 @@ stageEnd: ai_practitioner
 difficulty: intro
 moduleType: concept
 learningObjectives:
-  - Describe the main concepts for AI-Assisted Coding.
-  - Identify the artifact or checkpoint this module supports.
+  - Frame coding-assistant tasks with scope, context, constraints, and checks.
+  - Record a coding task brief that explains generated changes, tests run, and rejected output.
 prerequisites:
   - ai-assisted-writing
 resources:
@@ -19,7 +19,7 @@ resources:
     step: 1
     note: "Use this to turn the coding task into clear intent, context, constraints, and checks."
   - resource: openai-codex-best-practices
-    role: optional
+    role: required
     step: 2
     note: "Use this to compare agent-ready task framing and review expectations."
   - resource: anthropic-code-with-claude-ysPbXH0LpIE

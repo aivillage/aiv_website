@@ -9,13 +9,14 @@ stageEnd: specialist_contributor
 difficulty: intermediate
 moduleType: concept
 learningObjectives:
-  - Describe the main concepts for Benchmark Transparency.
-  - Identify the artifact or checkpoint this module supports.
+  - Assess what a benchmark measures, excludes, and makes hard to compare.
+  - Write a benchmark transparency note that connects limits to a real decision.
 prerequisites:
   - interpreting-eval-results
 resources:
   - resource: stanford-helm
     role: required
+requiredArtifact: Benchmark transparency note
 securityLens: required
 securityLensText: "Benchmark transparency reduces false confidence. Report what was tested, what was excluded, how scoring worked, and whether the benchmark resembles the system's real use."
 status: beta

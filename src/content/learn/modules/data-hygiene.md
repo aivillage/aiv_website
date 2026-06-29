@@ -9,8 +9,8 @@ stageEnd: ai_practitioner
 difficulty: intro
 moduleType: concept
 learningObjectives:
-  - Describe the main concepts for Data Hygiene.
-  - Identify the artifact or checkpoint this module supports.
+  - Classify data by sensitivity, reuse permission, and review requirements before AI use.
+  - Build a red/yellow/green data matrix for an approved workflow.
 prerequisites:
   - ai-for-security-workflows
 resources:

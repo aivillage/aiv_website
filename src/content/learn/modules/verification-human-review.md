@@ -9,8 +9,8 @@ stageEnd: ai_practitioner
 difficulty: intro
 moduleType: checkpoint
 learningObjectives:
-  - Describe the main concepts for Verification and Human Review.
-  - Identify the artifact or checkpoint this module supports.
+  - Design review steps for claims, outputs, citations, and decisions made with AI assistance.
+  - Create a human review rubric that defines what must be checked before acceptance.
 prerequisites:
   - data-hygiene
 resources:

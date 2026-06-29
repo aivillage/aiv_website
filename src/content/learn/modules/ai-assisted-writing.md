@@ -9,8 +9,8 @@ stageEnd: ai_practitioner
 difficulty: intro
 moduleType: concept
 learningObjectives:
-  - Describe the main concepts for AI-Assisted Writing.
-  - Identify the artifact or checkpoint this module supports.
+  - Use AI assistance for drafting and revision while preserving human ownership.
+  - Create a draft-edit-verify worksheet that records changes and verification decisions.
 prerequisites:
   - ai-assisted-research
 resources:

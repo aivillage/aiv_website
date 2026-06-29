@@ -9,13 +9,14 @@ stageEnd: risk_evaluative_practitioner
 difficulty: intermediate
 moduleType: concept
 learningObjectives:
-  - Describe the main concepts for AI Supply Chain.
-  - Identify the artifact or checkpoint this module supports.
+  - Inventory the models, data, prompts, packages, tools, and services behind an AI workflow.
+  - Complete a supply-chain checklist with source, license, update path, and review owner.
 prerequisites:
   - sensitive-information-disclosure
 resources:
   - resource: owasp-llm-top-10-2025
     role: required
+requiredArtifact: Supply-chain checklist
 securityLens: primary
 securityLensText: "AI supply chains include more than software packages. Review model sources, datasets, weights, prompts, plugins, tools, and external services before depending on them."
 status: beta

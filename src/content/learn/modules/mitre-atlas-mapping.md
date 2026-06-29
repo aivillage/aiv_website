@@ -9,13 +9,14 @@ stageEnd: risk_evaluative_practitioner
 difficulty: advanced
 moduleType: concept
 learningObjectives:
-  - Describe the main concepts for MITRE ATLAS Mapping.
-  - Identify the artifact or checkpoint this module supports.
+  - Use ATLAS terminology to organize AI security concerns without overclaiming coverage.
+  - Write an ATLAS mapping note that ties one concern to evidence or controls.
 prerequisites:
   - misinformation-unbounded-consumption
 resources:
   - resource: mitre-atlas
     role: required
+requiredArtifact: ATLAS mapping note
 securityLens: primary
 securityLensText: "A mapping is not proof of coverage. Use ATLAS terminology to organize review, then connect each concern to evidence, controls, and system-specific decisions."
 status: beta

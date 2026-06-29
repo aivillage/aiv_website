@@ -9,8 +9,8 @@ stageEnd: ai_literate
 difficulty: intermediate
 moduleType: concept
 learningObjectives:
-  - Describe the main concepts for Embeddings and Retrieval.
-  - Identify the artifact or checkpoint this module supports.
+  - Explain how embeddings, chunks, metadata, and nearest-neighbor search affect retrieval.
+  - Sketch a mini semantic-search demo with source collection and expected behavior.
 prerequisites:
   - transformers-llms
 resources:

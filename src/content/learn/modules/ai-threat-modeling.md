@@ -9,12 +9,13 @@ stageEnd: risk_evaluative_practitioner
 difficulty: intermediate
 moduleType: concept
 learningObjectives:
-  - Describe the main concepts for AI Threat Modeling.
-  - Identify the artifact or checkpoint this module supports.
+  - Name assets, actors, trust boundaries, data flows, and controls for an AI system.
+  - Draft an AI threat model outline that connects risks to owners and review decisions.
 prerequisites: []
 resources:
   - resource: owasp-llm-top-10-2025
     role: required
+requiredArtifact: AI threat model outline
 securityLens: primary
 securityLensText: "AI threat modeling should connect risks to concrete controls and owners. Keep the model high-level enough for shared review, but specific enough to guide design decisions."
 status: beta

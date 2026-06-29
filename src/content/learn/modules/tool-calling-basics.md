@@ -9,8 +9,8 @@ stageEnd: builder
 difficulty: advanced
 moduleType: practice
 learningObjectives:
-  - Describe the main concepts for Tool Calling Basics.
-  - Identify the artifact or checkpoint this module supports.
+  - Define tool names, arguments, allowed actions, and response shapes as application-controlled behavior.
+  - Write a Team Knowledge Assistant tool contract with approval and failure handling.
 prerequisites:
   - vector-search-retrieval
 resources:

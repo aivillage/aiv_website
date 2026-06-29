@@ -9,8 +9,8 @@ stageEnd: builder
 difficulty: intermediate
 moduleType: concept
 learningObjectives:
-  - Describe the main concepts for Structured Outputs.
-  - Identify the artifact or checkpoint this module supports.
+  - Use schemas to reduce ambiguity in model output without treating valid JSON as trusted.
+  - Create a Team Knowledge Assistant output contract with valid, invalid, and rejected examples.
 prerequisites:
   - api-based-ai-apps
 resources:
@@ -18,10 +18,6 @@ resources:
     role: required
     step: 1
     note: "Use this to define the required schema and validation behavior for assistant output."
-  - resource: microsoft-function-calling-external-apps
-    role: optional
-    step: 2
-    note: "Use this as optional context for structured app integration patterns."
 requiredArtifact: Team Knowledge Assistant output contract
 securityLens: required
 securityLensText: "Schema validation is not authorization. A valid JSON object can still request an unsafe or unauthorized action, so applications must validate intent, permissions, and business rules separately."

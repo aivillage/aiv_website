@@ -9,8 +9,8 @@ stageEnd: ai_literate
 difficulty: intro
 moduleType: practice
 learningObjectives:
-  - Describe the main concepts for Python Notebook Readiness.
-  - Identify the artifact or checkpoint this module supports.
+  - Read notebook cells, dependencies, data files, and outputs before running code.
+  - Complete a notebook readiness check that notes account, credential, and local-environment risks.
 prerequisites:
   - what-is-ai
 resources:

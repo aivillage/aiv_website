@@ -9,8 +9,8 @@ stageEnd: specialist_contributor
 difficulty: intermediate
 moduleType: practice
 learningObjectives:
-  - Describe the main concepts for Prompt Injection Basics.
-  - Identify the artifact or checkpoint this module supports.
+  - Explain prompt injection as an instruction-boundary problem inside authorized toy labs.
+  - Write a lab-boundary note naming allowed targets, scoped inputs, and defensive review needs.
 prerequisites:
   - rules-of-engagement-lab-safety
 resources:
@@ -21,6 +21,7 @@ resources:
 labs:
   - prompt-extraction
   - email-indirect
+requiredArtifact: Lab-boundary note
 securityLens: primary
 securityLensText: "Prompt injection basics should stay inside authorized toy labs and defensive review. Focus on instruction boundaries, source trust, and how applications decide which input can influence model behavior."
 status: beta

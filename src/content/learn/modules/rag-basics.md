@@ -9,8 +9,8 @@ stageEnd: builder
 difficulty: intermediate
 moduleType: practice
 learningObjectives:
-  - Describe the main concepts for RAG Basics.
-  - Identify the artifact or checkpoint this module supports.
+  - Explain how approved sources become retrieved context for an AI answer.
+  - Draft a Team Knowledge Assistant RAG design note with source, retrieval method, answer format, and review step.
 prerequisites:
   - structured-outputs
 resources:

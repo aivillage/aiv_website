@@ -9,8 +9,8 @@ stageEnd: ai_literate
 difficulty: intermediate
 moduleType: concept
 learningObjectives:
-  - Describe the main concepts for Transformers and LLMs.
-  - Identify the artifact or checkpoint this module supports.
+  - Explain tokens, attention, training data, context windows, and generation limits at a practical level.
+  - Create a token and attention explainer that names where confidence can be misleading.
 prerequisites:
   - deep-learning-systems
 resources:

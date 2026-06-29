@@ -9,8 +9,8 @@ stageEnd: specialist_contributor
 difficulty: intermediate
 moduleType: concept
 learningObjectives:
-  - Describe the main concepts for Running an Inspect Eval.
-  - Identify the artifact or checkpoint this module supports.
+  - Run an Inspect-style eval only with authorized models, accounts, datasets, and credentials.
+  - Write an eval run note with task, system under test, config, result summary, and limitations.
 prerequisites:
   - inspect-dataset-solver-scorer
 resources:
@@ -20,6 +20,7 @@ resources:
     role: optional
 labs:
   - inspect-bahrain
+requiredArtifact: Eval run note
 securityLens: required
 securityLensText: "Running an eval can send prompts, outputs, and configuration to models or services. Use authorized data, protect credentials, and document the environment before interpreting results."
 status: beta

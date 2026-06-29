@@ -9,8 +9,8 @@ stageEnd: ai_practitioner
 difficulty: intro
 moduleType: concept
 learningObjectives:
-  - Describe the main concepts for AI-Assisted Research.
-  - Identify the artifact or checkpoint this module supports.
+  - Separate model-assisted synthesis from verified claims and open questions.
+  - Build a claim-source matrix that keeps citations attached to checked facts.
 prerequisites:
   - prompting-context
 resources:

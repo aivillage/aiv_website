@@ -10,7 +10,7 @@ creator: Full Stack Deep Learning
 videoId: YdeuQhlHmCA
 playlistUrl: https://www.youtube.com/playlist?list=PL1T8fO7ArWleyIqOy37OVXsP4hFXymdOZ
 playlistId: PL1T8fO7ArWleyIqOy37OVXsP4hFXymdOZ
-featuredEmbed: true
+featuredEmbed: false
 embedPrivacyMode: enhanced
 ageRestricted: false
 seriesSlug: full-stack-deep-learning-llm-bootcamp
@@ -24,12 +24,12 @@ targetStage: builder
 difficulty: intermediate
 tracks:
   - agentic-ai-advanced-builder
-rightsMode: official_embed
+rightsMode: link_only
 license: Full Stack Deep Learning and YouTube terms
 cost: free
 loginRequired: false
 accessMode: direct_open
-embedAllowed: true
+embedAllowed: false
 attribution: Full Stack Deep Learning
 maintenanceRisk: medium
 caveats:

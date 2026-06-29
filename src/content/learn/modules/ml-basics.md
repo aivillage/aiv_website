@@ -9,8 +9,8 @@ stageEnd: ai_literate
 difficulty: intro
 moduleType: practice
 learningObjectives:
-  - Describe the main concepts for ML Basics.
-  - Identify the artifact or checkpoint this module supports.
+  - Explain how examples, labels, metrics, and validation shape a simple ML task.
+  - Write a baseline ML model note with task, data, metric, and limitations.
 prerequisites:
   - python-notebook-readiness
 resources:

@@ -85,7 +85,7 @@ const checkpointPrompt = requiredCheckpointSource?.resource.data.checkpointPromp
   || requiredCheckpointSource?.note
   || requiredCheckpointSource?.resource.data.watchFocus
   || (learnModule.data.requiredArtifact
-    ? `Create a ${learnModule.data.requiredArtifact} that captures the key decision, evidence, and review step from this lesson.`
+    ? `Create this artifact: ${learnModule.data.requiredArtifact}. Capture the key decision, evidence, and review step from this lesson.`
     : "Beta checkpoint: identify the artifact this module should produce, then write the smallest useful version before moving on.");
 const hasSecurityLensText = learnModule.data.securityLensText.trim().length > 0;
 

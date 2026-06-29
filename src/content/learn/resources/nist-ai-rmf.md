@@ -22,7 +22,6 @@ ageRestricted: false
 attribution: NIST
 canonicalFor:
   - ai-risk-frameworks
-  - ai-workflow-policy-basics
   - copyright-licensing-basics
   - model-system-cards
   - nist-ai-rmf-genai-profile

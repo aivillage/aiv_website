@@ -9,8 +9,8 @@ stageEnd: risk_evaluative_practitioner
 difficulty: intermediate
 moduleType: concept
 learningObjectives:
-  - Describe the main concepts for Agentic RAG.
-  - Identify the artifact or checkpoint this module supports.
+  - Map where retrieval, memory, and tool outputs influence an agentic workflow.
+  - Write a RAG boundary spec that names sources, update rules, and review controls.
 prerequisites:
   - agent-frameworks
 resources:

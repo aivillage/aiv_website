@@ -9,14 +9,15 @@ stageEnd: specialist_contributor
 difficulty: intermediate
 moduleType: concept
 learningObjectives:
-  - Describe the main concepts for What Is an Eval.
-  - Identify the artifact or checkpoint this module supports.
+  - Define the behavior, cases, expected result, and decision an eval is meant to support.
+  - Write an eval concept note that avoids broad claims from narrow tests.
 prerequisites: []
 resources:
   - resource: inspect-ai
     role: required
 labs:
   - inspect-bahrain
+requiredArtifact: Eval concept note
 securityLens: required
 securityLensText: "An eval should test the behavior a system depends on, not only the behavior that is easy to score. Include normal cases, boundary cases, and failures that would change a deployment decision."
 status: beta

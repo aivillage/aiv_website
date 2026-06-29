@@ -10,7 +10,7 @@ creator: LangChain
 videoId: KcGoJPK-0tY
 playlistUrl: https://www.youtube.com/playlist?list=PLfaIDFEXuae1opD3AuXZiwCfQTi8s2pBw
 playlistId: PLfaIDFEXuae1opD3AuXZiwCfQTi8s2pBw
-featuredEmbed: true
+featuredEmbed: false
 embedPrivacyMode: enhanced
 ageRestricted: false
 seriesSlug: langchain-academy
@@ -24,12 +24,12 @@ targetStage: risk_evaluative_practitioner
 difficulty: intermediate
 tracks:
   - agentic-ai-advanced-builder
-rightsMode: official_embed
+rightsMode: link_only
 license: LangChain and YouTube terms
 cost: free
 loginRequired: false
 accessMode: direct_open
-embedAllowed: true
+embedAllowed: false
 attribution: LangChain
 maintenanceRisk: medium
 caveats:

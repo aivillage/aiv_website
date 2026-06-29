@@ -9,8 +9,8 @@ stageEnd: specialist_contributor
 difficulty: advanced
 moduleType: concept
 learningObjectives:
-  - Describe the main concepts for Model Eval Harnesses.
-  - Identify the artifact or checkpoint this module supports.
+  - Compare eval harnesses by configuration, task definitions, model adapters, and scoring assumptions.
+  - Draft a harness review note that records evidence produced and blind spots.
 prerequisites:
   - benchmark-transparency
 resources:
@@ -18,6 +18,7 @@ resources:
     role: required
   - resource: lm-evaluation-harness
     role: optional
+requiredArtifact: Harness review note
 securityLens: required
 securityLensText: "An eval harness can standardize tests, but it can also standardize blind spots. Review configuration, datasets, scoring, and logging before relying on repeated results."
 status: beta

@@ -9,8 +9,8 @@ stageEnd: risk_evaluative_practitioner
 difficulty: intermediate
 moduleType: concept
 learningObjectives:
-  - Describe the main concepts for Workflows vs. Agents.
-  - Identify the artifact or checkpoint this module supports.
+  - Decide when a predictable workflow is enough and when agent autonomy adds justified value.
+  - Write a workflow-vs-agent decision memo that records new risks from tools, state, memory, and side effects.
 prerequisites: []
 resources:
   - resource: anthropic-building-effective-agents

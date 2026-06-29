@@ -9,8 +9,8 @@ stageEnd: specialist_contributor
 difficulty: advanced
 moduleType: capstone
 learningObjectives:
-  - Describe the main concepts for Eval Cards.
-  - Identify the artifact or checkpoint this module supports.
+  - Document eval purpose, setup, methods, results, limitations, and owner.
+  - Draft an eval card that makes supported and unsupported claims explicit.
 prerequisites:
   - model-eval-harnesses
 resources:
@@ -18,6 +18,7 @@ resources:
     role: required
 labs:
   - inspect-bahrain
+requiredArtifact: Eval card draft
 securityLens: required
 securityLensText: "An eval card should make evidence easier to review, not make weak evidence look complete. Include scope, methods, limitations, owners, and decisions the eval should or should not support."
 status: beta
