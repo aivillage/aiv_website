@@ -12,11 +12,13 @@ import {
   canRenderLearnModule,
   canRenderLearnTrack,
   entrySlug,
+  findPublicCanonicalTracksForModule,
   formatLabel,
   labPath,
   modulePath,
   refId,
   trackPath,
+  trackScopedModulePath,
 } from "../../../../utils/learn";
 
 type MappingGroup = {
@@ -24,9 +26,14 @@ type MappingGroup = {
   values: string[];
 };
 
+type ModuleLink = {
+  module: CollectionEntry<"learnModules">;
+  track?: CollectionEntry<"learnTracks">;
+};
+
 type Props = {
   lab: CollectionEntry<"learnLabs">;
-  modules: CollectionEntry<"learnModules">[];
+  modules: ModuleLink[];
   tracks: CollectionEntry<"learnTracks">[];
   resources: CollectionEntry<"learnResources">[];
   mappings: MappingGroup[];
@@ -49,6 +56,10 @@ export async function getStaticPaths() {
     const relatedModules = modules.filter((module) =>
       canRenderLearnModule(module) && (module.data.labs || []).some((labRef) => refId(labRef) === labSlug),
     );
+    const moduleLinks = relatedModules.map((module) => {
+      const canonicalTracks = findPublicCanonicalTracksForModule(module, tracks);
+      return { module, track: canonicalTracks.length === 1 ? canonicalTracks[0] : undefined };
+    });
     const relatedTracks = Array.from(
       new Map(
         relatedModules
@@ -69,7 +80,7 @@ export async function getStaticPaths() {
 
     return {
       params: { slug: labSlug },
-      props: { lab, modules: relatedModules, tracks: relatedTracks, resources: relatedResources, mappings },
+      props: { lab, modules: moduleLinks, tracks: relatedTracks, resources: relatedResources, mappings },
     };
   });
 }
@@ -165,9 +176,14 @@ const sourceUrl = lab.data.sourceRepo
 
     {modules.length > 0 && (
       <section>
-        <h2>Related Modules</h2>
+        <h2>Continue in module</h2>
         <ul class="learn-link-list">
-          {modules.map((module) => <li><a href={modulePath(module)}>{module.data.title}</a></li>)}
+          {modules.map(({ module, track }) => (
+            <li>
+              <a href={track ? trackScopedModulePath(track, module) : modulePath(module)}>{module.data.title}</a>
+              {track && <span>{track.data.title}</span>}
+            </li>
+          ))}
         </ul>
       </section>
     )}

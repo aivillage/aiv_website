@@ -1,16 +1,18 @@
 ---
 import { getCollection } from "astro:content";
 import type { CollectionEntry } from "astro:content";
-import ModulePageView from "../../../../components/learn/ModulePageView.astro";
+import ModulePageView from "../../../../../../components/learn/ModulePageView.astro";
 import {
   canRenderLearnLab,
   canRenderLearnModule,
+  canRenderLearnTrack,
   entrySlug,
   findPublicCanonicalTracksForModule,
-  modulePath,
+  moduleSequenceForTrack,
   previousNextModulesInTrack,
   refId,
-} from "../../../../utils/learn";
+  trackScopedModulePath,
+} from "../../../../../../utils/learn";
 
 type ResourceGroup = {
   role: "required" | "optional" | "deeper";
@@ -72,60 +74,61 @@ export async function getStaticPaths() {
     return resourceGroups.find((group) => group.role === "optional")?.items.find((item) => canFeatureYouTubeEmbed(item.resource));
   }
 
-  const modules = await getCollection("learnModules", canRenderLearnModule);
-  const allModules = await getCollection("learnModules");
-  const tracks = await getCollection("learnTracks");
-  const publicTracks = tracks.filter((track) => track.data.status !== "draft");
+  const tracks = await getCollection("learnTracks", canRenderLearnTrack);
+  const modules = await getCollection("learnModules");
   const resources = await getCollection("learnResources");
   const labs = await getCollection("learnLabs");
-  const moduleBySlug = new Map(allModules.flatMap((module) => [[entrySlug(module), module], [module.id, module]]));
-  const trackBySlug = new Map(tracks.flatMap((track) => [[entrySlug(track), track], [track.id, track]]));
+  const moduleBySlug = new Map(modules.flatMap((module) => [[entrySlug(module), module], [module.id, module]]));
   const resourceBySlug = new Map(resources.flatMap((resource) => [[entrySlug(resource), resource], [resource.id, resource]]));
   const labBySlug = new Map(labs.flatMap((lab) => [[entrySlug(lab), lab], [lab.id, lab]]));
+  const paths = [];
 
-  return modules.map((module) => {
-    const relatedTracks = module.data.tracks.map((trackRef) => trackBySlug.get(refId(trackRef))).filter(Boolean) as CollectionEntry<"learnTracks">[];
-    const canonicalTracks = findPublicCanonicalTracksForModule(module, publicTracks);
-    const primaryNavigation = canonicalTracks.length === 1 ? previousNextModulesInTrack(module, canonicalTracks[0], moduleBySlug) : undefined;
-    const prerequisites = module.data.prerequisites
-      .map((moduleRef) => moduleBySlug.get(refId(moduleRef)))
-      .filter((prerequisite) => prerequisite && canRenderLearnModule(prerequisite)) as CollectionEntry<"learnModules">[];
-    const resourceGroups = (["required", "optional", "deeper"] as const).map((role) => ({
-      role,
-      heading: resourceGroupLabels[role],
-      items: resourceItemsForRole(module, resourceBySlug, role),
-    })) satisfies ResourceGroup[];
-    const hasComingSoonTrack = relatedTracks.some((track) => track.data.status === "coming_soon");
-    const featuredEmbed = module.data.status === "coming_soon" || hasComingSoonTrack
-      ? undefined
-      : featuredEmbedForGroups(resourceGroups);
-    const linkedLabs = (module.data.labs || [])
-      .map((labRef) => labBySlug.get(refId(labRef)))
-      .filter((lab) => lab && canRenderLearnLab(lab)) as CollectionEntry<"learnLabs">[];
+  for (const track of tracks) {
+    const sequence = moduleSequenceForTrack(track, moduleBySlug);
 
-    return {
-      params: { slug: entrySlug(module) },
-      props: {
-        module,
-        tracks: relatedTracks,
-        canonicalTracks,
-        prerequisites,
-        resourceGroups,
-        featuredEmbed,
-        labs: linkedLabs,
-        canonical: modulePath(module),
-        globalTrackContext: canonicalTracks.length === 1 && primaryNavigation
-          ? {
-              track: canonicalTracks[0],
-              moduleIndex: primaryNavigation.moduleIndex,
-              moduleCount: primaryNavigation.moduleCount,
-              previousModule: primaryNavigation.previousModule,
-              nextModule: primaryNavigation.nextModule,
-            }
-          : undefined,
-      },
-    };
-  });
+    for (const module of sequence) {
+      const navigation = previousNextModulesInTrack(module, track, moduleBySlug);
+      const relatedTracks = module.data.tracks.map((trackRef) => tracks.find((candidate) => entrySlug(candidate) === refId(trackRef) || candidate.id === refId(trackRef))).filter(Boolean) as CollectionEntry<"learnTracks">[];
+      const canonicalTracks = findPublicCanonicalTracksForModule(module, tracks);
+      const prerequisites = module.data.prerequisites
+        .map((moduleRef) => moduleBySlug.get(refId(moduleRef)))
+        .filter((prerequisite) => prerequisite && canRenderLearnModule(prerequisite)) as CollectionEntry<"learnModules">[];
+      const resourceGroups = (["required", "optional", "deeper"] as const).map((role) => ({
+        role,
+        heading: resourceGroupLabels[role],
+        items: resourceItemsForRole(module, resourceBySlug, role),
+      })) satisfies ResourceGroup[];
+      const featuredEmbed = module.data.status === "coming_soon" || track.data.status === "coming_soon"
+        ? undefined
+        : featuredEmbedForGroups(resourceGroups);
+      const linkedLabs = (module.data.labs || [])
+        .map((labRef) => labBySlug.get(refId(labRef)))
+        .filter((lab) => lab && canRenderLearnLab(lab)) as CollectionEntry<"learnLabs">[];
+
+      paths.push({
+        params: { trackSlug: entrySlug(track), moduleSlug: entrySlug(module) },
+        props: {
+          module,
+          tracks: relatedTracks,
+          canonicalTracks,
+          prerequisites,
+          resourceGroups,
+          featuredEmbed,
+          labs: linkedLabs,
+          canonical: trackScopedModulePath(track, module),
+          trackContext: {
+            track,
+            moduleIndex: navigation.moduleIndex,
+            moduleCount: navigation.moduleCount,
+            previousModule: navigation.previousModule,
+            nextModule: navigation.nextModule,
+          },
+        },
+      });
+    }
+  }
+
+  return paths;
 }
 
 const props = Astro.props;

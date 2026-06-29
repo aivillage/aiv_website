@@ -203,6 +203,8 @@ const learnModules = defineCollection({
           z.object({
             resource: reference("learnResources"),
             role: z.enum(["required", "optional", "deeper"]),
+            step: z.number().int().positive().optional(),
+            note: z.string().optional(),
           }),
         )
         .default([]),

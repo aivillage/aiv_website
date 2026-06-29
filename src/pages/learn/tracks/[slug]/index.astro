@@ -5,10 +5,10 @@ import BaseLayout from "../../../../layouts/BaseLayout.astro";
 import PageShell from "../../../../components/layout/PageShell.astro";
 import ArtifactBadge from "../../../../components/learn/ArtifactBadge.astro";
 import LabCard from "../../../../components/learn/LabCard.astro";
-import ModuleCard from "../../../../components/learn/ModuleCard.astro";
+import DifficultyBadge from "../../../../components/learn/DifficultyBadge.astro";
 import StageBadge from "../../../../components/learn/StageBadge.astro";
 import StatusBadge from "../../../../components/learn/StatusBadge.astro";
-import { canRenderLearnLab, canRenderLearnModule, canRenderLearnTrack, entrySlug, refId, securityLensLabels, trackPath } from "../../../../utils/learn";
+import { canRenderLearnLab, canRenderLearnModule, canRenderLearnTrack, entrySlug, moduleTypeLabels, refId, securityLensLabels, trackPath, trackScopedModulePath } from "../../../../utils/learn";
 
 type Props = {
   track: CollectionEntry<"learnTracks">;
@@ -30,7 +30,13 @@ export async function getStaticPaths() {
     const canonicalModules = track.data.canonicalModules
       .map((moduleRef) => moduleBySlug.get(refId(moduleRef)))
       .filter((module) => module && canRenderLearnModule(module)) as CollectionEntry<"learnModules">[];
-    const relatedLabs = canonicalModules.flatMap((module) => module.data.labs?.map((labRef) => labBySlug.get(refId(labRef))).filter((lab) => lab && canRenderLearnLab(lab)) || []) as CollectionEntry<"learnLabs">[];
+    const relatedLabs = Array.from(
+      new Map(
+        canonicalModules
+          .flatMap((module) => module.data.labs?.map((labRef) => labBySlug.get(refId(labRef))).filter((lab) => lab && canRenderLearnLab(lab)) || [])
+          .map((lab) => [entrySlug(lab as CollectionEntry<"learnLabs">), lab as CollectionEntry<"learnLabs">]),
+      ).values(),
+    );
     const prerequisiteTracks = track.data.prerequisites.map((trackRef) => trackBySlug.get(refId(trackRef))).filter(Boolean) as CollectionEntry<"learnTracks">[];
 
     return {
@@ -69,8 +75,6 @@ const { Content } = await render(track);
 
     <section class="learn-two-column">
       <div>
-        <h2>What This Track Is For</h2>
-        <p>{track.data.summary}</p>
         <h2>Who Should Start Here</h2>
         <ul>
           {track.data.audiences.map((audience) => <li>{audience}</li>)}
@@ -105,6 +109,44 @@ const { Content } = await render(track);
       <Content />
     </section>
 
+    <section>
+      <div class="learn-section-heading">
+        <h2>Learning Path</h2>
+        {modules.length > 0 && <a class="button" href={trackScopedModulePath(track, modules[0])}>Start Module 1</a>}
+      </div>
+      {
+        modules.length > 0 ? (
+          <ol class="learn-module-path">
+            {modules.map((module, index) => (
+              <li>
+                <div class="learn-module-path__number">{index + 1}</div>
+                <div>
+                  <div class="learn-card__meta">
+                    <StatusBadge value={module.data.status} />
+                    <DifficultyBadge value={module.data.difficulty} />
+                    <span>{moduleTypeLabels[module.data.moduleType]}</span>
+                  </div>
+                  <h3><a href={trackScopedModulePath(track, module)}>{module.data.title}</a></h3>
+                  <p>{module.data.summary}</p>
+                  <div class="learn-card__meta">
+                    <StageBadge value={module.data.stageStart} />
+                    <span>to</span>
+                    <StageBadge value={module.data.stageEnd} />
+                    <span>{module.data.resources.length} resources</span>
+                    {module.data.labs?.length ? <span>{module.data.labs.length} lab links</span> : null}
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ol>
+        ) : track.data.status === "coming_soon" ? (
+          <p class="text-muted">Modules are being prepared for this track.</p>
+        ) : (
+          <p class="text-muted">No public modules are available for this track yet.</p>
+        )
+      }
+    </section>
+
     <section class="learn-two-column">
       <div class="card card--accent-primary">
         <h2 class="mt-0">What Exists Now</h2>
@@ -116,23 +158,10 @@ const { Content } = await render(track);
       </div>
     </section>
 
-    <section>
-      <h2>Canonical Modules</h2>
-      {
-        modules.length > 0 ? (
-          <div class="learn-grid">{modules.map((module) => <ModuleCard module={module} />)}</div>
-        ) : track.data.status === "coming_soon" ? (
-          <p class="text-muted">Modules are being prepared for this track.</p>
-        ) : (
-          <p class="text-muted">No public modules are available for this track yet.</p>
-        )
-      }
-    </section>
-
-    <section>
+    {labs.length > 0 && <section>
       <h2>Related Labs</h2>
-      {labs.length > 0 ? <div class="learn-grid">{labs.map((lab) => <LabCard lab={lab} />)}</div> : <p class="text-muted">No lab metadata is attached to this track yet.</p>}
-    </section>
+      <div class="learn-grid">{labs.map((lab) => <LabCard lab={lab} />)}</div>
+    </section>}
   </PageShell>
 </BaseLayout>
 
@@ -172,7 +201,8 @@ const { Content } = await render(track);
   }
 
   .learn-artifacts,
-  .learn-grid {
+  .learn-grid,
+  .learn-module-path {
     display: grid;
     gap: 0.75rem;
   }
@@ -183,6 +213,67 @@ const { Content } = await render(track);
 
   .learn-grid {
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+
+  .learn-section-heading {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+
+  .button {
+    background: var(--aiv-action-primary);
+    border: 1px solid var(--aiv-action-primary);
+    border-radius: 6px;
+    color: var(--aiv-bg-canvas);
+    display: inline-flex;
+    font-weight: 800;
+    justify-content: center;
+    min-height: 2.75rem;
+    padding: 0.6rem 0.95rem;
+    text-decoration: none;
+  }
+
+  .learn-module-path {
+    counter-reset: module-path;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .learn-module-path li {
+    background: var(--aiv-card-bg);
+    border: 1px solid var(--aiv-card-border);
+    border-radius: 8px;
+    box-shadow: var(--aiv-card-shadow);
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: auto minmax(0, 1fr);
+    padding: 1rem;
+  }
+
+  .learn-module-path__number {
+    align-items: center;
+    background: var(--aiv-nested-bg);
+    border: 1px solid var(--aiv-nested-border);
+    border-radius: 999px;
+    display: inline-flex;
+    font-weight: 800;
+    height: 2rem;
+    justify-content: center;
+    width: 2rem;
+  }
+
+  .learn-card__meta {
+    align-items: center;
+    color: var(--aiv-text-muted);
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 0.9rem;
+    gap: 0.5rem;
   }
 
   @media (max-width: 780px) {

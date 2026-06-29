@@ -10,6 +10,7 @@ import {
   accessModeLabels,
   byTitle,
   entrySlug,
+  findPublicCanonicalTracksForModule,
   formatLabel,
   modulePath,
   refId,
@@ -17,12 +18,18 @@ import {
   resourcePath,
   seriesPath,
   trackPath,
+  trackScopedModulePath,
 } from "../../../../utils/learn";
+
+type ModuleLink = {
+  module: CollectionEntry<"learnModules">;
+  track?: CollectionEntry<"learnTracks">;
+};
 
 type Props = {
   resource: CollectionEntry<"learnResources">;
   tracks: CollectionEntry<"learnTracks">[];
-  modules: CollectionEntry<"learnModules">[];
+  modules: ModuleLink[];
 };
 
 export async function getStaticPaths() {
@@ -46,10 +53,14 @@ export async function getStaticPaths() {
     const relatedModules = modules
       .filter((module) => module.data.resources.some((link) => refId(link.resource) === resourceSlug))
       .sort(byTitle);
+    const moduleLinks = relatedModules.map((module) => {
+      const canonicalTracks = findPublicCanonicalTracksForModule(module, tracks);
+      return { module, track: canonicalTracks.length === 1 ? canonicalTracks[0] : undefined };
+    });
 
     return {
       params: { slug: resourceSlug },
-      props: { resource, tracks: relatedTracks, modules: relatedModules },
+      props: { resource, tracks: relatedTracks, modules: moduleLinks },
     };
   });
 }
@@ -179,9 +190,14 @@ const hasLearnerBody = Boolean(bodyText && !boilerplateBodyPatterns.some((patter
 
     {modules.length > 0 && (
       <section>
-        <h2>Related Modules</h2>
+        <h2>Continue in module</h2>
         <ul class="learn-link-list">
-          {modules.map((module) => <li><a href={modulePath(module)}>{module.data.title}</a></li>)}
+          {modules.map(({ module, track }) => (
+            <li>
+              <a href={track ? trackScopedModulePath(track, module) : modulePath(module)}>{module.data.title}</a>
+              {track && <span>{track.data.title}</span>}
+            </li>
+          ))}
         </ul>
       </section>
     )}

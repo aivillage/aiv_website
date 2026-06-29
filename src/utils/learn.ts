@@ -108,6 +108,12 @@ export function modulePath(entry: { id: string; data: object }) {
   return `/learn/modules/${entrySlug(entry)}/`;
 }
 
+export function trackScopedModulePath(track: { id: string; data: object } | string, module: { id: string; data: object } | string) {
+  const trackSlug = typeof track === "string" ? track : entrySlug(track);
+  const moduleSlug = typeof module === "string" ? module : entrySlug(module);
+  return `/learn/tracks/${trackSlug}/modules/${moduleSlug}/`;
+}
+
 export function trackPath(entry: { id: string; data: object }) {
   return `/learn/tracks/${entrySlug(entry)}/`;
 }
@@ -131,4 +137,48 @@ export function byTitle<T extends { data: { title?: string; term?: string } }>(l
 
 export function byTrackKindThenTitle<T extends { data: { trackKind?: string; title: string } }>(left: T, right: T) {
   return `${left.data.trackKind || ""} ${left.data.title}`.localeCompare(`${right.data.trackKind || ""} ${right.data.title}`);
+}
+
+type ReferenceLike = string | { id?: string; slug?: string };
+type ModuleLike = { id: string; data: { slug?: string; status?: string } };
+type TrackLike = { id: string; data: { slug?: string; status?: string; canonicalModules: ReferenceLike[]; title?: string } };
+
+export function moduleSequenceForTrack<TModule extends ModuleLike, TTrack extends TrackLike>(track: TTrack, moduleBySlug: Map<string, TModule>) {
+  return track.data.canonicalModules
+    .map((moduleRef) => moduleBySlug.get(refId(moduleRef)))
+    .filter((module): module is TModule => {
+      if (!module) return false;
+      return module.data.status !== "draft";
+    });
+}
+
+export function findPublicCanonicalTracksForModule<TModule extends ModuleLike, TTrack extends TrackLike>(module: TModule, tracks: TTrack[]) {
+  const moduleSlug = entrySlug(module);
+  return tracks.filter((track) =>
+    canRenderLearnTrack(track) &&
+    track.data.canonicalModules.some((moduleRef) => refId(moduleRef) === moduleSlug)
+  );
+}
+
+export function previousNextModulesInTrack<TModule extends ModuleLike, TTrack extends TrackLike>(
+  module: TModule,
+  track: TTrack,
+  moduleBySlug: Map<string, TModule>,
+) {
+  const sequence = moduleSequenceForTrack(track, moduleBySlug);
+  const moduleSlug = entrySlug(module);
+  const moduleIndex = sequence.findIndex((candidate) => entrySlug(candidate) === moduleSlug);
+
+  return {
+    moduleIndex,
+    moduleCount: sequence.length,
+    previousModule: moduleIndex > 0 ? sequence[moduleIndex - 1] : undefined,
+    nextModule: moduleIndex >= 0 && moduleIndex < sequence.length - 1 ? sequence[moduleIndex + 1] : undefined,
+    sequence,
+  };
+}
+
+export function maybePrimaryTrackForModule<TModule extends ModuleLike, TTrack extends TrackLike>(module: TModule, tracks: TTrack[]) {
+  const canonicalTracks = findPublicCanonicalTracksForModule(module, tracks);
+  return canonicalTracks.length === 1 ? canonicalTracks[0] : undefined;
 }

@@ -7,12 +7,14 @@ import {
   accessModeLabels,
   byTitle,
   entrySlug,
+  findPublicCanonicalTracksForModule,
   formatLabel,
   modulePath,
   refId,
   resourcePath,
   seriesPath,
   trackPath,
+  trackScopedModulePath,
 } from "../../../../utils/learn";
 
 type Props = {
@@ -58,6 +60,11 @@ const accessLabel = accessModeLabels[series.data.accessMode] || accessModeLabels
 function episodeModules(episode: CollectionEntry<"learnResources">) {
   const canonicalFor = new Set(episode.data.canonicalFor);
   return modules.filter((module) => canonicalFor.has(entrySlug(module))).slice(0, 3);
+}
+
+function episodeModulePath(module: CollectionEntry<"learnModules">) {
+  const canonicalTracks = findPublicCanonicalTracksForModule(module, tracks);
+  return canonicalTracks.length === 1 ? trackScopedModulePath(canonicalTracks[0], module) : modulePath(module);
 }
 ---
 
@@ -115,10 +122,10 @@ function episodeModules(episode: CollectionEntry<"learnResources">) {
               {episode.data.checkpointPrompt && <p>{episode.data.checkpointPrompt}</p>}
               {mappedModules.length > 0 && (
                 <p>
-                  Module: {mappedModules.map((module, index) => (
+                  Continue in module: {mappedModules.map((module, index) => (
                     <>
                       {index > 0 && ", "}
-                      <a href={modulePath(module)}>{module.data.title}</a>
+                      <a href={episodeModulePath(module)}>{module.data.title}</a>
                     </>
                   ))}
                 </p>
