@@ -16,8 +16,15 @@ prerequisites:
 resources:
   - resource: llamaindex-rag-docs
     role: required
+    step: 1
+    note: "Use this to name the RAG source, chunking, retrieval, answer, and review pieces."
   - resource: microsoft-rag-vector-databases
     role: optional
+    step: 2
+    note: "Use this as optional context for vector database and retrieval design choices."
+labs:
+  - rag-poisoning
+requiredArtifact: Team Knowledge Assistant RAG design note
 securityLens: required
 securityLensText: "A RAG knowledge base is an instruction surface, not just data storage. Retrieved content should be treated as untrusted input until the application proves otherwise."
 status: beta

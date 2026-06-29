@@ -16,10 +16,19 @@ prerequisites:
 resources:
   - resource: llamaindex-vectorstoreindex-docs
     role: required
+    step: 1
+    note: "Use this to plan indexed content, chunking, metadata filters, and retrieval inspection."
   - resource: llamaindex-rag-docs
     role: optional
+    step: 2
+    note: "Use this as optional context for how retrieval feeds the RAG answer path."
   - resource: microsoft-building-search-apps-vector-databases
     role: deeper
+    step: 3
+    note: "Use this as a deeper reference after your retrieval plan is drafted."
+labs:
+  - rag-poisoning
+requiredArtifact: Team Knowledge Assistant retrieval plan
 securityLens: required
 securityLensText: "Vector search can retrieve sensitive, stale, or adversarial content if the index and ranking rules allow it. Review chunk sources, metadata filters, and access controls alongside relevance quality."
 status: beta

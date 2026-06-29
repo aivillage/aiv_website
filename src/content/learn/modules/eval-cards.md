@@ -16,6 +16,8 @@ prerequisites:
 resources:
   - resource: inspect-ai
     role: required
+labs:
+  - inspect-bahrain
 securityLens: required
 securityLensText: "An eval card should make evidence easier to review, not make weak evidence look complete. Include scope, methods, limitations, owners, and decisions the eval should or should not support."
 status: beta

@@ -7,6 +7,8 @@ type ResourceRole = "required" | "optional" | "deeper";
 type ResourceLink = {
   resource?: Reference;
   role?: ResourceRole;
+  step?: number;
+  note?: string;
 };
 type EntryData = {
   title?: string;
@@ -19,6 +21,7 @@ type EntryData = {
   whatExistsNow?: string;
   whatComingNext?: string;
   resources?: ResourceLink[];
+  requiredArtifact?: string;
   cost?: string;
   loginRequired?: boolean;
   accessMode?: string;
@@ -55,6 +58,7 @@ const removedPublicationField = ["vis", "ibility"].join("");
 const legacyComingSoonStatus = ["coming", "next"].join("_");
 const gatedAccessModes = new Set(["free_account_required", "application_or_cohort", "scheduled_or_live", "paid_or_freemium", "unclear"]);
 const gatedRequiredPattern = /\b(application|cohort|enrollment|scheduled|live class|paid|freemium|pro|certificate required)\b/i;
+const liveTrackSlugs = new Set(["ai-fundamentals", "ai-practitioner", "ai-builder-core", "agentic-ai-advanced-builder"]);
 
 function walk(dir: string, out: string[] = []) {
   for (const name of readdirSync(dir)) {
@@ -135,6 +139,7 @@ const allEntries = [...tracks, ...modules, ...resources, ...labs, ...glossary];
 
 const moduleBySlug = new Map(modules.map((entry) => [entry.slug, entry]));
 const resourceBySlug = new Map(resources.map((entry) => [entry.slug, entry]));
+const publicLiveModuleSlugs = new Set<string>();
 const publicResources = resources.filter((resource) => resource.data.status !== "draft");
 const canonicalUrlByResource = new Map<string, Entry[]>();
 const titleByResource = new Map<string, Entry[]>();
@@ -236,6 +241,15 @@ for (const track of tracks) {
       fail(track, "Beta tracks must have at least one non-draft canonical module.");
     }
   }
+
+  if (track.data.status !== "draft" && liveTrackSlugs.has(track.slug)) {
+    for (const moduleRef of track.data.canonicalModules || []) {
+      const module = moduleBySlug.get(refId(moduleRef));
+      if (module && module.data.status !== "draft") {
+        publicLiveModuleSlugs.add(module.slug);
+      }
+    }
+  }
 }
 
 for (const module of modules) {
@@ -249,6 +263,14 @@ for (const module of modules) {
 
   if (stableSecurityLensFailure(module.data)) {
     fail(module, "Stable modules with a Security Lens must include non-empty Security Lens text.");
+  }
+
+  if (isPublicModule && (module.data.status === "beta" || module.data.status === "stable") && !isPresent(module.data.requiredArtifact)) {
+    warn(module, "Public beta/stable modules should include requiredArtifact so the checkpoint is concrete.");
+  }
+
+  if (isPublicModule && publicLiveModuleSlugs.has(module.slug) && !isPresent(module.data.requiredArtifact)) {
+    warn(module, "Public modules in live tracks should include a real requiredArtifact.");
   }
 
   for (const link of resourceLinks) {

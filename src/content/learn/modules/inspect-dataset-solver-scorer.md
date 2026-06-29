@@ -16,6 +16,8 @@ prerequisites:
 resources:
   - resource: inspect-ai
     role: required
+labs:
+  - inspect-bahrain
 securityLens: required
 securityLensText: "Evaluation components encode assumptions. Review datasets, solvers, and scorers for what they include, what they omit, and how they could reward behavior you do not want."
 status: beta

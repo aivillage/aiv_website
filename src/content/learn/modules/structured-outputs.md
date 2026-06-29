@@ -16,8 +16,13 @@ prerequisites:
 resources:
   - resource: openai-structured-outputs
     role: required
+    step: 1
+    note: "Use this to define the required schema and validation behavior for assistant output."
   - resource: microsoft-function-calling-external-apps
     role: optional
+    step: 2
+    note: "Use this as optional context for structured app integration patterns."
+requiredArtifact: Team Knowledge Assistant output contract
 securityLens: required
 securityLensText: "Schema validation is not authorization. A valid JSON object can still request an unsafe or unauthorized action, so applications must validate intent, permissions, and business rules separately."
 status: beta

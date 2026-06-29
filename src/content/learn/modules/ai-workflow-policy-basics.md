@@ -20,7 +20,9 @@ resources:
     role: optional
   - resource: microsoft-using-generative-ai-responsibly
     role: deeper
-requiredArtifact: AI Workflow Policy Basics artifact
+    step: 3
+    note: "Use this to turn acceptable-use expectations into a one-page workflow policy."
+requiredArtifact: One-page AI workflow policy
 securityLens: awareness
 securityLensText: "A policy is useful only if people can follow it during real work. Connect allowed tools, allowed data, review steps, and ownership to specific workflows."
 status: beta

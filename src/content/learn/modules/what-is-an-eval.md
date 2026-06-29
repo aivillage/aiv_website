@@ -15,6 +15,8 @@ prerequisites: []
 resources:
   - resource: inspect-ai
     role: required
+labs:
+  - inspect-bahrain
 securityLens: required
 securityLensText: "An eval should test the behavior a system depends on, not only the behavior that is easy to score. Include normal cases, boundary cases, and failures that would change a deployment decision."
 status: beta

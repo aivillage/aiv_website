@@ -16,9 +16,11 @@ prerequisites:
 resources:
   - resource: huggingface-llm-course
     role: required
+    step: 1
+    note: "Use the retrieval material to name embeddings, similarity, and retrieval checks for your demo."
   - resource: 3blue1brown-transformers
     role: deeper
-requiredArtifact: Embeddings Retrieval artifact
+requiredArtifact: Mini semantic-search demo
 securityLens: awareness
 securityLensText: "Embeddings and retrieval systems can expose sensitive material and can retrieve poisoned or outdated chunks. Treat indexed content, metadata, and retrieved passages as part of the application attack surface."
 status: beta

@@ -15,10 +15,17 @@ prerequisites: []
 resources:
   - resource: anthropic-prompt-engineering
     role: required
+    step: 1
+    note: "Use this as the required prompt structure source for your Prompt Frame."
   - resource: microsoft-prompt-engineering-fundamentals-video
     role: deeper
+    step: 2
+    note: "Use this video as a direct-open companion for examples and review language."
   - resource: deeplearningai-prompt-engineering
     role: deeper
+    step: 3
+    note: "Optional off-ramp only after the no-login core prompt frame is complete."
+requiredArtifact: Prompt Frame
 securityLens: awareness
 securityLensText: "Do not paste secrets, credentials, customer data, or unreviewed third-party content into model context. Treat prompts as data movement, not just text entry."
 status: beta

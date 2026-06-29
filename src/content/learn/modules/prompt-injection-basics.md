@@ -18,6 +18,9 @@ resources:
     role: required
   - resource: portswigger-web-llm-attacks
     role: optional
+labs:
+  - prompt-extraction
+  - email-indirect
 securityLens: primary
 securityLensText: "Prompt injection basics should stay inside authorized toy labs and defensive review. Focus on instruction boundaries, source trust, and how applications decide which input can influence model behavior."
 status: beta

@@ -14,12 +14,17 @@ learningObjectives:
 prerequisites:
   - classical-ai-search
 resources:
-  - resource: 3blue1brown-neural-networks
-    role: required
   - resource: 3blue1brown-neural-networks-chapter-1
+    role: required
+    step: 1
+    note: "Use the visual explanation to sketch inputs, layers, activations, and outputs."
+  - resource: 3blue1brown-neural-networks
     role: deeper
+    step: 2
+    note: "Use the full series only if you need more context after the sketch."
   - resource: karpathy-zero-to-hero
     role: deeper
+requiredArtifact: Neural network intuition sketch
 securityLens: awareness
 securityLensText: "Neural networks learn patterns from examples, not rules with guaranteed coverage. Review where training data, model architecture, and deployment context can create blind spots before relying on model output."
 status: beta

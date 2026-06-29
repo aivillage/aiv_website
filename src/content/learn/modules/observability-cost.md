@@ -16,11 +16,17 @@ prerequisites:
 resources:
   - resource: phoenix-observability-docs
     role: required
+    step: 1
+    note: "Use this to name traces, spans, feedback, and review signals for the checklist."
   - resource: openinference-docs
     role: optional
+    step: 2
+    note: "Use this as optional context for telemetry shape and interoperability."
   - resource: fsdl-llmops
     role: deeper
-requiredArtifact: Observability Cost artifact
+    step: 3
+    note: "Use this as a deeper reference for operational practices after the checklist."
+requiredArtifact: Team Knowledge Assistant observability checklist
 securityLens: required
 securityLensText: "Observability can expose sensitive prompts and outputs if it is designed casually. Log enough to debug and review behavior, but protect secrets, personal data, and access-controlled context."
 status: beta

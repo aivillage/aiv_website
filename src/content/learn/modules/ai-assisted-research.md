@@ -16,6 +16,7 @@ prerequisites:
 resources:
   - resource: microsoft-genai-beginners
     role: required
+requiredArtifact: Claim-source matrix
 securityLens: awareness
 securityLensText: "AI-assisted research can mix accurate summaries with unsupported claims. Track sources, separate model-generated synthesis from evidence, and verify important facts before reuse."
 status: beta

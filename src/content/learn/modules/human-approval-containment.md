@@ -20,6 +20,8 @@ resources:
     role: optional
   - resource: mcp-spec-2025-11-25
     role: deeper
+labs:
+  - email-indirect
 requiredArtifact: Approval matrix plus containment policy
 securityLens: required
 securityLensText: "Approval gates only work when the human sees the right decision context. Show the requested action, source evidence, affected data, and rollback or cancellation options before approval."

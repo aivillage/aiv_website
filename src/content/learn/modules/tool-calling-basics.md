@@ -16,10 +16,17 @@ prerequisites:
 resources:
   - resource: openai-function-calling
     role: required
+    step: 1
+    note: "Use this to define one tool name, arguments, allowed action, and response shape."
   - resource: microsoft-function-calling-external-apps
     role: optional
+    step: 2
+    note: "Use this as optional context for connecting tool calls to application behavior."
   - resource: deeplearningai-build-evaluate-iterate-llm-agents
     role: deeper
+    step: 3
+    note: "Human-review off-ramp only; do not make it part of the core tool contract."
+requiredArtifact: Team Knowledge Assistant tool contract
 securityLens: required
 securityLensText: "Every tool call is a privilege boundary. The application, not the model, must enforce user intent, authorization, scope, and approval before any real action occurs."
 status: beta

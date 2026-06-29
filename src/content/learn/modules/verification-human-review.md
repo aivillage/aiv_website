@@ -16,6 +16,7 @@ prerequisites:
 resources:
   - resource: anthropic-prompt-engineering
     role: required
+requiredArtifact: Human review rubric
 securityLens: awareness
 securityLensText: "Human review works only when reviewers know what they are responsible for checking. Define evidence, failure cases, and escalation paths instead of relying on a vague final glance."
 status: beta

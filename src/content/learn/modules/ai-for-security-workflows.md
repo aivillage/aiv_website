@@ -18,9 +18,11 @@ resources:
     role: required
   - resource: ncsc-ai-cyber-security
     role: required
+    step: 2
+    note: "Use this to identify security workflow risks, review points, and escalation boundaries."
   - resource: microsoft-securing-generative-ai-applications
     role: optional
-requiredArtifact: AI security workflow triage note
+requiredArtifact: Security AI workflow triage note
 securityLens: awareness
 securityLensText: "AI can help summarize alerts, draft hypotheses, and organize evidence, but it must not become the authority for access, severity, containment, or disclosure decisions. Keep security workflows bounded by approved data, logged prompts, and human review."
 status: beta

@@ -19,6 +19,9 @@ resources:
     role: optional
   - resource: fsdl-launch-llm-app-one-hour
     role: deeper
+    step: 3
+    note: "Use this as context for the main application parts in your architecture sketch."
+requiredArtifact: Team Knowledge Assistant architecture sketch
 securityLens: required
 securityLensText: "AI application architecture should make trust boundaries visible. Separate user input, model calls, retrieved context, tools, storage, and approvals so controls can be placed where decisions happen."
 status: beta

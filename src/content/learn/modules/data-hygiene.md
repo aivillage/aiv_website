@@ -16,6 +16,7 @@ prerequisites:
 resources:
   - resource: anthropic-prompt-engineering
     role: required
+requiredArtifact: Red/yellow/green data matrix
 securityLens: awareness
 securityLensText: "Data hygiene is an access-control and privacy issue, not just a cleanup task. Know what data you are allowed to use, where it goes, and how long it remains available."
 status: beta

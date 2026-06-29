@@ -18,6 +18,7 @@ resources:
     role: required
   - resource: fastai-practical-deep-learning
     role: optional
+requiredArtifact: Baseline ML model note
 securityLens: awareness
 securityLensText: "Metrics define what good means for a model. A high score on the wrong metric can hide bias, brittleness, or unsafe behavior in the situations users actually face."
 status: beta

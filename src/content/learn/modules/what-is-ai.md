@@ -15,10 +15,15 @@ prerequisites: []
 resources:
   - resource: cs50-ai
     role: required
+    step: 1
+    note: "Use this to separate AI, machine learning, search, and generative AI in your concept map."
   - resource: google-ml-crash-course
     role: optional
   - resource: cs50-ai-search-lecture-0
     role: deeper
+    step: 3
+    note: "Watch for the core AI problem-solving vocabulary that should appear in your map."
+requiredArtifact: AI concept map
 securityLens: awareness
 securityLensText: "AI systems move and transform data, so security starts with understanding where inputs, outputs, and decisions travel. Treat model output as a generated suggestion that needs context, review, and clear ownership before it affects people or systems."
 status: beta

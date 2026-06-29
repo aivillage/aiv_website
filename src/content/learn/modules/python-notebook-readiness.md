@@ -16,14 +16,25 @@ prerequisites:
 resources:
   - resource: google-colab
     role: required
+    step: 1
+    note: "Confirm you can open a notebook environment and understand when sign-in may be needed."
   - resource: jupyter-notebook-docs
     role: optional
+    step: 2
+    note: "Use the docs to name the notebook operations you need before later modules."
   - resource: python-official-tutorial
     role: required
+    step: 3
+    note: "Use the official tutorial to check the Python basics your notebook work will rely on."
   - resource: kaggle-python
     role: optional
+    step: 4
+    note: "Optional practice path after the no-login readiness check is complete."
   - resource: kaggle-pandas
     role: deeper
+    step: 5
+    note: "Optional data-handling practice after the no-login readiness check is complete."
+requiredArtifact: Notebook readiness check
 securityLens: awareness
 securityLensText: "A notebook can mix explanation, code, credentials, and outputs in one place. Run only notebooks from sources you trust, inspect cells before execution, and keep secrets out of shared notebook state."
 status: beta

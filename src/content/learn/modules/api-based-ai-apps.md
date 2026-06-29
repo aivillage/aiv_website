@@ -16,10 +16,17 @@ prerequisites:
 resources:
   - resource: openai-quickstart
     role: required
+    step: 1
+    note: "Use this to outline the smallest working model call path for the assistant."
   - resource: openai-responses-api
     role: optional
+    step: 2
+    note: "Use this to name inputs, outputs, and response handling in the API call plan."
   - resource: microsoft-building-text-generation-applications
     role: deeper
+    step: 3
+    note: "Use this as an optional comparison for app structure and implementation choices."
+requiredArtifact: Team Knowledge Assistant API call plan
 securityLens: required
 securityLensText: "An API call to a model is a boundary between your application and an external decision service. Protect keys, control data sent to the model, handle failures, and log enough context for review."
 status: beta

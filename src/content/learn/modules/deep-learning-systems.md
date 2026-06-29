@@ -17,8 +17,12 @@ prerequisites:
 resources:
   - resource: mit-6s191-lecture-1
     role: required
+    step: 1
+    note: "Use the lecture as the core path for naming data, model, training, validation, and deployment pieces."
   - resource: mit-6s191
     role: optional
+    step: 2
+    note: "Use the course site as optional context after the direct lecture path."
 requiredArtifact: Deep-learning system sketch
 securityLens: awareness
 securityLensText: "Deep-learning systems depend on data pipelines, training choices, model artifacts, and deployment context. Track where data enters, where model files are stored, and where outputs influence decisions so later safety and security reviews have a concrete system boundary."
