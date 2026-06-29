@@ -15,15 +15,15 @@ status: beta
 prerequisites:
   - ai-builder-core
 requiredArtifacts:
-  - Agent boundary map
-  - Human approval plan
+  - Agent Risk Note
+  - Human approval and containment plan
 securityLens: required
 securityCheckpoints:
   - Tool authority checkpoint
   - MCP trust boundary checkpoint
   - Human approval checkpoint
-whatExistsNow: The curriculum beta makes the advanced agentic builder track visible as a beta learning path.
-whatComingNext: Full lessons will add agent design notes, security checkpoints, and containment examples.
+whatExistsNow: The curriculum beta includes a practical agentic-builder sequence, resource map, and Agent Risk Note scaffold.
+whatComingNext: Full lessons will add deeper design examples, security review prompts, and containment patterns.
 canonicalModules:
   - workflows-vs-agents
   - agent-fundamentals
@@ -37,6 +37,6 @@ reviewOwner: AI Village Learn
 lastReviewed: "2026-06-26"
 ---
 
-Agentic AI and Advanced Builder is for builders who already understand basic AI application patterns and are deciding whether to add agents, tool orchestration, RAG loops, MCP integrations, or human approval gates. The track helps learners distinguish a predictable workflow from an agentic system and identify where autonomy changes risk. The expected artifacts are an agent boundary map and a human approval plan.
+Agentic AI and Advanced Builder is for builders who already understand basic AI application patterns and are deciding whether to add agents, tool orchestration, RAG loops, MCP integrations, or human approval gates. The track starts from a least-agency premise: build an agentic system only when workflow complexity justifies extra autonomy, state, tools, and review burden. The expected artifact is an Agent Risk Note covering the user goal, workflow-vs-agent justification, tool inventory, side effects, memory classes, RAG sources, approval gates, observability plan, eval plan, MCP servers and scopes, containment controls, rollback, and kill switch.
 
-Security is built in through scope, credentials, session boundaries, tool authority, logging, and containment. The track does not assume every workflow should become an agent. What is useful now is the beta module sequence and curated resources for making design decisions before adopting a framework. Deeper agent examples, containment patterns, and security checkpoints are still being expanded. Use the current copy to structure review conversations and small prototypes, not to justify broad autonomous deployment.
+Security is built in through scope, credentials, session boundaries, tool authority, logging, and containment. The track does not assume every workflow should become an agent. What is useful now is the beta module sequence and curated resources for making design decisions before adopting a framework or MCP server. Deeper agent examples, containment patterns, and security checkpoints are still being expanded. Use the current copy to structure review conversations and small prototypes, not to justify broad autonomous deployment.

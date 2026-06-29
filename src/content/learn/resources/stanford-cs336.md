@@ -16,10 +16,11 @@ rightsMode: link_only
 license: Stanford course terms
 cost: free
 loginRequired: false
+accessMode: direct_open
 embedAllowed: false
+ageRestricted: false
 attribution: Stanford
-canonicalFor:
-  - transformers-llms
+reviewStatus: accepted
 maintenanceRisk: medium
 caveats:
   - Rights metadata needs review before reuse beyond linking.

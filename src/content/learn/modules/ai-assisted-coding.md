@@ -14,8 +14,14 @@ learningObjectives:
 prerequisites:
   - ai-assisted-writing
 resources:
-  - resource: openai-cookbook
+  - resource: github-copilot-prompt-engineering
     role: required
+  - resource: openai-codex-best-practices
+    role: optional
+  - resource: anthropic-code-with-claude-ysPbXH0LpIE
+    role: optional
+  - resource: anthropic-code-with-claude-XSZP9GhhuAc
+    role: deeper
 securityLens: awareness
 securityLensText: "AI-generated code can be plausible, insecure, or incompatible with project constraints. Treat generated changes like untrusted contributions that need tests, review, and dependency checks."
 status: beta

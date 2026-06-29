@@ -12,7 +12,7 @@ learningObjectives:
   - Describe the main concepts for Data Hygiene.
   - Identify the artifact or checkpoint this module supports.
 prerequisites:
-  - ai-assisted-coding
+  - ai-for-security-workflows
 resources:
   - resource: anthropic-prompt-engineering
     role: required

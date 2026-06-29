@@ -15,10 +15,13 @@ rightsMode: link_only
 license: Stanford CRFM site terms
 cost: free
 loginRequired: false
+accessMode: direct_open
 embedAllowed: false
+ageRestricted: false
 attribution: Stanford CRFM
 canonicalFor:
   - benchmark-transparency
+reviewStatus: accepted
 maintenanceRisk: medium
 caveats:
   - Rights metadata needs review before reuse beyond linking.

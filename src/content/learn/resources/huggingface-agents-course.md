@@ -15,10 +15,11 @@ rightsMode: link_only
 license: Hugging Face course terms
 cost: free
 loginRequired: false
+accessMode: direct_open
 embedAllowed: false
+ageRestricted: false
 attribution: Hugging Face
-canonicalFor:
-  - agent-fundamentals
+reviewStatus: accepted
 maintenanceRisk: low
 caveats:
   - Rights metadata needs review before reuse beyond linking.

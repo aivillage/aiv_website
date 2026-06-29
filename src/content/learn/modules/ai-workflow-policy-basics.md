@@ -18,6 +18,8 @@ resources:
     role: required
   - resource: nist-genai-profile
     role: optional
+  - resource: microsoft-using-generative-ai-responsibly
+    role: deeper
 requiredArtifact: AI Workflow Policy Basics artifact
 securityLens: awareness
 securityLensText: "A policy is useful only if people can follow it during real work. Connect allowed tools, allowed data, review steps, and ownership to specific workflows."

@@ -15,13 +15,15 @@ rightsMode: link_only
 license: MCP documentation terms
 cost: free
 loginRequired: false
+accessMode: direct_open
 embedAllowed: false
+ageRestricted: false
 attribution: Model Context Protocol
-canonicalFor:
-  - mcp-fundamentals
+reviewStatus: needs_verification
 maintenanceRisk: low
 caveats:
   - Rights metadata needs review before reuse beyond linking.
+status: draft
 reviewOwner: AI Village Learn
 lastChecked: "2026-06-26"
 ---

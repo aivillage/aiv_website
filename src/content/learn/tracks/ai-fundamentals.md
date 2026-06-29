@@ -30,6 +30,7 @@ canonicalModules:
   - ml-basics
   - classical-ai-search
   - neural-network-intuition
+  - deep-learning-systems
   - transformers-llms
   - embeddings-retrieval
 reviewOwner: AI Village Learn

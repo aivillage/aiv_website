@@ -15,10 +15,13 @@ rightsMode: link_only
 license: Repository license and YouTube terms
 cost: free
 loginRequired: false
+accessMode: direct_open
 embedAllowed: false
+ageRestricted: false
 attribution: Andrej Karpathy
 canonicalFor:
   - neural-network-intuition
+reviewStatus: accepted
 maintenanceRisk: medium
 caveats:
   - Rights metadata needs review before reuse beyond linking.

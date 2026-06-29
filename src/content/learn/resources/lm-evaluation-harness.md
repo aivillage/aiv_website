@@ -15,10 +15,13 @@ rightsMode: link_only
 license: Repository license
 cost: free
 loginRequired: false
+accessMode: direct_open
 embedAllowed: false
+ageRestricted: false
 attribution: EleutherAI
 canonicalFor:
   - model-eval-harnesses
+reviewStatus: accepted
 maintenanceRisk: medium
 caveats:
   - Rights metadata needs review before reuse beyond linking.

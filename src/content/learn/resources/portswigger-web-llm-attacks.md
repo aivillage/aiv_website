@@ -15,10 +15,18 @@ rightsMode: link_only
 license: PortSwigger Web Security Academy terms
 cost: free
 loginRequired: false
+accessMode: direct_open
 embedAllowed: false
+ageRestricted: false
 attribution: PortSwigger
 canonicalFor:
+  - agent-abuse-intro
+  - indirect-prompt-injection-lab-wrapper
+  - prompt-extraction-lab-wrapper
   - prompt-injection-basics
+  - red-team-report-writing
+  - rules-of-engagement-lab-safety
+reviewStatus: accepted
 maintenanceRisk: low
 caveats:
   - Rights metadata needs review before reuse beyond linking.

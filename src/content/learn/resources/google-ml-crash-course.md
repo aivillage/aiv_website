@@ -16,10 +16,14 @@ rightsMode: link_only
 license: Google Developers site terms
 cost: free
 loginRequired: false
+accessMode: direct_open
 embedAllowed: false
+ageRestricted: false
 attribution: Google
 canonicalFor:
   - ml-basics
+  - what-is-ai
+reviewStatus: accepted
 maintenanceRisk: low
 caveats:
   - Rights metadata needs review before reuse beyond linking.

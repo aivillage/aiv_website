@@ -14,10 +14,12 @@ learningObjectives:
 prerequisites:
   - rag-basics
 resources:
-  - resource: llamaindex-rag-docs
+  - resource: llamaindex-vectorstoreindex-docs
     role: required
-  - resource: huggingface-llm-course
+  - resource: llamaindex-rag-docs
     role: optional
+  - resource: microsoft-building-search-apps-vector-databases
+    role: deeper
 securityLens: required
 securityLensText: "Vector search can retrieve sensitive, stale, or adversarial content if the index and ranking rules allow it. Review chunk sources, metadata filters, and access controls alongside relevance quality."
 status: beta

@@ -15,11 +15,16 @@ rightsMode: link_only
 license: LlamaIndex docs terms
 cost: free
 loginRequired: false
+accessMode: direct_open
 embedAllowed: false
+ageRestricted: false
 attribution: LlamaIndex
 canonicalFor:
   - rag-basics
+  - rag-poisoning-lab-wrapper
+  - secure-rag
   - vector-search-retrieval
+reviewStatus: accepted
 maintenanceRisk: medium
 caveats:
   - Rights metadata needs review before reuse beyond linking.

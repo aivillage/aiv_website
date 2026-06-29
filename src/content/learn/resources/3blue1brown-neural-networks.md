@@ -4,6 +4,11 @@ title: Neural Networks
 provider: 3Blue1Brown
 canonicalUrl: https://www.3blue1brown.com/topics/neural-networks
 resourceType: playlist
+mediaType: playlist
+sourcePlatform: website
+creator: 3Blue1Brown
+playlistUrl: https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi
+playlistId: PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi
 modality:
   - video
 targetStage: ai_literate
@@ -14,10 +19,13 @@ rightsMode: link_only
 license: 3Blue1Brown site and YouTube terms
 cost: free
 loginRequired: false
+accessMode: direct_open
 embedAllowed: false
+ageRestricted: false
 attribution: 3Blue1Brown
 canonicalFor:
   - neural-network-intuition
+reviewStatus: accepted
 maintenanceRisk: low
 caveats:
   - Rights metadata needs review before reuse beyond linking.

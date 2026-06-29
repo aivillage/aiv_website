@@ -15,6 +15,9 @@ prerequisites: []
 resources:
   - resource: anthropic-building-effective-agents
     role: required
+  - resource: fsdl-augmented-language-models
+    role: optional
+requiredArtifact: Workflow-vs-agent decision memo
 securityLens: required
 securityLensText: "More autonomy means more ways for bad context to become bad action. Decide whether a workflow truly needs agent behavior before adding memory, tools, or independent planning."
 status: beta
@@ -22,4 +25,6 @@ reviewOwner: AI Village Learn
 lastReviewed: "2026-06-26"
 ---
 
-This module helps builders distinguish between structured AI workflows and agentic systems. The curated resources clarify when a fixed sequence, human-in-the-loop process, or limited tool call is enough, and when autonomous planning adds value. Your artifact is a decision note comparing a workflow design and an agent design for the same task, including benefits, risks, and review points. Use the module responsibly by preferring the simplest design that meets the need. Agents can be useful, but they also expand the importance of credentials, logging, approval gates, and containment. This module sets up later agent-specific design decisions. Keep the decision note available as the design changes so autonomy is added deliberately, not by drift.
+This module starts with least-agency design. Use the written source to decide whether a fixed workflow, human-in-the-loop process, limited tool call, or agent loop is justified for a real user goal. The FSDL video is concept scaffolding for augmented language models, not a current implementation reference.
+
+Your artifact is a workflow-vs-agent decision memo. It should name the user goal, describe the simplest workflow that could solve it, explain what complexity would justify an agent, and list the extra risks introduced by tools, state, memory, retrieval, and side effects. Use the module responsibly by preferring the simplest design that meets the need. Agents can be useful, but they also expand the importance of credentials, logging, approval gates, rollback, and containment. Keep the memo available as the design changes so autonomy is added deliberately, not by drift.

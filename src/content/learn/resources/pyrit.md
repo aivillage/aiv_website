@@ -15,13 +15,15 @@ rightsMode: link_only
 license: Repository license
 cost: free
 loginRequired: false
+accessMode: direct_open
 embedAllowed: false
+ageRestricted: false
 attribution: Microsoft
-canonicalFor:
-  - defensive-evals
+reviewStatus: needs_verification
 maintenanceRisk: medium
 caveats:
   - Rights metadata needs review before reuse beyond linking.
+status: draft
 reviewOwner: AI Village Learn
 lastChecked: "2026-06-26"
 ---

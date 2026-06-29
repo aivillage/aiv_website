@@ -15,13 +15,18 @@ rightsMode: link_only
 license: DeepLearning.AI course terms
 cost: free
 loginRequired: true
+accessMode: free_account_required
+accessNotes: Platform access may require a free account, so this is an optional off-ramp rather than a required core resource.
 embedAllowed: false
+ageRestricted: false
 attribution: DeepLearning.AI
 canonicalFor:
   - prompting-context
+reviewStatus: accepted
 maintenanceRisk: medium
 caveats:
   - Rights metadata needs review before reuse beyond linking.
+  - Do not use as a required Learn resource because account access may be required.
 reviewOwner: AI Village Learn
 lastChecked: "2026-06-26"
 ---

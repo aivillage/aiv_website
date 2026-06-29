@@ -16,13 +16,18 @@ rightsMode: link_only
 license: Kaggle course terms
 cost: free
 loginRequired: true
+accessMode: free_account_required
+accessNotes: Kaggle Learn requires account access for the interactive course path, so it is optional off-ramp material only.
 embedAllowed: false
+ageRestricted: false
 attribution: Kaggle
 canonicalFor:
   - python-notebook-readiness
+reviewStatus: accepted
 maintenanceRisk: low
 caveats:
   - Rights metadata needs review before reuse beyond linking.
+  - Do not use as a required Learn resource because account access is required.
 reviewOwner: AI Village Learn
 lastChecked: "2026-06-26"
 ---

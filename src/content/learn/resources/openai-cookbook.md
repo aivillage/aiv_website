@@ -16,11 +16,11 @@ rightsMode: link_only
 license: OpenAI Cookbook license and site terms
 cost: free
 loginRequired: false
+accessMode: direct_open
 embedAllowed: false
+ageRestricted: false
 attribution: OpenAI
-canonicalFor:
-  - api-based-ai-apps
-  - structured-outputs
+reviewStatus: accepted
 maintenanceRisk: low
 caveats:
   - Rights metadata needs review before reuse beyond linking.

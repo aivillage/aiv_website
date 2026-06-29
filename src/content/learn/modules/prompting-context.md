@@ -13,10 +13,12 @@ learningObjectives:
   - Identify the artifact or checkpoint this module supports.
 prerequisites: []
 resources:
-  - resource: deeplearningai-prompt-engineering
-    role: required
   - resource: anthropic-prompt-engineering
-    role: optional
+    role: required
+  - resource: microsoft-prompt-engineering-fundamentals-video
+    role: deeper
+  - resource: deeplearningai-prompt-engineering
+    role: deeper
 securityLens: awareness
 securityLensText: "Do not paste secrets, credentials, customer data, or unreviewed third-party content into model context. Treat prompts as data movement, not just text entry."
 status: beta
@@ -24,4 +26,4 @@ reviewOwner: AI Village Learn
 lastReviewed: "2026-06-26"
 ---
 
-This module helps practitioners move from casual prompting to deliberate context design. Use the curated resources to compare instructions, examples, constraints, and source material, then observe how each part changes the response. Your artifact is a reviewed prompt pattern for one work task, including what context is allowed, what context is excluded, and how the output should be checked. Use the module responsibly by treating every prompt as data handling. Avoid pasting sensitive information into tools that are not approved for that data, and do not assume the model can tell which source is reliable. A good prompt supports human judgment; it does not replace it.
+This module helps practitioners move from casual prompting to deliberate context design. Use the direct-open core resource to compare instructions, examples, constraints, and source material, then observe how each part changes the response. Your artifact is a reviewed prompt pattern for one work task, including what context is allowed, what context is excluded, and how the output should be checked. Use the module responsibly by treating every prompt as data handling. Avoid pasting sensitive information into tools that are not approved for that data, and do not assume the model can tell which source is reliable. A good prompt supports human judgment; it does not replace it. Account-gated courses are optional off-ramps, not required.

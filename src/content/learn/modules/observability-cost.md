@@ -14,8 +14,12 @@ learningObjectives:
 prerequisites:
   - basic-app-evals
 resources:
-  - resource: openai-cookbook
+  - resource: phoenix-observability-docs
     role: required
+  - resource: openinference-docs
+    role: optional
+  - resource: fsdl-llmops
+    role: deeper
 requiredArtifact: Observability Cost artifact
 securityLens: required
 securityLensText: "Observability can expose sensitive prompts and outputs if it is designed casually. Log enough to debug and review behavior, but protect secrets, personal data, and access-controlled context."

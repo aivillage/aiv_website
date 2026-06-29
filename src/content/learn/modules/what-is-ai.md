@@ -13,8 +13,12 @@ learningObjectives:
   - Identify the artifact or checkpoint this module supports.
 prerequisites: []
 resources:
-  - resource: google-ml-crash-course
+  - resource: cs50-ai
     role: required
+  - resource: google-ml-crash-course
+    role: optional
+  - resource: cs50-ai-search-lecture-0
+    role: deeper
 securityLens: awareness
 securityLensText: "AI systems move and transform data, so security starts with understanding where inputs, outputs, and decisions travel. Treat model output as a generated suggestion that needs context, review, and clear ownership before it affects people or systems."
 status: beta

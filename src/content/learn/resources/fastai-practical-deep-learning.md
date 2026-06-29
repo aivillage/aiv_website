@@ -17,10 +17,13 @@ rightsMode: link_only
 license: fast.ai course terms
 cost: free
 loginRequired: false
+accessMode: direct_open
 embedAllowed: false
+ageRestricted: false
 attribution: fast.ai
 canonicalFor:
   - ml-basics
+reviewStatus: accepted
 maintenanceRisk: low
 caveats:
   - Rights metadata needs review before reuse beyond linking.

@@ -16,6 +16,8 @@ prerequisites:
 resources:
   - resource: cs50-ai
     role: required
+  - resource: cs50-ai-search-lecture-0
+    role: deeper
 securityLens: awareness
 securityLensText: "Search systems can optimize exactly what they are asked to optimize, even when that is not what the user intended. Define constraints and stopping conditions before trusting an automated search or planning result."
 status: beta

@@ -16,10 +16,15 @@ rightsMode: link_only
 license: NIST public information
 cost: free
 loginRequired: false
+accessMode: direct_open
 embedAllowed: false
+ageRestricted: false
 attribution: NIST
 canonicalFor:
+  - ai-risk-frameworks
+  - ai-workflow-policy-basics
   - nist-ai-rmf-genai-profile
+reviewStatus: accepted
 maintenanceRisk: low
 caveats:
   - Rights metadata needs review before reuse beyond linking.

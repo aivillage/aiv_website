@@ -1,6 +1,6 @@
 ---
 slug: microsoft-ai-agents-beginners
-title: AI Agents for Beginners
+title: Microsoft AI Agents for Beginners, GitHub Course
 provider: Microsoft
 canonicalUrl: https://microsoft.github.io/ai-agents-for-beginners/
 resourceType: course
@@ -15,10 +15,11 @@ rightsMode: link_only
 license: Repository license and Microsoft terms
 cost: free
 loginRequired: false
+accessMode: direct_open
 embedAllowed: false
+ageRestricted: false
 attribution: Microsoft
-canonicalFor:
-  - agent-frameworks
+reviewStatus: accepted
 maintenanceRisk: low
 caveats:
   - Rights metadata needs review before reuse beyond linking.

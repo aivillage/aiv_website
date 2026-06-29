@@ -16,6 +16,8 @@ prerequisites:
 resources:
   - resource: llamaindex-rag-docs
     role: required
+  - resource: microsoft-rag-vector-databases
+    role: optional
 securityLens: required
 securityLensText: "A RAG knowledge base is an instruction surface, not just data storage. Retrieved content should be treated as untrusted input until the application proves otherwise."
 status: beta
@@ -23,4 +25,4 @@ reviewOwner: AI Village Learn
 lastReviewed: "2026-06-26"
 ---
 
-This module introduces retrieval augmented generation as a pattern for bringing external content into model context. The curated resources explain indexing, chunking, retrieval, prompt assembly, and answer generation. Your artifact is a basic RAG design note that names the content source, retrieval method, answer format, and review step. Use the module responsibly by treating retrieved text as influential input rather than neutral background. Do not assume the newest, closest, or longest chunk is safe or correct. RAG systems need access rules, source labeling, evaluation, and fallback behavior when retrieval is weak or conflicting. Keep the design note close to the prototype so retrieval assumptions are reviewed as the content changes.
+This module introduces retrieval augmented generation as the Team Knowledge Assistant's path from approved team documents into model context. The curated resources explain indexing, chunking, retrieval, prompt assembly, and answer generation. Your artifact is a basic RAG design note that names the content source, retrieval method, answer format, and review step. Use the module responsibly by treating retrieved text as influential input rather than neutral background. Do not assume the newest, closest, or longest chunk is safe or correct. RAG systems need access rules, source labeling, evaluation, and fallback behavior when retrieval is weak or conflicting. Keep the design note close to the prototype so retrieval assumptions are reviewed as the content changes.

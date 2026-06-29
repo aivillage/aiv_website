@@ -16,6 +16,8 @@ prerequisites:
 resources:
   - resource: huggingface-llm-course
     role: required
+  - resource: 3blue1brown-transformers
+    role: deeper
 requiredArtifact: Embeddings Retrieval artifact
 securityLens: awareness
 securityLensText: "Embeddings and retrieval systems can expose sensitive material and can retrieve poisoned or outdated chunks. Treat indexed content, metadata, and retrieved passages as part of the application attack surface."

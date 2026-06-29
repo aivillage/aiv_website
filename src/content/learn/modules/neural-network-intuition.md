@@ -16,8 +16,10 @@ prerequisites:
 resources:
   - resource: 3blue1brown-neural-networks
     role: required
+  - resource: 3blue1brown-neural-networks-chapter-1
+    role: deeper
   - resource: karpathy-zero-to-hero
-    role: optional
+    role: deeper
 securityLens: awareness
 securityLensText: "Neural networks learn patterns from examples, not rules with guaranteed coverage. Review where training data, model architecture, and deployment context can create blind spots before relying on model output."
 status: beta

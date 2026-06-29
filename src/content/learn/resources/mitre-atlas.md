@@ -14,10 +14,13 @@ rightsMode: link_only
 license: MITRE site terms
 cost: free
 loginRequired: false
+accessMode: direct_open
 embedAllowed: false
+ageRestricted: false
 attribution: MITRE
 canonicalFor:
   - mitre-atlas-mapping
+reviewStatus: accepted
 maintenanceRisk: low
 caveats:
   - Rights metadata needs review before reuse beyond linking.

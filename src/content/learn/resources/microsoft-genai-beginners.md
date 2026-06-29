@@ -4,6 +4,11 @@ title: Generative AI for Beginners
 provider: Microsoft
 canonicalUrl: https://microsoft.github.io/generative-ai-for-beginners/
 resourceType: course
+mediaType: playlist
+sourcePlatform: website
+creator: Microsoft
+playlistId: PLlrxD0HtieHj2nfK54c62lcs3-YSTx3Je
+playlistUrl: https://www.youtube.com/playlist?list=PLlrxD0HtieHj2nfK54c62lcs3-YSTx3Je
 modality:
   - text
   - code
@@ -16,16 +21,19 @@ rightsMode: link_only
 license: Repository license and Microsoft terms
 cost: free
 loginRequired: false
+accessMode: direct_open
 embedAllowed: false
+ageRestricted: false
 attribution: Microsoft
-canonicalFor:
-  - ai-assisted-research
-  - ai-app-architecture
 maintenanceRisk: low
 caveats:
   - Rights metadata needs review before reuse beyond linking.
 reviewOwner: AI Village Learn
 lastChecked: "2026-06-26"
+canonicalFor:
+  - ai-app-architecture
+  - ai-assisted-research
+reviewStatus: accepted
 ---
 
 Catalog metadata for this linked resource is included for the curriculum beta. Review rights and attribution before reuse beyond linking.

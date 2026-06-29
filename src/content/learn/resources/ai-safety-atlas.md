@@ -14,10 +14,13 @@ rightsMode: link_only
 license: Site terms
 cost: free
 loginRequired: false
+accessMode: direct_open
 embedAllowed: false
+ageRestricted: false
 attribution: AI Safety Atlas
 canonicalFor:
   - ai-safety-fundamentals
+reviewStatus: accepted
 maintenanceRisk: medium
 caveats:
   - Rights metadata needs review before reuse beyond linking.

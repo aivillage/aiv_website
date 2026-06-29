@@ -15,10 +15,14 @@ rightsMode: link_only
 license: OWASP project license and site terms
 cost: free
 loginRequired: false
+accessMode: direct_open
 embedAllowed: false
+ageRestricted: false
 attribution: OWASP
 canonicalFor:
-  - excessive-agency
+  - secure-agents
+  - secure-tool-use
+reviewStatus: accepted
 maintenanceRisk: medium
 caveats:
   - Rights metadata needs review before reuse beyond linking.

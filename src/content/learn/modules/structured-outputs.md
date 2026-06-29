@@ -14,8 +14,10 @@ learningObjectives:
 prerequisites:
   - api-based-ai-apps
 resources:
-  - resource: openai-cookbook
+  - resource: openai-structured-outputs
     role: required
+  - resource: microsoft-function-calling-external-apps
+    role: optional
 securityLens: required
 securityLensText: "Schema validation is not authorization. A valid JSON object can still request an unsafe or unauthorized action, so applications must validate intent, permissions, and business rules separately."
 status: beta

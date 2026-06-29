@@ -15,9 +15,9 @@ prerequisites:
   - agent-abuse-intro
 resources:
   - resource: hackaprompt
-    role: required
+    role: deeper
   - resource: dreadnode-crucible
-    role: optional
+    role: deeper
 securityLens: primary
 securityLensText: ""
 status: draft

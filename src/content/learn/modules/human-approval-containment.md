@@ -14,9 +14,13 @@ learningObjectives:
 prerequisites:
   - mcp-security-basics
 resources:
-  - resource: anthropic-building-effective-agents
+  - resource: langchain-human-in-the-loop
     role: required
-requiredArtifact: Human Approval Containment artifact
+  - resource: langchain-introduction-to-langgraph
+    role: optional
+  - resource: mcp-spec-2025-11-25
+    role: deeper
+requiredArtifact: Approval matrix plus containment policy
 securityLens: required
 securityLensText: "Approval gates only work when the human sees the right decision context. Show the requested action, source evidence, affected data, and rollback or cancellation options before approval."
 status: beta
@@ -24,4 +28,6 @@ reviewOwner: AI Village Learn
 lastReviewed: "2026-06-26"
 ---
 
-This module focuses on containment and human approval for AI systems that can take action. The curated resources support decisions about when to require confirmation, what context to show, and how to limit side effects. Your artifact is a human approval plan for one workflow, naming actions that are automatic, actions that require approval, and actions that are never allowed. Use the module responsibly by making approval meaningful. A reviewer should see what will happen, why the system recommends it, what data or account is affected, and how to stop or reverse the action. Containment keeps mistakes small enough to learn from safely.
+This module focuses on containment and human approval for AI systems that can take action. LangChain and LangGraph provide concrete implementation references, but the pattern generalizes beyond any one framework: approval, containment, recoverability, and logging must be designed into the workflow.
+
+Your artifact is an approval matrix plus containment policy. Name actions that are automatic, actions that require approval, actions that are never allowed, rollback paths, kill-switch owner, log evidence, and containment boundaries for tools, memory, retrieval, and MCP servers. Use the module responsibly by making approval meaningful. A reviewer should see what will happen, why the system recommends it, what data or account is affected, and how to stop or reverse the action. Containment keeps mistakes small enough to learn from safely.
