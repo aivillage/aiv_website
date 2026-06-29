@@ -1,0 +1,258 @@
+---
+import { getCollection, render } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import PageShell from "../../../../components/layout/PageShell.astro";
+import DifficultyBadge from "../../../../components/learn/DifficultyBadge.astro";
+import StageBadge from "../../../../components/learn/StageBadge.astro";
+import YouTubeEmbed from "../../../../components/learn/YouTubeEmbed.astro";
+import {
+  accessModeLabels,
+  byTitle,
+  entrySlug,
+  formatLabel,
+  modulePath,
+  refId,
+  resourceActionLabel,
+  resourcePath,
+  seriesPath,
+  trackPath,
+} from "../../../../utils/learn";
+
+type Props = {
+  resource: CollectionEntry<"learnResources">;
+  tracks: CollectionEntry<"learnTracks">[];
+  modules: CollectionEntry<"learnModules">[];
+};
+
+export async function getStaticPaths() {
+  const resources = await getCollection("learnResources", ({ data }) =>
+    data.status !== "draft" &&
+    Boolean(data.accessMode) &&
+    Boolean(data.reviewStatus) &&
+    data.reviewStatus !== "rejected" &&
+    data.reviewStatus !== "deferred"
+  );
+  const tracks = await getCollection("learnTracks", ({ data }) => data.status !== "draft");
+  const modules = await getCollection("learnModules", ({ data }) => data.status !== "draft");
+  const trackBySlug = new Map(tracks.flatMap((track) => [[entrySlug(track), track], [track.id, track]]));
+
+  return resources.map((resource) => {
+    const resourceSlug = entrySlug(resource);
+    const relatedTracks = resource.data.tracks
+      .map((trackRef) => trackBySlug.get(refId(trackRef)))
+      .filter((track): track is CollectionEntry<"learnTracks"> => Boolean(track))
+      .sort(byTitle) as CollectionEntry<"learnTracks">[];
+    const relatedModules = modules
+      .filter((module) => module.data.resources.some((link) => refId(link.resource) === resourceSlug))
+      .sort(byTitle);
+
+    return {
+      params: { slug: resourceSlug },
+      props: { resource, tracks: relatedTracks, modules: relatedModules },
+    };
+  });
+}
+
+const { resource, tracks, modules } = Astro.props;
+const { Content } = await render(resource);
+const creator = resource.data.creator || resource.data.attribution || resource.data.provider;
+const isPlaylist = resource.data.resourceType === "playlist" || resource.data.mediaType === "playlist";
+const accessLabel = accessModeLabels[resource.data.accessMode] || accessModeLabels.direct_open;
+const actionLabel = resourceActionLabel(resource);
+const isOffRamp = resource.data.accessMode !== "direct_open";
+const isUnderReview = resource.data.reviewStatus !== "accepted";
+const canEmbedVideo = Boolean(
+  resource.data.sourcePlatform === "youtube" &&
+  resource.data.embedAllowed &&
+  resource.data.reviewStatus === "accepted" &&
+  resource.data.accessMode === "direct_open" &&
+  resource.data.loginRequired === false &&
+  !resource.data.ageRestricted &&
+  resource.data.videoId &&
+  !isPlaylist,
+);
+const boilerplateBodyPatterns = [
+  new RegExp(["Catalog metadata", "linked resource", "curriculum beta"].join(".*"), "i"),
+  new RegExp(["Catalog metadata", "linked video", "curriculum beta"].join(".*"), "i"),
+  new RegExp(["Catalog metadata", "series", "curriculum beta"].join(".*"), "i"),
+  new RegExp(["Review rights", "attribution", "reuse beyond linking"].join(".*"), "i"),
+  /Use the official YouTube player when embedding/i,
+  /Do not embed until reviewed/i,
+];
+const bodyText = (resource.body || "").trim();
+const hasLearnerBody = Boolean(bodyText && !boilerplateBodyPatterns.some((pattern) => pattern.test(bodyText)));
+---
+
+<BaseLayout title={resource.data.title} canonical={resourcePath(resource)} description={`Learn resource from ${resource.data.provider}: ${resource.data.title}.`}>
+  <PageShell class="learn-resource-page">
+    <nav class="learn-breadcrumb" aria-label="Breadcrumb"><a href="/learn/">Learn</a> / <a href="/learn/resources/">Resources</a> / <span>{resource.data.title}</span></nav>
+
+    <header class="learn-resource-header">
+      <div>
+        <div class="learn-meta-row">
+          <StageBadge value={resource.data.targetStage} />
+          <DifficultyBadge value={resource.data.difficulty} />
+          <span>{formatLabel(resource.data.resourceType)}</span>
+          <span class="learn-access-badge">{isOffRamp ? "Extra/off-ramp" : accessLabel}</span>
+          {isUnderReview && <span class="learn-access-badge learn-access-badge--review">Under review</span>}
+        </div>
+        <h1>{resource.data.title}</h1>
+        <p class="text-lead">{resource.data.watchFocus || `A ${formatLabel(resource.data.resourceType).toLowerCase()} from ${resource.data.provider} used by AI Village Learn modules.`}</p>
+        <p class="text-muted">By {creator}</p>
+      </div>
+      <aside class="learn-side-panel">
+        <h2>Source</h2>
+        <p>
+          {isUnderReview
+            ? "Under review. Use this as a secondary reference until source details are checked."
+            : isOffRamp
+              ? `${accessLabel}. Use this as an extra path, not as the core requirement.`
+              : accessLabel}
+        </p>
+        <a class="button" href={resource.data.canonicalUrl} target="_blank" rel="noopener noreferrer">Open original resource</a>
+      </aside>
+    </header>
+
+    {canEmbedVideo && (
+      <section>
+        <h2>Featured Video</h2>
+        <YouTubeEmbed
+          title={resource.data.title}
+          creator={creator}
+          canonicalUrl={resource.data.canonicalUrl}
+          channelUrl={resource.data.channelUrl}
+          videoId={resource.data.videoId}
+          embedPrivacyMode={resource.data.embedPrivacyMode}
+        />
+      </section>
+    )}
+
+    {isPlaylist && (
+      <section class="learn-callout">
+        <h2>Video Series</h2>
+        <p>Use the series page for the ordered episode list and checkpoints.</p>
+        <a href={seriesPath(resource)}>View series page</a>
+      </section>
+    )}
+
+    <section class="learn-two-column">
+      <div>
+        <h2>Why This Resource Is Here</h2>
+        {hasLearnerBody ? (
+          <div class="learn-content-body">
+            <Content />
+          </div>
+        ) : (
+          <div class="learn-content-body">
+            {resource.data.watchFocus && <p>{resource.data.watchFocus}</p>}
+            {resource.data.checkpointPrompt && <p>{resource.data.checkpointPrompt}</p>}
+            {resource.data.accessNotes && <p>{resource.data.accessNotes}</p>}
+            {!resource.data.watchFocus && !resource.data.checkpointPrompt && !resource.data.accessNotes && (
+              <p>This resource is curated for the related Learn module; use the focus and checkpoint below to guide review.</p>
+            )}
+          </div>
+        )}
+      </div>
+      <div>
+        <h2>{actionLabel} Focus</h2>
+        {resource.data.watchFocus ? <p>{resource.data.watchFocus}</p> : <p>Use the original source to support the related Learn module checkpoint.</p>}
+        <h2>Checkpoint Prompt</h2>
+        {resource.data.checkpointPrompt ? <p>{resource.data.checkpointPrompt}</p> : <p class="text-muted">Write one note about how this resource changes your module artifact or question list.</p>}
+        {resource.data.accessNotes && (
+          <>
+            <h2>Access Note</h2>
+            <p>{resource.data.accessNotes}</p>
+          </>
+        )}
+      </div>
+    </section>
+
+    {tracks.length > 0 && (
+      <section>
+        <h2>Related Tracks</h2>
+        <ul class="learn-link-list">
+          {tracks.map((track) => <li><a href={trackPath(track)}>{track.data.title}</a></li>)}
+        </ul>
+      </section>
+    )}
+
+    {modules.length > 0 && (
+      <section>
+        <h2>Related Modules</h2>
+        <ul class="learn-link-list">
+          {modules.map((module) => <li><a href={modulePath(module)}>{module.data.title}</a></li>)}
+        </ul>
+      </section>
+    )}
+  </PageShell>
+</BaseLayout>
+
+<style>
+  .learn-resource-page {
+    display: grid;
+    gap: 2rem;
+  }
+
+  .learn-breadcrumb,
+  .learn-meta-row {
+    align-items: center;
+    color: var(--aiv-text-muted);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .learn-resource-header,
+  .learn-two-column {
+    display: grid;
+    gap: 1.25rem;
+    grid-template-columns: minmax(0, 1fr) minmax(260px, 0.55fr);
+  }
+
+  .learn-side-panel,
+  .learn-callout {
+    background: var(--aiv-nested-bg);
+    border: 1px solid var(--aiv-nested-border);
+    border-radius: 8px;
+    padding: 1rem;
+  }
+
+  .button {
+    background: var(--aiv-action-primary);
+    border: 1px solid var(--aiv-action-primary);
+    border-radius: 6px;
+    color: var(--aiv-bg-canvas);
+    display: inline-flex;
+    font-weight: 800;
+    justify-content: center;
+    min-height: 2.75rem;
+    padding: 0.6rem 0.95rem;
+    text-decoration: none;
+  }
+
+  .learn-access-badge {
+    background: var(--aiv-nested-bg);
+    border: 1px solid var(--aiv-nested-border);
+    border-radius: 999px;
+    color: var(--aiv-text);
+    padding: 0.12rem 0.45rem;
+  }
+
+  .learn-side-panel h2,
+  .learn-callout h2 {
+    font-size: 1.1rem;
+    margin-top: 0;
+  }
+
+  .learn-content-body {
+    max-width: 76ch;
+  }
+
+  @media (max-width: 780px) {
+    .learn-resource-header,
+    .learn-two-column {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -3,21 +3,78 @@ import { getCollection } from "astro:content";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import PageShell from "../../../components/layout/PageShell.astro";
 import ResourceCard from "../../../components/learn/ResourceCard.astro";
-import { byTitle, costLabels, difficultyLabels, entrySlug, formatLabel, stageLabels } from "../../../utils/learn";
+import { byTitle, difficultyLabels, entrySlug, formatLabel, refId, stageLabels } from "../../../utils/learn";
 
 const resources = (await getCollection("learnResources", ({ data }) => data.status !== "draft")).sort(byTitle);
 const tracks = (await getCollection("learnTracks", ({ data }) => data.status !== "draft")).sort(byTitle);
+const publicModules = await getCollection("learnModules", ({ data }) => data.status !== "draft");
+const linkedResourceSlugs = new Set(publicModules.flatMap((module) => module.data.resources.map((link) => refId(link.resource))));
 const stages = [...new Set(resources.map((resource) => resource.data.targetStage))];
 const difficulties = [...new Set(resources.map((resource) => resource.data.difficulty))];
 const resourceTypes = [...new Set(resources.map((resource) => resource.data.resourceType))].sort();
-const costs = [...new Set(resources.map((resource) => resource.data.cost))];
+const acceptedResources = resources.filter((resource) => resource.data.reviewStatus === "accepted");
+const underReviewResources = resources.filter((resource) =>
+  resource.data.reviewStatus &&
+  resource.data.reviewStatus !== "accepted" &&
+  linkedResourceSlugs.has(entrySlug(resource))
+);
+const featuredVideos = resources.filter((resource) =>
+  resource.data.accessMode === "direct_open" &&
+  resource.data.reviewStatus === "accepted" &&
+  resource.data.loginRequired === false &&
+  resource.data.sourcePlatform === "youtube" &&
+  resource.data.embedAllowed &&
+  resource.data.ageRestricted === false &&
+  resource.data.featuredEmbed &&
+  (resource.data.mediaType === "video" || resource.data.resourceType === "video"),
+);
+const labsAndWorkshops = acceptedResources.filter((resource) =>
+  resource.data.accessMode === "direct_open" &&
+  resource.data.loginRequired === false &&
+  (resource.data.resourceType === "lab" || resource.data.mediaType === "lab" || /workshop/i.test(`${resource.data.title} ${resource.data.provider}`)),
+);
+const coreResources = acceptedResources.filter((resource) =>
+  resource.data.accessMode === "direct_open" &&
+  resource.data.loginRequired === false &&
+  !featuredVideos.includes(resource) &&
+  !labsAndWorkshops.includes(resource),
+);
+const offRampResources = acceptedResources.filter((resource) => resource.data.accessMode !== "direct_open");
+const resourceSections = [
+  {
+    title: "Featured Videos",
+    text: "Click-to-load videos selected as useful starting points for modules.",
+    resources: featuredVideos,
+  },
+  {
+    title: "Core No-Login Resources",
+    text: "Direct-open docs, courses, and references used by public Learn modules.",
+    resources: coreResources,
+  },
+  {
+    title: "Labs And Workshops",
+    text: "Hands-on resources and workshop references that are safe to browse from the catalog.",
+    resources: labsAndWorkshops,
+  },
+  {
+    title: "Extra/Off-Ramps",
+    text: "Useful links that may require an account, enrollment, or another step. These are not the required core path.",
+    resources: offRampResources,
+  },
+  {
+    title: "Under Review",
+    text: "Public links kept secondary while source details or review status are still being checked.",
+    resources: underReviewResources,
+  },
+].filter((section) => section.resources.length > 0);
+const shownResourceCount = resourceSections.reduce((sum, section) => sum + section.resources.length, 0);
 ---
 
 <BaseLayout title="Learn Resources" canonical="/learn/resources/" description="Browse the AI Village Learn beta resource catalog.">
   <PageShell class="learn-page">
     <h1>Resource Catalog</h1>
     <p class="text-lead">
-      A deduped catalog of public resources linked from Learn modules. Required resources are controlled at the module level and must remain free.
+      Public resources linked from Learn modules, grouped by how a learner should use them. Start with direct-open core resources, then use extra links only when the access requirements make sense for you.
     </p>
     <p class="text-muted">
       Resources are linked to their original sources and remain owned by their respective creators.
@@ -52,18 +109,19 @@ const costs = [...new Set(resources.map((resource) => resource.data.cost))];
           {resourceTypes.map((type) => <option value={type}>{formatLabel(type)}</option>)}
         </select>
       </label>
-      <label>
-        Cost
-        <select data-filter="cost">
-          <option value="">All costs</option>
-          {costs.map((cost) => <option value={cost}>{costLabels[cost]}</option>)}
-        </select>
-      </label>
     </form>
 
-    <p class="text-muted" id="resource-count">{resources.length} resources shown</p>
-    <div class="learn-grid" data-resource-grid>
-      {resources.map((resource) => <ResourceCard resource={resource} />)}
+    <p class="text-muted" id="resource-count">{shownResourceCount} resources shown</p>
+    <div data-resource-grid>
+      {resourceSections.map((section) => (
+        <section class="learn-resource-section">
+          <h2>{section.title}</h2>
+          <p>{section.text}</p>
+          <div class="learn-grid">
+            {section.resources.map((resource) => <ResourceCard resource={resource} />)}
+          </div>
+        </section>
+      ))}
     </div>
   </PageShell>
 </BaseLayout>
@@ -71,6 +129,7 @@ const costs = [...new Set(resources.map((resource) => resource.data.cost))];
 <script>
   const filters = Array.from(document.querySelectorAll<HTMLSelectElement>("[data-filter]"));
   const cards = Array.from(document.querySelectorAll<HTMLElement>("[data-resource-grid] article"));
+  const sections = Array.from(document.querySelectorAll<HTMLElement>("[data-resource-grid] .learn-resource-section"));
   const count = document.getElementById("resource-count");
 
   function updateResourceFilters() {
@@ -82,10 +141,15 @@ const costs = [...new Set(resources.map((resource) => resource.data.cost))];
       const matchesStage = !selected.stage || card.dataset.stage === selected.stage;
       const matchesDifficulty = !selected.difficulty || card.dataset.difficulty === selected.difficulty;
       const matchesType = !selected.type || card.dataset.type === selected.type;
-      const matchesCost = !selected.cost || card.dataset.cost === selected.cost;
-      const visible = Boolean(matchesTrack && matchesStage && matchesDifficulty && matchesType && matchesCost);
+      const visible = Boolean(matchesTrack && matchesStage && matchesDifficulty && matchesType);
       card.toggleAttribute("hidden", !visible);
       if (visible) shown += 1;
+    });
+
+    sections.forEach((section) => {
+      const sectionCards = Array.from(section.querySelectorAll<HTMLElement>("article"));
+      const sectionShown = sectionCards.some((card) => !card.hidden);
+      section.toggleAttribute("hidden", !sectionShown);
     });
 
     if (count) count.textContent = `${shown} ${shown === 1 ? "resource" : "resources"} shown`;
@@ -117,5 +181,24 @@ const costs = [...new Set(resources.map((resource) => resource.data.cost))];
     display: grid;
     gap: 1rem;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+
+  .learn-resource-section {
+    display: grid;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+  }
+
+  .learn-resource-section h2,
+  .learn-resource-section p {
+    margin: 0;
+  }
+
+  .learn-resource-section > p {
+    color: var(--aiv-text-muted);
+  }
+
+  .learn-resource-section[hidden] {
+    display: none;
   }
 </style>

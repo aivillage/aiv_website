@@ -10,9 +10,9 @@ const labs = (await getCollection("learnLabs", canRenderLearnLab)).sort(byTitle)
 
 <BaseLayout title="Learn Labs" canonical="/learn/labs/" description="Safety-bounded AI Village Learn lab metadata.">
   <PageShell class="learn-page">
-    <h1>Lab Catalog</h1>
+    <h1>Labs</h1>
     <p class="text-lead">
-      Lab entries expose metadata, safety boundaries, run modes, difficulty, and status. The curriculum beta does not add a hosted lab launcher, scoring system, or new vulnerable-agent stack.
+      Hands-on Learn entries pair a bounded exercise with safety framing, run expectations, and a learner artifact. Labs link to source when a public workshop or repository is available.
     </p>
     <div class="learn-grid">
       {labs.map((lab) => <LabCard lab={lab} />)}

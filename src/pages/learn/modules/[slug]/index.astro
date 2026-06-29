@@ -11,6 +11,7 @@ import StageBadge from "../../../../components/learn/StageBadge.astro";
 import StatusBadge from "../../../../components/learn/StatusBadge.astro";
 import YouTubeEmbed from "../../../../components/learn/YouTubeEmbed.astro";
 import {
+  accessModeLabels,
   canRenderLearnLab,
   canRenderLearnModule,
   canRenderLearnTrack,
@@ -19,10 +20,12 @@ import {
   modulePath,
   moduleTypeLabels,
   refId,
+  resourcePath,
   trackPath,
 } from "../../../../utils/learn";
 
 type ResourceGroup = {
+  role: "required" | "optional" | "deeper";
   heading: string;
   resources: CollectionEntry<"learnResources">[];
 };
@@ -42,6 +45,9 @@ export async function getStaticPaths() {
       resource.data.sourcePlatform === "youtube" &&
       resource.data.embedAllowed &&
       resource.data.featuredEmbed &&
+      resource.data.reviewStatus === "accepted" &&
+      resource.data.accessMode === "direct_open" &&
+      resource.data.loginRequired === false &&
       !resource.data.ageRestricted &&
       (resource.data.videoId || resource.data.playlistId),
     );
@@ -49,8 +55,8 @@ export async function getStaticPaths() {
 
   const resourceGroupLabels = {
     required: "Start here",
-    optional: "Optional",
-    deeper: "Go deeper",
+    optional: "Optional resources",
+    deeper: "Extra/off-ramp resources",
   } as const;
   const modules = await getCollection("learnModules", canRenderLearnModule);
   const allModules = await getCollection("learnModules");
@@ -68,6 +74,7 @@ export async function getStaticPaths() {
       .map((moduleRef) => moduleBySlug.get(refId(moduleRef)))
       .filter((prerequisite) => prerequisite && canRenderLearnModule(prerequisite)) as CollectionEntry<"learnModules">[];
     const resourceGroups = (["required", "optional", "deeper"] as const).map((role) => ({
+      role,
       heading: resourceGroupLabels[role],
       resources: module.data.resources
         .filter((resourceLink) => resourceLink.role === role)
@@ -101,6 +108,28 @@ const genericObjectivePatterns = [
 const hasCustomLearningObjectives = module.data.learningObjectives.some(
   (objective) => !genericObjectivePatterns.some((pattern) => pattern.test(objective)),
 );
+const visibleResourceGroups = resourceGroups.filter((group) => group.resources.length > 0);
+const requiredGroup = visibleResourceGroups.find((group) => group.role === "required");
+const optionalGroups = visibleResourceGroups.filter((group) => group.role !== "required");
+
+function accessLabel(resource: CollectionEntry<"learnResources">) {
+  return accessModeLabels[resource.data.accessMode] || accessModeLabels.direct_open;
+}
+
+function actionLabel(resource: CollectionEntry<"learnResources">) {
+  if (resource.data.mediaType === "video" || resource.data.resourceType === "video" || resource.data.mediaType === "playlist") return "Watch";
+  if (resource.data.resourceType === "lab") return "Practice";
+  if (resource.data.resourceType === "tool" || resource.data.resourceType === "repo") return "Build checkpoint";
+  return "Read";
+}
+
+function isUnderReview(resource: CollectionEntry<"learnResources">) {
+  return resource.data.reviewStatus !== "accepted";
+}
+
+function showOffRampBadge(resource: CollectionEntry<"learnResources">, role: ResourceGroup["role"]) {
+  return role === "deeper" || resource.data.accessMode !== "direct_open" || resource.data.reviewStatus !== "accepted";
+}
 ---
 
 <BaseLayout title={module.data.title} canonical={modulePath(module)} description={module.data.summary}>
@@ -134,38 +163,13 @@ const hasCustomLearningObjectives = module.data.learningObjectives.some(
       </aside>
     </header>
 
-    <section class="learn-two-column">
-      <div>
-        {hasCustomLearningObjectives && (
-          <>
-            <h2>Learning Objectives</h2>
-            <ul>
-              {module.data.learningObjectives.map((objective) => <li>{objective}</li>)}
-            </ul>
-          </>
-        )}
-      </div>
-      <div>
-        {prerequisites.length > 0 && (
-          <>
-            <h2>Prerequisites</h2>
-            <ul>
-              {prerequisites.map((prerequisite) => <li><a href={modulePath(prerequisite)}>{prerequisite.data.title}</a></li>)}
-            </ul>
-          </>
-        )}
-        {module.data.requiredArtifact && (
-          <>
-            <h2>Required Artifact</h2>
-            <ArtifactBadge value={module.data.requiredArtifact} />
-          </>
-        )}
-      </div>
+    <section class="learn-content-body">
+      <Content />
     </section>
 
-    <section>
-      <h2>Resources</h2>
-      {featuredEmbed && (
+    {featuredEmbed && (
+      <section>
+        <h2>Featured Resource</h2>
         <div class="learn-featured-embed">
           <YouTubeEmbed
             title={featuredEmbed.data.title}
@@ -179,42 +183,90 @@ const hasCustomLearningObjectives = module.data.learningObjectives.some(
             embedPrivacyMode={featuredEmbed.data.embedPrivacyMode}
           />
         </div>
-      )}
-      <div class="learn-resource-groups">
-        {
-          resourceGroups.map((group) => (
-            <section class="learn-resource-group">
-              <h3>{group.heading}</h3>
-              {group.resources.length > 0 ? (
-                <ul>
-                  {group.resources.map((resource) => (
-                    <li>
-                      <a href={resource.data.canonicalUrl} target="_blank" rel="noopener noreferrer">{resource.data.title}</a>
-                      <span>{resource.data.provider} - {formatLabel(resource.data.resourceType)}</span>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p class="text-muted">No resources in this group yet.</p>
-              )}
-            </section>
-          ))
-        }
-      </div>
-    </section>
-
-    {labs.length > 0 && (
-      <section>
-        <h2>Linked Labs</h2>
-        <div class="learn-grid">{labs.map((lab) => <LabCard lab={lab} />)}</div>
       </section>
     )}
 
+    {requiredGroup && (
+      <section class="learn-resource-group">
+        <h2>{requiredGroup.heading}</h2>
+        <ul>
+          {requiredGroup.resources.map((resource) => (
+            <li>
+              <a href={resourcePath(resource)}>{resource.data.title}</a>
+              <span>
+                {actionLabel(resource)} - {resource.data.provider} - {formatLabel(resource.data.resourceType)} -
+                <a href={resource.data.canonicalUrl} target="_blank" rel="noopener noreferrer"> Open original</a>
+                {" "}
+                <span class="learn-access-badge">{accessLabel(resource)}</span>
+                {isUnderReview(resource) && <span class="learn-access-badge">Under review</span>}
+              </span>
+              {resource.data.watchFocus && <p>{resource.data.watchFocus}</p>}
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+
+    <section class="learn-two-column">
+      <div>
+        {hasCustomLearningObjectives && (
+          <>
+            <h2>Learning Objectives</h2>
+            <ul>
+              {module.data.learningObjectives.map((objective) => <li>{objective}</li>)}
+            </ul>
+          </>
+        )}
+        {module.data.requiredArtifact && (
+          <>
+            <h2>Practice/checkpoint</h2>
+            <ArtifactBadge value={module.data.requiredArtifact} />
+          </>
+        )}
+      </div>
+      <div>
+        {prerequisites.length > 0 && (
+          <>
+            <h2>Prerequisites</h2>
+            <ul>
+              {prerequisites.map((prerequisite) => <li><a href={modulePath(prerequisite)}>{prerequisite.data.title}</a></li>)}
+            </ul>
+          </>
+        )}
+      </div>
+    </section>
+
     <SecurityLensCallout lens={module.data.securityLens} text={module.data.securityLensText} />
 
-    <section class="learn-content-body">
-      <Content />
-    </section>
+    {optionalGroups.map((group) => (
+      <section class="learn-resource-group">
+        <h2>{group.heading}</h2>
+        <ul>
+          {group.resources.map((resource) => (
+            <li>
+              <a href={resourcePath(resource)}>{resource.data.title}</a>
+              <span>
+                {actionLabel(resource)} - {resource.data.provider} - {formatLabel(resource.data.resourceType)} -
+                <a href={resource.data.canonicalUrl} target="_blank" rel="noopener noreferrer"> Open original</a>
+                {" "}
+                <span class="learn-access-badge">{accessLabel(resource)}</span>
+                {showOffRampBadge(resource, group.role) && <span class="learn-access-badge">Extra/off-ramp</span>}
+                {isUnderReview(resource) && <span class="learn-access-badge">Under review</span>}
+              </span>
+              {resource.data.watchFocus && <p>{resource.data.watchFocus}</p>}
+              {resource.data.checkpointPrompt && <p>{resource.data.checkpointPrompt}</p>}
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
+
+    {labs.length > 0 && (
+      <section>
+        <h2>Related Labs</h2>
+        <div class="learn-grid">{labs.map((lab) => <LabCard lab={lab} />)}</div>
+      </section>
+    )}
   </PageShell>
 </BaseLayout>
 
@@ -275,7 +327,18 @@ const hasCustomLearningObjectives = module.data.learningObjectives.some(
 
   .learn-resource-group li {
     display: grid;
-    gap: 0.15rem;
+    gap: 0.2rem;
+  }
+
+  .learn-access-badge {
+    background: var(--aiv-card-bg);
+    border: 1px solid var(--aiv-card-border);
+    border-radius: 999px;
+    color: var(--aiv-text);
+    display: inline-flex;
+    font-size: 0.78rem;
+    margin-left: 0.25rem;
+    padding: 0.08rem 0.4rem;
   }
 
   .learn-resource-group span {

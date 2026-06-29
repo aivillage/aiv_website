@@ -1,0 +1,212 @@
+---
+import { getCollection } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import PageShell from "../../../../components/layout/PageShell.astro";
+import {
+  accessModeLabels,
+  byTitle,
+  entrySlug,
+  formatLabel,
+  modulePath,
+  refId,
+  resourcePath,
+  seriesPath,
+  trackPath,
+} from "../../../../utils/learn";
+
+type Props = {
+  series: CollectionEntry<"learnResources">;
+  episodes: CollectionEntry<"learnResources">[];
+  tracks: CollectionEntry<"learnTracks">[];
+  modules: CollectionEntry<"learnModules">[];
+};
+
+export async function getStaticPaths() {
+  const resources = await getCollection("learnResources", ({ data }) => data.status !== "draft");
+  const tracks = await getCollection("learnTracks", ({ data }) => data.status !== "draft");
+  const modules = await getCollection("learnModules", ({ data }) => data.status !== "draft");
+  const trackBySlug = new Map(tracks.flatMap((track) => [[entrySlug(track), track], [track.id, track]]));
+  const seriesResources = resources.filter((resource) => resource.data.resourceType === "playlist" || resource.data.mediaType === "playlist");
+
+  return seriesResources.map((series) => {
+    const seriesSlug = entrySlug(series);
+    const episodes = resources
+      .filter((resource) => resource.data.seriesSlug === seriesSlug)
+      .sort((left, right) => {
+        const leftOrder = left.data.episodeOrder ?? Number.POSITIVE_INFINITY;
+        const rightOrder = right.data.episodeOrder ?? Number.POSITIVE_INFINITY;
+        if (leftOrder !== rightOrder) return leftOrder - rightOrder;
+        return byTitle(left, right);
+      });
+    const relatedTracks = series.data.tracks
+      .map((trackRef) => trackBySlug.get(refId(trackRef)))
+      .filter((track): track is CollectionEntry<"learnTracks"> => Boolean(track))
+      .sort(byTitle) as CollectionEntry<"learnTracks">[];
+
+    return {
+      params: { slug: seriesSlug },
+      props: { series, episodes, tracks: relatedTracks, modules },
+    };
+  });
+}
+
+const { series, episodes, tracks, modules } = Astro.props;
+const creator = series.data.creator || series.data.attribution || series.data.provider;
+const accessLabel = accessModeLabels[series.data.accessMode] || accessModeLabels.direct_open;
+
+function episodeModules(episode: CollectionEntry<"learnResources">) {
+  const canonicalFor = new Set(episode.data.canonicalFor);
+  return modules.filter((module) => canonicalFor.has(entrySlug(module))).slice(0, 3);
+}
+---
+
+<BaseLayout title={series.data.title} canonical={seriesPath(series)} description={`Learn series from ${series.data.provider}: ${series.data.title}.`}>
+  <PageShell class="learn-series-page">
+    <nav class="learn-breadcrumb" aria-label="Breadcrumb"><a href="/learn/">Learn</a> / <a href="/learn/series/">Series</a> / <span>{series.data.title}</span></nav>
+
+    <header class="learn-series-header">
+      <div>
+        <div class="learn-meta-row">
+          <span>{formatLabel(series.data.resourceType)}</span>
+          <span class="learn-access-badge">{accessLabel}</span>
+        </div>
+        <h1>{series.data.title}</h1>
+        <p class="text-lead">{series.data.watchFocus || `An ordered learning path from ${creator}.`}</p>
+      </div>
+      <aside class="learn-side-panel">
+        <h2>Source</h2>
+        <p>{series.data.provider}</p>
+        <a href={series.data.canonicalUrl} target="_blank" rel="noopener noreferrer">Open original series</a>
+        {series.data.playlistUrl && <a href={series.data.playlistUrl} target="_blank" rel="noopener noreferrer">Open playlist</a>}
+      </aside>
+    </header>
+
+    <section class="learn-callout">
+      <h2>How To Use This Series</h2>
+      <p>
+        Watch episodes in order when you want the full path, or jump from a related module to the episode that supports its checkpoint. Each episode links to a resource detail page with focus and checkpoint notes.
+      </p>
+      {series.data.accessNotes && <p>{series.data.accessNotes}</p>}
+    </section>
+
+    {tracks.length > 0 && (
+      <section>
+        <h2>Related Tracks</h2>
+        <ul class="learn-link-list">
+          {tracks.map((track) => <li><a href={trackPath(track)}>{track.data.title}</a></li>)}
+        </ul>
+      </section>
+    )}
+
+    <section>
+      <h2>Episodes</h2>
+      {episodes.length > 0 ? (
+        <ol class="learn-episode-list">
+          {episodes.map((episode) => {
+            const mappedModules = episodeModules(episode);
+
+            return (
+            <li>
+              <div>
+                <a href={resourcePath(episode)}>{episode.data.title}</a>
+                <span>{episode.data.watchFocus || episode.data.provider}</span>
+              </div>
+              {episode.data.checkpointPrompt && <p>{episode.data.checkpointPrompt}</p>}
+              {mappedModules.length > 0 && (
+                <p>
+                  Module: {mappedModules.map((module, index) => (
+                    <>
+                      {index > 0 && ", "}
+                      <a href={modulePath(module)}>{module.data.title}</a>
+                    </>
+                  ))}
+                </p>
+              )}
+              <a href={resourcePath(episode)}>View resource details</a>
+            </li>
+            );
+          })}
+        </ol>
+      ) : (
+        <section class="learn-callout">
+          <h3>Episodes Coming Later</h3>
+          <p>Episode records have not been added to this series yet. Use the source links above for the original series.</p>
+        </section>
+      )}
+    </section>
+  </PageShell>
+</BaseLayout>
+
+<style>
+  .learn-series-page {
+    display: grid;
+    gap: 2rem;
+  }
+
+  .learn-breadcrumb,
+  .learn-meta-row {
+    align-items: center;
+    color: var(--aiv-text-muted);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .learn-series-header,
+  .learn-two-column {
+    display: grid;
+    gap: 1.25rem;
+    grid-template-columns: minmax(0, 1fr) minmax(260px, 0.55fr);
+  }
+
+  .learn-side-panel,
+  .learn-callout {
+    align-self: start;
+    background: var(--aiv-nested-bg);
+    border: 1px solid var(--aiv-nested-border);
+    border-radius: 8px;
+    display: grid;
+    gap: 0.5rem;
+    padding: 1rem;
+  }
+
+  .learn-side-panel h2,
+  .learn-callout h2 {
+    font-size: 1.1rem;
+    margin-top: 0;
+  }
+
+  .learn-episode-list li {
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .learn-episode-list {
+    display: grid;
+    gap: 0.75rem;
+    padding-left: 1.2rem;
+  }
+
+  .learn-episode-list span,
+  .learn-episode-list p {
+    color: var(--aiv-text-muted);
+    font-size: 0.9rem;
+    margin: 0;
+  }
+
+  .learn-access-badge {
+    background: var(--aiv-nested-bg);
+    border: 1px solid var(--aiv-nested-border);
+    border-radius: 999px;
+    color: var(--aiv-text);
+    padding: 0.12rem 0.45rem;
+  }
+
+  @media (max-width: 780px) {
+    .learn-series-header,
+    .learn-two-column {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

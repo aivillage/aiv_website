@@ -1,0 +1,106 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import PageShell from "../../../components/layout/PageShell.astro";
+import { accessModeLabels, byTitle, entrySlug, seriesPath } from "../../../utils/learn";
+
+const resources = await getCollection("learnResources", ({ data }) => data.status !== "draft");
+const series = resources
+  .filter((resource) => resource.data.resourceType === "playlist" || resource.data.mediaType === "playlist")
+  .sort(byTitle);
+const episodeCountBySeries = new Map<string, number>();
+
+for (const resource of resources) {
+  if (!resource.data.seriesSlug) continue;
+  episodeCountBySeries.set(resource.data.seriesSlug, (episodeCountBySeries.get(resource.data.seriesSlug) || 0) + 1);
+}
+---
+
+<BaseLayout title="Learn Video Series" canonical="/learn/series/" description="Ordered AI Village Learn video series with episode checkpoints.">
+  <PageShell class="learn-page">
+    <h1>Video Series</h1>
+    <p class="text-lead">
+      Follow ordered video paths with a clear source link, episode list, and module-oriented checkpoints. Series pages link to the original creator and avoid loading embedded players by default.
+    </p>
+
+    {series.length > 0 ? (
+      <div class="learn-grid">
+        {series.map((item) => {
+          const seriesSlug = entrySlug(item);
+          const accessLabel = accessModeLabels[item.data.accessMode] || accessModeLabels.direct_open;
+          const episodes = episodeCountBySeries.get(seriesSlug) || 0;
+
+          return (
+            <article class="learn-card">
+              <div class="learn-card__meta">
+                <span class="learn-access-badge">{accessLabel}</span>
+                <span>{episodes} {episodes === 1 ? "episode" : "episodes"}</span>
+              </div>
+              <h2><a href={seriesPath(item)}>{item.data.title}</a></h2>
+              <p>{item.data.watchFocus || `A video path from ${item.data.provider}.`}</p>
+              <div class="learn-card__actions">
+                <a href={seriesPath(item)}>View learning path</a>
+                <a href={item.data.canonicalUrl} target="_blank" rel="noopener noreferrer">Open original series</a>
+                {item.data.playlistUrl && <a href={item.data.playlistUrl} target="_blank" rel="noopener noreferrer">Open playlist</a>}
+              </div>
+              {episodes === 0 && <p class="text-muted">Episode records have not been added yet.</p>}
+            </article>
+          );
+        })}
+      </div>
+    ) : (
+      <section class="learn-empty">
+        <h2>No Series Yet</h2>
+        <p>Video series records will appear here after episode metadata is ready.</p>
+      </section>
+    )}
+  </PageShell>
+</BaseLayout>
+
+<style>
+  .learn-page,
+  .learn-card,
+  .learn-card__actions {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .learn-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+
+  .learn-card,
+  .learn-empty {
+    background: var(--aiv-card-bg);
+    border: 1px solid var(--aiv-card-border);
+    border-radius: 8px;
+    box-shadow: var(--aiv-card-shadow);
+    padding: 1rem;
+  }
+
+  .learn-card h2,
+  .learn-card p,
+  .learn-empty h2,
+  .learn-empty p {
+    margin: 0;
+  }
+
+  .learn-card__meta,
+  .learn-card__actions {
+    align-items: center;
+    color: var(--aiv-text-muted);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .learn-access-badge {
+    background: var(--aiv-nested-bg);
+    border: 1px solid var(--aiv-nested-border);
+    border-radius: 999px;
+    color: var(--aiv-text);
+    padding: 0.12rem 0.45rem;
+  }
+</style>

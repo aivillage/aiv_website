@@ -1,6 +1,15 @@
 import { getCollection } from "astro:content";
 import { site } from "../data/site";
-import { canRenderLearnLab, canRenderLearnModule, canRenderLearnTrack, labPath, modulePath, trackPath } from "../utils/learn";
+import {
+  canRenderLearnLab,
+  canRenderLearnModule,
+  canRenderLearnTrack,
+  labPath,
+  modulePath,
+  resourcePath,
+  seriesPath,
+  trackPath,
+} from "../utils/learn";
 import { canonicalPostPath, eventPath, schedulePath, sortEventsAscending, sponsorPath } from "../utils/site";
 
 const staticAssets = [
@@ -37,6 +46,13 @@ export async function GET() {
   const learnTracks = await getCollection("learnTracks", canRenderLearnTrack);
   const learnModules = await getCollection("learnModules", canRenderLearnModule);
   const learnLabs = await getCollection("learnLabs", canRenderLearnLab);
+  const learnResources = await getCollection("learnResources", ({ data }) =>
+    data.status !== "draft" &&
+    Boolean(data.accessMode) &&
+    Boolean(data.reviewStatus) &&
+    data.reviewStatus === "accepted"
+  );
+  const learnSeries = learnResources.filter((resource) => resource.data.resourceType === "playlist" || resource.data.mediaType === "playlist");
 
   const urls = Array.from(new Set([
     "/",
@@ -58,6 +74,9 @@ export async function GET() {
     ...learnTracks.map(trackPath),
     ...learnModules.map(modulePath),
     "/learn/resources/",
+    "/learn/series/",
+    ...learnResources.map(resourcePath),
+    ...learnSeries.map(seriesPath),
     "/learn/labs/",
     ...learnLabs.map(labPath),
     "/learn/deep-dives/",

@@ -2,7 +2,7 @@
 import type { CollectionEntry } from "astro:content";
 import DifficultyBadge from "./DifficultyBadge.astro";
 import StageBadge from "./StageBadge.astro";
-import { costLabels, formatLabel, refId } from "../../utils/learn";
+import { accessModeLabels, formatLabel, refId, resourceActionLabel, resourcePath } from "../../utils/learn";
 
 type Props = {
   resource: CollectionEntry<"learnResources">;
@@ -12,20 +12,33 @@ const { resource } = Astro.props;
 const trackRefs = resource.data.tracks.map(refId).join(" ");
 const sourceLabel = resource.data.sourcePlatform === "youtube" ? "YouTube" : resource.data.sourcePlatform ? formatLabel(resource.data.sourcePlatform) : "";
 const creator = resource.data.creator || resource.data.attribution;
+const accessLabel = accessModeLabels[resource.data.accessMode] || accessModeLabels.direct_open;
+const actionLabel = resourceActionLabel(resource);
+const relatedTracks = resource.data.tracks.map((trackRef) => formatLabel(refId(trackRef).replace(/-/g, "_"))).slice(0, 2);
+const isUnderReview = resource.data.reviewStatus !== "accepted";
+const isOffRamp = resource.data.accessMode !== "direct_open";
 ---
 
-<article class="learn-card" data-track-refs={trackRefs} data-stage={resource.data.targetStage} data-difficulty={resource.data.difficulty} data-type={resource.data.resourceType} data-cost={resource.data.cost}>
+<article class="learn-card" data-track-refs={trackRefs} data-stage={resource.data.targetStage} data-difficulty={resource.data.difficulty} data-type={resource.data.resourceType} data-access={resource.data.accessMode}>
   <div class="learn-card__meta">
     <StageBadge value={resource.data.targetStage} />
     <DifficultyBadge value={resource.data.difficulty} />
-    <span>{costLabels[resource.data.cost]}</span>
+    <span class="learn-access-badge">{isOffRamp ? "Extra/off-ramp" : accessLabel}</span>
+    {isUnderReview && <span class="learn-access-badge learn-access-badge--review">Under review</span>}
   </div>
-  <h3><a href={resource.data.canonicalUrl} target="_blank" rel="noopener noreferrer">{resource.data.title}</a></h3>
-  <p class="learn-card__provider">{resource.data.provider}</p>
+  <h3><a href={resourcePath(resource)}>{resource.data.title}</a></h3>
+  <p class="learn-card__provider">
+    {resource.data.provider}
+    <a href={resource.data.canonicalUrl} target="_blank" rel="noopener noreferrer">Open original</a>
+  </p>
+  {resource.data.watchFocus && <p>{resource.data.watchFocus}</p>}
+  {resource.data.checkpointPrompt && <p class="learn-card__checkpoint">{resource.data.checkpointPrompt}</p>}
   <div class="learn-card__meta">
+    <span>{actionLabel}</span>
     <span>{formatLabel(resource.data.resourceType)}</span>
     {sourceLabel && <span>{sourceLabel}</span>}
     {creator && <span>By {creator}</span>}
+    {relatedTracks.length > 0 && <span>Track: {relatedTracks.join(", ")}</span>}
     {resource.data.embedAllowed && <span>Official embed available</span>}
   </div>
 </article>
@@ -57,8 +70,15 @@ const creator = resource.data.creator || resource.data.attribution;
   }
 
   .learn-card__provider,
+  .learn-card__checkpoint,
   .learn-card__meta {
     color: var(--aiv-text-muted);
+  }
+
+  .learn-card__provider {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
   }
 
   .learn-card__meta {
@@ -67,5 +87,13 @@ const creator = resource.data.creator || resource.data.attribution;
     flex-wrap: wrap;
     font-size: 0.9rem;
     gap: 0.5rem;
+  }
+
+  .learn-access-badge {
+    background: var(--aiv-nested-bg);
+    border: 1px solid var(--aiv-nested-border);
+    border-radius: 999px;
+    color: var(--aiv-text);
+    padding: 0.12rem 0.45rem;
   }
 </style>

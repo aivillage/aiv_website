@@ -43,6 +43,23 @@ export const costLabels: Record<string, string> = {
   paid: "Paid",
 };
 
+export const accessModeLabels: Record<string, string> = {
+  direct_open: "No account required",
+  free_account_required: "Free account required",
+  application_or_cohort: "Application/cohort",
+  scheduled_or_live: "Scheduled/live",
+  paid_or_freemium: "Extra/off-ramp",
+  unclear: "Extra/off-ramp",
+};
+
+export function resourceActionLabel(resource: { data: { mediaType?: string; resourceType?: string } }) {
+  const type = resource.data.mediaType || resource.data.resourceType;
+  if (type === "video" || type === "playlist") return "Watch";
+  if (type === "lab") return "Practice";
+  if (type === "tool" || type === "repo") return "Build checkpoint";
+  return "Read";
+}
+
 export const moduleTypeLabels: Record<string, string> = {
   concept: "Concept",
   practice: "Practice",
@@ -97,6 +114,15 @@ export function trackPath(entry: { id: string; data: object }) {
 
 export function labPath(entry: { id: string; data: object }) {
   return `/learn/labs/${entrySlug(entry)}/`;
+}
+
+export function resourcePath(entry: { id: string; data: object }) {
+  return `/learn/resources/${entrySlug(entry)}/`;
+}
+
+export function seriesPath(entryOrSlug: { id: string; data: object } | string) {
+  const slug = typeof entryOrSlug === "string" ? entryOrSlug : entrySlug(entryOrSlug);
+  return `/learn/series/${slug}/`;
 }
 
 export function byTitle<T extends { data: { title?: string; term?: string } }>(left: T, right: T) {

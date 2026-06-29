@@ -76,6 +76,9 @@ export async function getStaticPaths() {
 
 const { lab, modules, tracks, resources, mappings } = Astro.props;
 const { Content } = await render(lab);
+const sourceUrl = lab.data.sourceRepo
+  ? `https://github.com/${lab.data.sourceRepo}${lab.data.sourcePath ? `/tree/main/${lab.data.sourcePath}` : ""}`
+  : "";
 ---
 
 <BaseLayout title={lab.data.title} canonical={labPath(lab)} description={lab.data.summary}>
@@ -93,21 +96,15 @@ const { Content } = await render(lab);
         <p class="text-lead">{lab.data.summary}</p>
       </div>
       <aside class="learn-side-panel">
-        <h2>Lab Status</h2>
-        <dl>
-          <div>
-            <dt>Debrief</dt>
-            <dd><span class:list={["learn-state-badge", `learn-state-badge--${lab.data.debriefStatus}`]}>{formatLabel(lab.data.debriefStatus)}</span></dd>
-          </div>
-          <div>
-            <dt>Instructor guide</dt>
-            <dd><span class:list={["learn-state-badge", `learn-state-badge--${lab.data.instructorGuideStatus}`]}>{formatLabel(lab.data.instructorGuideStatus)}</span></dd>
-          </div>
-          <div>
-            <dt>Setup</dt>
-            <dd><span class:list={["learn-state-badge", `learn-state-badge--${lab.data.setupStatus}`]}>{formatLabel(lab.data.setupStatus)}</span></dd>
-          </div>
-        </dl>
+        <h2>Workshop Source</h2>
+        {sourceUrl ? (
+          <>
+            <p>{lab.data.sourceRepo}{lab.data.sourcePath ? ` / ${lab.data.sourcePath}` : ""}</p>
+            <a class="button" href={sourceUrl} target="_blank" rel="noopener noreferrer">Open workshop source</a>
+          </>
+        ) : (
+          <p class="text-muted">No public source link is attached to this lab.</p>
+        )}
       </aside>
     </header>
 
@@ -236,56 +233,23 @@ const { Content } = await render(lab);
     padding: 1rem;
   }
 
+  .button {
+    background: var(--aiv-action-primary);
+    border: 1px solid var(--aiv-action-primary);
+    border-radius: 6px;
+    color: var(--aiv-bg-canvas);
+    display: inline-flex;
+    font-weight: 800;
+    justify-content: center;
+    min-height: 2.75rem;
+    padding: 0.6rem 0.95rem;
+    text-decoration: none;
+  }
+
   .learn-side-panel h2,
   .learn-mapping-grid h3 {
     font-size: 1.1rem;
     margin-top: 0;
-  }
-
-  .learn-side-panel dl {
-    display: grid;
-    gap: 0.65rem;
-    margin: 0;
-  }
-
-  .learn-side-panel dt {
-    color: var(--aiv-text-muted);
-    font-size: 0.8rem;
-    font-weight: 700;
-    text-transform: uppercase;
-  }
-
-  .learn-side-panel dd {
-    margin: 0;
-  }
-
-  .learn-state-badge {
-    align-items: center;
-    border: 1px solid var(--aiv-line-strong);
-    border-radius: 999px;
-    color: var(--aiv-text-secondary);
-    display: inline-flex;
-    font-size: 0.8rem;
-    font-weight: 700;
-    line-height: 1.2;
-    min-height: 1.8rem;
-    padding: 0.28rem 0.65rem;
-  }
-
-  .learn-state-badge--draft {
-    border-color: var(--aiv-warning);
-    color: var(--aiv-warning);
-  }
-
-  .learn-state-badge--published,
-  .learn-state-badge--tested {
-    border-color: var(--aiv-accent-field);
-    color: var(--aiv-accent-field);
-  }
-
-  .learn-state-badge--missing {
-    border-color: var(--aiv-text-muted);
-    color: var(--aiv-text-muted);
   }
 
   .learn-flag {

@@ -36,10 +36,6 @@ const href = canRenderLearnLab(lab) ? labPath(lab) : "";
       <dt>Run modes</dt>
       <dd>{lab.data.runModes.map(formatLabel).join(", ")}</dd>
     </div>
-    <div>
-      <dt>Debrief</dt>
-      <dd>{formatLabel(lab.data.debriefStatus)}</dd>
-    </div>
   </dl>
   <ArtifactBadge value={lab.data.requiredArtifact} />
 </article>
