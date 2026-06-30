@@ -119,6 +119,7 @@ const sourceActionText = isAivTemplate
     ? "Load the official embedded player only when you are ready to watch."
     : "Open the original source when you are ready to use this resource.";
 const sourceActionHref = isAivTemplate ? "#template-content" : resource.data.canonicalUrl;
+const sourceActionButtonLabel = isAivTemplate ? actionLabel : "Open original";
 const watchInModuleHref = canEmbedVideo && primaryModuleLink?.track
   ? `${trackScopedModulePath(primaryModuleLink.track, primaryModuleLink.module)}#watch`
   : undefined;
@@ -167,7 +168,7 @@ function moduleLinkHref(module: CollectionEntry<"learnModules">, track?: Collect
 
       <section class="learn-support-banner learn-surface-task" aria-labelledby="resource-context-heading">
         <div>
-          <span id="resource-context-heading">Part of</span>
+          <span id="resource-context-heading">Part of module</span>
           <p>
             {primaryModuleLink ? (
               <>
@@ -233,7 +234,7 @@ function moduleLinkHref(module: CollectionEntry<"learnModules">, track?: Collect
                 embedPrivacyMode={resource.data.embedPrivacyMode}
               />
             ) : (
-              <a class="learn-source-action__button" href={sourceActionHref} target={isAivTemplate ? undefined : "_blank"} rel={isAivTemplate ? undefined : "noopener noreferrer"}>{actionLabel}</a>
+              <a class="learn-source-action__button" href={sourceActionHref} target={isAivTemplate ? undefined : "_blank"} rel={isAivTemplate ? undefined : "noopener noreferrer"}>{sourceActionButtonLabel}</a>
             )}
           </section>
 
