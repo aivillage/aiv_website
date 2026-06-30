@@ -57,6 +57,7 @@ export async function getStaticPaths() {
 
 const { series, episodes, tracks, allTracks, modules } = Astro.props;
 const creator = series.data.creator || series.data.attribution || series.data.provider;
+const showCreator = creator !== series.data.provider;
 const accessLabel = accessModeLabels[series.data.accessMode] || accessModeLabels.direct_open;
 const episodeCount = episodes.length;
 const pathLabel = episodeCount === 0 ? "Episode Path Not Ready" : episodeCount === 1 ? "Single Selected Episode" : "AIV-Selected Episode Path";
@@ -104,7 +105,7 @@ function episodeModuleTrack(module: CollectionEntry<"learnModules">) {
       <aside class="learn-side-panel">
         <h2>Source Summary</h2>
         <p>{series.data.provider}</p>
-        <p>{creator}</p>
+        {showCreator && <p>{creator}</p>}
         <p>{accessLabel}</p>
       </aside>
     </header>
