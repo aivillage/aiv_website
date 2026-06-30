@@ -151,6 +151,80 @@ type ReferenceLike = string | { id?: string; slug?: string };
 type ModuleLike = { id: string; data: { slug?: string; status?: string } };
 type TrackLike = { id: string; data: { slug?: string; status?: string; canonicalModules: ReferenceLike[]; title?: string } };
 
+type ArtifactModuleLike = { id: string; data: { slug?: string; requiredArtifact?: string } };
+type ArtifactTrackLike = { id: string; data: { slug?: string; trackKind?: string; title?: string } };
+
+const genericArtifactFields = ["artifact", "evidence", "limitation", "owner/reviewer", "next question"];
+
+const artifactFieldsByTrack: Record<string, string[]> = {
+  "ai-practitioner": ["workflow", "AI assistance step", "allowed data", "review step", "owner", "escalation"],
+  "ai-builder-core": ["boundary", "input", "output", "control", "evidence"],
+  "agentic-ai-advanced-builder": [
+    "user goal",
+    "workflow-vs-agent justification",
+    "tools",
+    "side effects",
+    "memory classes",
+    "RAG sources",
+    "approval gates",
+    "observability plan",
+    "eval plan",
+    "MCP servers/scopes",
+    "rollback",
+    "kill switch",
+  ],
+  "evals-reliability-grt": [
+    "behavior tested",
+    "system/model version",
+    "dataset provenance",
+    "solver",
+    "scorer/metric",
+    "representative failures",
+    "limitations",
+    "decision supported",
+    "decision not supported",
+    "next test",
+  ],
+  "ai-security-core": ["system boundary", "risk category", "evidence", "control", "owner", "review question"],
+  "offensive-ai-security-red-teaming": ["finding", "scope", "evidence", "impact", "mapping", "mitigation", "regression test", "disclosure boundary"],
+  "defensive-ai-engineering": ["risk pattern", "defensive control", "log signal", "regression test", "owner", "escalation path"],
+  "governance-responsible-use": ["use case", "framework", "owner", "evidence", "caveat", "review cadence"],
+};
+
+const artifactFieldsByModule: Record<string, string[]> = {
+  "prompting-context": ["task", "allowed context", "excluded context", "expected format", "human review step"],
+  "ai-assisted-research": ["claim", "source", "quote or evidence", "confidence", "human verification status"],
+  "data-hygiene": ["input class", "allowed tool tier", "restricted data", "retention concern", "escalation owner"],
+  "verification-human-review": ["factual claim", "source check", "calculation check", "external reference check", "red-line failure condition"],
+  "ai-workflow-policy-basics": ["workflow", "allowed tools", "allowed data", "review level", "recordkeeping", "escalation"],
+  "ai-app-architecture": ["user input", "model call", "retrieval boundary", "tool boundary", "logging", "human review"],
+  "structured-outputs": ["schema", "reject cases", "unauthorized valid output", "validation rule"],
+  "rag-basics": ["approved source", "retrieval method", "metadata filter", "citation/source label", "fallback behavior"],
+  "vector-search-retrieval": ["approved source", "retrieval method", "metadata filter", "citation/source label", "fallback behavior"],
+  "tool-calling-basics": ["allowed action", "required input", "authorization check", "approval gate", "failure handling"],
+  "basic-app-evals": ["behavior tested", "dataset/sample", "expected outcome", "failure meaning", "next regression"],
+  "observability-cost": ["trace field", "redaction rule", "cost signal", "owner", "alert threshold"],
+  "eval-cards": [
+    "behavior tested",
+    "system/model version",
+    "dataset provenance",
+    "solver",
+    "scorer/metric",
+    "representative failures",
+    "limitations",
+    "decision supported",
+    "decision not supported",
+    "next test",
+  ],
+  "grt-style-findings": ["claim", "evidence", "samples", "reproducibility path", "limitations", "severity/importance framing", "follow-up action"],
+  "mitre-atlas-mapping": ["OWASP category", "ATLAS mapping", "NIST function", "control evidence", "uncertainty"],
+  "nist-ai-rmf-genai-profile": ["OWASP category", "ATLAS mapping", "NIST function", "control evidence", "uncertainty"],
+  "rules-of-engagement-lab-safety": ["scope", "authorized target", "allowed actions", "disallowed actions", "stop conditions", "reporting path"],
+  "red-team-report-writing": ["finding", "scope", "evidence", "impact", "mapping", "mitigation", "regression test", "disclosure boundary"],
+  "secure-tool-use": ["tool", "identity", "allowed action", "denied action", "approval condition", "audit event"],
+  "detection-logging": ["event field", "trace/span", "redaction rule", "alert condition", "retention/access rule"],
+};
+
 export function moduleSequenceForTrack<TModule extends ModuleLike, TTrack extends TrackLike>(track: TTrack, moduleBySlug: Map<string, TModule>) {
   return track.data.canonicalModules
     .map((moduleRef) => moduleBySlug.get(refId(moduleRef)))
@@ -189,4 +263,13 @@ export function previousNextModulesInTrack<TModule extends ModuleLike, TTrack ex
 export function maybePrimaryTrackForModule<TModule extends ModuleLike, TTrack extends TrackLike>(module: TModule, tracks: TTrack[]) {
   const canonicalTracks = findPublicCanonicalTracksForModule(module, tracks);
   return canonicalTracks.length === 1 ? canonicalTracks[0] : undefined;
+}
+
+export function artifactFieldsForModule<TModule extends ArtifactModuleLike, TTrack extends ArtifactTrackLike>(
+  module: TModule,
+  track?: TTrack,
+) {
+  const moduleSlug = entrySlug(module);
+  const trackSlug = track ? entrySlug(track) : "";
+  return artifactFieldsByModule[moduleSlug] || artifactFieldsByTrack[trackSlug] || genericArtifactFields;
 }

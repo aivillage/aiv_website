@@ -70,7 +70,10 @@ const { Content } = await render(resource);
 const creator = resource.data.creator || resource.data.attribution || resource.data.provider;
 const isPlaylist = resource.data.resourceType === "playlist" || resource.data.mediaType === "playlist";
 const accessLabel = accessModeLabels[resource.data.accessMode] || accessModeLabels.direct_open;
-const actionLabel = resourceActionLabel(resource);
+const isAivTemplate = resource.data.provider === "AI Village Learn" &&
+  resource.data.rightsMode === "internal" &&
+  /template/i.test(resource.data.title);
+const actionLabel = isAivTemplate ? "Use AIV template" : resourceActionLabel(resource);
 const isOffRamp = resource.data.accessMode !== "direct_open";
 const isUnderReview = resource.data.reviewStatus !== "accepted";
 const canEmbedVideo = Boolean(
@@ -123,7 +126,7 @@ function moduleLinkHref(module: CollectionEntry<"learnModules">, track?: Collect
       </div>
     </header>
 
-    <section class="learn-content-body">
+    <section class="learn-content-body" id={isAivTemplate ? "template" : undefined}>
       <h2>Why AIV Includes This</h2>
       {hasLearnerBody ? <Content /> : <p>{resource.data.accessNotes || fallbackRationale}</p>}
     </section>
@@ -172,8 +175,12 @@ function moduleLinkHref(module: CollectionEntry<"learnModules">, track?: Collect
     {!canEmbedVideo && (
       <section class="learn-callout">
         <h2>{actionLabel} Source</h2>
-        <p>Open the original source when you are ready to use this resource.</p>
-        <a class="button" href={resource.data.canonicalUrl} target="_blank" rel="noopener noreferrer">Open original</a>
+        <p>{isAivTemplate ? "Use this AIV-authored template when you are ready to draft the artifact." : "Open the original source when you are ready to use this resource."}</p>
+        {isAivTemplate ? (
+          <a class="button" href="#template">Use AIV template</a>
+        ) : (
+          <a class="button" href={resource.data.canonicalUrl} target="_blank" rel="noopener noreferrer">Open original</a>
+        )}
       </section>
     )}
 

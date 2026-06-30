@@ -1,0 +1,257 @@
+---
+type TemplateResource = {
+  title: string;
+  href: string;
+};
+
+type Props = {
+  title: string;
+  prompt: string;
+  evidenceExpected: string[];
+  fields: string[];
+  templateResource?: TemplateResource;
+  relatedTrackTitle?: string;
+  relatedModuleTitle?: string;
+  compact?: boolean;
+};
+
+const {
+  title,
+  prompt,
+  evidenceExpected,
+  fields,
+  templateResource,
+  relatedTrackTitle,
+  relatedModuleTitle,
+  compact = false,
+} = Astro.props;
+const boundedEvidence = evidenceExpected.filter(Boolean).slice(0, compact ? 2 : 4);
+const boundedFields = fields.filter(Boolean).slice(0, compact ? 6 : 12);
+---
+
+<section class:list={["artifact-guide", compact && "artifact-guide--compact"]} aria-labelledby="artifact-guide-heading">
+  <div class="artifact-guide__header">
+    <div>
+      <span class="artifact-guide__eyebrow">What to produce</span>
+      <h2 id="artifact-guide-heading">{title}</h2>
+    </div>
+    {(relatedTrackTitle || relatedModuleTitle) && (
+      <p class="artifact-guide__context">
+        {relatedTrackTitle && <span>{relatedTrackTitle}</span>}
+        {relatedTrackTitle && relatedModuleTitle && <span aria-hidden="true"> / </span>}
+        {relatedModuleTitle && <span>{relatedModuleTitle}</span>}
+      </p>
+    )}
+  </div>
+
+  <p class="artifact-guide__prompt">{prompt}</p>
+
+  {templateResource && (
+    <aside class="artifact-guide__template" aria-label="AIV template">
+      <div>
+        <span>Template</span>
+        <p>{templateResource.title}</p>
+      </div>
+      <a href={templateResource.href}>Use AIV template</a>
+    </aside>
+  )}
+
+  {boundedFields.length > 0 && (
+    <div class="artifact-guide__section">
+      <h3>Fields to include</h3>
+      <ul class="artifact-guide__fields">
+        {boundedFields.map((field) => (
+          <li>
+            <span>{field}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )}
+
+  {boundedEvidence.length > 0 && (
+    <div class="artifact-guide__section artifact-guide__section--evidence">
+      <h3>Evidence expected</h3>
+      <ul>
+        {boundedEvidence.map((item) => <li>{item}</li>)}
+      </ul>
+    </div>
+  )}
+
+  <div class="artifact-guide__review">
+    <span>Before you move on</span>
+    <p>Review this artifact through the Security Lens, then carry the result into the next module or track output.</p>
+  </div>
+</section>
+
+<style>
+  .artifact-guide {
+    background:
+      linear-gradient(90deg, color-mix(in srgb, var(--aiv-action-secondary) 24%, transparent), transparent 32%),
+      color-mix(in srgb, var(--aiv-bg-panel) 86%, transparent);
+    border: 1px solid color-mix(in srgb, var(--aiv-action-secondary) 58%, var(--aiv-line-subtle));
+    border-left: 4px solid var(--aiv-action-secondary);
+    border-radius: 8px;
+    display: grid;
+    gap: 1.15rem;
+    padding: 1.25rem;
+  }
+
+  .artifact-guide--compact {
+    gap: 0.9rem;
+    padding: 1rem;
+  }
+
+  .artifact-guide__header {
+    align-items: start;
+    display: grid;
+    gap: 0.75rem;
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .artifact-guide__eyebrow,
+  .artifact-guide__template span,
+  .artifact-guide__review span {
+    color: var(--aiv-text-muted);
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  .artifact-guide h2,
+  .artifact-guide h3,
+  .artifact-guide p,
+  .artifact-guide ul {
+    margin: 0;
+  }
+
+  .artifact-guide h2 {
+    font-size: clamp(1.35rem, 2vw, 1.8rem);
+    line-height: 1.15;
+    margin-top: 0.2rem;
+  }
+
+  .artifact-guide h3 {
+    font-size: 1rem;
+  }
+
+  .artifact-guide__context {
+    color: var(--aiv-text-muted);
+    font-size: 0.92rem;
+    justify-self: end;
+    text-align: right;
+  }
+
+  .artifact-guide__prompt {
+    color: var(--aiv-text-secondary);
+    max-width: 78ch;
+  }
+
+  .artifact-guide__template {
+    align-items: center;
+    background: color-mix(in srgb, var(--aiv-action-primary) 11%, var(--aiv-nested-bg));
+    border: 1px solid color-mix(in srgb, var(--aiv-action-primary) 42%, var(--aiv-line-subtle));
+    border-radius: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+    justify-content: space-between;
+    padding: 0.85rem;
+  }
+
+  .artifact-guide__template p {
+    font-weight: 800;
+  }
+
+  .artifact-guide__template a {
+    align-items: center;
+    background: var(--aiv-action-primary);
+    border: 1px solid var(--aiv-action-primary);
+    border-radius: 6px;
+    color: var(--aiv-bg-canvas);
+    display: inline-flex;
+    font-weight: 800;
+    justify-content: center;
+    min-height: 2.75rem;
+    padding: 0.55rem 0.85rem;
+    text-decoration: none;
+  }
+
+  .artifact-guide__section {
+    display: grid;
+    gap: 0.65rem;
+  }
+
+  .artifact-guide__fields {
+    display: grid;
+    gap: 0.45rem;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    list-style: none;
+    padding: 0;
+  }
+
+  .artifact-guide__fields li {
+    align-items: center;
+    display: grid;
+    gap: 0.55rem;
+    grid-template-columns: max-content minmax(2rem, 1fr);
+    min-width: 0;
+  }
+
+  .artifact-guide__fields li::after {
+    border-bottom: 1px dotted color-mix(in srgb, var(--aiv-action-secondary) 52%, var(--aiv-line-subtle));
+    content: "";
+    min-width: 2rem;
+  }
+
+  .artifact-guide__fields span {
+    color: var(--aiv-text-primary);
+    font-weight: 700;
+  }
+
+  .artifact-guide__section--evidence {
+    background: color-mix(in srgb, var(--aiv-bg-canvas) 20%, transparent);
+    border: 1px solid color-mix(in srgb, var(--aiv-action-secondary) 32%, var(--aiv-line-subtle));
+    border-radius: 8px;
+    padding: 0.85rem;
+  }
+
+  .artifact-guide__section--evidence ul {
+    display: grid;
+    gap: 0.45rem;
+    padding-left: 1.1rem;
+  }
+
+  .artifact-guide__review {
+    border-top: 1px solid color-mix(in srgb, var(--aiv-action-secondary) 35%, var(--aiv-line-subtle));
+    display: grid;
+    gap: 0.25rem;
+    padding-top: 0.85rem;
+  }
+
+  .artifact-guide__review p {
+    color: var(--aiv-text-secondary);
+  }
+
+  .artifact-guide__template a:focus-visible {
+    outline: 3px solid var(--aiv-focus-ring);
+    outline-offset: 3px;
+  }
+
+  @media (max-width: 780px) {
+    .artifact-guide__header {
+      grid-template-columns: 1fr;
+    }
+
+    .artifact-guide__context {
+      justify-self: start;
+      text-align: left;
+    }
+
+    .artifact-guide__template {
+      align-items: start;
+      display: grid;
+    }
+  }
+</style>

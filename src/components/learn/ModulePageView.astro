@@ -3,11 +3,13 @@ import { render } from "astro:content";
 import type { CollectionEntry } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import PageShell from "../layout/PageShell.astro";
+import ArtifactGuide from "./ArtifactGuide.astro";
 import DifficultyBadge from "./DifficultyBadge.astro";
 import LabCard from "./LabCard.astro";
 import YouTubeEmbed from "./YouTubeEmbed.astro";
 import {
   accessModeLabels,
+  artifactFieldsForModule,
   canRenderLearnTrack,
   formatLabel,
   modulePath,
@@ -101,6 +103,13 @@ const checkpointPrompt = requiredCheckpointSource?.resource.data.checkpointPromp
     ? `Create this artifact: ${learnModule.data.requiredArtifact}. Capture the key decision, evidence, and review step from this lesson.`
     : "Beta checkpoint: identify the artifact this module should produce, then write the smallest useful version before moving on.");
 const hasSecurityLensText = learnModule.data.securityLensText.trim().length > 0;
+const artifactGuideTrack = trackContext?.track || globalTrackContext?.track || canonicalTracks[0];
+const artifactFields = artifactFieldsForModule(learnModule, artifactGuideTrack);
+const evidenceExpected = [
+  "The artifact named above, written in your own context.",
+  "One resource, lab, log, sample, or source note that supports it.",
+  "One limitation, review question, or owner before using it downstream.",
+];
 
 function accessLabel(resource: CollectionEntry<"learnResources">) {
   return accessModeLabels[resource.data.accessMode] || accessModeLabels.direct_open;
@@ -119,6 +128,17 @@ function isUnderReview(resource: CollectionEntry<"learnResources">) {
 
 function isOffRampResource(resource: CollectionEntry<"learnResources">) {
   return resource.data.accessMode !== "direct_open" || resource.data.loginRequired || resource.data.cost !== "free";
+}
+
+function isAivTemplateResource(resource: CollectionEntry<"learnResources">) {
+  return resource.data.provider === "AI Village Learn" &&
+    resource.data.rightsMode === "internal" &&
+    resource.data.reviewStatus === "accepted" &&
+    resource.data.status !== "draft" &&
+    resource.data.accessMode === "direct_open" &&
+    !resource.data.loginRequired &&
+    resource.data.cost === "free" &&
+    /template/i.test(resource.data.title);
 }
 
 function supplementalKind(resource: CollectionEntry<"learnResources">, role: ResourceGroup["role"]): SupplementalResourceKind {
@@ -160,6 +180,16 @@ const supplementalSections = supplementalSectionOrder
     ),
   }))
   .filter((section) => section.items.length > 0);
+const templateResourceItem = visibleResourceGroups
+  .filter((group) => group.role === "required" || group.role === "optional")
+  .flatMap((group) => group.items)
+  .find((item) => isAivTemplateResource(item.resource));
+const templateResource = templateResourceItem
+  ? {
+      title: templateResourceItem.resource.data.title,
+      href: resourcePath(templateResourceItem.resource),
+    }
+  : undefined;
 ---
 
 <BaseLayout title={moduleTitle} canonical={canonical} description={learnModule.data.summary}>
@@ -284,21 +314,15 @@ const supplementalSections = supplementalSectionOrder
       </section>
     )}
 
-    <section class="learn-checkpoint-panel">
-      <div>
-        <span class="learn-kicker">Checkpoint: produce this artifact</span>
-        <h2>{learnModule.data.requiredArtifact || "Module checkpoint"}</h2>
-        <p>{checkpointPrompt}</p>
-      </div>
-      <div class="learn-checkpoint-panel__evidence">
-        <h3>Evidence expected</h3>
-        <ul>
-          <li>The artifact named above, written in your own context.</li>
-          <li>One resource, lab, log, sample, or source note that supports it.</li>
-          <li>One limitation, review question, or owner before using it downstream.</li>
-        </ul>
-      </div>
-    </section>
+    <ArtifactGuide
+      title={learnModule.data.requiredArtifact || "Module checkpoint"}
+      prompt={checkpointPrompt}
+      evidenceExpected={evidenceExpected}
+      fields={artifactFields}
+      templateResource={templateResource}
+      relatedTrackTitle={artifactGuideTrack?.data.title}
+      relatedModuleTitle={learnModule.data.title}
+    />
 
     {hasSecurityLensText && (
       <section class="learn-security-panel">
@@ -706,37 +730,6 @@ const supplementalSections = supplementalSectionOrder
 
   .learn-objectives-section h2 {
     font-size: 1.2rem;
-  }
-
-  .learn-checkpoint-panel {
-    background: color-mix(in srgb, var(--aiv-action-secondary) 14%, var(--aiv-bg-panel));
-    border: 1px solid var(--aiv-action-secondary);
-    border-radius: 8px;
-    display: grid;
-    gap: 1.25rem;
-    grid-template-columns: minmax(0, 1fr) minmax(260px, 0.5fr);
-    padding: 1.25rem;
-  }
-
-  .learn-checkpoint-panel h2 {
-    margin: 0.2rem 0 0.45rem;
-  }
-
-  .learn-checkpoint-panel p,
-  .learn-checkpoint-panel ul {
-    margin-bottom: 0;
-  }
-
-  .learn-checkpoint-panel__evidence {
-    background: color-mix(in srgb, var(--aiv-bg-canvas) 26%, transparent);
-    border: 1px solid color-mix(in srgb, var(--aiv-action-secondary) 45%, var(--aiv-line-subtle));
-    border-radius: 8px;
-    padding: 1rem;
-  }
-
-  .learn-checkpoint-panel__evidence h3 {
-    font-size: 1rem;
-    margin: 0 0 0.5rem;
   }
 
   .learn-kicker,

@@ -52,6 +52,58 @@ const { Content } = await render(track);
 function shouldShowModuleStatus(status: CollectionEntry<"learnModules">["data"]["status"]) {
   return ["coming_soon", "stale"].includes(status);
 }
+
+function trackOutputForTrack(track: CollectionEntry<"learnTracks">) {
+  const outputs = {
+    "ai-practitioner": {
+      title: "AI Workflow Plan",
+      rollup: "Module artifacts become the prompt frame, claim-source matrix, data matrix, human-review rubric, and workflow policy for one reviewed AI workflow.",
+      fields: ["workflow", "allowed tools", "allowed data", "review level", "recordkeeping", "escalation"],
+    },
+    "ai-builder-core": {
+      title: "Team Knowledge Assistant design package",
+      rollup: "Each module adds one design package part: architecture sketch, API plan, schema, RAG path, retrieval plan, tool contract, eval suite, and observability note.",
+      fields: ["architecture", "API boundary", "schema", "retrieval", "tools", "evals", "observability"],
+    },
+    "agentic-ai-advanced-builder": {
+      title: "Agent Risk Note",
+      rollup: "Module artifacts accumulate into one risk note covering autonomy, tools, memory, retrieval, approvals, observability, evals, MCP scope, rollback, and stop controls.",
+      fields: ["goal", "autonomy", "tools", "memory", "approvals", "evals", "MCP scope", "rollback"],
+    },
+    "evals-reliability-grt": {
+      title: "Inspect eval package + eval card + finding memo",
+      rollup: "Inspect run notes, sample-level review, eval-card fields, transparency checks, and GRT-style claims form the evidence package.",
+      fields: ["run package", "eval card", "sample evidence", "limitations", "non-claims", "finding memo"],
+    },
+    "ai-security-core": {
+      title: "AI Security Core review pack",
+      rollup: "Threat-model, OWASP, ATLAS, NIST, control, owner, and evidence entries become a reusable review pack for one AI system boundary.",
+      fields: ["system boundary", "risk category", "evidence", "control", "owner", "review question"],
+    },
+    "defensive-ai-engineering": {
+      title: "Defensive AI Engineering Control Pack",
+      rollup: "Architecture controls, RAG/tool/agent controls, defensive evals, and telemetry specs become a control pack defenders can review.",
+      fields: ["risk pattern", "control", "log signal", "regression test", "owner", "escalation"],
+    },
+    "offensive-ai-security-red-teaming": {
+      title: "ROE + defensive red-team report package",
+      rollup: "Rules of engagement, lab debrief findings, scoped evidence, mitigations, regression tests, and disclosure boundaries become the report package.",
+      fields: ["scope", "authorized target", "finding", "evidence", "impact", "mitigation", "disclosure boundary"],
+    },
+    "governance-responsible-use": {
+      title: "Governance evidence pack",
+      rollup: "Coming-soon modules will build an evidence pack for responsible-use review without exposing draft lessons yet.",
+      fields: ["use case", "framework", "owner", "evidence", "caveat", "review cadence"],
+    },
+  } as const;
+  return outputs[track.data.slug as keyof typeof outputs] || {
+    title: track.data.requiredArtifacts[0] || "Track output",
+    rollup: "Module artifacts build toward the track output and keep evidence, limits, and review ownership visible.",
+    fields: track.data.requiredArtifacts.slice(0, 6),
+  };
+}
+
+const trackOutput = trackOutputForTrack(track);
 ---
 
 <BaseLayout title={track.data.title} canonical={trackPath(track)} description={track.data.summary}>
@@ -151,27 +203,36 @@ function shouldShowModuleStatus(status: CollectionEntry<"learnModules">["data"][
       }
     </section>
 
-    {modules.length > 0 && (
-      <section class="learn-artifact-path-section">
-        <h2>Artifact Path</h2>
-        <p class="text-muted">Each module checkpoint contributes to the track-level artifacts.</p>
+    <section class="learn-track-output">
+      <div class="learn-track-output__intro">
+        <span>Track output</span>
+        <h2>What You Will Produce</h2>
+        <p>{trackOutput.rollup}</p>
+      </div>
+      <div class="learn-track-output__primary">
+        <h3>{trackOutput.title}</h3>
+        <ul>
+          {trackOutput.fields.map((field) => <li>{field}</li>)}
+        </ul>
+      </div>
+      {modules.length > 0 ? (
         <ol class="learn-artifact-path">
           {modules.map((module, index) => (
             <li>
               <div class="learn-module-path__number">{index + 1}</div>
               <div>
                 <h3><a href={trackScopedModulePath(track, module)}>{module.data.title}</a></h3>
-                {module.data.requiredArtifact ? (
-                  <ArtifactBadge value={module.data.requiredArtifact} />
-                ) : (
-                  <p class="text-muted">Checkpoint being refined.</p>
-                )}
+                <p>{module.data.requiredArtifact || "Checkpoint being refined."}</p>
               </div>
             </li>
           ))}
         </ol>
-      </section>
-    )}
+      ) : (
+        <p class="learn-track-output__empty">
+          Module worksheets are not public yet. The track remains {track.data.status === "coming_soon" ? "coming soon" : "in beta"} until reviewed modules are available.
+        </p>
+      )}
+    </section>
 
     <section class="learn-two-column">
       <div class="card card--accent-primary">
@@ -279,18 +340,86 @@ function shouldShowModuleStatus(status: CollectionEntry<"learnModules">["data"][
 
   .learn-artifact-path li {
     align-items: start;
-    background: var(--aiv-nested-bg);
-    border: 1px solid var(--aiv-nested-border);
-    border-radius: 8px;
+    border-top: 1px solid var(--aiv-line-subtle);
     display: grid;
     gap: 0.85rem;
     grid-template-columns: auto minmax(0, 1fr);
-    padding: 1rem;
+    padding: 0.85rem 0;
   }
 
   .learn-artifact-path h3 {
     font-size: 1rem;
-    margin: 0 0 0.45rem;
+    margin: 0 0 0.25rem;
+  }
+
+  .learn-artifact-path p {
+    color: var(--aiv-text-secondary);
+    margin: 0;
+  }
+
+  .learn-track-output {
+    background: color-mix(in srgb, var(--aiv-action-secondary) 9%, var(--aiv-bg-panel));
+    border: 1px solid color-mix(in srgb, var(--aiv-action-secondary) 48%, var(--aiv-line-subtle));
+    border-left: 4px solid var(--aiv-action-secondary);
+    border-radius: 8px;
+    display: grid;
+    gap: 1rem;
+    padding: 1.2rem;
+  }
+
+  .learn-track-output__intro {
+    display: grid;
+    gap: 0.4rem;
+  }
+
+  .learn-track-output__intro span {
+    color: var(--aiv-text-muted);
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  .learn-track-output__intro h2,
+  .learn-track-output__intro p,
+  .learn-track-output__primary h3,
+  .learn-track-output__empty {
+    margin: 0;
+  }
+
+  .learn-track-output__intro p,
+  .learn-track-output__empty {
+    color: var(--aiv-text-secondary);
+    max-width: 78ch;
+  }
+
+  .learn-track-output__primary {
+    background: color-mix(in srgb, var(--aiv-bg-canvas) 20%, transparent);
+    border: 1px solid color-mix(in srgb, var(--aiv-action-secondary) 32%, var(--aiv-line-subtle));
+    border-radius: 8px;
+    display: grid;
+    gap: 0.7rem;
+    padding: 0.9rem;
+  }
+
+  .learn-track-output__primary h3 {
+    font-size: 1.15rem;
+  }
+
+  .learn-track-output__primary ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .learn-track-output__primary li {
+    border-bottom: 1px dotted color-mix(in srgb, var(--aiv-action-secondary) 58%, var(--aiv-line-subtle));
+    color: var(--aiv-text-primary);
+    font-weight: 700;
+    padding-block: 0.12rem;
   }
 
   .learn-module-path li {
