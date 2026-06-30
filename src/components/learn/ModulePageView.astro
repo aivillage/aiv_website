@@ -3,10 +3,8 @@ import { render } from "astro:content";
 import type { CollectionEntry } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import PageShell from "../layout/PageShell.astro";
-import ArtifactBadge from "./ArtifactBadge.astro";
 import DifficultyBadge from "./DifficultyBadge.astro";
 import LabCard from "./LabCard.astro";
-import SecurityLensCallout from "./SecurityLensCallout.astro";
 import YouTubeEmbed from "./YouTubeEmbed.astro";
 import {
   accessModeLabels,
@@ -76,6 +74,20 @@ const hasCustomLearningObjectives = learnModule.data.learningObjectives.some(
 const visibleResourceGroups = resourceGroups.filter((group) => group.items.length > 0);
 const requiredGroup = visibleResourceGroups.find((group) => group.role === "required");
 const optionalGroups = visibleResourceGroups.filter((group) => group.role !== "required");
+type SupplementalResourceKind = "optional" | "deeper" | "off_ramp" | "under_review";
+const supplementalSectionLabels: Record<SupplementalResourceKind, string> = {
+  optional: "Optional resources",
+  deeper: "Go deeper",
+  off_ramp: "Off-ramp resources",
+  under_review: "Under review",
+};
+const supplementalSectionText: Record<SupplementalResourceKind, string> = {
+  optional: "Use these after the required steps when they help with the same module checkpoint.",
+  deeper: "Direct-open material for learners who want more depth without leaving the AIV path.",
+  off_ramp: "Helpful links that need an account, course context, product commitment, or another extra step.",
+  under_review: "Secondary links kept visible while source details or review status are still being checked.",
+};
+const supplementalSectionOrder: SupplementalResourceKind[] = ["optional", "deeper", "off_ramp", "under_review"];
 const moduleTitle = learnModule.data.title;
 const breadcrumbTrack = trackContext?.track;
 const requiredCheckpointSource = requiredGroup?.items.find((item) => item.resource.data.checkpointPrompt)
@@ -104,8 +116,15 @@ function isUnderReview(resource: CollectionEntry<"learnResources">) {
   return resource.data.reviewStatus !== "accepted";
 }
 
-function showOffRampBadge(resource: CollectionEntry<"learnResources">, role: ResourceGroup["role"]) {
-  return role === "deeper" || resource.data.accessMode !== "direct_open" || resource.data.reviewStatus !== "accepted";
+function isOffRampResource(resource: CollectionEntry<"learnResources">) {
+  return resource.data.accessMode !== "direct_open" || resource.data.loginRequired || resource.data.cost !== "free";
+}
+
+function supplementalKind(resource: CollectionEntry<"learnResources">, role: ResourceGroup["role"]): SupplementalResourceKind {
+  if (isUnderReview(resource)) return "under_review";
+  if (isOffRampResource(resource)) return "off_ramp";
+  if (role === "deeper") return "deeper";
+  return "optional";
 }
 
 function resourceFraming(item: ResourceItem) {
@@ -119,6 +138,27 @@ function moduleHref(module: CollectionEntry<"learnModules">) {
 function trackModuleHref(track: CollectionEntry<"learnTracks">) {
   return trackScopedModulePath(track, learnModule);
 }
+
+function isFeaturedResourceItem(item: ResourceItem) {
+  return Boolean(featuredEmbed && featuredEmbed.resource.id === item.resource.id && featuredEmbed.sourceIndex === item.sourceIndex);
+}
+
+function resourceSupportText(item: ResourceItem) {
+  return resourceFraming(item) || `Use this ${formatLabel(item.resource.data.resourceType).toLowerCase()} to support the ${learnModule.data.requiredArtifact || "module checkpoint"}.`;
+}
+
+const supplementalSections = supplementalSectionOrder
+  .map((kind) => ({
+    kind,
+    title: supplementalSectionLabels[kind],
+    text: supplementalSectionText[kind],
+    items: optionalGroups.flatMap((group) =>
+      group.items
+        .filter((item) => supplementalKind(item.resource, group.role) === kind)
+        .map((item) => ({ item })),
+    ),
+  }))
+  .filter((section) => section.items.length > 0);
 ---
 
 <BaseLayout title={moduleTitle} canonical={canonical} description={learnModule.data.summary}>
@@ -163,57 +203,65 @@ function trackModuleHref(track: CollectionEntry<"learnTracks">) {
       </aside>
     </header>
 
-    <section class="learn-content-body">
-      <Content />
-    </section>
-
     {requiredGroup && (
-      <section class="learn-resource-group learn-start-here">
-        <h2>Start here</h2>
-        <ul>
-          {requiredGroup.items.map((item) => {
+      <section class="learn-start-here" aria-labelledby="start-here-heading">
+        <div class="learn-section-heading">
+          <div>
+            <span class="learn-kicker">Required path</span>
+            <h2 id="start-here-heading">Start Here</h2>
+          </div>
+          <p>Use these steps first, then produce the checkpoint artifact before moving on.</p>
+        </div>
+        <div class="learn-step-list">
+          {requiredGroup.items.map((item, index) => {
             const resource = item.resource;
-            const framing = resourceFraming(item);
+            const framing = resourceSupportText(item);
             return (
-              <li>
-                {item.step && <span class="learn-step-marker">Step {item.step}</span>}
-                <a href={resourcePath(resource)}>{resource.data.title}</a>
-                <span>
-                  {actionLabel(resource)} - {resource.data.provider} - {formatLabel(resource.data.resourceType)} -
-                  <a href={resource.data.canonicalUrl} target="_blank" rel="noopener noreferrer"> Open original</a>
-                  {" "}
-                  <span class="learn-access-badge">{accessLabel(resource)}</span>
-                  {isUnderReview(resource) && <span class="learn-access-badge">Under review</span>}
-                </span>
-                {framing && <p>{framing}</p>}
-              </li>
+              <article class="learn-step-card">
+                <div class="learn-step-card__number">Step {item.step ?? index + 1}</div>
+                <div class="learn-step-card__body">
+                  <span class="learn-step-card__action">{actionLabel(resource)}</span>
+                  <h3><a href={resourcePath(resource)}>{resource.data.title}</a></h3>
+                  <p>{framing}</p>
+                  <div class="learn-step-card__meta">
+                    <span>{resource.data.provider}</span>
+                    <span>{formatLabel(resource.data.resourceType)}</span>
+                    <span class="learn-access-badge">{accessLabel(resource)}</span>
+                    {isUnderReview(resource) && <span class="learn-access-badge learn-access-badge--review">Under review</span>}
+                  </div>
+                  <div class="learn-step-card__actions">
+                    <a href={resourcePath(resource)}>View AIV notes</a>
+                    <a href={resource.data.canonicalUrl} target="_blank" rel="noopener noreferrer">Open original</a>
+                  </div>
+                  {isFeaturedResourceItem(item) && (
+                    <div class="learn-step-card__embed">
+                      <YouTubeEmbed
+                        title={resource.data.title}
+                        creator={resource.data.creator || resource.data.attribution || resource.data.provider}
+                        canonicalUrl={resource.data.canonicalUrl}
+                        channelUrl={resource.data.channelUrl}
+                        videoId={resource.data.videoId}
+                        playlistId={resource.data.playlistId}
+                        playlistUrl={resource.data.playlistUrl}
+                        mediaType={resource.data.mediaType || resource.data.resourceType}
+                        embedPrivacyMode={resource.data.embedPrivacyMode}
+                      />
+                    </div>
+                  )}
+                </div>
+              </article>
             );
           })}
-        </ul>
-      </section>
-    )}
-
-    {featuredEmbed && (
-      <section>
-        <h2>Featured Resource</h2>
-        <div class="learn-featured-embed">
-          <YouTubeEmbed
-            title={featuredEmbed.resource.data.title}
-            creator={featuredEmbed.resource.data.creator || featuredEmbed.resource.data.attribution || featuredEmbed.resource.data.provider}
-            canonicalUrl={featuredEmbed.resource.data.canonicalUrl}
-            channelUrl={featuredEmbed.resource.data.channelUrl}
-            videoId={featuredEmbed.resource.data.videoId}
-            playlistId={featuredEmbed.resource.data.playlistId}
-            playlistUrl={featuredEmbed.resource.data.playlistUrl}
-            mediaType={featuredEmbed.resource.data.mediaType || featuredEmbed.resource.data.resourceType}
-            embedPrivacyMode={featuredEmbed.resource.data.embedPrivacyMode}
-          />
         </div>
       </section>
     )}
 
+    <section class="learn-content-body learn-lesson-notes">
+      <Content />
+    </section>
+
     {hasCustomLearningObjectives && (
-      <section class="learn-compact-section">
+      <section class="learn-objectives-section">
         <h2>Learning Objectives</h2>
         <ul>
           {learnModule.data.learningObjectives.map((objective) => <li>{objective}</li>)}
@@ -230,52 +278,97 @@ function trackModuleHref(track: CollectionEntry<"learnTracks">) {
       </section>
     )}
 
-    <section class="learn-checkpoint-card">
+    <section class="learn-checkpoint-panel">
       <div>
-        <span class="learn-kicker">Checkpoint</span>
+        <span class="learn-kicker">Checkpoint: produce this artifact</span>
         <h2>{learnModule.data.requiredArtifact || "Module checkpoint"}</h2>
         <p>{checkpointPrompt}</p>
       </div>
-      {learnModule.data.requiredArtifact && <ArtifactBadge value={learnModule.data.requiredArtifact} />}
+      <div class="learn-checkpoint-panel__evidence">
+        <h3>Evidence expected</h3>
+        <ul>
+          <li>The artifact named above, written in your own context.</li>
+          <li>One resource, lab, log, sample, or source note that supports it.</li>
+          <li>One limitation, review question, or owner before using it downstream.</li>
+        </ul>
+      </div>
     </section>
 
     {hasSecurityLensText && (
-      <section class="learn-security-section">
-        <p class="text-muted">Before you move on, review this artifact through the Security Lens.</p>
-        <SecurityLensCallout lens={learnModule.data.securityLens} text={learnModule.data.securityLensText} />
+      <section class="learn-security-panel">
+        <span class="learn-kicker">Security Lens: review your artifact</span>
+        <h2>Review before you move on</h2>
+        <p>{learnModule.data.securityLensText}</p>
       </section>
     )}
 
     {labs.length > 0 && (
-      <section>
-        <h2>Practice this with...</h2>
-        <div class="learn-grid">{labs.map((lab) => <LabCard lab={lab} />)}</div>
+      <section class="learn-lab-section">
+        <div class="learn-section-heading">
+          <div>
+            <span class="learn-kicker">Practice</span>
+            <h2>Practice this with...</h2>
+          </div>
+          <p>Use the lab boundary and expected artifact before opening source material.</p>
+        </div>
+        <div class="learn-grid">
+          {labs.map((lab) => <LabCard lab={lab} usedInModuleTitle={learnModule.data.title} usedInModuleHref={moduleHref(learnModule)} />)}
+        </div>
       </section>
     )}
 
-    {optionalGroups.map((group) => (
-      <section class="learn-resource-group">
-        <h2>{group.heading}</h2>
-        <ul>
-          {group.items.map((item) => {
+    {supplementalSections.map((section) => (
+      <section class:list={["learn-resource-section", `learn-resource-section--${section.kind}`]}>
+        <div class="learn-section-heading">
+          <div>
+            <span class="learn-kicker">Support</span>
+            <h2>{section.title}</h2>
+          </div>
+          <p>{section.text}</p>
+        </div>
+        <div class="learn-resource-card-list">
+          {section.items.map(({ item }) => {
             const resource = item.resource;
-            const framing = resourceFraming(item);
+            const framing = resourceSupportText(item);
             return (
-              <li>
-                <a href={resourcePath(resource)}>{resource.data.title}</a>
-                <span>
-                  {actionLabel(resource)} - {resource.data.provider} - {formatLabel(resource.data.resourceType)} -
-                <a href={resource.data.canonicalUrl} target="_blank" rel="noopener noreferrer"> Open original</a>
-                {" "}
-                {(resource.data.accessMode !== "direct_open" || isUnderReview(resource)) && <span class="learn-access-badge">{accessLabel(resource)}</span>}
-                {showOffRampBadge(resource, group.role) && <span class="learn-access-badge">Extra/off-ramp</span>}
-                  {isUnderReview(resource) && <span class="learn-access-badge">Under review</span>}
-                </span>
-                {framing && <p>{framing}</p>}
-              </li>
+              <article class="learn-resource-card">
+                <div>
+                  <span class="learn-step-card__action">{actionLabel(resource)}</span>
+                  <h3><a href={resourcePath(resource)}>{resource.data.title}</a></h3>
+                  <p>{framing}</p>
+                </div>
+                <div class="learn-step-card__meta">
+                  <span>{resource.data.provider}</span>
+                  <span>{formatLabel(resource.data.resourceType)}</span>
+                  {(resource.data.accessMode !== "direct_open" || isOffRampResource(resource)) && (
+                    <span class="learn-access-badge">{accessLabel(resource)}</span>
+                  )}
+                  {section.kind === "off_ramp" && <span class="learn-access-badge">Off-ramp</span>}
+                  {section.kind === "under_review" && <span class="learn-access-badge learn-access-badge--review">Under review</span>}
+                </div>
+                <div class="learn-step-card__actions">
+                  <a href={resourcePath(resource)}>View AIV notes</a>
+                  <a href={resource.data.canonicalUrl} target="_blank" rel="noopener noreferrer">Open original</a>
+                </div>
+                {isFeaturedResourceItem(item) && (
+                  <div class="learn-step-card__embed">
+                    <YouTubeEmbed
+                      title={resource.data.title}
+                      creator={resource.data.creator || resource.data.attribution || resource.data.provider}
+                      canonicalUrl={resource.data.canonicalUrl}
+                      channelUrl={resource.data.channelUrl}
+                      videoId={resource.data.videoId}
+                      playlistId={resource.data.playlistId}
+                      playlistUrl={resource.data.playlistUrl}
+                      mediaType={resource.data.mediaType || resource.data.resourceType}
+                      embedPrivacyMode={resource.data.embedPrivacyMode}
+                    />
+                  </div>
+                )}
+              </article>
             );
           })}
-        </ul>
+        </div>
       </section>
     ))}
 
@@ -284,7 +377,7 @@ function trackModuleHref(track: CollectionEntry<"learnTracks">) {
         <>
           <h2>Continue in {trackContext.track.data.title}</h2>
           <div class="learn-module-nav">
-            <div>
+            <div class="learn-module-nav__item">
               <span>Previous module</span>
               {trackContext.previousModule ? (
                 <a href={trackScopedModulePath(trackContext.track, trackContext.previousModule)}>{trackContext.previousModule.data.title}</a>
@@ -292,7 +385,7 @@ function trackModuleHref(track: CollectionEntry<"learnTracks">) {
                 <p class="text-muted">This is the first module in the track.</p>
               )}
             </div>
-            <div>
+            <div class="learn-module-nav__item learn-module-nav__item--next">
               <span>Next module</span>
               {trackContext.nextModule ? (
                 <a href={trackScopedModulePath(trackContext.track, trackContext.nextModule)}>{trackContext.nextModule.data.title}</a>
@@ -300,7 +393,7 @@ function trackModuleHref(track: CollectionEntry<"learnTracks">) {
                 <p class="text-muted">This is the final module in the track.</p>
               )}
             </div>
-            <div>
+            <div class="learn-module-nav__item">
               <span>Track</span>
               <a href={trackPath(trackContext.track)}>Back to {trackContext.track.data.title}</a>
             </div>
@@ -318,7 +411,7 @@ function trackModuleHref(track: CollectionEntry<"learnTracks">) {
         <>
           <h2>Continue in {globalTrackContext.track.data.title}</h2>
           <div class="learn-module-nav">
-            <div>
+            <div class="learn-module-nav__item">
               <span>Previous module</span>
               {globalTrackContext.previousModule ? (
                 <a href={trackScopedModulePath(globalTrackContext.track, globalTrackContext.previousModule)}>{globalTrackContext.previousModule.data.title}</a>
@@ -326,7 +419,7 @@ function trackModuleHref(track: CollectionEntry<"learnTracks">) {
                 <p class="text-muted">This is the first module in the track.</p>
               )}
             </div>
-            <div>
+            <div class="learn-module-nav__item learn-module-nav__item--next">
               <span>Next module</span>
               {globalTrackContext.nextModule ? (
                 <a href={trackScopedModulePath(globalTrackContext.track, globalTrackContext.nextModule)}>{globalTrackContext.nextModule.data.title}</a>
@@ -334,7 +427,7 @@ function trackModuleHref(track: CollectionEntry<"learnTracks">) {
                 <p class="text-muted">This is the final module in the track.</p>
               )}
             </div>
-            <div>
+            <div class="learn-module-nav__item">
               <span>Track context</span>
               <a href={trackModuleHref(globalTrackContext.track)}>Open in {globalTrackContext.track.data.title}</a>
             </div>
@@ -360,7 +453,7 @@ function trackModuleHref(track: CollectionEntry<"learnTracks">) {
 <style>
   .learn-module-page {
     display: grid;
-    gap: 2rem;
+    gap: 2.1rem;
   }
 
   .learn-breadcrumb,
@@ -379,18 +472,15 @@ function trackModuleHref(track: CollectionEntry<"learnTracks">) {
   }
 
   .learn-side-panel,
-  .learn-resource-group,
   .learn-compact-section,
-  .learn-checkpoint-card,
   .learn-navigation-panel {
-    background: var(--aiv-nested-bg);
-    border: 1px solid var(--aiv-nested-border);
+    background: color-mix(in srgb, var(--aiv-nested-bg) 82%, transparent);
+    border: 1px solid var(--aiv-line-subtle);
     border-radius: 8px;
     padding: 1rem;
   }
 
   .learn-side-panel h2,
-  .learn-resource-group h2,
   .learn-compact-section h2,
   .learn-navigation-panel h2 {
     font-size: 1.1rem;
@@ -398,7 +488,6 @@ function trackModuleHref(track: CollectionEntry<"learnTracks">) {
   }
 
   .learn-side-panel ul,
-  .learn-resource-group ul,
   .learn-compact-section ul,
   .learn-link-list {
     display: grid;
@@ -407,35 +496,169 @@ function trackModuleHref(track: CollectionEntry<"learnTracks">) {
     padding-left: 1.2rem;
   }
 
-  .learn-resource-groups,
-  .learn-featured-embed,
   .learn-grid,
-  .learn-module-nav {
+  .learn-module-nav,
+  .learn-resource-card-list,
+  .learn-step-list {
     display: grid;
     gap: 0.75rem;
   }
 
-  .learn-resource-groups,
   .learn-module-nav {
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   }
 
-  .learn-resource-group li,
-  .learn-module-nav > div {
+  .learn-module-nav__item {
     display: grid;
     gap: 0.2rem;
   }
 
-  .learn-checkpoint-card {
-    align-items: start;
+  .learn-section-heading {
+    align-items: end;
     display: flex;
+    flex-wrap: wrap;
     gap: 1rem;
     justify-content: space-between;
   }
 
-  .learn-checkpoint-card h2 {
-    margin-bottom: 0.4rem;
-    margin-top: 0.2rem;
+  .learn-section-heading h2,
+  .learn-section-heading p {
+    margin: 0;
+  }
+
+  .learn-section-heading p {
+    color: var(--aiv-text-muted);
+    max-width: 62ch;
+  }
+
+  .learn-start-here {
+    background: color-mix(in srgb, var(--aiv-bg-panel) 70%, transparent);
+    border-block: 1px solid var(--aiv-action-primary);
+    border-radius: 8px;
+    display: grid;
+    gap: 1rem;
+    padding: 1.2rem 0;
+  }
+
+  .learn-step-card,
+  .learn-resource-card {
+    background: var(--aiv-card-bg);
+    border: 1px solid var(--aiv-card-border);
+    border-radius: 8px;
+    display: grid;
+    gap: 0.9rem;
+    padding: 1rem;
+  }
+
+  .learn-step-card {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .learn-step-card__number {
+    align-items: center;
+    background: var(--aiv-nested-bg);
+    border: 1px solid var(--aiv-nested-border);
+    border-radius: 999px;
+    color: var(--aiv-text-primary);
+    display: inline-flex;
+    font-weight: 800;
+    height: 3rem;
+    justify-content: center;
+    line-height: 1.15;
+    text-align: center;
+    width: 3rem;
+  }
+
+  .learn-step-card__body,
+  .learn-resource-card {
+    min-width: 0;
+  }
+
+  .learn-step-card__body,
+  .learn-step-card__embed {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .learn-step-card h3,
+  .learn-resource-card h3,
+  .learn-step-card p,
+  .learn-resource-card p {
+    margin: 0;
+  }
+
+  .learn-step-card h3,
+  .learn-resource-card h3 {
+    font-size: 1.18rem;
+    line-height: 1.25;
+  }
+
+  .learn-step-card__action {
+    color: var(--aiv-action-secondary);
+    font-family: var(--aiv-font-mono);
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .learn-step-card__actions,
+  .learn-step-card__meta {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+  }
+
+  .learn-step-card__actions a {
+    align-items: center;
+    display: inline-flex;
+    font-weight: 800;
+    min-height: 2.45rem;
+  }
+
+  .learn-step-card__embed {
+    margin-top: 0.25rem;
+    max-width: 760px;
+  }
+
+  .learn-objectives-section {
+    max-width: 76ch;
+  }
+
+  .learn-objectives-section h2 {
+    font-size: 1.2rem;
+  }
+
+  .learn-checkpoint-panel {
+    background: color-mix(in srgb, var(--aiv-action-secondary) 14%, var(--aiv-bg-panel));
+    border: 1px solid var(--aiv-action-secondary);
+    border-radius: 8px;
+    display: grid;
+    gap: 1.25rem;
+    grid-template-columns: minmax(0, 1fr) minmax(260px, 0.5fr);
+    padding: 1.25rem;
+  }
+
+  .learn-checkpoint-panel h2 {
+    margin: 0.2rem 0 0.45rem;
+  }
+
+  .learn-checkpoint-panel p,
+  .learn-checkpoint-panel ul {
+    margin-bottom: 0;
+  }
+
+  .learn-checkpoint-panel__evidence {
+    background: color-mix(in srgb, var(--aiv-bg-canvas) 26%, transparent);
+    border: 1px solid color-mix(in srgb, var(--aiv-action-secondary) 45%, var(--aiv-line-subtle));
+    border-radius: 8px;
+    padding: 1rem;
+  }
+
+  .learn-checkpoint-panel__evidence h3 {
+    font-size: 1rem;
+    margin: 0 0 0.5rem;
   }
 
   .learn-kicker,
@@ -447,23 +670,57 @@ function trackModuleHref(track: CollectionEntry<"learnTracks">) {
     text-transform: uppercase;
   }
 
-  .learn-security-section {
+  .learn-security-panel {
+    background: color-mix(in srgb, var(--aiv-warning) 10%, var(--aiv-bg-panel));
+    border: 1px solid color-mix(in srgb, var(--aiv-warning) 55%, var(--aiv-line-subtle));
+    border-left: 4px solid var(--aiv-warning);
+    border-radius: 8px;
     display: grid;
-    gap: 0.5rem;
+    gap: 0.55rem;
+    padding: 1.15rem;
+  }
+
+  .learn-security-panel h2,
+  .learn-security-panel p {
+    margin: 0;
+  }
+
+  .learn-lab-section,
+  .learn-resource-section {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .learn-resource-section {
+    border-top: 1px solid var(--aiv-line-subtle);
+    padding-top: 1.25rem;
+  }
+
+  .learn-resource-section--deeper {
+    border-top-color: color-mix(in srgb, var(--aiv-action-secondary) 45%, var(--aiv-line-subtle));
+  }
+
+  .learn-resource-section--off_ramp,
+  .learn-resource-section--under_review {
+    opacity: 0.92;
   }
 
   .learn-access-badge {
-    background: var(--aiv-card-bg);
-    border: 1px solid var(--aiv-card-border);
+    background: var(--aiv-nested-bg);
+    border: 1px solid var(--aiv-nested-border);
     border-radius: 999px;
     color: var(--aiv-text);
     display: inline-flex;
     font-size: 0.78rem;
-    margin-left: 0.25rem;
-    padding: 0.08rem 0.4rem;
+    padding: 0.1rem 0.45rem;
   }
 
-  .learn-resource-group span,
+  .learn-access-badge--review {
+    border-color: var(--aiv-warning);
+    color: var(--aiv-warning);
+  }
+
+  .learn-step-card__meta,
   .learn-module-nav span {
     color: var(--aiv-text-muted);
     font-size: 0.9rem;
@@ -477,13 +734,48 @@ function trackModuleHref(track: CollectionEntry<"learnTracks">) {
     max-width: 76ch;
   }
 
+  .learn-module-nav__item {
+    background: color-mix(in srgb, var(--aiv-bg-panel) 72%, transparent);
+    border: 1px solid var(--aiv-line-subtle);
+    border-radius: 8px;
+    padding: 0.9rem;
+  }
+
+  .learn-module-nav__item--next {
+    background: color-mix(in srgb, var(--aiv-action-primary) 12%, var(--aiv-bg-panel));
+    border-color: var(--aiv-action-primary);
+  }
+
+  .learn-module-nav__item--next a {
+    color: var(--aiv-action-primary);
+    font-weight: 800;
+  }
+
+  .learn-step-card a:focus-visible,
+  .learn-resource-card a:focus-visible,
+  .learn-module-nav a:focus-visible {
+    outline: 3px solid var(--aiv-focus-ring);
+    outline-offset: 3px;
+  }
+
   @media (max-width: 780px) {
-    .learn-module-header {
+    .learn-module-header,
+    .learn-checkpoint-panel {
       grid-template-columns: 1fr;
     }
 
-    .learn-checkpoint-card {
+    .learn-section-heading {
+      align-items: start;
       display: grid;
+    }
+
+    .learn-step-card {
+      grid-template-columns: 1fr;
+    }
+
+    .learn-step-card__number {
+      height: 2.6rem;
+      width: 2.6rem;
     }
   }
 </style>

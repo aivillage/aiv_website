@@ -93,6 +93,10 @@ const sourceUrl = lab.data.sourceRepo
 const isWorkshopBacked = lab.data.sourceRepo === "aivillage/workshops";
 const sourceHeading = isWorkshopBacked ? "Workshop Source" : "Source Reference";
 const sourceLinkLabel = isWorkshopBacked ? "Open workshop source" : "Open reference";
+
+function moduleLinkHref(module: CollectionEntry<"learnModules">, track?: CollectionEntry<"learnTracks">) {
+  return track ? trackScopedModulePath(track, module) : modulePath(module);
+}
 ---
 
 <BaseLayout title={lab.data.title} canonical={labPath(lab)} description={lab.data.summary}>
@@ -117,15 +121,17 @@ const sourceLinkLabel = isWorkshopBacked ? "Open workshop source" : "Open refere
         <ul class="learn-link-list">
           {modules.map(({ module, track }) => (
             <li>
-              <a href={track ? trackScopedModulePath(track, module) : modulePath(module)}>{module.data.title}</a>
-              {track && <span>{track.data.title}</span>}
+              <a class="learn-module-link" href={moduleLinkHref(module, track)}>
+                <strong>{module.data.title}</strong>
+                {track && <span>{" · "}{track.data.title}</span>}
+              </a>
             </li>
           ))}
         </ul>
       </section>
     )}
 
-    <section class="learn-two-column">
+    <section class="learn-two-column learn-exercise-priority">
       <div>
         <h2>Safety Boundary</h2>
         <p>{lab.data.safetyBoundary}</p>
@@ -135,6 +141,13 @@ const sourceLinkLabel = isWorkshopBacked ? "Open workshop source" : "Open refere
         <ArtifactBadge value={lab.data.requiredArtifact} />
       </div>
     </section>
+
+    {lab.data.isOffensive && (
+      <section class="learn-callout learn-callout--safety">
+        <h2>Authorized toy-lab boundary</h2>
+        <p>This exercise is for the provided toy lab and defensive debrief only. Do not transfer prompts, payloads, or techniques to real systems without explicit authorization and a documented scope.</p>
+      </section>
+    )}
 
     <section class="learn-content-body">
       <Content />
@@ -194,28 +207,15 @@ const sourceLinkLabel = isWorkshopBacked ? "Open workshop source" : "Open refere
       </section>
     )}
 
-    {(tracks.length > 0 || modules.length > 0 || resources.length > 0) && (
+    {(tracks.length > 0 || resources.length > 0) && (
       <section>
-        <h2>Related Tracks, Modules, And Resources</h2>
+        <h2>Related Tracks And Resources</h2>
         <div class="learn-related-grid">
           {tracks.length > 0 && (
             <div>
               <h3>Tracks</h3>
               <ul class="learn-link-list">
                 {tracks.map((track) => <li><a href={trackPath(track)}>{track.data.title}</a></li>)}
-              </ul>
-            </div>
-          )}
-          {modules.length > 0 && (
-            <div>
-              <h3>Modules</h3>
-              <ul class="learn-link-list">
-                {modules.map(({ module, track }) => (
-                  <li>
-                    <a href={track ? trackScopedModulePath(track, module) : modulePath(module)}>{module.data.title}</a>
-                    {track && <span>{track.data.title}</span>}
-                  </li>
-                ))}
               </ul>
             </div>
           )}
@@ -285,6 +285,18 @@ const sourceLinkLabel = isWorkshopBacked ? "Open workshop source" : "Open refere
     border-color: var(--aiv-action-primary);
   }
 
+  .learn-callout--safety {
+    background: color-mix(in srgb, var(--aiv-risk) 10%, var(--aiv-bg-panel));
+    border-color: color-mix(in srgb, var(--aiv-risk) 50%, var(--aiv-line-subtle));
+  }
+
+  .learn-exercise-priority {
+    background: color-mix(in srgb, var(--aiv-action-secondary) 10%, var(--aiv-bg-panel));
+    border: 1px solid color-mix(in srgb, var(--aiv-action-secondary) 48%, var(--aiv-line-subtle));
+    border-radius: 8px;
+    padding: 1rem;
+  }
+
   .learn-source-panel {
     max-width: 76ch;
   }
@@ -335,6 +347,22 @@ const sourceLinkLabel = isWorkshopBacked ? "Open workshop source" : "Open refere
     color: var(--aiv-text-muted);
   }
 
+  .learn-module-link {
+    display: inline-grid;
+    gap: 0.12rem;
+    line-height: 1.3;
+    min-height: 2.4rem;
+  }
+
+  .learn-module-link strong {
+    color: var(--aiv-action-primary);
+  }
+
+  .learn-module-link span {
+    color: var(--aiv-text-muted);
+    font-size: 0.92rem;
+  }
+
   .learn-mapping-grid {
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   }
@@ -345,6 +373,14 @@ const sourceLinkLabel = isWorkshopBacked ? "Open workshop source" : "Open refere
 
   .learn-content-body {
     max-width: 76ch;
+  }
+
+  .button:focus-visible,
+  .learn-module-link:focus-visible,
+  .learn-related-grid a:focus-visible,
+  .learn-mapping-panel summary:focus-visible {
+    outline: 3px solid var(--aiv-focus-ring);
+    outline-offset: 3px;
   }
 
   @media (max-width: 780px) {

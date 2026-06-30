@@ -99,6 +99,10 @@ const checkpointText = resource.data.checkpointPrompt || "Write one note about h
 const fallbackRationale = primaryModuleLink
   ? `AI Village includes this resource because it supports the ${primaryModuleLink.module.data.title} module and gives learners source material for the module checkpoint.`
   : `AI Village includes this resource as a learner-facing ${formatLabel(resource.data.resourceType).toLowerCase()} from ${resource.data.provider}. Use it with a concrete checkpoint instead of treating it as a catalog endpoint.`;
+
+function moduleLinkHref(module: CollectionEntry<"learnModules">, track?: CollectionEntry<"learnTracks">) {
+  return track ? trackScopedModulePath(track, module) : modulePath(module);
+}
 ---
 
 <BaseLayout title={resource.data.title} canonical={resourcePath(resource)} description={`Learn resource from ${resource.data.provider}: ${resource.data.title}.`}>
@@ -111,7 +115,7 @@ const fallbackRationale = primaryModuleLink
           <StageBadge value={resource.data.targetStage} />
           <DifficultyBadge value={resource.data.difficulty} />
           <span>{formatLabel(resource.data.resourceType)}</span>
-          <span class="learn-access-badge">{isOffRamp ? "Extra/off-ramp" : accessLabel}</span>
+          <span class="learn-access-badge">{isOffRamp ? "Off-ramp" : accessLabel}</span>
           {isUnderReview && <span class="learn-access-badge learn-access-badge--review">Under review</span>}
         </div>
         <h1>{resource.data.title}</h1>
@@ -141,8 +145,10 @@ const fallbackRationale = primaryModuleLink
         <ul class="learn-link-list">
           {modules.map(({ module, track }) => (
             <li>
-              <a href={track ? trackScopedModulePath(track, module) : modulePath(module)}>{module.data.title}</a>
-              {track && <span>{track.data.title}</span>}
+              <a class="learn-module-link" href={moduleLinkHref(module, track)}>
+                <strong>{module.data.title}</strong>
+                {track && <span>{" · "}{track.data.title}</span>}
+              </a>
             </li>
           ))}
         </ul>
@@ -179,31 +185,15 @@ const fallbackRationale = primaryModuleLink
       </section>
     )}
 
-    {(modules.length > 0 || tracks.length > 0) && (
+    {tracks.length > 0 && (
       <section>
-        <h2>Related Modules And Tracks</h2>
+        <h2>Related Tracks</h2>
         <div class="learn-related-grid">
-          {modules.length > 0 && (
-            <div>
-              <h3>Modules</h3>
-              <ul class="learn-link-list">
-                {modules.map(({ module, track }) => (
-                  <li>
-                    <a href={track ? trackScopedModulePath(track, module) : modulePath(module)}>{module.data.title}</a>
-                    {track && <span>{track.data.title}</span>}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-          {tracks.length > 0 && (
-            <div>
-              <h3>Tracks</h3>
-              <ul class="learn-link-list">
-                {tracks.map((track) => <li><a href={trackPath(track)}>{track.data.title}</a></li>)}
-              </ul>
-            </div>
-          )}
+          <div>
+            <ul class="learn-link-list">
+              {tracks.map((track) => <li><a href={trackPath(track)}>{track.data.title}</a></li>)}
+            </ul>
+          </div>
         </div>
       </section>
     )}
@@ -264,6 +254,30 @@ const fallbackRationale = primaryModuleLink
     margin-top: 0;
   }
 
+  .learn-link-list {
+    display: grid;
+    gap: 0.65rem;
+    margin-bottom: 0;
+    padding-left: 1.1rem;
+  }
+
+  .learn-module-link {
+    display: inline-grid;
+    gap: 0.12rem;
+    line-height: 1.3;
+    min-height: 2.4rem;
+  }
+
+  .learn-module-link strong {
+    color: var(--aiv-action-primary);
+  }
+
+  .learn-module-link span,
+  .learn-link-list span {
+    color: var(--aiv-text-muted);
+    font-size: 0.92rem;
+  }
+
   .learn-content-body {
     max-width: 76ch;
   }
@@ -277,6 +291,13 @@ const fallbackRationale = primaryModuleLink
   .learn-related-grid h3 {
     font-size: 1rem;
     margin-top: 0;
+  }
+
+  .button:focus-visible,
+  .learn-module-link:focus-visible,
+  .learn-related-grid a:focus-visible {
+    outline: 3px solid var(--aiv-focus-ring);
+    outline-offset: 3px;
   }
 
   @media (max-width: 780px) {

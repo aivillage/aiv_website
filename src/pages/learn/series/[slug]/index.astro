@@ -74,6 +74,11 @@ function episodeModulePath(module: CollectionEntry<"learnModules">) {
   const canonicalTracks = findPublicCanonicalTracksForModule(module, allTracks);
   return canonicalTracks.length === 1 ? trackScopedModulePath(canonicalTracks[0], module) : modulePath(module);
 }
+
+function episodeModuleTrack(module: CollectionEntry<"learnModules">) {
+  const canonicalTracks = findPublicCanonicalTracksForModule(module, allTracks);
+  return canonicalTracks.length === 1 ? canonicalTracks[0] : undefined;
+}
 ---
 
 <BaseLayout title={series.data.title} canonical={seriesPath(series)} description={`Learn series from ${series.data.provider}: ${series.data.title}.`}>
@@ -129,28 +134,52 @@ function episodeModulePath(module: CollectionEntry<"learnModules">) {
       <h2>{episodeCount === 1 ? "Selected Episode" : "Episodes"}</h2>
       {episodes.length > 0 ? (
         <ol class="learn-episode-list">
-          {episodes.map((episode) => {
+          {episodes.map((episode, index) => {
             const mappedModules = episodeModules(episode);
 
             return (
-            <li>
-              <div>
-                <a href={resourcePath(episode)}>{episode.data.title}</a>
-                <span>{episode.data.watchFocus || episode.data.provider}</span>
-              </div>
-              {episode.data.checkpointPrompt && <p>{episode.data.checkpointPrompt}</p>}
-              {mappedModules.length > 0 && (
-                <p>
-                  Continue in module: {mappedModules.map((module, index) => (
-                    <>
-                      {index > 0 && ", "}
-                      <a href={episodeModulePath(module)}>{module.data.title}</a>
-                    </>
-                  ))}
-                </p>
-              )}
-              <a href={resourcePath(episode)}>View resource details</a>
-            </li>
+              <li class="learn-episode-card">
+                <div class="learn-episode-card__order">Episode {episode.data.episodeOrder ?? index + 1}</div>
+                <div class="learn-episode-card__body">
+                  <h3><a href={resourcePath(episode)}>{episode.data.title}</a></h3>
+                  <dl>
+                    <div>
+                      <dt>Focus</dt>
+                      <dd>{episode.data.watchFocus || episode.data.provider}</dd>
+                    </div>
+                    {episode.data.checkpointPrompt && (
+                      <div>
+                        <dt>Checkpoint</dt>
+                        <dd>{episode.data.checkpointPrompt}</dd>
+                      </div>
+                    )}
+                    {mappedModules.length > 0 && (
+                      <div>
+                        <dt>Module mapping</dt>
+                        <dd>
+                          <ul class="learn-module-link-list">
+                            {mappedModules.map((module) => {
+                              const track = episodeModuleTrack(module);
+                              return (
+                                <li>
+                                  <a href={episodeModulePath(module)}>
+                                    <strong>{module.data.title}</strong>
+                                    {track && <span>{" · "}{track.data.title}</span>}
+                                  </a>
+                                </li>
+                              );
+                            })}
+                          </ul>
+                        </dd>
+                      </div>
+                    )}
+                  </dl>
+                  <div class="learn-episode-card__actions">
+                    <a href={resourcePath(episode)}>View resource details</a>
+                    {mappedModules.length > 0 && <a href={episodeModulePath(mappedModules[0])}>Continue in module</a>}
+                  </div>
+                </div>
+              </li>
             );
           })}
         </ol>
@@ -203,22 +232,82 @@ function episodeModulePath(module: CollectionEntry<"learnModules">) {
     margin-top: 0;
   }
 
-  .learn-episode-list li {
-    display: grid;
-    gap: 0.5rem;
-  }
-
   .learn-episode-list {
     display: grid;
-    gap: 0.75rem;
-    padding-left: 1.2rem;
+    gap: 0.9rem;
+    list-style: none;
+    margin: 0;
+    padding-left: 0;
   }
 
-  .learn-episode-list span,
-  .learn-episode-list p {
-    color: var(--aiv-text-muted);
-    font-size: 0.9rem;
+  .learn-episode-card {
+    background: var(--aiv-card-bg);
+    border: 1px solid var(--aiv-card-border);
+    border-radius: 8px;
+    display: grid;
+    gap: 0.9rem;
+    grid-template-columns: auto minmax(0, 1fr);
+    padding: 1rem;
+  }
+
+  .learn-episode-card__order {
+    align-items: center;
+    background: var(--aiv-nested-bg);
+    border: 1px solid var(--aiv-nested-border);
+    border-radius: 999px;
+    display: inline-flex;
+    font-weight: 800;
+    height: 3rem;
+    justify-content: center;
+    line-height: 1.15;
+    text-align: center;
+    width: 4.6rem;
+  }
+
+  .learn-episode-card__body,
+  .learn-episode-card dl,
+  .learn-module-link-list {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .learn-episode-card h3,
+  .learn-episode-card dl,
+  .learn-episode-card dd,
+  .learn-module-link-list {
     margin: 0;
+  }
+
+  .learn-episode-card dt {
+    color: var(--aiv-text-muted);
+    font-size: 0.78rem;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+
+  .learn-module-link-list {
+    list-style: none;
+    padding-left: 0;
+  }
+
+  .learn-module-link-list a {
+    display: inline-grid;
+    gap: 0.12rem;
+    min-height: 2.35rem;
+  }
+
+  .learn-module-link-list span {
+    color: var(--aiv-text-muted);
+    font-size: 0.92rem;
+  }
+
+  .learn-episode-card__actions {
+    align-items: center;
+    border-top: 1px solid var(--aiv-line-subtle);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding-top: 0.75rem;
   }
 
   .learn-access-badge {
@@ -229,9 +318,19 @@ function episodeModulePath(module: CollectionEntry<"learnModules">) {
     padding: 0.12rem 0.45rem;
   }
 
+  .learn-episode-card a:focus-visible,
+  .learn-side-panel a:focus-visible {
+    outline: 3px solid var(--aiv-focus-ring);
+    outline-offset: 3px;
+  }
+
   @media (max-width: 780px) {
     .learn-series-header,
     .learn-two-column {
+      grid-template-columns: 1fr;
+    }
+
+    .learn-episode-card {
       grid-template-columns: 1fr;
     }
   }
