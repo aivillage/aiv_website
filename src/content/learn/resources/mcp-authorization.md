@@ -12,6 +12,7 @@ targetStage: risk_evaluative_practitioner
 difficulty: advanced
 tracks:
   - agentic-ai-advanced-builder
+  - defensive-ai-engineering
 rightsMode: link_only
 license: MCP documentation terms
 cost: free
@@ -30,6 +31,7 @@ reviewOwner: AI Village Learn
 lastChecked: "2026-06-28"
 canonicalFor:
   - mcp-security-basics
+  - secure-tool-use
 reviewStatus: accepted
 status: beta
 ---

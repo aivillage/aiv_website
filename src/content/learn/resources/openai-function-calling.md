@@ -2,7 +2,7 @@
 slug: openai-function-calling
 title: Function calling
 provider: OpenAI
-canonicalUrl: https://platform.openai.com/docs/guides/function-calling
+canonicalUrl: https://developers.openai.com/api/docs/guides/function-calling
 resourceType: docs
 mediaType: docs
 sourcePlatform: docs
@@ -13,6 +13,7 @@ targetStage: builder
 difficulty: advanced
 tracks:
   - ai-builder-core
+  - defensive-ai-engineering
 rightsMode: link_only
 license: OpenAI documentation terms
 cost: free
@@ -25,8 +26,9 @@ maintenanceRisk: low
 caveats:
   - Tool calls still require application-enforced authorization and approval gates.
 reviewOwner: AI Village Learn
-lastChecked: "2026-06-27"
+lastChecked: "2026-06-29"
 canonicalFor:
+  - secure-tool-use
   - tool-calling-basics
 reviewStatus: accepted
 ---

@@ -18,15 +18,19 @@ resources:
     role: required
     step: 1
     note: "Use this to outline the smallest working model call path for the assistant."
+  - resource: openai-text-generation-guide
+    role: required
+    step: 2
+    note: "Use this to plan the text-generation request, response handling, and minimal endpoint behavior."
   - resource: openai-responses-api
     role: optional
-    step: 2
-    note: "Use this to name inputs, outputs, and response handling in the API call plan."
+    step: 3
+    note: "Use this as API reference context after the minimal endpoint plan is drafted."
   - resource: microsoft-building-text-generation-applications
     role: deeper
-    step: 3
+    step: 4
     note: "Use this as an optional comparison for app structure and implementation choices."
-requiredArtifact: Team Knowledge Assistant API call plan
+requiredArtifact: Team Knowledge Assistant minimal API endpoint plan
 securityLens: required
 securityLensText: "An API call to a model is a boundary between your application and an external decision service. Protect keys, control data sent to the model, handle failures, and log enough context for review."
 status: beta

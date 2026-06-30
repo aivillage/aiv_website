@@ -30,8 +30,7 @@ caveats:
   - Rights metadata needs review before reuse beyond linking.
 reviewOwner: AI Village Learn
 lastChecked: "2026-06-26"
-canonicalFor:
-  - ai-app-architecture
+canonicalFor: []
 reviewStatus: accepted
 ---
 

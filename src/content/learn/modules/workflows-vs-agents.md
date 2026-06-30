@@ -17,7 +17,7 @@ resources:
     role: required
   - resource: fsdl-augmented-language-models
     role: optional
-requiredArtifact: Workflow-vs-agent decision memo
+requiredArtifact: "Agent Risk Note: workflow-vs-agent decision"
 securityLens: required
 securityLensText: "More autonomy means more ways for bad context to become bad action. Decide whether a workflow truly needs agent behavior before adding memory, tools, or independent planning."
 status: beta

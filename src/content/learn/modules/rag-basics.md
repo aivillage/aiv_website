@@ -17,19 +17,19 @@ resources:
   - resource: llamaindex-rag-docs
     role: required
     step: 1
-    note: "Use this to name the RAG source, chunking, retrieval, answer, and review pieces."
+    note: "Use this to name approved sources, chunking, retrieval, source labels, answer format, and retrieval-failure behavior."
   - resource: microsoft-rag-vector-databases
     role: optional
     step: 2
     note: "Use this as optional context for vector database and retrieval design choices."
 labs:
   - rag-poisoning
-requiredArtifact: Team Knowledge Assistant RAG design note
+requiredArtifact: Team Knowledge Assistant approved-docs RAG path
 securityLens: required
-securityLensText: "A RAG knowledge base is an instruction surface, not just data storage. Retrieved content should be treated as untrusted input until the application proves otherwise."
+securityLensText: "A RAG knowledge base is an instruction surface, not just data storage. Use approved sources, source labels, retrieval-failure handling, and access controls because retrieved content remains untrusted input until the application proves otherwise."
 status: beta
 reviewOwner: AI Village Learn
 lastReviewed: "2026-06-26"
 ---
 
-This module introduces retrieval augmented generation as the Team Knowledge Assistant's path from approved team documents into model context. The curated resources explain indexing, chunking, retrieval, prompt assembly, and answer generation. Your artifact is a basic RAG design note that names the content source, retrieval method, answer format, and review step. Use the module responsibly by treating retrieved text as influential input rather than neutral background. Do not assume the newest, closest, or longest chunk is safe or correct. RAG systems need access rules, source labeling, evaluation, and fallback behavior when retrieval is weak or conflicting. Keep the design note close to the prototype so retrieval assumptions are reviewed as the content changes.
+This module introduces retrieval augmented generation as the Team Knowledge Assistant's path from approved team documents into model context. The curated resources explain indexing, chunking, retrieval, prompt assembly, and answer generation. Your artifact is an approved-docs RAG path that names the content source, retrieval method, source label, answer format, and review step. Use the module responsibly by treating retrieved text as influential input rather than neutral background. Do not assume the newest, closest, or longest chunk is safe or correct. RAG systems need access rules, source labeling, evaluation, and fallback behavior when retrieval is weak, missing, stale, or conflicting. Keep the design note close to the prototype so retrieval assumptions are reviewed as the content changes.

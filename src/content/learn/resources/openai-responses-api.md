@@ -2,7 +2,7 @@
 slug: openai-responses-api
 title: OpenAI Responses API reference
 provider: OpenAI
-canonicalUrl: https://platform.openai.com/docs/api-reference/responses
+canonicalUrl: https://developers.openai.com/api/reference/resources/responses
 resourceType: docs
 mediaType: docs
 sourcePlatform: docs
@@ -25,7 +25,7 @@ maintenanceRisk: low
 caveats:
   - API behavior can change; check current platform documentation while building.
 reviewOwner: AI Village Learn
-lastChecked: "2026-06-27"
+lastChecked: "2026-06-29"
 canonicalFor:
   - api-based-ai-apps
 reviewStatus: accepted

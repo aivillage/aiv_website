@@ -20,7 +20,7 @@ resources:
     role: optional
   - resource: inspect-ai
     role: deeper
-requiredArtifact: Agent eval plan
+requiredArtifact: "Agent Risk Note: observability and eval plan"
 securityLens: required
 securityLensText: "Agent failures can involve several steps, not one bad answer. Capture plans, tool requests, approvals, retrieved context, and final outputs so reviewers can understand what happened."
 status: beta

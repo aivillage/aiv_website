@@ -11,6 +11,7 @@ targetStage: builder
 difficulty: intermediate
 tracks:
   - ai-builder-core
+  - defensive-ai-engineering
 rightsMode: link_only
 license: LlamaIndex docs terms
 cost: free
@@ -21,7 +22,6 @@ ageRestricted: false
 attribution: LlamaIndex
 canonicalFor:
   - rag-basics
-  - rag-poisoning-lab-wrapper
   - secure-rag
   - vector-search-retrieval
 reviewStatus: accepted

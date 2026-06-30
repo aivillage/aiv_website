@@ -31,7 +31,6 @@ caveats:
 reviewOwner: AI Village Learn
 lastChecked: "2026-06-26"
 canonicalFor:
-  - ai-app-architecture
   - ai-assisted-research
 reviewStatus: accepted
 ---

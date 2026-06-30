@@ -26,7 +26,7 @@ cost: free
 loginRequired: false
 accessMode: direct_open
 embedAllowed: true
-featuredEmbed: false
+featuredEmbed: true
 embedPrivacyMode: enhanced
 ageRestricted: false
 attribution: Full Stack Deep Learning
@@ -34,7 +34,7 @@ maintenanceRisk: medium
 caveats:
   - Video remains hosted by YouTube and the original creator.
 reviewOwner: AI Village Learn
-lastChecked: "2026-06-27"
+lastChecked: "2026-06-29"
 canonicalFor:
   - observability-cost
 reviewStatus: accepted

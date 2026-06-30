@@ -2,7 +2,7 @@
 slug: openai-structured-outputs
 title: Structured Outputs
 provider: OpenAI
-canonicalUrl: https://platform.openai.com/docs/guides/structured-outputs
+canonicalUrl: https://developers.openai.com/api/docs/guides/structured-outputs
 resourceType: docs
 mediaType: docs
 sourcePlatform: docs
@@ -25,7 +25,7 @@ maintenanceRisk: low
 caveats:
   - Schema conformance still requires application-level validation and authorization.
 reviewOwner: AI Village Learn
-lastChecked: "2026-06-27"
+lastChecked: "2026-06-29"
 canonicalFor:
   - structured-outputs
 reviewStatus: accepted

@@ -16,13 +16,19 @@ prerequisites:
 resources:
   - resource: langchain-human-in-the-loop
     role: required
+    step: 1
+    note: "Use this as one implementation reference for approval gates, then generalize the pattern beyond LangChain."
   - resource: langchain-introduction-to-langgraph
     role: optional
+    step: 2
+    note: "Use this as optional graph-workflow context, not as the default worldview."
   - resource: mcp-spec-2025-11-25
     role: deeper
+    step: 3
+    note: "Use this to connect approval and containment decisions to protocol boundaries and tool authority."
 labs:
   - email-indirect
-requiredArtifact: Approval matrix plus containment policy
+requiredArtifact: "Agent Risk Note: approval and containment policy"
 securityLens: required
 securityLensText: "Approval gates only work when the human sees the right decision context. Show the requested action, source evidence, affected data, and rollback or cancellation options before approval."
 status: beta

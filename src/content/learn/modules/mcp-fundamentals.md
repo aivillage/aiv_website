@@ -20,7 +20,7 @@ resources:
     role: optional
   - resource: mcp-spec-2025-11-25
     role: deeper
-requiredArtifact: Protocol boundary diagram
+requiredArtifact: "Agent Risk Note: protocol boundary diagram"
 securityLens: required
 securityLensText: "MCP connects AI systems to real tools and data. Design for confused deputy risk, token passthrough risk, session boundaries, and local-server exposure."
 status: beta

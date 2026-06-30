@@ -14,11 +14,11 @@ learningObjectives:
 prerequisites:
   - tool-calling-basics
 resources:
-  - resource: inspect-tutorial
+  - resource: inspect-ai-tutorial
     role: required
     step: 1
     note: "Use this to outline examples, solver behavior, scoring, and expected results."
-  - resource: inspect-logs
+  - resource: inspect-ai-log-viewer
     role: optional
     step: 2
     note: "Use this as optional context for reading eval run evidence."
@@ -28,7 +28,7 @@ resources:
     note: "Use this as a deeper comparison path after the eval plan exists."
 labs:
   - inspect-bahrain
-requiredArtifact: Team Knowledge Assistant eval plan
+requiredArtifact: Team Knowledge Assistant starter eval suite
 securityLens: required
 securityLensText: "A benchmark score is not a security guarantee. Test the behavior your application actually depends on, including refusal, uncertainty, retrieval failure, and adversarial cases."
 status: beta

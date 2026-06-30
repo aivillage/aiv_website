@@ -13,6 +13,7 @@ targetStage: builder
 difficulty: advanced
 tracks:
   - ai-builder-core
+  - defensive-ai-engineering
 rightsMode: link_only
 license: OpenInference documentation terms
 cost: free
@@ -27,6 +28,7 @@ caveats:
 reviewOwner: AI Village Learn
 lastChecked: "2026-06-27"
 canonicalFor:
+  - detection-logging
   - observability-cost
 reviewStatus: accepted
 ---

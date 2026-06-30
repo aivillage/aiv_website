@@ -21,7 +21,7 @@ accessMode: direct_open
 embedAllowed: false
 ageRestricted: false
 attribution: Hugging Face
-recommendedRole: required
+recommendedRole: optional
 watchFocus: Use this for the neutral baseline vocabulary of agent goals, tools, state, memory, and stop conditions.
 checkpointPrompt: Draw a core agent loop with model, tools, state, memory class, environment, stop condition, and approval gate.
 maintenanceRisk: low
@@ -29,8 +29,7 @@ caveats:
   - Course content may evolve; re-check unit structure during major curriculum updates.
 reviewOwner: AI Village Learn
 lastChecked: "2026-06-28"
-canonicalFor:
-  - agent-fundamentals
+canonicalFor: []
 reviewStatus: accepted
 status: beta
 ---

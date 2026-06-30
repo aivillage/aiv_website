@@ -20,7 +20,7 @@ resources:
     role: optional
   - resource: anthropic-building-effective-agents
     role: deeper
-requiredArtifact: Framework ADR
+requiredArtifact: "Agent Risk Note: framework ADR"
 securityLens: required
 securityLensText: "Framework defaults can hide important decisions about memory, tool execution, retries, and logging. Review framework behavior before trusting an agent built from examples."
 status: beta

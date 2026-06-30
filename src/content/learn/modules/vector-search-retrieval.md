@@ -23,12 +23,12 @@ resources:
     step: 2
     note: "Use this as optional context for how retrieval feeds the RAG answer path."
   - resource: microsoft-building-search-apps-vector-databases
-    role: deeper
+    role: optional
     step: 3
-    note: "Use this as a deeper reference after your retrieval plan is drafted."
+    note: "Use this featured companion after the retrieval plan is drafted to compare index, metadata, ranking, and inspection choices."
 labs:
   - rag-poisoning
-requiredArtifact: Team Knowledge Assistant retrieval plan
+requiredArtifact: Team Knowledge Assistant vector retrieval plan
 securityLens: required
 securityLensText: "Vector search can retrieve sensitive, stale, or adversarial content if the index and ranking rules allow it. Review chunk sources, metadata filters, and access controls alongside relevance quality."
 status: beta

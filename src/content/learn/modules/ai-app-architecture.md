@@ -13,14 +13,14 @@ learningObjectives:
   - Draft a Team Knowledge Assistant architecture sketch with data flow and human review points.
 prerequisites: []
 resources:
-  - resource: microsoft-genai-beginners
-    role: required
-  - resource: full-stack-deep-learning-llm-bootcamp
+  - resource: microsoft-genai-application-lifecycle
     role: optional
+    step: 1
+    note: "Use this direct lesson as featured support for app boundaries, lifecycle review, evaluation, and operational feedback."
   - resource: fsdl-launch-llm-app-one-hour
     role: deeper
-    step: 3
-    note: "Use this as context for the main application parts in your architecture sketch."
+    step: 2
+    note: "Use this as broader context for the main application parts after the architecture sketch has concrete boundaries."
 requiredArtifact: Team Knowledge Assistant architecture sketch
 securityLens: required
 securityLensText: "AI application architecture should make trust boundaries visible. Separate user input, model calls, retrieved context, tools, storage, and approvals so controls can be placed where decisions happen."
@@ -29,4 +29,4 @@ reviewOwner: AI Village Learn
 lastReviewed: "2026-06-26"
 ---
 
-This module introduces the architecture of a Team Knowledge Assistant: user interface, prompt assembly, model call, retrieval, tools, storage, logging, and evaluation. Use the curated resources to see how these pieces fit together before selecting a framework. Your artifact is a design sketch for the assistant that labels data flow, model inputs, outputs, and human review points. Use the module responsibly by keeping architecture decisions explicit. Do not hide authorization, privacy, or safety assumptions inside prompt text. A clear design sketch helps teams decide where validation, logging, access control, and fallback behavior belong before the prototype becomes hard to change.
+This module introduces the architecture of a Team Knowledge Assistant: user interface, prompt assembly, model call, approved-document retrieval, safe read-only tools, storage, logging, evaluation, and human review. Use the curated resources to see how these pieces fit together before selecting a framework. Your artifact is a design sketch for the assistant that labels data flow, model inputs, outputs, tool authority, retrieved context, logs, and review points. Use the module responsibly by keeping architecture decisions explicit. Do not hide authorization, privacy, or safety assumptions inside prompt text. A clear design sketch helps teams decide where validation, logging, access control, and fallback behavior belong before the prototype becomes hard to change.

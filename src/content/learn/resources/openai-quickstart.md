@@ -2,7 +2,7 @@
 slug: openai-quickstart
 title: OpenAI API quickstart
 provider: OpenAI
-canonicalUrl: https://platform.openai.com/docs/quickstart
+canonicalUrl: https://developers.openai.com/api/docs/quickstart
 resourceType: docs
 mediaType: docs
 sourcePlatform: docs
@@ -25,7 +25,7 @@ maintenanceRisk: low
 caveats:
   - Use current platform documentation instead of archived examples when implementing.
 reviewOwner: AI Village Learn
-lastChecked: "2026-06-27"
+lastChecked: "2026-06-29"
 canonicalFor:
   - api-based-ai-apps
 reviewStatus: accepted

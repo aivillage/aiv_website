@@ -13,6 +13,7 @@ difficulty: advanced
 tracks:
   - agentic-ai-advanced-builder
   - ai-security-core
+  - defensive-ai-engineering
 rightsMode: link_only
 license: MCP documentation terms
 cost: free

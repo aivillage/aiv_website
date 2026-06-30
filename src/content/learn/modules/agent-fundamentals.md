@@ -14,11 +14,19 @@ learningObjectives:
 prerequisites:
   - workflows-vs-agents
 resources:
-  - resource: huggingface-agents-course-unit-0
+  - resource: huggingface-agents-course-what-is-an-agent
     role: required
+    step: 1
+    note: "Use this direct Unit 1 concept page to define goals, tools, actions, observations, and stopping conditions."
   - resource: microsoft-ai-agents-what-are-ai-agents
     role: optional
-requiredArtifact: Core agent loop diagram
+    step: 2
+    note: "Use this as the single featured video companion for agent-loop vocabulary."
+  - resource: huggingface-agents-course-thought-action-observation
+    role: deeper
+    step: 3
+    note: "Use this to add thought-action-observation loop details after the core diagram is drafted."
+requiredArtifact: "Agent Risk Note: core agent loop"
 securityLens: required
 securityLensText: "Agent autonomy turns bad context into bad action. Agents need scoped credentials, audit logs, approval gates, and containment before they operate on meaningful data or systems."
 status: beta

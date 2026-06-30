@@ -17,8 +17,8 @@ resources:
   - resource: openai-structured-outputs
     role: required
     step: 1
-    note: "Use this to define the required schema and validation behavior for assistant output."
-requiredArtifact: Team Knowledge Assistant output contract
+    note: "Use this to define the answer schema, validation behavior, and reject cases for assistant output."
+requiredArtifact: Team Knowledge Assistant schema-bound output contract
 securityLens: required
 securityLensText: "Schema validation is not authorization. A valid JSON object can still request an unsafe or unauthorized action, so applications must validate intent, permissions, and business rules separately."
 status: beta

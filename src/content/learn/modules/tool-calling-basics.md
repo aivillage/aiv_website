@@ -26,7 +26,7 @@ resources:
     role: deeper
     step: 3
     note: "Human-review off-ramp only; do not make it part of the core tool contract."
-requiredArtifact: Team Knowledge Assistant tool contract
+requiredArtifact: Team Knowledge Assistant safe read-only tool contract
 securityLens: required
 securityLensText: "Every tool call is a privilege boundary. The application, not the model, must enforce user intent, authorization, scope, and approval before any real action occurs."
 status: beta

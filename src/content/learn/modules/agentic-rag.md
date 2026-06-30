@@ -18,7 +18,7 @@ resources:
     role: required
   - resource: llamaindex-build-agents-from-scratch
     role: optional
-requiredArtifact: RAG boundary spec
+requiredArtifact: "Agent Risk Note: RAG boundary spec"
 securityLens: required
 securityLensText: "Agentic RAG combines retrieval risk with autonomous decision-making. Limit what the agent can retrieve, label sources clearly, and test how retrieved content changes tool or answer behavior."
 status: beta
