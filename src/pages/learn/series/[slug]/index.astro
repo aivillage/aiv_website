@@ -10,6 +10,7 @@ import {
   entrySlug,
   findPublicCanonicalTracksForModule,
   formatLabel,
+  hasAcceptedEmbeddableVideo,
   isPlaylistResource,
   modulePath,
   refId,
@@ -140,6 +141,20 @@ function episodeModuleTrack(module: CollectionEntry<"learnModules">) {
               <ol class="episode-path__list">
                 {episodes.map((episode, index) => {
                   const mappedModules = episodeModules(episode);
+                  const primaryMappedModule = mappedModules[0];
+                  const canWatchInModule = Boolean(primaryMappedModule && hasAcceptedEmbeddableVideo(episode));
+                  const primaryActionHref = canWatchInModule && primaryMappedModule
+                    ? `${episodeModulePath(primaryMappedModule)}#watch`
+                    : primaryMappedModule
+                      ? episodeModulePath(primaryMappedModule)
+                      : resourcePath(episode);
+                  const primaryActionLabel = canWatchInModule
+                    ? "Watch in module"
+                    : primaryMappedModule
+                      ? "Continue in module"
+                      : (episode.data.mediaType === "video" || episode.data.resourceType === "video")
+                        ? "Watch episode"
+                        : "Open resource page";
 
                   return (
                     <li class="episode-path__item">
@@ -176,8 +191,8 @@ function episodeModuleTrack(module: CollectionEntry<"learnModules">) {
                         )}
                       </div>
                       <div class="episode-path__actions">
-                        {mappedModules.length > 0 && <a class="episode-path__continue" href={episodeModulePath(mappedModules[0])}>Continue in module</a>}
-                        <a href={resourcePath(episode)}>Open resource page</a>
+                        <a class="episode-path__continue" href={primaryActionHref}>{primaryActionLabel}</a>
+                        {primaryActionHref !== resourcePath(episode) && <a href={resourcePath(episode)}>Open resource page</a>}
                       </div>
                     </li>
                   );

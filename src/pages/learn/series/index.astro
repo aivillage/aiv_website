@@ -2,17 +2,50 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import PageShell from "../../../components/layout/PageShell.astro";
-import { accessModeLabels, byTitle, entrySlug, isPlaylistResource, seriesPath } from "../../../utils/learn";
+import {
+  accessModeLabels,
+  byTitle,
+  entrySlug,
+  findPublicCanonicalTracksForModule,
+  isPlaylistResource,
+  modulePath,
+  refId,
+  seriesPath,
+  trackScopedModulePath,
+} from "../../../utils/learn";
 
 const resources = await getCollection("learnResources", ({ data }) => data.status !== "draft");
+const modules = (await getCollection("learnModules", ({ data }) => data.status !== "draft")).sort(byTitle);
+const tracks = await getCollection("learnTracks", ({ data }) => data.status !== "draft");
 const series = resources
   .filter(isPlaylistResource)
   .sort(byTitle);
 const episodeCountBySeries = new Map<string, number>();
+const moduleContextBySeries = new Map<string, { title: string; href: string; trackTitle?: string }>();
 
 for (const resource of resources) {
   if (!resource.data.seriesSlug) continue;
   episodeCountBySeries.set(resource.data.seriesSlug, (episodeCountBySeries.get(resource.data.seriesSlug) || 0) + 1);
+}
+
+for (const item of series) {
+  const seriesSlug = entrySlug(item);
+  const episodes = resources.filter((resource) => resource.data.seriesSlug === seriesSlug);
+  const episodeSlugs = new Set(episodes.map(entrySlug));
+  const canonicalModuleSlugs = new Set(episodes.flatMap((episode) => episode.data.canonicalFor.map(refId)));
+  const usedModule = modules.find((module) =>
+    canonicalModuleSlugs.has(entrySlug(module)) ||
+    module.data.resources.some((link) => episodeSlugs.has(refId(link.resource)) || refId(link.resource) === seriesSlug)
+  );
+
+  if (usedModule) {
+    const canonicalTracks = findPublicCanonicalTracksForModule(usedModule, tracks);
+    moduleContextBySeries.set(seriesSlug, {
+      title: usedModule.data.title,
+      href: canonicalTracks.length === 1 ? trackScopedModulePath(canonicalTracks[0], usedModule) : modulePath(usedModule),
+      trackTitle: canonicalTracks.length === 1 ? canonicalTracks[0].data.title : undefined,
+    });
+  }
 }
 
 const fullSeries = series.filter((item) => (episodeCountBySeries.get(entrySlug(item)) || 0) >= 2);
@@ -38,6 +71,7 @@ const selectedEpisodePaths = series.filter((item) => (episodeCountBySeries.get(e
           const seriesSlug = entrySlug(item);
           const accessLabel = accessModeLabels[item.data.accessMode] || accessModeLabels.direct_open;
           const episodes = episodeCountBySeries.get(seriesSlug) || 0;
+          const context = moduleContextBySeries.get(seriesSlug);
 
           return (
             <article class="learn-series-row learn-surface-reference">
@@ -45,6 +79,7 @@ const selectedEpisodePaths = series.filter((item) => (episodeCountBySeries.get(e
                 <span>Episode path</span>
                 <h2><a href={seriesPath(item)}>{item.data.title}</a></h2>
                 <p>{item.data.watchFocus || `A video path from ${item.data.provider}.`}</p>
+                {context && <p class="learn-series-row__used-in">Used in <a href={context.href}>{context.title}</a>{context.trackTitle && ` / ${context.trackTitle}`}</p>}
               </div>
               <div class="learn-series-row__meta">
                 <span class="learn-access-badge">{accessLabel}</span>
@@ -73,7 +108,15 @@ const selectedEpisodePaths = series.filter((item) => (episodeCountBySeries.get(e
           {selectedEpisodePaths.map((item) => (
             <li>
               <a href={seriesPath(item)}>{item.data.title}</a>
-              <span>1 selected episode</span>
+              <span>
+                1 selected episode
+                {moduleContextBySeries.get(entrySlug(item)) && (
+                  <>
+                    {" / Used in "}
+                    <a href={moduleContextBySeries.get(entrySlug(item))?.href}>{moduleContextBySeries.get(entrySlug(item))?.title}</a>
+                  </>
+                )}
+              </span>
             </li>
           ))}
         </ul>
@@ -146,6 +189,10 @@ const selectedEpisodePaths = series.filter((item) => (episodeCountBySeries.get(e
 
   .learn-series-row p {
     color: var(--aiv-text-secondary);
+  }
+
+  .learn-series-row__used-in {
+    font-size: 0.9rem;
   }
 
   .learn-secondary-section,
