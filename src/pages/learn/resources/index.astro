@@ -2,8 +2,8 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import PageShell from "../../../components/layout/PageShell.astro";
-import ResourceCard from "../../../components/learn/ResourceCard.astro";
 import {
+  accessModeLabels,
   byTitle,
   difficultyLabels,
   entrySlug,
@@ -11,6 +11,8 @@ import {
   formatLabel,
   modulePath,
   refId,
+  resourceActionLabel,
+  resourcePath,
   stageLabels,
   trackScopedModulePath,
 } from "../../../utils/learn";
@@ -92,15 +94,18 @@ const resourceSections = [
 const shownResourceCount = resourceSections.reduce((sum, section) => sum + section.resources.length, 0);
 ---
 
-<BaseLayout title="Learn Resources" canonical="/learn/resources/" description="Browse the AI Village Learn beta resource catalog.">
+<BaseLayout title="Learn Resources" canonical="/learn/resources/" description="Browse the AI Village Learn beta resource appendix.">
   <PageShell class="learn-page" width="wide">
-    <h1>Resource Catalog</h1>
-    <p class="text-lead">
-      Public resources linked from Learn modules, grouped by how a learner should use them. Start with direct-open core resources, then use extra links only when the access requirements make sense for you.
-    </p>
-    <p class="text-muted">
-      Resources are linked to their original sources and remain owned by their respective creators.
-    </p>
+    <header class="learn-appendix-header">
+      <span>Appendix</span>
+      <h1>Resource Library</h1>
+      <p class="text-lead">
+        Use this library when a module sends you here. For a guided path, start from a track.
+      </p>
+      <p class="text-muted">
+        Resources are linked to their original sources and remain owned by their respective creators.
+      </p>
+    </header>
 
     <form class="learn-filters" aria-label="Resource filters">
       <label>
@@ -139,10 +144,39 @@ const shownResourceCount = resourceSections.reduce((sum, section) => sum + secti
         <section class="learn-resource-section">
           <h2>{section.title}</h2>
           <p>{section.text}</p>
-          <div class="learn-grid">
+          <div class="learn-resource-row-list">
             {section.resources.map((resource) => {
               const usedInModule = moduleByResourceSlug.get(entrySlug(resource));
-              return <ResourceCard resource={resource} usedInModuleTitle={usedInModule?.title} usedInModuleHref={usedInModule?.href} />;
+              const creator = resource.data.creator || resource.data.attribution;
+              const accessLabel = accessModeLabels[resource.data.accessMode] || accessModeLabels.direct_open;
+              const isUnderReview = resource.data.reviewStatus !== "accepted";
+              const isOffRamp = resource.data.accessMode !== "direct_open" || resource.data.loginRequired || resource.data.cost !== "free";
+              return (
+                <article
+                  class="learn-resource-row learn-surface-reference"
+                  data-track-refs={resource.data.tracks.map(refId).join(" ")}
+                  data-stage={resource.data.targetStage}
+                  data-difficulty={resource.data.difficulty}
+                  data-type={resource.data.resourceType}
+                  data-access={resource.data.accessMode}
+                >
+                  <div class="learn-resource-row__main">
+                    <span>{resourceActionLabel(resource)}</span>
+                    <h3><a href={resourcePath(resource)}>{resource.data.title}</a></h3>
+                    <p>{creator ? `${resource.data.provider} / ${creator}` : resource.data.provider}</p>
+                  </div>
+                  <div class="learn-resource-row__context">
+                    <span>{formatLabel(resource.data.resourceType)}</span>
+                    <span>{isOffRamp ? "Off-ramp" : accessLabel}</span>
+                    {isUnderReview && <span>Under review</span>}
+                    {usedInModule && <a href={usedInModule.href}>Used in {usedInModule.title}</a>}
+                  </div>
+                  <div class="learn-resource-row__actions">
+                    <a href={resourcePath(resource)}>View notes</a>
+                    <a href={resource.data.canonicalUrl} target="_blank" rel="noopener noreferrer">Open original</a>
+                  </div>
+                </article>
+              );
             })}
           </div>
         </section>
@@ -189,10 +223,32 @@ const shownResourceCount = resourceSections.reduce((sum, section) => sum + secti
     gap: 1.5rem;
   }
 
+  .learn-appendix-header {
+    display: grid;
+    gap: 0.45rem;
+  }
+
+  .learn-appendix-header span {
+    color: var(--aiv-text-muted);
+    font-size: 0.8rem;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .learn-appendix-header h1,
+  .learn-appendix-header p {
+    margin: 0;
+  }
+
   .learn-filters {
+    background: color-mix(in srgb, var(--aiv-bg-panel) 58%, transparent);
+    border: 1px solid var(--aiv-line-subtle);
+    border-radius: 8px;
     display: grid;
     gap: 0.9rem;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    padding: 0.9rem;
   }
 
   .learn-filters label {
@@ -202,10 +258,9 @@ const shownResourceCount = resourceSections.reduce((sum, section) => sum + secti
     gap: 0.35rem;
   }
 
-  .learn-grid {
+  .learn-resource-row-list {
     display: grid;
-    gap: 1rem;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 0.55rem;
   }
 
   .learn-resource-section {
@@ -225,5 +280,86 @@ const shownResourceCount = resourceSections.reduce((sum, section) => sum + secti
 
   .learn-resource-section[hidden] {
     display: none;
+  }
+
+  .learn-resource-row {
+    align-items: start;
+    display: grid;
+    gap: 0.75rem;
+    grid-template-columns: minmax(0, 1fr) minmax(15rem, 0.42fr) auto;
+    padding: 0.75rem 0.85rem;
+  }
+
+  .learn-resource-row[hidden] {
+    display: none;
+  }
+
+  .learn-resource-row__main,
+  .learn-resource-row__context,
+  .learn-resource-row__actions {
+    min-width: 0;
+  }
+
+  .learn-resource-row__main {
+    display: grid;
+    gap: 0.22rem;
+  }
+
+  .learn-resource-row__main > span {
+    color: var(--aiv-action-secondary);
+    font-family: var(--aiv-font-mono);
+    font-size: 0.75rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .learn-resource-row h3,
+  .learn-resource-row p {
+    margin: 0;
+  }
+
+  .learn-resource-row h3 {
+    font-size: 1rem;
+    line-height: 1.24;
+  }
+
+  .learn-resource-row p,
+  .learn-resource-row__context {
+    color: var(--aiv-text-muted);
+    font-size: 0.9rem;
+  }
+
+  .learn-resource-row__context,
+  .learn-resource-row__actions {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+
+  .learn-resource-row__context span,
+  .learn-resource-row__context a {
+    border-bottom: 1px dotted var(--aiv-line-subtle);
+    min-height: 2rem;
+  }
+
+  .learn-resource-row__actions a {
+    align-items: center;
+    display: inline-flex;
+    font-weight: 800;
+    min-height: 2.45rem;
+    padding-inline: 0.1rem;
+  }
+
+  .learn-resource-row a:focus-visible {
+    outline: 3px solid var(--aiv-focus-ring);
+    outline-offset: 3px;
+  }
+
+  @media (max-width: 860px) {
+    .learn-resource-row {
+      grid-template-columns: 1fr;
+    }
   }
 </style>

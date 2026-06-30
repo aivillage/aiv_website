@@ -13,11 +13,13 @@ type LearnTrack = (typeof tracks)[number];
 <BaseLayout title="Learn Glossary" canonical="/learn/glossary/" description="Compact AI Village Learn glossary terms used across tracks, modules, labs, and resources.">
   <PageShell class="learn-page">
     <nav class="learn-breadcrumb" aria-label="Breadcrumb"><a href="/learn/">Learn</a> / <span>Glossary</span></nav>
-    <header>
+    <header class="learn-appendix-header">
+      <span>Appendix</span>
       <h1>Glossary</h1>
       <p class="text-lead">
-        Short definitions for recurring Learn terms. Use this as secondary reference while working through modules and labs.
+        Use this library when a module sends you here. For a guided path, start from a track.
       </p>
+      <p>Short definitions for recurring Learn terms, labs, resources, and track pages.</p>
     </header>
 
     {terms.length > 0 ? (
@@ -28,7 +30,7 @@ type LearnTrack = (typeof tracks)[number];
             .filter((track): track is LearnTrack => Boolean(track));
 
           return (
-            <article class="learn-term" id={entrySlug(term)}>
+            <article class="learn-term learn-surface-reference" id={entrySlug(term)}>
               <h2>{term.data.term}</h2>
               <p>{term.data.definition}</p>
               {term.data.securityLens && (
@@ -71,12 +73,26 @@ type LearnTrack = (typeof tracks)[number];
     color: var(--aiv-text-muted);
   }
 
+  .learn-appendix-header {
+    display: grid;
+    gap: 0.45rem;
+  }
+
+  .learn-appendix-header > span {
+    color: var(--aiv-text-muted);
+    font-size: 0.8rem;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .learn-appendix-header h1,
+  .learn-appendix-header p {
+    margin: 0;
+  }
+
   .learn-term,
   .learn-empty {
-    background: var(--aiv-card-bg);
-    border: 1px solid var(--aiv-card-border);
-    border-radius: 8px;
-    box-shadow: var(--aiv-card-shadow);
     padding: 1rem;
   }
 

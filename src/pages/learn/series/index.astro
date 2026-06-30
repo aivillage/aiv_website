@@ -19,32 +19,40 @@ const fullSeries = series.filter((item) => (episodeCountBySeries.get(entrySlug(i
 const selectedEpisodePaths = series.filter((item) => (episodeCountBySeries.get(entrySlug(item)) || 0) === 1);
 ---
 
-<BaseLayout title="Learn Video Series" canonical="/learn/series/" description="Ordered AI Village Learn video series with episode checkpoints.">
+<BaseLayout title="Learn Video Series" canonical="/learn/series/" description="Ordered AI Village Learn video reference appendix with episode checkpoints.">
   <PageShell class="learn-page" width="wide">
-    <h1>Video Series</h1>
-    <p class="text-lead">
-      Follow ordered video paths with a clear source link, episode list, and module-oriented checkpoints. Series pages link to the original creator and avoid loading embedded players by default.
-    </p>
+    <header class="learn-appendix-header">
+      <span>Appendix</span>
+      <h1>Video Series Library</h1>
+      <p class="text-lead">
+        Use this library when a module sends you here. For a guided path, start from a track.
+      </p>
+      <p>
+        Series pages are curated episode paths with checkpoints; original playlists stay secondary.
+      </p>
+    </header>
 
     {fullSeries.length > 0 ? (
-      <div class="learn-grid">
+      <div class="learn-series-row-list">
         {fullSeries.map((item) => {
           const seriesSlug = entrySlug(item);
           const accessLabel = accessModeLabels[item.data.accessMode] || accessModeLabels.direct_open;
           const episodes = episodeCountBySeries.get(seriesSlug) || 0;
 
           return (
-            <article class="learn-card">
-              <div class="learn-card__meta">
+            <article class="learn-series-row learn-surface-reference">
+              <div class="learn-series-row__main">
+                <span>Episode path</span>
+                <h2><a href={seriesPath(item)}>{item.data.title}</a></h2>
+                <p>{item.data.watchFocus || `A video path from ${item.data.provider}.`}</p>
+              </div>
+              <div class="learn-series-row__meta">
                 <span class="learn-access-badge">{accessLabel}</span>
                 <span>{episodes} {episodes === 1 ? "episode" : "episodes"}</span>
               </div>
-              <h2><a href={seriesPath(item)}>{item.data.title}</a></h2>
-              <p>{item.data.watchFocus || `A video path from ${item.data.provider}.`}</p>
-              <div class="learn-card__actions">
+              <div class="learn-series-row__actions">
                 <a href={seriesPath(item)}>View learning path</a>
                 <a href={item.data.canonicalUrl} target="_blank" rel="noopener noreferrer">Open original series</a>
-                {item.data.playlistUrl && <a href={item.data.playlistUrl} target="_blank" rel="noopener noreferrer">Open playlist</a>}
               </div>
             </article>
           );
@@ -58,7 +66,7 @@ const selectedEpisodePaths = series.filter((item) => (episodeCountBySeries.get(e
     )}
 
     {selectedEpisodePaths.length > 0 && (
-      <section class="learn-secondary-section">
+      <section class="learn-secondary-section learn-surface-reference">
         <h2>Selected Episode Paths</h2>
         <p>These playlists currently have one AI Village-selected episode. Use them as focused episode paths, not full series.</p>
         <ul class="learn-link-list">
@@ -76,30 +84,27 @@ const selectedEpisodePaths = series.filter((item) => (episodeCountBySeries.get(e
 
 <style>
   .learn-page,
-  .learn-card,
-  .learn-card__actions {
+  .learn-series-row-list,
+  .learn-series-row__actions {
     display: grid;
     gap: 1rem;
   }
 
-  .learn-grid {
+  .learn-appendix-header {
     display: grid;
-    gap: 1rem;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 0.45rem;
   }
 
-  .learn-card,
-  .learn-secondary-section,
-  .learn-empty {
-    background: var(--aiv-card-bg);
-    border: 1px solid var(--aiv-card-border);
-    border-radius: 8px;
-    box-shadow: var(--aiv-card-shadow);
-    padding: 1rem;
+  .learn-appendix-header span {
+    color: var(--aiv-text-muted);
+    font-size: 0.8rem;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
   }
 
-  .learn-card h2,
-  .learn-card p,
+  .learn-appendix-header h1,
+  .learn-appendix-header p,
   .learn-secondary-section h2,
   .learn-secondary-section p,
   .learn-empty h2,
@@ -107,8 +112,49 @@ const selectedEpisodePaths = series.filter((item) => (episodeCountBySeries.get(e
     margin: 0;
   }
 
-  .learn-card__meta,
-  .learn-card__actions,
+  .learn-series-row {
+    align-items: start;
+    display: grid;
+    gap: 0.8rem;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    padding: 0.85rem;
+  }
+
+  .learn-series-row__main {
+    display: grid;
+    gap: 0.25rem;
+  }
+
+  .learn-series-row__main > span {
+    color: var(--aiv-action-secondary);
+    font-family: var(--aiv-font-mono);
+    font-size: 0.75rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .learn-series-row h2,
+  .learn-series-row p {
+    margin: 0;
+  }
+
+  .learn-series-row h2 {
+    font-size: 1.12rem;
+    line-height: 1.2;
+  }
+
+  .learn-series-row p {
+    color: var(--aiv-text-secondary);
+  }
+
+  .learn-secondary-section,
+  .learn-empty {
+    padding: 1rem;
+  }
+
+  .learn-series-row__meta,
+  .learn-series-row__actions,
   .learn-link-list {
     align-items: center;
     color: var(--aiv-text-muted);
@@ -121,11 +167,31 @@ const selectedEpisodePaths = series.filter((item) => (episodeCountBySeries.get(e
     display: grid;
   }
 
+  .learn-series-row__actions a,
+  .learn-link-list a {
+    align-items: center;
+    display: inline-flex;
+    font-weight: 800;
+    min-height: 2.45rem;
+  }
+
   .learn-access-badge {
     background: var(--aiv-nested-bg);
     border: 1px solid var(--aiv-nested-border);
     border-radius: 999px;
     color: var(--aiv-text);
     padding: 0.12rem 0.45rem;
+  }
+
+  .learn-series-row a:focus-visible,
+  .learn-link-list a:focus-visible {
+    outline: 3px solid var(--aiv-focus-ring);
+    outline-offset: 3px;
+  }
+
+  @media (max-width: 860px) {
+    .learn-series-row {
+      grid-template-columns: 1fr;
+    }
   }
 </style>

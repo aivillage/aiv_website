@@ -2,36 +2,84 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import PageShell from "../../../components/layout/PageShell.astro";
-import LabCard from "../../../components/learn/LabCard.astro";
-import { byTitle, canRenderLearnLab } from "../../../utils/learn";
+import { byTitle, canRenderLearnLab, formatLabel, labPath } from "../../../utils/learn";
 
 const labs = (await getCollection("learnLabs", canRenderLearnLab)).sort(byTitle);
 const offensiveLabs = labs.filter((lab) => lab.data.isOffensive);
 const otherLabs = labs.filter((lab) => !lab.data.isOffensive);
 ---
 
-<BaseLayout title="Learn Labs" canonical="/learn/labs/" description="Safety-bounded AI Village Learn lab metadata.">
+<BaseLayout title="Learn Labs" canonical="/learn/labs/" description="Safety-bounded AI Village Learn exercise appendix.">
   <PageShell class="learn-page" width="wide">
-    <h1>Labs</h1>
-    <p class="text-lead">
-      Hands-on Learn entries pair a bounded exercise with safety framing, run expectations, and a learner artifact. Labs link to source when a public workshop or repository is available.
-    </p>
-    <p>
-      Labs work best from the module pages that introduce the relevant concepts, checkpoints, and review questions. Use this catalog when you need to return to a lab directly.
-    </p>
+    <header class="learn-appendix-header">
+      <span>Appendix</span>
+      <h1>Exercise Library</h1>
+      <p class="text-lead">
+        Use this library when a module sends you here. For a guided path, start from a track.
+      </p>
+      <p>
+        Labs pair a bounded exercise with safety framing, run expectations, and a learner artifact.
+      </p>
+    </header>
     {offensiveLabs.length > 0 && (
       <section>
         <h2>Safety-Bounded Challenge Labs</h2>
-        <div class="learn-grid">
-          {offensiveLabs.map((lab) => <LabCard lab={lab} />)}
+        <div class="learn-lab-row-list">
+          {offensiveLabs.map((lab) => (
+            <article class="learn-lab-row learn-surface-exercise">
+              <div>
+                <span>Exercise</span>
+                <h3><a href={labPath(lab)}>{lab.data.title}</a></h3>
+                <p>{lab.data.summary}</p>
+              </div>
+              <dl>
+                <div>
+                  <dt>Safety boundary</dt>
+                  <dd>{lab.data.safetyBoundary}</dd>
+                </div>
+                <div>
+                  <dt>Artifact</dt>
+                  <dd>{lab.data.requiredArtifact}</dd>
+                </div>
+              </dl>
+              <div class="learn-lab-row__meta">
+                <span>{lab.data.estimatedMinutes} min</span>
+                <span>{formatLabel(lab.data.difficulty)}</span>
+                <a href={labPath(lab)}>Open exercise</a>
+              </div>
+            </article>
+          ))}
         </div>
       </section>
     )}
     {otherLabs.length > 0 && (
       <section>
         <h2>Evaluation And Reporting Labs</h2>
-        <div class="learn-grid">
-          {otherLabs.map((lab) => <LabCard lab={lab} />)}
+        <div class="learn-lab-row-list">
+          {otherLabs.map((lab) => (
+            <article class="learn-lab-row learn-surface-exercise">
+              <div>
+                <span>Exercise</span>
+                <h3><a href={labPath(lab)}>{lab.data.title}</a></h3>
+                <p>{lab.data.summary}</p>
+              </div>
+              <dl>
+                <div>
+                  <dt>Safety boundary</dt>
+                  <dd>{lab.data.safetyBoundary}</dd>
+                </div>
+                <div>
+                  <dt>Artifact</dt>
+                  <dd>{lab.data.requiredArtifact}</dd>
+                </div>
+              </dl>
+              <div class="learn-lab-row__meta">
+                <span>{lab.data.estimatedMinutes} min</span>
+                <span>{formatLabel(lab.data.difficulty)}</span>
+                <a href={labPath(lab)}>Open exercise</a>
+              </div>
+            </article>
+          ))}
         </div>
       </section>
     )}
@@ -44,14 +92,112 @@ const otherLabs = labs.filter((lab) => !lab.data.isOffensive);
     gap: 1.5rem;
   }
 
+  .learn-appendix-header {
+    display: grid;
+    gap: 0.45rem;
+  }
+
+  .learn-appendix-header span {
+    color: var(--aiv-text-muted);
+    font-size: 0.8rem;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .learn-appendix-header h1,
+  .learn-appendix-header p {
+    margin: 0;
+  }
+
   .learn-page section {
     display: grid;
     gap: 0.9rem;
   }
 
-  .learn-grid {
+  .learn-lab-row-list {
     display: grid;
-    gap: 1rem;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 0.65rem;
+  }
+
+  .learn-lab-row {
+    align-items: start;
+    display: grid;
+    gap: 0.75rem;
+    grid-template-columns: minmax(0, 1fr) minmax(16rem, 0.55fr) auto;
+    padding: 0.85rem;
+  }
+
+  .learn-lab-row > div:first-child {
+    display: grid;
+    gap: 0.25rem;
+  }
+
+  .learn-lab-row > div:first-child > span,
+  .learn-lab-row dt {
+    color: var(--aiv-text-muted);
+    font-size: 0.76rem;
+    font-weight: 900;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  .learn-lab-row h3,
+  .learn-lab-row p,
+  .learn-lab-row dl,
+  .learn-lab-row dd {
+    margin: 0;
+  }
+
+  .learn-lab-row h3 {
+    font-size: 1.08rem;
+    line-height: 1.22;
+  }
+
+  .learn-lab-row p,
+  .learn-lab-row dd,
+  .learn-lab-row__meta {
+    color: var(--aiv-text-secondary);
+  }
+
+  .learn-lab-row dl {
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .learn-lab-row__meta {
+    align-items: start;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: end;
+  }
+
+  .learn-lab-row__meta a {
+    align-items: center;
+    border: 1px solid var(--aiv-risk);
+    border-radius: 6px;
+    color: var(--aiv-risk);
+    display: inline-flex;
+    font-weight: 900;
+    justify-content: center;
+    min-height: 2.45rem;
+    padding: 0.35rem 0.65rem;
+    text-decoration: none;
+  }
+
+  .learn-lab-row a:focus-visible {
+    outline: 3px solid var(--aiv-focus-ring);
+    outline-offset: 3px;
+  }
+
+  @media (max-width: 860px) {
+    .learn-lab-row {
+      grid-template-columns: 1fr;
+    }
+
+    .learn-lab-row__meta {
+      justify-content: start;
+    }
   }
 </style>
