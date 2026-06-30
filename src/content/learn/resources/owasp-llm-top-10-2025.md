@@ -10,6 +10,7 @@ targetStage: risk_evaluative_practitioner
 difficulty: intermediate
 tracks:
   - ai-security-core
+  - defensive-ai-engineering
 rightsMode: link_only
 license: OWASP project license and site terms
 cost: free
@@ -19,27 +20,18 @@ embedAllowed: false
 ageRestricted: false
 attribution: OWASP
 canonicalFor:
-  - ai-supply-chain
   - ai-threat-modeling
-  - excessive-agency
-  - improper-output-handling
-  - indirect-prompt-injection-lab-wrapper
   - misinformation-unbounded-consumption
-  - prompt-extraction-lab-wrapper
-  - prompt-injection
-  - rag-poisoning-lab-wrapper
-  - rag-poisoning-risk
   - secure-ai-architecture
-  - secure-rag
-  - sensitive-information-disclosure
-  - system-prompt-leakage
-  - vector-embedding-weaknesses
 reviewStatus: accepted
 maintenanceRisk: medium
 caveats:
   - Rights metadata needs review before reuse beyond linking.
 reviewOwner: AI Village Learn
-lastChecked: "2026-06-26"
+lastChecked: "2026-06-30"
+recommendedRole: optional
+watchFocus: Use this only as the overview map after module-specific OWASP pages are assigned.
+checkpointPrompt: Pick the module-specific OWASP page before using the general Top 10 overview.
 ---
 
 Catalog metadata for this linked resource is included for the curriculum beta. Review rights and attribution before reuse beyond linking.

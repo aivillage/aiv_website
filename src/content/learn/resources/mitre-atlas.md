@@ -25,7 +25,10 @@ maintenanceRisk: low
 caveats:
   - Rights metadata needs review before reuse beyond linking.
 reviewOwner: AI Village Learn
-lastChecked: "2026-06-26"
+lastChecked: "2026-06-30"
+recommendedRole: required
+watchFocus: Use ATLAS as vocabulary for organizing observations, not as proof of coverage.
+checkpointPrompt: Write one conservative mapping note and mark any unverified identifiers for human review.
 ---
 
 Catalog metadata for this linked resource is included for the curriculum beta. Review rights and attribution before reuse beyond linking.

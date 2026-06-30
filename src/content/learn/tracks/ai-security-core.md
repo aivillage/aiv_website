@@ -2,8 +2,8 @@
 title: AI Security Core
 slug: ai-security-core
 summary: >-
-  A first-class AI security track covering threat modeling, prompt injection, disclosure, supply chain, RAG
-  poisoning, agency, output handling, mappings, and risk frameworks.
+  A docs-first AI security track covering threat modeling, OWASP LLM risks, supply chain,
+  retrieval risks, conservative MITRE mapping, and NIST risk-framework evidence.
 trackKind: security
 stageStart: ai_literate
 stageEnd: risk_evaluative_practitioner
@@ -16,30 +16,33 @@ prerequisites:
   - ai-fundamentals
 requiredArtifacts:
   - AI threat model outline
-  - Risk issue write-up
+  - AI Security Core review pack
+  - Governance evidence map
 securityLens: primary
 securityCheckpoints:
   - Threat model checkpoint
+  - OWASP risk entry checkpoint
   - Control mapping checkpoint
-whatExistsNow: The curriculum beta includes the AI security core structure with links to security-focused resources.
-whatComingNext: Full lessons will add AI Village Security Lens guidance, examples, and templates.
+whatExistsNow: The curriculum beta includes a docs-first AI Security Core path with an AIV threat-modeling anchor, module-specific OWASP LLM resources, conservative MITRE mapping, and NIST evidence framing.
+whatComingNext: Full lessons will add deeper examples and templates while keeping labs optional, safety-framed, and outside the required core path.
 canonicalModules:
   - ai-threat-modeling
   - prompt-injection
   - sensitive-information-disclosure
-  - ai-supply-chain
-  - rag-poisoning-risk
   - improper-output-handling
   - excessive-agency
-  - system-prompt-leakage
+  - ai-supply-chain
   - vector-embedding-weaknesses
-  - misinformation-unbounded-consumption
+  - rag-poisoning-risk
+  - system-prompt-leakage
+  - misinformation
+  - unbounded-consumption
   - mitre-atlas-mapping
   - nist-ai-rmf-genai-profile
 reviewOwner: AI Village Learn
-lastReviewed: "2026-06-26"
+lastReviewed: "2026-06-30"
 ---
 
-AI Security Core is for security practitioners, AppSec teams, and builders who need a first structured pass through AI-specific risks. The public beta keeps the first modules high-level and defensive: threat modeling, supply-chain review, control mapping, and framework alignment. The learner should produce an AI threat model outline and a risk issue write-up that can be reviewed with system owners.
+AI Security Core is for security practitioners, AppSec teams, and builders who need a first structured pass through AI-specific risks. The public beta is docs-first and defensive: threat modeling opens with an AIV-authored anchor, OWASP module-specific pages replace the generic landing page as the primary source for most risk modules, and MITRE/NIST appear late as conservative mapping and evidence frameworks.
 
-Security is the main subject here, but the track still serves the broader Learn program by translating AI concepts into practical review questions. Higher-risk topics such as prompt injection mechanics, leakage patterns, and poisoning behavior are kept draft-gated for manual review before they become public lessons. What is useful now is the track structure, anchor modules, and resource map for safe orientation. More examples, templates, and detailed module bodies are still being expanded and reviewed.
+The learner should produce an AI threat model outline, AI Security Core review pack entries, and a governance evidence map that can be reviewed with system owners. AIV labs are kept optional and safety-framed where they support debriefing. The track does not publish offensive walkthroughs, add CTF resources, embed security videos, or treat mappings as proof of coverage.

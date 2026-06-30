@@ -11,6 +11,7 @@ difficulty: intermediate
 tracks:
   - ai-practitioner
   - ai-security-core
+  - defensive-ai-engineering
   - governance-responsible-use
 rightsMode: link_only
 license: NIST public information
@@ -22,19 +23,18 @@ ageRestricted: false
 attribution: NIST
 canonicalFor:
   - ai-risk-frameworks
-  - copyright-licensing-basics
-  - model-system-cards
   - nist-ai-rmf-genai-profile
   - responsible-ai-use
-  - responsible-disclosure
   - secure-ai-architecture
-  - security-vs-safety-vs-governance
 reviewStatus: accepted
 maintenanceRisk: low
 caveats:
-  - Rights metadata needs review before reuse beyond linking.
+  - Voluntary framework guidance; do not present as certification, legal advice, or proof of safety.
 reviewOwner: AI Village Learn
-lastChecked: "2026-06-26"
+lastChecked: "2026-06-30"
+recommendedRole: required
+watchFocus: Use the RMF as the primary framework source for governance evidence mapping.
+checkpointPrompt: Map one AI use case to Govern, Map, Measure, or Manage with owner and evidence fields.
 ---
 
 Catalog metadata for this linked resource is included for the curriculum beta. Review rights and attribution before reuse beyond linking.

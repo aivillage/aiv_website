@@ -1,7 +1,7 @@
 ---
 title: Improper Output Handling
 slug: improper-output-handling
-summary: This beta module provides the learning goal, curated resources, and expected artifact.
+summary: Reviews how model output crosses into rendered UI, code, tools, decisions, and other trusted systems.
 tracks:
   - ai-security-core
 stageStart: ai_literate
@@ -9,18 +9,23 @@ stageEnd: risk_evaluative_practitioner
 difficulty: intermediate
 moduleType: concept
 learningObjectives:
-  - Describe the main concepts for Improper Output Handling.
-  - Identify the artifact or checkpoint this module supports.
+  - Identify downstream trust boundaries where model output can trigger rendering, execution, decisions, or tool actions.
+  - Write an output-handling control entry with validation owner, failure mode, and review evidence.
 prerequisites:
-  - rag-poisoning-risk
+  - sensitive-information-disclosure
 resources:
-  - resource: owasp-llm-top-10-2025
+  - resource: owasp-llm05-improper-output-handling
     role: required
+    step: 1
+    note: "Use this official OWASP page for output validation and downstream trust-boundary review."
+requiredArtifact: Output-handling control entry
 securityLens: primary
-securityLensText: ""
-status: draft
+securityLensText: "Model output should not become trusted code, markup, policy, or action without validation. Review the destination, validation point, owner, and evidence for failure handling."
+status: beta
 reviewOwner: AI Village Learn
-lastReviewed: "2026-06-26"
+lastReviewed: "2026-06-30"
 ---
 
-This beta module provides the learning goal, curated resources, and expected artifact. Full exercises and debriefs are being expanded over time.
+This module moves earlier in the AI Security Core sequence because output handling is the boundary where model text can affect users, applications, and tools. Learners review how outputs are rendered, stored, transformed, executed, or used in decisions.
+
+Your artifact is an output-handling control entry. It should name the output destination, the trust boundary crossed, the validation or sanitization control, the owner, the failure mode, and the evidence needed for review. Use the module defensively by treating model output as untrusted until a downstream system has handled it safely.

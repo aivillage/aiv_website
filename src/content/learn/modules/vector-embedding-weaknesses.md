@@ -1,7 +1,7 @@
 ---
 title: Vector and Embedding Weaknesses
 slug: vector-embedding-weaknesses
-summary: This beta module provides the learning goal, curated resources, and expected artifact.
+summary: Reviews vector stores, embeddings, retrieval trust boundaries, access controls, and provenance.
 tracks:
   - ai-security-core
 stageStart: ai_literate
@@ -9,18 +9,23 @@ stageEnd: risk_evaluative_practitioner
 difficulty: advanced
 moduleType: concept
 learningObjectives:
-  - Describe the main concepts for Vector and Embedding Weaknesses.
-  - Identify the artifact or checkpoint this module supports.
+  - Identify vector and embedding weaknesses around retrieval scope, stale context, provenance, and access control.
+  - Write a vector/retrieval boundary review entry with affected data, control, owner, and evidence.
 prerequisites:
-  - system-prompt-leakage
+  - ai-supply-chain
 resources:
-  - resource: owasp-llm-top-10-2025
+  - resource: owasp-llm08-vector-embedding-weaknesses
     role: required
+    step: 1
+    note: "Use this official OWASP page for vector and embedding weakness review."
+requiredArtifact: Vector/retrieval boundary review entry
 securityLens: primary
-securityLensText: ""
-status: draft
+securityLensText: "Vector and embedding review should treat retrieval stores as security boundaries. Check provenance, access controls, stale or misleading context, tenant separation, and what evidence supports trust."
+status: beta
 reviewOwner: AI Village Learn
-lastReviewed: "2026-06-26"
+lastReviewed: "2026-06-30"
 ---
 
-This beta module provides the learning goal, curated resources, and expected artifact. Full exercises and debriefs are being expanded over time.
+This module moves vector and embedding weaknesses before RAG poisoning so learners can review the retrieval substrate before reasoning about poisoning paths. Learners focus on what enters an embedding store, who can read it, how records age, how sources are preserved, and how retrieval results are trusted.
+
+Your artifact is a vector/retrieval boundary review entry. It should name the retrieval surface, affected data, access-control boundary, provenance signal, stale-content risk, owner, and review evidence. Use the module defensively by connecting retrieval trust to concrete controls rather than treating vector search as a neutral plumbing layer.

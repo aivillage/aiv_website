@@ -20,7 +20,7 @@ securityLens: primary
 securityLensText: ""
 status: draft
 reviewOwner: AI Village Learn
-lastReviewed: "2026-06-26"
+lastReviewed: "2026-06-30"
 ---
 
-This beta module provides the learning goal, curated resources, and expected artifact. Full exercises and debriefs are being expanded over time.
+This draft placeholder is retained outside the canonical AI Security Core path for backward compatibility while the public beta path uses the split `misinformation` and `unbounded-consumption` modules.
