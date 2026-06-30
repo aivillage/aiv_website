@@ -1,0 +1,168 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { entrySlug, getModuleFeaturedVideo, resourcePath, trackScopedModulePath } from "../../utils/learn";
+
+type Props = {
+  track: CollectionEntry<"learnTracks">;
+  modules: CollectionEntry<"learnModules">[];
+  resources: CollectionEntry<"learnResources">[];
+};
+
+const { track, modules, resources } = Astro.props;
+const mutedVideoTrackSlugs = new Set([
+  "evals-reliability-grt",
+  "offensive-ai-security-red-teaming",
+  "defensive-ai-engineering",
+  "governance-responsible-use",
+]);
+const shouldSuppressShortcuts = mutedVideoTrackSlugs.has(entrySlug(track));
+const videoShortcuts = shouldSuppressShortcuts
+  ? []
+  : modules
+      .filter((module) => module.data.status !== "coming_soon")
+      .map((module) => {
+        const video = getModuleFeaturedVideo(module, resources);
+        return video
+          ? {
+              module,
+              video,
+              href: `${trackScopedModulePath(track, module)}#watch`,
+              fallbackHref: resourcePath(video),
+              creator: video.data.creator || video.data.attribution || video.data.provider,
+            }
+          : undefined;
+      })
+      .filter(Boolean);
+const visibleShortcuts = videoShortcuts.slice(0, 4);
+const hiddenShortcuts = videoShortcuts.slice(4);
+---
+
+{videoShortcuts.length > 0 && (
+  <section class="track-video-shortcuts learn-surface-task" aria-labelledby="track-video-shortcuts-heading">
+    <div class="track-video-shortcuts__header">
+      <h2 id="track-video-shortcuts-heading">Selected videos</h2>
+      <p>Accepted official or creator-owned videos used by this path.</p>
+    </div>
+
+    <ul class="track-video-shortcuts__list">
+      {visibleShortcuts.map((item) => item && (
+        <li>
+          <span>{item.module.data.title}</span>
+          <h3>{item.video.data.title}</h3>
+          <p>{item.creator}</p>
+          <a href={item.href}>Watch in module</a>
+        </li>
+      ))}
+    </ul>
+
+    {hiddenShortcuts.length > 0 && (
+      <details class="track-video-shortcuts__more">
+        <summary>{hiddenShortcuts.length} more {hiddenShortcuts.length === 1 ? "video" : "videos"}</summary>
+        <ul class="track-video-shortcuts__list">
+          {hiddenShortcuts.map((item) => item && (
+            <li>
+              <span>{item.module.data.title}</span>
+              <h3>{item.video.data.title}</h3>
+              <p>{item.creator}</p>
+              <a href={item.href || item.fallbackHref}>Watch in module</a>
+            </li>
+          ))}
+        </ul>
+      </details>
+    )}
+  </section>
+)}
+
+<style>
+  .track-video-shortcuts {
+    display: grid;
+    gap: 0.78rem;
+    padding: 0.9rem;
+  }
+
+  .track-video-shortcuts__header,
+  .track-video-shortcuts__list,
+  .track-video-shortcuts__list li {
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .track-video-shortcuts h2,
+  .track-video-shortcuts h3,
+  .track-video-shortcuts p,
+  .track-video-shortcuts ul {
+    margin: 0;
+  }
+
+  .track-video-shortcuts h2 {
+    font-size: 1rem;
+    line-height: 1.15;
+  }
+
+  .track-video-shortcuts__header p,
+  .track-video-shortcuts__list p {
+    color: var(--aiv-text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.35;
+  }
+
+  .track-video-shortcuts__list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .track-video-shortcuts__list li {
+    border-top: 1px solid color-mix(in srgb, var(--aiv-action-primary) 28%, var(--aiv-line-subtle));
+    padding-top: 0.68rem;
+  }
+
+  .track-video-shortcuts__list li:first-child {
+    border-top: 0;
+    padding-top: 0;
+  }
+
+  .track-video-shortcuts__list span {
+    color: var(--aiv-text-muted);
+    font-size: 0.76rem;
+    font-weight: 900;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  .track-video-shortcuts h3 {
+    font-size: 0.98rem;
+    line-height: 1.22;
+  }
+
+  .track-video-shortcuts a {
+    align-items: center;
+    border: 1px solid var(--aiv-action-primary);
+    border-radius: 6px;
+    color: var(--aiv-action-primary);
+    display: inline-flex;
+    font-weight: 900;
+    justify-content: center;
+    margin-top: 0.15rem;
+    min-height: 2.4rem;
+    padding: 0.38rem 0.64rem;
+    text-decoration: none;
+    width: fit-content;
+  }
+
+  .track-video-shortcuts__more {
+    border-top: 1px solid var(--aiv-line-subtle);
+    padding-top: 0.6rem;
+  }
+
+  .track-video-shortcuts__more summary {
+    cursor: pointer;
+    font-weight: 900;
+    min-height: 2.35rem;
+  }
+
+  .track-video-shortcuts a:focus-visible,
+  .track-video-shortcuts summary:focus-visible {
+    outline: 3px solid var(--aiv-focus-ring);
+    outline-offset: 3px;
+  }
+</style>
