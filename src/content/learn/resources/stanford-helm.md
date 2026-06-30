@@ -26,7 +26,10 @@ maintenanceRisk: medium
 caveats:
   - Rights metadata needs review before reuse beyond linking.
 reviewOwner: AI Village Learn
-lastChecked: "2026-06-26"
+lastChecked: "2026-06-30"
+recommendedRole: optional
+watchFocus: Treat the landing page as orientation only; use the capabilities page for the worksheet.
+checkpointPrompt: Note one reason a benchmark landing page is not enough evidence for a deployment decision.
 ---
 
 Catalog metadata for this linked resource is included for the curriculum beta. Review rights and attribution before reuse beyond linking.

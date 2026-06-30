@@ -1,5 +1,5 @@
 ---
-slug: inspect-tutorial
+slug: inspect-ai-tutorial
 title: Inspect tutorial
 provider: UK AI Security Institute
 canonicalUrl: https://inspect.aisi.org.uk/tutorial.html
@@ -13,6 +13,7 @@ targetStage: builder
 difficulty: advanced
 tracks:
   - ai-builder-core
+  - defensive-ai-engineering
   - evals-reliability-grt
 rightsMode: link_only
 license: Inspect AI documentation license and site terms
@@ -26,9 +27,15 @@ maintenanceRisk: low
 caveats:
   - Tutorial examples should be adapted to the behavior the learner's app actually needs to test.
 reviewOwner: AI Village Learn
-lastChecked: "2026-06-27"
+lastChecked: "2026-06-30"
+recommendedRole: required
+watchFocus: Watch how task definitions, datasets, solvers, scorers, and log review connect in a small Inspect eval.
+checkpointPrompt: Note the minimum files and commands needed for a reproducible Inspect run before you launch the lab.
 canonicalFor:
   - basic-app-evals
+  - defensive-evals
+  - running-inspect-eval
+  - what-is-an-eval
 reviewStatus: accepted
 ---
 

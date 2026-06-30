@@ -12,7 +12,6 @@ difficulty: intermediate
 tracks:
   - ai-builder-core
   - agentic-ai-advanced-builder
-  - defensive-ai-engineering
   - evals-reliability-grt
 rightsMode: link_only
 license: Inspect AI documentation license and site terms
@@ -24,17 +23,6 @@ ageRestricted: false
 attribution: UK AI Security Institute
 canonicalFor:
   - agent-observability-evals
-  - ai-incident-response
-  - custom-solvers-scoring
-  - defensive-debrief-library
-  - defensive-evals
-  - detection-logging
-  - eval-cards
-  - grt-style-findings
-  - inspect-dataset-solver-scorer
-  - interpreting-eval-results
-  - running-inspect-eval
-  - what-is-an-eval
 reviewStatus: accepted
 maintenanceRisk: low
 caveats:

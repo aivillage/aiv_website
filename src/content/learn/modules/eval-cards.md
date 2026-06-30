@@ -10,20 +10,28 @@ difficulty: advanced
 moduleType: capstone
 learningObjectives:
   - Document eval purpose, setup, methods, results, limitations, and owner.
-  - Draft an eval card that makes supported and unsupported claims explicit.
+  - Complete an eval card that makes supported and unsupported claims explicit.
 prerequisites:
-  - model-eval-harnesses
+  - agent-evals
 resources:
-  - resource: inspect-ai
+  - resource: aiv-eval-card-template
     role: required
+    step: 1
+    note: "Use this AIV-authored template as the required primary artifact structure."
+  - resource: inspect-ai-eval-logs
+    role: optional
+    step: 2
+    note: "Use this to connect eval-card evidence fields back to run logs."
 labs:
   - inspect-bahrain
-requiredArtifact: Eval card draft
+requiredArtifact: Completed eval card
 securityLens: required
 securityLensText: "An eval card should make evidence easier to review, not make weak evidence look complete. Include scope, methods, limitations, owners, and decisions the eval should or should not support."
 status: beta
 reviewOwner: AI Village Learn
-lastReviewed: "2026-06-26"
+lastReviewed: "2026-06-30"
 ---
 
-This module introduces eval cards as a concise way to document evaluation work. It does not provide a final AI Village template; instead, it helps learners understand the information a reviewer needs. The curated resources support capturing the evaluation purpose, system under test, dataset, method, scoring, results, limitations, and owner. Your artifact is a draft eval card outline for a controlled example or existing eval. Use the module responsibly by making uncertainty visible. An eval card should state what the evidence supports, what it does not support, and what review decisions remain open. Good documentation prevents scores from traveling without context.
+This module introduces eval cards as a concise way to document evaluation work and now provides the AIV-authored template as the required primary resource. The template captures behavior tested, system or model version, dataset provenance and slices, solver configuration, scorer and metrics, run config, representative failures, limitations, supported decision, unsupported decision, owner, and next regression test.
+
+Your artifact is a completed eval card for the Inspect-backed example or another controlled eval. Use the module responsibly by making uncertainty visible. An eval card should state what the evidence supports, what it does not support, and what review decisions remain open. Good documentation prevents scores from traveling without context.

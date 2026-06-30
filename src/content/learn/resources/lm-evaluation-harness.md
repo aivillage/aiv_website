@@ -26,7 +26,10 @@ maintenanceRisk: medium
 caveats:
   - Rights metadata needs review before reuse beyond linking.
 reviewOwner: AI Village Learn
-lastChecked: "2026-06-26"
+lastChecked: "2026-06-30"
+recommendedRole: required
+watchFocus: Focus on when a broad evaluation harness is the right fit, how tasks are registered, and what reproducibility metadata is needed.
+checkpointPrompt: Write a harness selection note that explains why this harness fits one eval goal better than Inspect Evals or Promptfoo.
 ---
 
 Catalog metadata for this linked resource is included for the curriculum beta. Review rights and attribution before reuse beyond linking.
