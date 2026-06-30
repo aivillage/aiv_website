@@ -3,12 +3,14 @@ import { getCollection } from "astro:content";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import PageShell from "../../../components/layout/PageShell.astro";
 import TrackCard from "../../../components/learn/TrackCard.astro";
-import { byTrackKindThenTitle, canRenderLearnModule, refId } from "../../../utils/learn";
+import { canRenderLearnModule, refId } from "../../../utils/learn";
 
-const tracks = (await getCollection("learnTracks", ({ data }) => data.status !== "draft")).sort(byTrackKindThenTitle);
+const starterTrackSlugs = ["ai-fundamentals", "ai-practitioner", "ai-builder-core", "ai-security-core"];
+const tracks = await getCollection("learnTracks", ({ data }) => data.status !== "draft");
 const modules = await getCollection("learnModules");
 const moduleBySlug = new Map(modules.flatMap((module) => [[module.data.slug, module], [module.id, module]]));
-const starterTracks = tracks.filter((track) => ["foundation", "practitioner", "builder", "security", "governance"].includes(track.data.trackKind));
+const trackBySlug = new Map(tracks.flatMap((track) => [[track.data.slug, track], [track.id, track]]));
+const starterTracks = starterTrackSlugs.map((slug) => trackBySlug.get(slug)).filter((track) => Boolean(track)) as typeof tracks;
 
 function publicModuleCount(track: (typeof tracks)[number]) {
   return track.data.canonicalModules
@@ -29,7 +31,7 @@ function publicModuleCount(track: (typeof tracks)[number]) {
     <section class="card card--accent-muted">
       <h2 class="mt-0">Beta Notes</h2>
       <p>
-        Module detail lessons and authored security prose are being expanded. Use the track, resource, and lab catalogs as beta navigation while curriculum review continues.
+        The beta is organized around track paths and module checkpoints. Start with a track, work module by module, and use resources, labs, and series as supporting material. Some deeper examples, role-specific scenarios, and authored security prose are still expanding.
       </p>
     </section>
   </PageShell>

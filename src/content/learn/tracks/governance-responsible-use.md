@@ -27,7 +27,7 @@ securityCheckpoints:
   - Risk framework checkpoint
   - Responsible disclosure checkpoint
 whatExistsNow: >-
-  The curriculum beta includes draft governance module scaffolding, primary-source resource metadata, and
+  The curriculum beta includes draft governance module scaffolding, primary-source resource records, and
   artifact prompts for a future evidence-pack path.
 whatComingNext: Full lessons need human review before publication, especially for AIV-specific disclosure,
   remediation, rights, legal, and jurisdiction-specific policy guidance.

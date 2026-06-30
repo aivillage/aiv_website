@@ -21,8 +21,12 @@ securityCheckpoints:
   - Tool authority checkpoint
   - MCP trust boundary checkpoint
   - Human approval checkpoint
-whatExistsNow: The curriculum beta includes a practical agentic-builder sequence, resource map, and Agent Risk Note scaffold.
-whatComingNext: Full lessons will add deeper design examples, security review prompts, and containment patterns.
+whatExistsNow: >-
+  The beta includes an Agent Risk Note path, least-agency framing, workflow and agent design modules,
+  human-approval containment before observability and MCP, a docs-first MCP path, and optional OWASP
+  agentic-risk adjuncts.
+whatComingNext: Deeper design examples, security review prompts, containment patterns, and team review examples
+  will be added as the beta expands.
 canonicalModules:
   - workflows-vs-agents
   - agent-fundamentals
@@ -33,7 +37,7 @@ canonicalModules:
   - mcp-fundamentals
   - mcp-security-basics
 reviewOwner: AI Village Learn
-lastReviewed: "2026-06-26"
+lastReviewed: "2026-06-30"
 ---
 
 Agentic AI and Advanced Builder is for builders who already understand basic AI application patterns and are deciding whether to add agents, tool orchestration, RAG loops, MCP integrations, or human approval gates. The track starts from a least-agency premise: build an agentic system only when workflow complexity justifies extra autonomy, state, tools, and review burden. The single track artifact is an Agent Risk Note. Each module contributes one section covering the user goal, workflow-vs-agent justification, tool inventory, side effects, memory classes, RAG sources, approval gates, observability plan, eval plan, MCP servers and scopes, containment controls, rollback, and kill switch.

@@ -14,9 +14,9 @@ learningObjectives:
 prerequisites: []
 resources:
   - resource: microsoft-genai-application-lifecycle
-    role: optional
+    role: required
     step: 1
-    note: "Use this direct lesson as featured support for app boundaries, lifecycle review, evaluation, and operational feedback."
+    note: "Start here for app boundaries, lifecycle review, evaluation, monitoring, and operational feedback."
   - resource: fsdl-launch-llm-app-one-hour
     role: deeper
     step: 2

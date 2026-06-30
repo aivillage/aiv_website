@@ -21,8 +21,12 @@ securityLens: awareness
 securityCheckpoints:
   - Sensitive data checkpoint
   - Verification and review checkpoint
-whatExistsNow: The curriculum beta includes the module shell and resource metadata for practical AI use.
-whatComingNext: Full lessons will add scenarios, safe-use checklists, and practice activities.
+whatExistsNow: >-
+  The beta includes ordered practitioner lessons, first-action resource steps, per-module checkpoints,
+  required artifacts, curated no-login resources, data-hygiene and security-workflow framing, and
+  human-review guidance.
+whatComingNext: More role-specific scenarios, practice activities, team examples, and workflow policy examples
+  will be added as the beta expands.
 canonicalModules:
   - prompting-context
   - ai-assisted-research
@@ -33,7 +37,7 @@ canonicalModules:
   - verification-human-review
   - ai-workflow-policy-basics
 reviewOwner: AI Village Learn
-lastReviewed: "2026-06-26"
+lastReviewed: "2026-06-30"
 ---
 
 AI Practitioner is for people who want to use AI tools more effectively in everyday work while keeping review and responsibility clear. It covers prompting, research, writing, coding assistance, bounded security workflows, data hygiene, verification, and lightweight workflow policy. The learner should come away with a reviewed AI workflow example and a human-review checklist that can be discussed with a team.

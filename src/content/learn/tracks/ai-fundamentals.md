@@ -21,9 +21,11 @@ securityCheckpoints:
   - Data handling checkpoint
   - Model limitation checkpoint
 whatExistsNow: >-
-  The curriculum beta includes the track structure, module sequence, and resource links for a broad AI
-  fundamentals path.
-whatComingNext: Full lessons will add lesson prose, exercises, and lightweight security checkpoints.
+  The beta includes ordered beginner lessons, curated direct-open resources, accepted official or
+  creator-owned video embeds where useful, and checkpoints such as a concept map, notebook readiness check,
+  ML and search notes, transformer explainer, and retrieval demo.
+whatComingNext: More examples, practice prompts, and lightweight security checkpoints will be added without
+  treating the beta as a complete course.
 canonicalModules:
   - what-is-ai
   - python-notebook-readiness
@@ -34,7 +36,7 @@ canonicalModules:
   - transformers-llms
   - embeddings-retrieval
 reviewOwner: AI Village Learn
-lastReviewed: "2026-06-26"
+lastReviewed: "2026-06-30"
 ---
 
 AI Fundamentals is for learners who need a grounded starting point before choosing a practitioner, builder, security, or research path. It builds shared vocabulary around models, data, training, inference, notebooks, neural networks, language models, embeddings, and retrieval. The useful output is not a finished project; it is a learning journal and readiness check that lets the learner explain what an AI system is doing, what evidence supports that explanation, and where uncertainty remains.

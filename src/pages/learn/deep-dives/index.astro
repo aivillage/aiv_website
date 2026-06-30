@@ -6,9 +6,15 @@ import TrackCard from "../../../components/learn/TrackCard.astro";
 import ResourceCard from "../../../components/learn/ResourceCard.astro";
 import { byTitle, canRenderLearnModule, refId } from "../../../utils/learn";
 
-const tracks = (await getCollection("learnTracks", ({ data }) => data.status !== "draft")).filter((track) =>
-  ["agentic-ai-advanced-builder", "evals-reliability-grt", "offensive-ai-security-red-teaming"].includes(track.data.slug),
-);
+const advancedTrackSlugs = [
+  "agentic-ai-advanced-builder",
+  "defensive-ai-engineering",
+  "evals-reliability-grt",
+  "offensive-ai-security-red-teaming",
+];
+const allTracks = await getCollection("learnTracks", ({ data }) => data.status !== "draft");
+const trackBySlug = new Map(allTracks.flatMap((track) => [[track.data.slug, track], [track.id, track]]));
+const tracks = advancedTrackSlugs.map((slug) => trackBySlug.get(slug)).filter((track) => Boolean(track)) as typeof allTracks;
 const modules = await getCollection("learnModules");
 const moduleBySlug = new Map(modules.flatMap((module) => [[module.data.slug, module], [module.id, module]]));
 const resources = (await getCollection("learnResources", ({ data }) => data.status !== "draft"))
