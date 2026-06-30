@@ -3,39 +3,81 @@ import { getCollection } from "astro:content";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import PageShell from "../../../components/layout/PageShell.astro";
 import TrackCard from "../../../components/learn/TrackCard.astro";
-import { byTrackKindThenTitle, canRenderLearnModule, refId } from "../../../utils/learn";
+import { canRenderLearnModule, entrySlug, refId } from "../../../utils/learn";
 
-const tracks = (await getCollection("learnTracks", ({ data }) => data.status !== "draft")).sort(byTrackKindThenTitle);
+const tracks = await getCollection("learnTracks", ({ data }) => data.status !== "draft");
 const modules = await getCollection("learnModules");
 const moduleBySlug = new Map(modules.flatMap((module) => [[module.data.slug, module], [module.id, module]]));
+const trackBySlug = new Map(tracks.flatMap((track) => [[entrySlug(track), track], [track.id, track]]));
 const groups = [
-  { title: "New to AI", kinds: ["foundation"], summary: "Start with shared vocabulary, notebooks, ML basics, LLMs, embeddings, and retrieval." },
-  { title: "Use AI Better at Work", kinds: ["practitioner", "governance"], summary: "Focus on prompting, review, workflow policy, responsible use, and risk frameworks." },
-  { title: "Build AI Systems", kinds: ["builder", "agentic"], summary: "Move through AI app architecture, RAG, tools, evals, agents, MCP, and containment." },
-  { title: "Secure and Evaluate AI", kinds: ["security", "defensive", "evals"], summary: "Work on AI security, authorized red teaming, defensive engineering, evals, reliability, and GRT-style findings." },
+  {
+    title: "New to AI",
+    slugs: ["ai-fundamentals"],
+    summary: "Start with shared vocabulary, notebooks, ML basics, LLMs, embeddings, and retrieval.",
+  },
+  {
+    title: "Use AI Better at Work",
+    slugs: ["ai-practitioner", "governance-responsible-use"],
+    summary: "Focus on prompting, review, workflow policy, responsible use, and risk frameworks.",
+  },
+  {
+    title: "Build AI Systems",
+    slugs: ["ai-builder-core", "agentic-ai-advanced-builder"],
+    summary: "Move through AI app architecture, RAG, tools, evals, agents, MCP, and containment.",
+  },
+  {
+    title: "Secure and Evaluate AI",
+    slugs: ["ai-security-core", "defensive-ai-engineering", "evals-reliability-grt", "offensive-ai-security-red-teaming"],
+    summary: "Work on AI security fundamentals, defensive controls, eval evidence, and advanced authorized-lab red teaming.",
+  },
 ];
+const contextLabels = new Map([
+  ["offensive-ai-security-red-teaming", "Advanced authorized-lab path"],
+  ["governance-responsible-use", "Coming soon roadmap"],
+]);
 
 function publicModuleCount(track: (typeof tracks)[number]) {
   return track.data.canonicalModules
     .map((moduleRef) => moduleBySlug.get(refId(moduleRef)))
     .filter((module) => module && canRenderLearnModule(module)).length;
 }
+
+function groupTracks(group: (typeof groups)[number]) {
+  return group.slugs
+    .map((slug) => trackBySlug.get(slug))
+    .filter((track): track is (typeof tracks)[number] => Boolean(track))
+    .sort((left, right) => {
+      const leftRank = left.data.status === "coming_soon" ? 1 : 0;
+      const rightRank = right.data.status === "coming_soon" ? 1 : 0;
+      return leftRank - rightRank || group.slugs.indexOf(entrySlug(left)) - group.slugs.indexOf(entrySlug(right));
+    });
+}
 ---
 
 <BaseLayout title="Choose Your Path" canonical="/learn/choose-your-path/" description="Choose an AI Village Learn beta track by learner intent.">
-  <PageShell class="learn-page">
-    <h1>Choose Your Path</h1>
-    <p class="text-lead">
-      Tracks are organized by learner intent, not by a single ladder. Choose the path that fits your current artifact goal.
-    </p>
+  <PageShell class="learn-page" width="wide">
+    <header class="choose-hero">
+      <h1>Choose Your Path</h1>
+      <p class="text-lead">
+        Tracks are organized by learner intent, not by a single ladder. Choose the role, artifact, or review question closest to your current work.
+      </p>
+    </header>
     {groups.map((group) => {
-      const groupTracks = tracks.filter((track) => group.kinds.includes(track.data.trackKind));
+      const tracksInGroup = groupTracks(group);
       return (
-        <section>
-          <h2>{group.title}</h2>
-          <p>{group.summary}</p>
+        <section class="intent-group">
+          <div class="intent-group__heading">
+            <h2>{group.title}</h2>
+            <p>{group.summary}</p>
+          </div>
           <div class="learn-grid">
-            {groupTracks.map((track) => <TrackCard track={track} publicModuleCount={publicModuleCount(track)} />)}
+            {tracksInGroup.map((track) => (
+              <TrackCard
+                track={track}
+                publicModuleCount={publicModuleCount(track)}
+                contextLabel={contextLabels.get(entrySlug(track))}
+              />
+            ))}
           </div>
         </section>
       );
@@ -46,12 +88,42 @@ function publicModuleCount(track: (typeof tracks)[number]) {
 <style>
   .learn-page {
     display: grid;
-    gap: 2rem;
+    gap: 2.2rem;
+  }
+
+  .choose-hero {
+    max-width: 78ch;
+  }
+
+  .choose-hero h1,
+  .choose-hero p {
+    margin-bottom: 0;
+  }
+
+  .intent-group {
+    border-top: 1px solid var(--aiv-line-subtle);
+    display: grid;
+    gap: 1rem;
+    padding-top: 1.25rem;
+  }
+
+  .intent-group__heading {
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .intent-group__heading h2,
+  .intent-group__heading p {
+    margin: 0;
+  }
+
+  .intent-group__heading p {
+    color: var(--aiv-text-secondary);
   }
 
   .learn-grid {
     display: grid;
     gap: 1rem;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   }
 </style>

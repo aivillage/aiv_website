@@ -1,40 +1,42 @@
 ---
 import type { CollectionEntry } from "astro:content";
-import DifficultyBadge from "./DifficultyBadge.astro";
-import StageBadge from "./StageBadge.astro";
-import { accessModeLabels, formatLabel, refId, resourceActionLabel, resourcePath } from "../../utils/learn";
+import { accessModeLabels, refId, resourceActionLabel, resourcePath } from "../../utils/learn";
 
 type Props = {
   resource: CollectionEntry<"learnResources">;
   usedInModuleTitle?: string;
+  usedInModuleHref?: string;
 };
 
-const { resource, usedInModuleTitle } = Astro.props;
+const { resource, usedInModuleTitle, usedInModuleHref } = Astro.props;
 const trackRefs = resource.data.tracks.map(refId).join(" ");
 const creator = resource.data.creator || resource.data.attribution;
 const accessLabel = accessModeLabels[resource.data.accessMode] || accessModeLabels.direct_open;
 const actionLabel = resourceActionLabel(resource);
 const isUnderReview = resource.data.reviewStatus !== "accepted";
-const isOffRamp = resource.data.accessMode !== "direct_open";
+const isOffRamp = resource.data.accessMode !== "direct_open" || resource.data.loginRequired || resource.data.cost !== "free";
 ---
 
 <article class="learn-card" data-track-refs={trackRefs} data-stage={resource.data.targetStage} data-difficulty={resource.data.difficulty} data-type={resource.data.resourceType} data-access={resource.data.accessMode}>
   <div class="learn-card__meta">
-    <StageBadge value={resource.data.targetStage} />
-    <DifficultyBadge value={resource.data.difficulty} />
-    <span class="learn-access-badge">{isOffRamp ? "Extra/off-ramp" : accessLabel}</span>
+    <span>{actionLabel}</span>
+    <span class="learn-access-badge">{isOffRamp ? "Off-ramp" : accessLabel}</span>
     {isUnderReview && <span class="learn-access-badge learn-access-badge--review">Under review</span>}
   </div>
   <h3><a href={resourcePath(resource)}>{resource.data.title}</a></h3>
   <p class="learn-card__provider">
-    <span>{creator ? `${resource.data.provider} / ${creator}` : resource.data.provider}</span>
-    <a href={resource.data.canonicalUrl} target="_blank" rel="noopener noreferrer">Open original</a>
+    {creator ? `${resource.data.provider} / ${creator}` : resource.data.provider}
   </p>
   {resource.data.watchFocus && <p>{resource.data.watchFocus}</p>}
-  <div class="learn-card__meta">
-    <span>{actionLabel}</span>
-    <span>{formatLabel(resource.data.resourceType)}</span>
-    {usedInModuleTitle && <span>Used in {usedInModuleTitle}</span>}
+  <div class="learn-card__footer">
+    {usedInModuleTitle && (
+      usedInModuleHref ? (
+        <a href={usedInModuleHref}>Used in {usedInModuleTitle}</a>
+      ) : (
+        <span>Used in {usedInModuleTitle}</span>
+      )
+    )}
+    <a href={resource.data.canonicalUrl} target="_blank" rel="noopener noreferrer">Open original</a>
   </div>
 </article>
 
@@ -47,6 +49,7 @@ const isOffRamp = resource.data.accessMode !== "direct_open";
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
+    margin: 0;
     min-height: 100%;
     padding: 1.15rem;
   }
@@ -64,24 +67,36 @@ const isOffRamp = resource.data.accessMode !== "direct_open";
     margin: 0;
   }
 
-  .learn-card__provider,
-  .learn-card__checkpoint,
-  .learn-card__meta {
-    color: var(--aiv-text-muted);
-  }
-
   .learn-card__provider {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
+    color: var(--aiv-text-muted);
+    font-size: 0.92rem;
   }
 
-  .learn-card__meta {
+  .learn-card__meta,
+  .learn-card__footer {
     align-items: center;
     display: flex;
     flex-wrap: wrap;
     font-size: 0.9rem;
     gap: 0.5rem;
+  }
+
+  .learn-card__meta {
+    color: var(--aiv-text-muted);
+  }
+
+  .learn-card__footer {
+    border-top: 1px solid var(--aiv-line-subtle);
+    justify-content: space-between;
+    margin-top: auto;
+    padding-top: 0.75rem;
+  }
+
+  .learn-card__footer a,
+  .learn-card__footer span {
+    align-items: center;
+    display: inline-flex;
+    min-height: 2.35rem;
   }
 
   .learn-access-badge {
@@ -90,5 +105,10 @@ const isOffRamp = resource.data.accessMode !== "direct_open";
     border-radius: 999px;
     color: var(--aiv-text);
     padding: 0.12rem 0.45rem;
+  }
+
+  .learn-access-badge--review {
+    border-color: var(--aiv-warning);
+    color: var(--aiv-warning);
   }
 </style>

@@ -2,15 +2,44 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import PageShell from "../../../components/layout/PageShell.astro";
-import TrackCard from "../../../components/learn/TrackCard.astro";
-import { canRenderLearnModule, refId } from "../../../utils/learn";
+import { canRenderLearnModule, refId, trackPath } from "../../../utils/learn";
 
-const starterTrackSlugs = ["ai-fundamentals", "ai-practitioner", "ai-builder-core", "ai-security-core"];
+const starterChoices = [
+  {
+    label: "New to AI",
+    slug: "ai-fundamentals",
+    startIf: "you need shared vocabulary, notebook readiness, and a clear mental model before choosing a role path.",
+    cta: "Start AI Fundamentals",
+  },
+  {
+    label: "Use AI better at work",
+    slug: "ai-practitioner",
+    startIf: "you want prompting, research, writing, coding assistance, verification, and review habits for everyday work.",
+    cta: "Start AI Practitioner",
+  },
+  {
+    label: "Build AI systems",
+    slug: "ai-builder-core",
+    startIf: "you are designing small AI applications and need architecture, structured output, RAG, tool use, evals, and observability.",
+    cta: "Start AI Builder Core",
+  },
+  {
+    label: "Understand AI security",
+    slug: "ai-security-core",
+    startIf: "you need threat modeling, AI-specific risks, retrieval concerns, supply-chain checks, and evidence mapping.",
+    cta: "Start AI Security Core",
+  },
+];
 const tracks = await getCollection("learnTracks", ({ data }) => data.status !== "draft");
 const modules = await getCollection("learnModules");
 const moduleBySlug = new Map(modules.flatMap((module) => [[module.data.slug, module], [module.id, module]]));
 const trackBySlug = new Map(tracks.flatMap((track) => [[track.data.slug, track], [track.id, track]]));
-const starterTracks = starterTrackSlugs.map((slug) => trackBySlug.get(slug)).filter((track) => Boolean(track)) as typeof tracks;
+const starterCards = starterChoices
+  .map((choice) => {
+    const track = trackBySlug.get(choice.slug);
+    return track ? { choice, track } : undefined;
+  })
+  .filter((item): item is { choice: (typeof starterChoices)[number]; track: (typeof tracks)[number] } => Boolean(item));
 
 function publicModuleCount(track: (typeof tracks)[number]) {
   return track.data.canonicalModules
@@ -20,14 +49,45 @@ function publicModuleCount(track: (typeof tracks)[number]) {
 ---
 
 <BaseLayout title="Start Learning" canonical="/learn/start/" description="Starting points for the AI Village Learn curriculum beta.">
-  <PageShell class="learn-page">
-    <h1>Start Learning</h1>
-    <p class="text-lead">
-      Pick the track that matches what you are trying to do now. Stage is not a global prerequisite chain; prerequisites are listed on tracks and modules.
-    </p>
-    <div class="learn-grid">
-      {starterTracks.map((track) => <TrackCard track={track} publicModuleCount={publicModuleCount(track)} />)}
-    </div>
+  <PageShell class="learn-page" width="wide">
+    <header class="start-hero">
+      <p class="start-kicker">Start with one track</p>
+      <h1>Start Learning</h1>
+      <p class="text-lead">
+        Pick the closest starting point for what you need to do next. You can change paths later; the first goal is to complete a small checkpoint.
+      </p>
+    </header>
+
+    <section class="start-decision" aria-labelledby="start-decision-heading">
+      <div class="start-decision__heading">
+        <div>
+          <h2 id="start-decision-heading">Choose your starting point</h2>
+          <p>Each option leads to one track, a module sequence, and one first artifact.</p>
+        </div>
+        <a href="/learn/choose-your-path/">Already know your role or goal? Choose your path.</a>
+      </div>
+      <div class="start-grid">
+        {starterCards.map(({ choice, track }) => (
+          <article class="card start-card">
+            <p class="start-card__label">{choice.label}</p>
+            <h3>{track.data.title}</h3>
+            <p><strong>Start here if</strong> {choice.startIf}</p>
+            <dl class="start-card__facts">
+              <div>
+                <dt>Modules</dt>
+                <dd>{publicModuleCount(track)}</dd>
+              </div>
+              <div>
+                <dt>Main artifact</dt>
+                <dd>{track.data.requiredArtifacts[0]}</dd>
+              </div>
+            </dl>
+            <a class="button" href={trackPath(track)}>{choice.cta}</a>
+          </article>
+        ))}
+      </div>
+    </section>
+
     <section class="card card--accent-muted">
       <h2 class="mt-0">Beta Notes</h2>
       <p>
@@ -43,9 +103,137 @@ function publicModuleCount(track: (typeof tracks)[number]) {
     gap: 2rem;
   }
 
-  .learn-grid {
+  .start-hero {
+    max-width: 78ch;
+  }
+
+  .start-hero h1,
+  .start-hero p {
+    margin-bottom: 0;
+  }
+
+  .start-kicker,
+  .start-card__label {
+    color: var(--aiv-action-secondary);
+    font-family: var(--aiv-font-mono);
+    font-size: 0.84rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    margin: 0;
+    text-transform: uppercase;
+  }
+
+  .start-decision {
+    display: grid;
+    gap: 1.15rem;
+  }
+
+  .start-decision__heading {
+    align-items: end;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: space-between;
+  }
+
+  .start-decision__heading h2,
+  .start-decision__heading p {
+    margin: 0;
+  }
+
+  .start-decision__heading > a {
+    color: var(--aiv-action-primary);
+    font-weight: 800;
+    min-height: 2.5rem;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .start-grid {
     display: grid;
     gap: 1rem;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .start-card {
+    border-radius: 8px;
+    display: grid;
+    gap: 0.9rem;
+    margin: 0;
+    min-height: 100%;
+    padding: 1.25rem;
+  }
+
+  .start-card::before {
+    display: none;
+  }
+
+  .start-card:hover {
+    transform: none;
+  }
+
+  .start-card h3,
+  .start-card p {
+    margin: 0;
+  }
+
+  .start-card p {
+    color: var(--aiv-text-secondary);
+  }
+
+  .start-card__facts {
+    border-top: 1px solid var(--aiv-line-subtle);
+    display: grid;
+    gap: 0.65rem;
+    margin: 0;
+    padding-top: 0.85rem;
+  }
+
+  .start-card__facts div {
+    display: grid;
+    gap: 0.2rem;
+  }
+
+  .start-card__facts dt {
+    color: var(--aiv-text-muted);
+    font-size: 0.78rem;
+    font-weight: 800;
+  }
+
+  .start-card__facts dd {
+    margin: 0;
+  }
+
+  .button {
+    align-items: center;
+    align-self: end;
+    background: var(--aiv-action-primary);
+    border: 1px solid var(--aiv-action-primary);
+    border-radius: 6px;
+    color: var(--aiv-bg-canvas);
+    display: inline-flex;
+    font-weight: 800;
+    justify-content: center;
+    min-height: 2.75rem;
+    padding: 0.6rem 0.95rem;
+    text-decoration: none;
+  }
+
+  .button:focus-visible,
+  .start-decision__heading > a:focus-visible {
+    outline: 3px solid var(--aiv-focus-ring);
+    outline-offset: 3px;
+  }
+
+  @media (max-width: 980px) {
+    .start-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 620px) {
+    .start-grid {
+      grid-template-columns: 1fr;
+    }
   }
 </style>

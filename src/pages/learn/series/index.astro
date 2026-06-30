@@ -20,7 +20,7 @@ const selectedEpisodePaths = series.filter((item) => (episodeCountBySeries.get(e
 ---
 
 <BaseLayout title="Learn Video Series" canonical="/learn/series/" description="Ordered AI Village Learn video series with episode checkpoints.">
-  <PageShell class="learn-page">
+  <PageShell class="learn-page" width="wide">
     <h1>Video Series</h1>
     <p class="text-lead">
       Follow ordered video paths with a clear source link, episode list, and module-oriented checkpoints. Series pages link to the original creator and avoid loading embedded players by default.
@@ -59,8 +59,8 @@ const selectedEpisodePaths = series.filter((item) => (episodeCountBySeries.get(e
 
     {selectedEpisodePaths.length > 0 && (
       <section class="learn-secondary-section">
-        <h2>Single Selected Episodes</h2>
-        <p>These playlists currently have one AI Village-selected episode. Use them as selected episode paths, not full series.</p>
+        <h2>Selected Episode Paths</h2>
+        <p>These playlists currently have one AI Village-selected episode. Use them as focused episode paths, not full series.</p>
         <ul class="learn-link-list">
           {selectedEpisodePaths.map((item) => (
             <li>

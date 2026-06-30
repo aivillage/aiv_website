@@ -1,43 +1,42 @@
 ---
 import type { CollectionEntry } from "astro:content";
-import ArtifactBadge from "./ArtifactBadge.astro";
-import DifficultyBadge from "./DifficultyBadge.astro";
-import StageBadge from "./StageBadge.astro";
-import StatusBadge from "./StatusBadge.astro";
-import { canRenderLearnLab, formatLabel, labPath } from "../../utils/learn";
+import { canRenderLearnLab, labPath } from "../../utils/learn";
 
 type Props = {
   lab: CollectionEntry<"learnLabs">;
+  usedInModuleTitle?: string;
+  usedInModuleHref?: string;
 };
 
-const { lab } = Astro.props;
+const { lab, usedInModuleTitle, usedInModuleHref } = Astro.props;
 const href = canRenderLearnLab(lab) ? labPath(lab) : "";
 ---
 
 <article class="learn-card">
   <div class="learn-card__meta">
-    <StatusBadge value={lab.data.status} />
-    <DifficultyBadge value={lab.data.difficulty} />
-    {lab.data.isOffensive && <span class="learn-card__flag">Offensive</span>}
+    {lab.data.isOffensive && <span class="learn-card__flag">Offensive toy lab</span>}
+    <span>{lab.data.estimatedMinutes} min</span>
   </div>
   <h3>{href ? <a href={href}>{lab.data.title}</a> : lab.data.title}</h3>
   <p>{lab.data.summary}</p>
-  <div class="learn-card__meta">
-    <StageBadge value={lab.data.stageStart} />
-    <span>to</span>
-    <StageBadge value={lab.data.stageEnd} />
-  </div>
   <dl>
     <div>
       <dt>Safety boundary</dt>
       <dd>{lab.data.safetyBoundary}</dd>
     </div>
     <div>
-      <dt>Run modes</dt>
-      <dd>{lab.data.runModes.map(formatLabel).join(", ")}</dd>
+      <dt>Expected artifact</dt>
+      <dd>{lab.data.requiredArtifact}</dd>
     </div>
   </dl>
-  <ArtifactBadge value={lab.data.requiredArtifact} />
+  {(usedInModuleTitle || href) && (
+    <div class="learn-card__actions">
+      {usedInModuleTitle && (
+        usedInModuleHref ? <a href={usedInModuleHref}>Used in {usedInModuleTitle}</a> : <span>Used in {usedInModuleTitle}</span>
+      )}
+      {href && <a href={href}>Open lab</a>}
+    </div>
+  )}
 </article>
 
 <style>
@@ -49,6 +48,7 @@ const href = canRenderLearnLab(lab) ? labPath(lab) : "";
     display: flex;
     flex-direction: column;
     gap: 0.8rem;
+    margin: 0;
     min-height: 100%;
     padding: 1.15rem;
   }
@@ -78,6 +78,24 @@ const href = canRenderLearnLab(lab) ? labPath(lab) : "";
     font-size: 0.8rem;
     font-weight: 700;
     padding: 0.28rem 0.65rem;
+  }
+
+  .learn-card__actions {
+    align-items: center;
+    border-top: 1px solid var(--aiv-line-subtle);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    justify-content: space-between;
+    margin-top: auto;
+    padding-top: 0.75rem;
+  }
+
+  .learn-card__actions a,
+  .learn-card__actions span {
+    align-items: center;
+    display: inline-flex;
+    min-height: 2.35rem;
   }
 
   .learn-card dl {

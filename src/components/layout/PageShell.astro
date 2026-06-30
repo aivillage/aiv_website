@@ -1,11 +1,30 @@
 ---
 type Props = {
   class?: string;
+  width?: "default" | "wide" | "prose" | "full";
 };
 
-const { class: className } = Astro.props;
+const { class: className, width = "default" } = Astro.props;
 ---
 
-<div class:list={["container", "aiv-page-shell", className]}>
+<div class:list={["container", "aiv-page-shell", `aiv-page-shell--${width}`, className]}>
   <slot />
 </div>
+
+<style>
+  .aiv-page-shell {
+    width: 100%;
+  }
+
+  .aiv-page-shell--wide {
+    max-width: 1200px;
+  }
+
+  .aiv-page-shell--prose {
+    max-width: min(100%, 920px);
+  }
+
+  .aiv-page-shell--full {
+    max-width: none;
+  }
+</style>

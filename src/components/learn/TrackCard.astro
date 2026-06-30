@@ -1,73 +1,165 @@
 ---
 import type { CollectionEntry } from "astro:content";
-import ArtifactBadge from "./ArtifactBadge.astro";
-import StageBadge from "./StageBadge.astro";
 import StatusBadge from "./StatusBadge.astro";
-import { canRenderLearnTrack, securityLensLabels, trackPath } from "../../utils/learn";
+import { canRenderLearnTrack, trackPath } from "../../utils/learn";
 
 type Props = {
   track: CollectionEntry<"learnTracks">;
   publicModuleCount?: number;
+  contextLabel?: string;
+  ctaLabel?: string;
 };
 
-const { track, publicModuleCount = track.data.canonicalModules.length } = Astro.props;
+const {
+  track,
+  publicModuleCount = track.data.canonicalModules.length,
+  contextLabel,
+  ctaLabel,
+} = Astro.props;
 const href = canRenderLearnTrack(track) ? trackPath(track) : "";
+const firstAudience = track.data.audiences[0] || "Learners";
+const audienceMore = Math.max(track.data.audiences.length - 1, 0);
+const firstArtifact = track.data.requiredArtifacts[0] || "Track checkpoint";
+const artifactMore = Math.max(track.data.requiredArtifacts.length - 1, 0);
+const showStatus = ["coming_soon", "stable", "stale"].includes(track.data.status);
+const resolvedCtaLabel = ctaLabel || (track.data.status === "coming_soon" ? "Preview path" : "View track");
 ---
 
-<article class="learn-card">
-  <div class="learn-card__meta">
-    <StatusBadge value={track.data.status} />
-    <StageBadge value={track.data.stageStart} />
-    <span class="learn-card__range">to</span>
-    <StageBadge value={track.data.stageEnd} />
+<article class:list={["card", "learn-track-card", track.data.status === "coming_soon" && "learn-track-card--muted"]}>
+  <div class="learn-track-card__top">
+    {showStatus && <StatusBadge value={track.data.status} />}
+    {contextLabel && <span class="learn-track-card__context">{contextLabel}</span>}
   </div>
   <h2>{href ? <a href={href}>{track.data.title}</a> : track.data.title}</h2>
-  <p>{track.data.summary}</p>
-  <div class="learn-card__meta">
-    <span>{securityLensLabels[track.data.securityLens]}</span>
+  <p class="learn-track-card__summary">{track.data.summary}</p>
+  <dl class="learn-track-card__details">
+    <div>
+      <dt>For:</dt>
+      <dd>{firstAudience}{audienceMore > 0 ? ` +${audienceMore} more` : ""}</dd>
+    </div>
+    <div>
+      <dt>You will produce:</dt>
+      <dd>{firstArtifact}{artifactMore > 0 ? ` +${artifactMore} more` : ""}</dd>
+    </div>
+  </dl>
+  <div class="learn-track-card__footer">
     <span>{publicModuleCount} public {publicModuleCount === 1 ? "module" : "modules"}</span>
-  </div>
-  <div class="learn-card__artifacts">
-    {track.data.requiredArtifacts.map((artifact) => <ArtifactBadge value={artifact} />)}
+    {href && <a class="learn-track-card__cta" href={href}>{resolvedCtaLabel}</a>}
   </div>
 </article>
 
 <style>
-  .learn-card {
+  .learn-track-card {
     background: var(--aiv-card-bg);
     border: 1px solid var(--aiv-card-border);
     border-radius: 8px;
     box-shadow: var(--aiv-card-shadow);
     display: flex;
     flex-direction: column;
-    gap: 0.85rem;
+    gap: 0.9rem;
+    margin: 0;
     min-height: 100%;
     padding: 1.25rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
   }
 
-  .learn-card h2 {
-    font-size: 1.25rem;
+  .learn-track-card::before {
+    display: none;
+  }
+
+  .learn-track-card:hover {
+    border-color: var(--aiv-card-hover-border);
+    box-shadow: var(--aiv-card-hover-shadow);
+    transform: none;
+  }
+
+  .learn-track-card--muted {
+    background: color-mix(in srgb, var(--aiv-card-bg) 70%, transparent);
+    border-color: var(--aiv-line-subtle);
+    box-shadow: none;
+  }
+
+  .learn-track-card h2 {
+    font-size: 1.18rem;
+    line-height: 1.25;
     margin: 0;
   }
 
-  .learn-card p {
+  .learn-track-card h2 a {
+    color: inherit;
+  }
+
+  .learn-track-card__summary {
+    color: var(--aiv-text-secondary);
+    flex: 1;
+    line-height: 1.5;
     margin: 0;
   }
 
-  .learn-card__meta,
-  .learn-card__artifacts {
+  .learn-track-card__top,
+  .learn-track-card__footer {
     align-items: center;
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
+    gap: 0.65rem;
   }
 
-  .learn-card__meta {
+  .learn-track-card__top {
+    min-height: 1.65rem;
+  }
+
+  .learn-track-card__context {
+    border: 1px solid var(--aiv-line-strong);
+    border-radius: 999px;
+    color: var(--aiv-text-secondary);
+    font-size: 0.78rem;
+    font-weight: 800;
+    padding: 0.14rem 0.5rem;
+  }
+
+  .learn-track-card__details {
+    border-top: 1px solid var(--aiv-line-subtle);
+    display: grid;
+    gap: 0.65rem;
+    margin: 0;
+    padding-top: 0.85rem;
+  }
+
+  .learn-track-card__details div {
+    display: grid;
+    gap: 0.2rem;
+  }
+
+  .learn-track-card__details dt {
+    color: var(--aiv-text-muted);
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+  }
+
+  .learn-track-card__details dd {
+    color: var(--aiv-text-primary);
+    margin: 0;
+  }
+
+  .learn-track-card__footer {
     color: var(--aiv-text-muted);
     font-size: 0.9rem;
+    justify-content: space-between;
+    margin-top: auto;
+    padding-top: 0.15rem;
   }
 
-  .learn-card__range {
-    color: var(--aiv-text-muted);
+  .learn-track-card__cta {
+    color: var(--aiv-action-primary);
+    font-weight: 800;
+    min-height: 2.5rem;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .learn-track-card__cta:focus-visible {
+    outline: 3px solid var(--aiv-focus-ring);
+    outline-offset: 3px;
   }
 </style>

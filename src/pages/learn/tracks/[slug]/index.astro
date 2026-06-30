@@ -51,7 +51,7 @@ const { Content } = await render(track);
 ---
 
 <BaseLayout title={track.data.title} canonical={trackPath(track)} description={track.data.summary}>
-  <PageShell class="learn-track-page">
+  <PageShell class="learn-track-page" width="wide">
     <nav class="learn-breadcrumb" aria-label="Breadcrumb"><a href="/learn/">Learn</a> / <span>{track.data.title}</span></nav>
 
     <header class="learn-track-header">

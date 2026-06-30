@@ -3,19 +3,31 @@ import { getCollection } from "astro:content";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import PageShell from "../../../components/layout/PageShell.astro";
 import ResourceCard from "../../../components/learn/ResourceCard.astro";
-import { byTitle, difficultyLabels, entrySlug, formatLabel, refId, stageLabels } from "../../../utils/learn";
+import {
+  byTitle,
+  difficultyLabels,
+  entrySlug,
+  findPublicCanonicalTracksForModule,
+  formatLabel,
+  modulePath,
+  refId,
+  stageLabels,
+  trackScopedModulePath,
+} from "../../../utils/learn";
 
 const resources = (await getCollection("learnResources", ({ data }) => data.status !== "draft")).sort(byTitle);
 const tracks = (await getCollection("learnTracks", ({ data }) => data.status !== "draft")).sort(byTitle);
 const publicModules = await getCollection("learnModules", ({ data }) => data.status !== "draft");
 const linkedResourceSlugs = new Set(publicModules.flatMap((module) => module.data.resources.map((link) => refId(link.resource))));
-const moduleByResourceSlug = new Map<string, string>();
+const moduleByResourceSlug = new Map<string, { title: string; href: string }>();
 
 for (const module of publicModules.sort(byTitle)) {
   for (const link of module.data.resources) {
     const resourceSlug = refId(link.resource);
     if (resourceSlug && !moduleByResourceSlug.has(resourceSlug)) {
-      moduleByResourceSlug.set(resourceSlug, module.data.title);
+      const canonicalTracks = findPublicCanonicalTracksForModule(module, tracks);
+      const href = canonicalTracks.length === 1 ? trackScopedModulePath(canonicalTracks[0], module) : modulePath(module);
+      moduleByResourceSlug.set(resourceSlug, { title: module.data.title, href });
     }
   }
 }
@@ -81,7 +93,7 @@ const shownResourceCount = resourceSections.reduce((sum, section) => sum + secti
 ---
 
 <BaseLayout title="Learn Resources" canonical="/learn/resources/" description="Browse the AI Village Learn beta resource catalog.">
-  <PageShell class="learn-page">
+  <PageShell class="learn-page" width="wide">
     <h1>Resource Catalog</h1>
     <p class="text-lead">
       Public resources linked from Learn modules, grouped by how a learner should use them. Start with direct-open core resources, then use extra links only when the access requirements make sense for you.
@@ -128,7 +140,10 @@ const shownResourceCount = resourceSections.reduce((sum, section) => sum + secti
           <h2>{section.title}</h2>
           <p>{section.text}</p>
           <div class="learn-grid">
-            {section.resources.map((resource) => <ResourceCard resource={resource} usedInModuleTitle={moduleByResourceSlug.get(entrySlug(resource))} />)}
+            {section.resources.map((resource) => {
+              const usedInModule = moduleByResourceSlug.get(entrySlug(resource));
+              return <ResourceCard resource={resource} usedInModuleTitle={usedInModule?.title} usedInModuleHref={usedInModule?.href} />;
+            })}
           </div>
         </section>
       ))}
