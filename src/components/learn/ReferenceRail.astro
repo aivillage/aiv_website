@@ -1,0 +1,219 @@
+---
+type RailLink = {
+  label: string;
+  href?: string;
+  external?: boolean;
+  meta?: string;
+};
+
+type RailFact = {
+  label: string;
+  value?: string;
+  href?: string;
+  external?: boolean;
+};
+
+type RailSection = {
+  title: string;
+  text?: string;
+  facts?: RailFact[];
+  links?: RailLink[];
+  tags?: string[];
+  collapsed?: boolean;
+};
+
+type Props = {
+  title?: string;
+  sections: RailSection[];
+};
+
+const { title = "Reference", sections } = Astro.props;
+const visibleSections = sections.filter((section) =>
+  Boolean(
+    section.text ||
+    section.facts?.some((fact) => fact.value || fact.href) ||
+    section.links?.length ||
+    section.tags?.length,
+  ),
+);
+---
+
+{visibleSections.length > 0 && (
+  <aside class="reference-rail learn-surface-reference" aria-labelledby="reference-rail-heading">
+    <h2 id="reference-rail-heading">{title}</h2>
+    <div class="reference-rail__sections">
+      {visibleSections.map((section) => {
+        const content = (
+          <>
+            {section.text && <p>{section.text}</p>}
+            {section.facts && section.facts.length > 0 && (
+              <dl class="reference-rail__facts">
+                {section.facts.filter((fact) => fact.value || fact.href).map((fact) => (
+                  <div>
+                    <dt>{fact.label}</dt>
+                    <dd>
+                      {fact.href ? (
+                        <a href={fact.href} target={fact.external ? "_blank" : undefined} rel={fact.external ? "noopener noreferrer" : undefined}>
+                          {fact.value || fact.href}
+                        </a>
+                      ) : (
+                        fact.value
+                      )}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            )}
+            {section.tags && section.tags.length > 0 && (
+              <ul class="reference-rail__tags" aria-label={section.title}>
+                {section.tags.map((tag) => <li>{tag}</li>)}
+              </ul>
+            )}
+            {section.links && section.links.length > 0 && (
+              <ul class="reference-rail__links">
+                {section.links.map((link) => (
+                  <li>
+                    <a href={link.href} target={link.external ? "_blank" : undefined} rel={link.external ? "noopener noreferrer" : undefined}>
+                      {link.label}
+                    </a>
+                    {link.meta && <span>{link.meta}</span>}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </>
+        );
+
+        return section.collapsed ? (
+          <details class="reference-rail__section">
+            <summary>{section.title}</summary>
+            {content}
+          </details>
+        ) : (
+          <section class="reference-rail__section" aria-label={section.title}>
+            <h3>{section.title}</h3>
+            {content}
+          </section>
+        );
+      })}
+    </div>
+  </aside>
+)}
+
+<style>
+  .reference-rail {
+    display: grid;
+    gap: 0.85rem;
+    padding: 0.95rem;
+  }
+
+  .reference-rail h2,
+  .reference-rail h3,
+  .reference-rail p,
+  .reference-rail dl,
+  .reference-rail ul {
+    margin: 0;
+  }
+
+  .reference-rail h2 {
+    color: var(--aiv-text-muted);
+    font-size: 0.82rem;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .reference-rail__sections,
+  .reference-rail__section,
+  .reference-rail__facts,
+  .reference-rail__links {
+    display: grid;
+    gap: 0.65rem;
+  }
+
+  .reference-rail__section {
+    border-top: 1px solid var(--aiv-line-subtle);
+    padding-top: 0.72rem;
+  }
+
+  .reference-rail__section:first-child {
+    border-top: 0;
+    padding-top: 0;
+  }
+
+  .reference-rail__section h3,
+  .reference-rail__section summary {
+    color: var(--aiv-text-primary);
+    font-size: 0.98rem;
+    font-weight: 900;
+    line-height: 1.2;
+  }
+
+  .reference-rail__section summary {
+    cursor: pointer;
+    min-height: 2.35rem;
+  }
+
+  .reference-rail p,
+  .reference-rail__links span {
+    color: var(--aiv-text-muted);
+    line-height: 1.4;
+  }
+
+  .reference-rail__facts div {
+    display: grid;
+    gap: 0.18rem;
+  }
+
+  .reference-rail__facts dt {
+    color: var(--aiv-text-muted);
+    font-size: 0.75rem;
+    font-weight: 900;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  .reference-rail__facts dd {
+    color: var(--aiv-text-secondary);
+    margin: 0;
+  }
+
+  .reference-rail__links,
+  .reference-rail__tags {
+    list-style: none;
+    padding: 0;
+  }
+
+  .reference-rail__links li {
+    display: grid;
+    gap: 0.15rem;
+  }
+
+  .reference-rail__links a,
+  .reference-rail__facts a {
+    align-items: center;
+    display: inline-flex;
+    min-height: 2.35rem;
+  }
+
+  .reference-rail__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.38rem;
+  }
+
+  .reference-rail__tags li {
+    background: color-mix(in srgb, var(--aiv-bg-canvas) 20%, transparent);
+    border: 1px solid var(--aiv-line-subtle);
+    border-radius: 999px;
+    color: var(--aiv-text-secondary);
+    font-size: 0.82rem;
+    padding: 0.22rem 0.48rem;
+  }
+
+  .reference-rail a:focus-visible,
+  .reference-rail summary:focus-visible {
+    outline: 3px solid var(--aiv-focus-ring);
+    outline-offset: 3px;
+  }
+</style>

@@ -1,0 +1,202 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { trackPath } from "../../utils/learn";
+
+type TrackContext = {
+  track: CollectionEntry<"learnTracks">;
+  moduleIndex: number;
+  moduleCount: number;
+  previousModule?: CollectionEntry<"learnModules">;
+  nextModule?: CollectionEntry<"learnModules">;
+};
+
+type JumpLink = {
+  href: string;
+  label: string;
+};
+
+type Props = {
+  module: CollectionEntry<"learnModules">;
+  tracks?: CollectionEntry<"learnTracks">[];
+  canonicalTracks?: CollectionEntry<"learnTracks">[];
+  trackContext?: TrackContext;
+  globalTrackContext?: TrackContext;
+  jumpLinks?: JumpLink[];
+};
+
+const {
+  module: learnModule,
+  tracks = [],
+  canonicalTracks = [],
+  trackContext,
+  globalTrackContext,
+  jumpLinks = [],
+} = Astro.props;
+const context = trackContext || globalTrackContext;
+const fallbackTrack = canonicalTracks[0] || tracks[0];
+const trackTitle = context?.track.data.title || fallbackTrack?.data.title || "AIV Learn";
+const modulePosition = context && context.moduleIndex >= 0
+  ? `Module ${context.moduleIndex + 1} of ${context.moduleCount}`
+  : "Module workbook";
+const backHref = context ? trackPath(context.track) : "/learn/";
+const backLabel = context ? "Back to track" : "Back to Learn";
+const artifact = learnModule.data.requiredArtifact || "Module checkpoint";
+---
+
+<header class="lesson-task-header learn-surface-task" aria-labelledby="lesson-task-title">
+  <div class="lesson-task-header__main">
+    <div class="lesson-task-header__context">
+      <span>{trackTitle}</span>
+      <span aria-hidden="true">/</span>
+      <span>{modulePosition}</span>
+    </div>
+    <h1 id="lesson-task-title">{learnModule.data.title}</h1>
+    <p>{learnModule.data.summary}</p>
+    <div class="lesson-task-header__artifact">
+      <span>You will produce:</span>
+      <strong>{artifact}</strong>
+    </div>
+  </div>
+
+  <div class="lesson-task-header__actions">
+    <a class="lesson-task-header__back" href={backHref}>{backLabel}</a>
+    {jumpLinks.length > 0 && (
+      <nav class="lesson-task-header__jumps" aria-label="Lesson sections">
+        {jumpLinks.map((link) => <a href={link.href}>{link.label}</a>)}
+      </nav>
+    )}
+  </div>
+</header>
+
+<style>
+  .lesson-task-header {
+    align-items: start;
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: minmax(0, 1fr) auto;
+    padding: 1rem 1.15rem;
+  }
+
+  .lesson-task-header__main {
+    display: grid;
+    gap: 0.48rem;
+    min-width: 0;
+  }
+
+  .lesson-task-header__context,
+  .lesson-task-header__artifact span {
+    color: var(--aiv-text-muted);
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  .lesson-task-header__context {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+
+  .lesson-task-header h1,
+  .lesson-task-header p {
+    margin: 0;
+  }
+
+  .lesson-task-header h1 {
+    font-size: clamp(2rem, 4vw, 3.35rem);
+    line-height: 1.02;
+    max-width: 15ch;
+  }
+
+  .lesson-task-header p {
+    color: var(--aiv-text-secondary);
+    display: -webkit-box;
+    font-size: clamp(1rem, 1.3vw, 1.16rem);
+    line-height: 1.45;
+    max-width: 74ch;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .lesson-task-header__artifact {
+    align-items: baseline;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin-top: 0.1rem;
+  }
+
+  .lesson-task-header__artifact strong {
+    color: var(--aiv-text-primary);
+    font-weight: 900;
+  }
+
+  .lesson-task-header__actions {
+    align-items: end;
+    display: grid;
+    gap: 0.7rem;
+    justify-items: end;
+  }
+
+  .lesson-task-header__back,
+  .lesson-task-header__jumps a {
+    align-items: center;
+    border-radius: 6px;
+    display: inline-flex;
+    font-weight: 800;
+    min-height: 2.5rem;
+    text-decoration: none;
+  }
+
+  .lesson-task-header__back {
+    border: 1px solid var(--aiv-action-primary);
+    color: var(--aiv-action-primary);
+    justify-content: center;
+    padding: 0.42rem 0.72rem;
+    white-space: nowrap;
+  }
+
+  .lesson-task-header__jumps {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    justify-content: end;
+    max-width: 20rem;
+  }
+
+  .lesson-task-header__jumps a {
+    background: color-mix(in srgb, var(--aiv-bg-canvas) 22%, transparent);
+    border: 1px solid var(--aiv-line-subtle);
+    color: var(--aiv-text-secondary);
+    font-size: 0.88rem;
+    padding: 0.28rem 0.58rem;
+  }
+
+  .lesson-task-header a:focus-visible {
+    outline: 3px solid var(--aiv-focus-ring);
+    outline-offset: 3px;
+  }
+
+  @media (max-width: 860px) {
+    .lesson-task-header {
+      grid-template-columns: 1fr;
+      padding: 0.95rem;
+    }
+
+    .lesson-task-header h1 {
+      max-width: none;
+    }
+
+    .lesson-task-header__actions {
+      justify-items: start;
+    }
+
+    .lesson-task-header__jumps {
+      justify-content: start;
+      max-width: none;
+    }
+  }
+</style>

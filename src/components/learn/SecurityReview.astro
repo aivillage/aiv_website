@@ -1,0 +1,82 @@
+---
+import { securityLensLabels } from "../../utils/learn";
+
+type Props = {
+  lens: string;
+  text: string;
+  checklist?: string[];
+  id?: string;
+};
+
+const { lens, text, checklist = [], id = "security-review" } = Astro.props;
+const cleanText = text.trim();
+const visibleChecklist = checklist.filter(Boolean).slice(0, 4);
+---
+
+{cleanText && (
+  <section id={id} class="security-review learn-surface-security" aria-labelledby={`${id}-heading`}>
+    <div class="security-review__header">
+      <span>{securityLensLabels[lens] || "Security Lens"}</span>
+      <h2 id={`${id}-heading`}>Security Review</h2>
+    </div>
+    <p>{cleanText}</p>
+    <p class="security-review__move-on">Before you move on, review the artifact above through this lens.</p>
+    {visibleChecklist.length > 0 && (
+      <ul class="security-review__checklist" aria-label="Artifact review checklist">
+        {visibleChecklist.map((item) => <li>Check {item}</li>)}
+      </ul>
+    )}
+  </section>
+)}
+
+<style>
+  .security-review {
+    display: grid;
+    gap: 0.6rem;
+    padding: 0.9rem;
+  }
+
+  .security-review__header {
+    display: grid;
+    gap: 0.18rem;
+  }
+
+  .security-review__header span {
+    color: var(--aiv-text-muted);
+    font-size: 0.76rem;
+    font-weight: 900;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  .security-review h2,
+  .security-review p,
+  .security-review ul {
+    margin: 0;
+  }
+
+  .security-review h2 {
+    font-size: 1.16rem;
+    line-height: 1.15;
+  }
+
+  .security-review p {
+    color: var(--aiv-text-secondary);
+    line-height: 1.42;
+  }
+
+  .security-review__move-on {
+    color: var(--aiv-text-primary);
+    font-weight: 800;
+  }
+
+  .security-review__checklist {
+    display: grid;
+    gap: 0.35rem;
+    padding-left: 1.1rem;
+  }
+
+  .security-review__checklist li {
+    color: var(--aiv-text-secondary);
+  }
+</style>

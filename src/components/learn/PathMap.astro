@@ -1,0 +1,266 @@
+---
+import type { CollectionEntry } from "astro:content";
+import StatusBadge from "./StatusBadge.astro";
+import { difficultyLabels, moduleTypeLabels, trackScopedModulePath } from "../../utils/learn";
+
+type Props = {
+  track: CollectionEntry<"learnTracks">;
+  modules: CollectionEntry<"learnModules">[];
+};
+
+const { track, modules } = Astro.props;
+
+function shouldShowModuleStatus(status: CollectionEntry<"learnModules">["data"]["status"]) {
+  return ["coming_soon", "stale"].includes(status);
+}
+
+function shouldShowDifficulty(difficulty: CollectionEntry<"learnModules">["data"]["difficulty"]) {
+  return ["advanced", "expert"].includes(difficulty);
+}
+---
+
+<section class="path-map learn-surface-path" aria-labelledby="path-map-heading">
+  <div class="path-map__header">
+    <div>
+      <span class="path-map__eyebrow">Learning path</span>
+      <h2 id="path-map-heading">Follow the module path</h2>
+    </div>
+    {modules.length > 0 && <p>{modules.length} public {modules.length === 1 ? "module" : "modules"}</p>}
+  </div>
+
+  {modules.length > 0 ? (
+    <ol class="path-map__list">
+      {modules.map((module, index) => {
+        const href = trackScopedModulePath(track, module);
+        const actionLabel = index === 0 ? "Start" : "Open module";
+        return (
+          <li class="path-map__item">
+            <div class="path-map__marker" aria-label={`Module ${index + 1}`}>{index + 1}</div>
+            <div class="path-map__main">
+              <div class="path-map__meta">
+                {shouldShowModuleStatus(module.data.status) && <StatusBadge value={module.data.status} />}
+                <span>{moduleTypeLabels[module.data.moduleType]}</span>
+                {shouldShowDifficulty(module.data.difficulty) && <span>{difficultyLabels[module.data.difficulty]}</span>}
+              </div>
+              <h3><a href={href}>{module.data.title}</a></h3>
+              <p>{module.data.summary}</p>
+            </div>
+            <div class="path-map__artifact">
+              <span>Artifact</span>
+              <p>{module.data.requiredArtifact || "Checkpoint being refined."}</p>
+            </div>
+            <a class="path-map__action" href={href}>{actionLabel}</a>
+          </li>
+        );
+      })}
+    </ol>
+  ) : (
+    <div class="path-map__empty">
+      <h3>{track.data.status === "coming_soon" ? "Module path coming soon" : "No public modules yet"}</h3>
+      <p>
+        {track.data.status === "coming_soon"
+          ? "This track is visible as a roadmap, but its module path is not public yet."
+          : "This track is in the curriculum index, but no public module sequence is available yet."}
+      </p>
+    </div>
+  )}
+</section>
+
+<style>
+  .path-map {
+    display: grid;
+    gap: 0.75rem;
+    padding: 0.9rem;
+  }
+
+  .path-map__header {
+    align-items: end;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: space-between;
+  }
+
+  .path-map__header h2,
+  .path-map__header p,
+  .path-map__main h3,
+  .path-map__main p,
+  .path-map__artifact p,
+  .path-map__empty h3,
+  .path-map__empty p {
+    margin: 0;
+  }
+
+  .path-map__header p {
+    color: var(--aiv-text-muted);
+    font-weight: 800;
+  }
+
+  .path-map__eyebrow,
+  .path-map__artifact span {
+    color: var(--aiv-text-muted);
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  .path-map__list {
+    display: grid;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .path-map__item {
+    align-items: start;
+    display: grid;
+    gap: 0.65rem;
+    grid-template-columns: auto minmax(0, 1fr) minmax(13rem, 0.38fr) auto;
+    padding: 0.65rem 0;
+    position: relative;
+  }
+
+  .path-map__item + .path-map__item {
+    border-top: 1px solid color-mix(in srgb, var(--aiv-action-primary) 28%, var(--aiv-line-subtle));
+  }
+
+  .path-map__marker {
+    align-items: center;
+    background: var(--aiv-action-primary);
+    border-radius: 999px;
+    color: var(--aiv-bg-canvas);
+    display: inline-flex;
+    font-family: var(--aiv-font-mono);
+    font-weight: 900;
+    height: 2rem;
+    justify-content: center;
+    margin-top: 0.15rem;
+    width: 2rem;
+  }
+
+  .path-map__main {
+    display: grid;
+    gap: 0.28rem;
+    min-width: 0;
+  }
+
+  .path-map__main h3 {
+    font-size: 1rem;
+    line-height: 1.2;
+  }
+
+  .path-map__main p {
+    color: var(--aiv-text-secondary);
+    display: -webkit-box;
+    font-size: 0.95rem;
+    line-height: 1.45;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+  }
+
+  .path-map__meta {
+    align-items: center;
+    color: var(--aiv-text-muted);
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 0.82rem;
+    gap: 0.42rem;
+  }
+
+  .path-map__artifact {
+    background: color-mix(in srgb, var(--aiv-bg-canvas) 16%, transparent);
+    border: 1px solid color-mix(in srgb, var(--aiv-action-secondary) 32%, var(--aiv-line-subtle));
+    border-radius: 6px;
+    display: grid;
+    gap: 0.25rem;
+    padding: 0.45rem 0.55rem;
+  }
+
+  .path-map__artifact p {
+    color: var(--aiv-text-primary);
+    display: -webkit-box;
+    font-size: 0.88rem;
+    line-height: 1.35;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+  }
+
+  .path-map__action {
+    align-items: center;
+    border: 1px solid var(--aiv-action-primary);
+    border-radius: 6px;
+    color: var(--aiv-action-primary);
+    display: inline-flex;
+    font-weight: 800;
+    justify-content: center;
+    min-height: 2.45rem;
+    padding: 0.42rem 0.7rem;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .path-map__item:first-child .path-map__action {
+    background: var(--aiv-action-primary);
+    color: var(--aiv-bg-canvas);
+  }
+
+  .path-map__empty {
+    display: grid;
+    gap: 0.35rem;
+    padding-block: 0.65rem;
+  }
+
+  .path-map__empty p {
+    color: var(--aiv-text-secondary);
+  }
+
+  .path-map__main a:focus-visible,
+  .path-map__action:focus-visible {
+    outline: 3px solid var(--aiv-focus-ring);
+    outline-offset: 3px;
+  }
+
+  @media (max-width: 980px) {
+    .path-map__item {
+      grid-template-columns: auto minmax(0, 1fr);
+    }
+
+    .path-map__artifact,
+    .path-map__action {
+      grid-column: 2;
+      justify-self: start;
+    }
+  }
+
+  @media (max-width: 540px) {
+    .path-map {
+      padding: 0.9rem;
+    }
+
+    .path-map__main p {
+      -webkit-line-clamp: 2;
+    }
+
+    .path-map__artifact p {
+      -webkit-line-clamp: 2;
+    }
+
+    .path-map__item {
+      grid-template-columns: 1fr;
+    }
+
+    .path-map__artifact,
+    .path-map__action {
+      grid-column: auto;
+    }
+
+    .path-map__marker {
+      border-radius: 6px;
+      height: 2rem;
+      width: 2.7rem;
+    }
+  }
+</style>

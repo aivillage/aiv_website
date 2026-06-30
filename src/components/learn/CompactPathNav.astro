@@ -1,0 +1,207 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { canRenderLearnTrack, trackPath, trackScopedModulePath } from "../../utils/learn";
+
+type TrackContext = {
+  track: CollectionEntry<"learnTracks">;
+  moduleIndex: number;
+  moduleCount: number;
+  previousModule?: CollectionEntry<"learnModules">;
+  nextModule?: CollectionEntry<"learnModules">;
+};
+
+type JumpLink = {
+  href: string;
+  label: string;
+};
+
+type Props = {
+  module: CollectionEntry<"learnModules">;
+  trackContext?: TrackContext;
+  globalTrackContext?: TrackContext;
+  tracks?: CollectionEntry<"learnTracks">[];
+  canonicalTracks?: CollectionEntry<"learnTracks">[];
+  jumpLinks?: JumpLink[];
+  variant?: "rail" | "mobile" | "footer";
+};
+
+const {
+  module: learnModule,
+  trackContext,
+  globalTrackContext,
+  tracks = [],
+  canonicalTracks = [],
+  jumpLinks = [],
+  variant = "rail",
+} = Astro.props;
+const context = trackContext || globalTrackContext;
+const trackChoices = (canonicalTracks.length > 0 ? canonicalTracks : tracks.filter(canRenderLearnTrack))
+  .filter((track, index, list) => list.findIndex((candidate) => candidate.id === track.id) === index);
+const hasContext = Boolean(context && context.moduleIndex >= 0);
+const navLabel = variant === "rail" ? "Path navigation" : "Module path navigation";
+---
+
+<nav class:list={["compact-path-nav", `compact-path-nav--${variant}`]} aria-label={navLabel}>
+  {hasContext && context ? (
+    <>
+      <div class="compact-path-nav__status">
+        <span>Module {context.moduleIndex + 1} of {context.moduleCount}</span>
+        <strong>{context.track.data.title}</strong>
+      </div>
+      <div class="compact-path-nav__links">
+        <div>
+          <span>Previous</span>
+          {context.previousModule ? (
+            <a href={trackScopedModulePath(context.track, context.previousModule)}>{context.previousModule.data.title}</a>
+          ) : (
+            <p>This is the first module.</p>
+          )}
+        </div>
+        <div class="compact-path-nav__next">
+          <span>Next</span>
+          {context.nextModule ? (
+            <a href={trackScopedModulePath(context.track, context.nextModule)}>{context.nextModule.data.title}</a>
+          ) : (
+            <p>This is the final module.</p>
+          )}
+        </div>
+        <div>
+          <span>Track</span>
+          <a href={trackPath(context.track)}>Back to track</a>
+        </div>
+      </div>
+    </>
+  ) : trackChoices.length > 0 ? (
+    <>
+      <div class="compact-path-nav__status">
+        <span>Track context</span>
+        <strong>{trackChoices.length === 1 ? trackChoices[0].data.title : "Choose a track path"}</strong>
+      </div>
+      <div class="compact-path-nav__links">
+        {trackChoices.map((track) => (
+          <div>
+            <span>Open in track</span>
+            <a href={trackScopedModulePath(track, learnModule)}>{track.data.title}</a>
+          </div>
+        ))}
+      </div>
+    </>
+  ) : (
+    <div class="compact-path-nav__status">
+      <span>Path</span>
+      <strong><a href="/learn/">Back to Learn</a></strong>
+    </div>
+  )}
+
+  {jumpLinks.length > 0 && (
+    <div class="compact-path-nav__jumps" aria-label="Jump to section">
+      {jumpLinks.map((link) => <a href={link.href}>{link.label}</a>)}
+    </div>
+  )}
+</nav>
+
+<style>
+  .compact-path-nav {
+    background: color-mix(in srgb, var(--aiv-bg-panel) 68%, transparent);
+    border: 1px solid var(--aiv-line-subtle);
+    border-radius: 8px;
+    display: grid;
+    gap: 0.75rem;
+    min-width: 0;
+    padding: 0.85rem;
+  }
+
+  .compact-path-nav--rail {
+    position: relative;
+  }
+
+  .compact-path-nav--mobile,
+  .compact-path-nav--footer {
+    display: none;
+  }
+
+  .compact-path-nav__status {
+    display: grid;
+    gap: 0.22rem;
+  }
+
+  .compact-path-nav__status span,
+  .compact-path-nav__links span {
+    color: var(--aiv-text-muted);
+    font-size: 0.76rem;
+    font-weight: 900;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  .compact-path-nav__status strong {
+    color: var(--aiv-text-primary);
+    font-size: 0.98rem;
+    line-height: 1.25;
+  }
+
+  .compact-path-nav__links {
+    display: grid;
+    gap: 0.55rem;
+  }
+
+  .compact-path-nav__links > div {
+    border-top: 1px solid var(--aiv-line-subtle);
+    display: grid;
+    gap: 0.18rem;
+    padding-top: 0.55rem;
+  }
+
+  .compact-path-nav__links p {
+    color: var(--aiv-text-muted);
+    margin: 0;
+  }
+
+  .compact-path-nav__next a {
+    color: var(--aiv-action-primary);
+    font-weight: 900;
+  }
+
+  .compact-path-nav__jumps {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+
+  .compact-path-nav__jumps a {
+    background: color-mix(in srgb, var(--aiv-bg-canvas) 24%, transparent);
+    border: 1px solid var(--aiv-line-subtle);
+    border-radius: 999px;
+    color: var(--aiv-text-secondary);
+    font-size: 0.84rem;
+    font-weight: 800;
+    min-height: 2.25rem;
+    padding: 0.3rem 0.58rem;
+    text-decoration: none;
+  }
+
+  .compact-path-nav a:focus-visible {
+    outline: 3px solid var(--aiv-focus-ring);
+    outline-offset: 3px;
+  }
+
+  @media (max-width: 1099px) {
+    .compact-path-nav--rail {
+      display: none;
+    }
+
+    .compact-path-nav--mobile,
+    .compact-path-nav--footer {
+      display: grid;
+    }
+
+    .compact-path-nav--mobile {
+      gap: 0.5rem;
+      padding: 0.68rem 0.78rem;
+    }
+
+    .compact-path-nav--mobile .compact-path-nav__links {
+      display: none;
+    }
+  }
+</style>

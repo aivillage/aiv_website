@@ -793,6 +793,67 @@ blockquote {
   }
 }
 
+/* ===================================
+   LEARN SEMANTIC SURFACES
+   =================================== */
+
+.learn-surface-path,
+.learn-surface-task,
+.learn-surface-worksheet,
+.learn-surface-security,
+.learn-surface-exercise,
+.learn-surface-reference,
+.learn-surface-roadmap {
+  border-radius: 8px;
+  min-width: 0;
+}
+
+.learn-surface-path {
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--aiv-action-primary) 13%, transparent), transparent 38%),
+    color-mix(in srgb, var(--aiv-bg-panel) 82%, transparent);
+  border: 1px solid color-mix(in srgb, var(--aiv-action-primary) 46%, var(--aiv-line-subtle));
+  border-left: 4px solid var(--aiv-action-primary);
+}
+
+.learn-surface-task {
+  background: color-mix(in srgb, var(--aiv-action-primary) 9%, var(--aiv-bg-panel));
+  border: 1px solid color-mix(in srgb, var(--aiv-action-primary) 58%, var(--aiv-line-subtle));
+  border-top: 4px solid var(--aiv-action-primary);
+}
+
+.learn-surface-worksheet {
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--aiv-action-secondary) 18%, transparent), transparent 34%),
+    color-mix(in srgb, var(--aiv-bg-panel) 86%, transparent);
+  border: 1px solid color-mix(in srgb, var(--aiv-action-secondary) 55%, var(--aiv-line-subtle));
+  border-left: 4px solid var(--aiv-action-secondary);
+}
+
+.learn-surface-security {
+  background: color-mix(in srgb, var(--aiv-warning) 11%, var(--aiv-bg-panel));
+  border: 1px solid color-mix(in srgb, var(--aiv-warning) 55%, var(--aiv-line-subtle));
+  border-left: 4px solid var(--aiv-warning);
+}
+
+.learn-surface-exercise {
+  background: color-mix(in srgb, var(--aiv-risk) 8%, var(--aiv-bg-panel));
+  border: 1px solid color-mix(in srgb, var(--aiv-risk) 42%, var(--aiv-line-subtle));
+  border-left: 4px solid var(--aiv-risk);
+}
+
+.learn-surface-reference {
+  background: color-mix(in srgb, var(--aiv-bg-panel) 58%, transparent);
+  border: 1px solid color-mix(in srgb, var(--aiv-line-subtle) 78%, transparent);
+  box-shadow: none;
+}
+
+.learn-surface-roadmap {
+  background: color-mix(in srgb, var(--aiv-nested-bg) 55%, transparent);
+  border: 1px dashed color-mix(in srgb, var(--aiv-text-muted) 58%, var(--aiv-line-subtle));
+  box-shadow: none;
+}
+
 .site-header .site-title::before,
 .site-title::before {
   animation: none;

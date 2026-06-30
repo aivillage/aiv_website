@@ -1,0 +1,231 @@
+---
+import type { CollectionEntry } from "astro:content";
+import YouTubeEmbed from "./YouTubeEmbed.astro";
+import { accessModeLabels, formatLabel, resourcePath } from "../../utils/learn";
+
+type ResourceItem = {
+  resource: CollectionEntry<"learnResources">;
+  step?: number;
+  note?: string;
+  sourceIndex: number;
+};
+
+type Props = {
+  item: ResourceItem;
+  index: number;
+  totalSteps: number;
+  moduleArtifact?: string;
+  isFeatured?: boolean;
+};
+
+const { item, index, totalSteps, moduleArtifact = "module checkpoint", isFeatured = false } = Astro.props;
+const resource = item.resource;
+const mediaType = resource.data.mediaType || resource.data.resourceType;
+const stepNumber = item.step ?? index + 1;
+const stepLabel = totalSteps === 1 ? "First action" : `Step ${stepNumber}`;
+const supportText = item.note
+  || resource.data.watchFocus
+  || resource.data.checkpointPrompt
+  || `Use this ${formatLabel(resource.data.resourceType).toLowerCase()} to support the ${moduleArtifact}.`;
+const accessLabel = accessModeLabels[resource.data.accessMode] || accessModeLabels.direct_open;
+const isUnderReview = resource.data.reviewStatus !== "accepted";
+const shouldRenderVideo = Boolean(
+  isFeatured &&
+  resource.data.sourcePlatform === "youtube" &&
+  resource.data.embedAllowed &&
+  (resource.data.videoId || resource.data.playlistId),
+);
+
+function actionLabel(resource: CollectionEntry<"learnResources">) {
+  if (/template/i.test(resource.data.title)) return "Use template";
+  if (resource.data.mediaType === "video" || resource.data.resourceType === "video" || resource.data.mediaType === "playlist") return "Watch";
+  if (resource.data.resourceType === "lab" || resource.data.resourceType === "tool" || resource.data.resourceType === "repo") return "Practice";
+  return "Read";
+}
+---
+
+<article class:list={["lesson-step", shouldRenderVideo && "lesson-step--has-video"]}>
+  <div class="lesson-step__marker">{stepLabel}</div>
+  <div class="lesson-step__body">
+    <div class="lesson-step__content">
+      <span class="lesson-step__action">{actionLabel(resource)}</span>
+      <h3><a href={resourcePath(resource)}>{resource.data.title}</a></h3>
+      <p>{supportText}</p>
+      <div class="lesson-step__meta">
+        <span>{resource.data.provider}</span>
+        <span>{formatLabel(resource.data.resourceType)}</span>
+        <span class="lesson-step__badge">{accessLabel}</span>
+        {isUnderReview && <span class="lesson-step__badge lesson-step__badge--review">Under review</span>}
+      </div>
+      <div class="lesson-step__actions">
+        <a class="lesson-step__link lesson-step__link--notes" href={resourcePath(resource)}>View AIV notes</a>
+        <a class="lesson-step__link lesson-step__link--original" href={resource.data.canonicalUrl} target="_blank" rel="noopener noreferrer">Open original</a>
+      </div>
+    </div>
+
+    {shouldRenderVideo && (
+      <div class="lesson-step__video">
+        <YouTubeEmbed
+          title={resource.data.title}
+          creator={resource.data.creator || resource.data.attribution || resource.data.provider}
+          canonicalUrl={resource.data.canonicalUrl}
+          channelUrl={resource.data.channelUrl}
+          videoId={resource.data.videoId}
+          playlistId={resource.data.playlistId}
+          playlistUrl={resource.data.playlistUrl}
+          mediaType={mediaType}
+          embedPrivacyMode={resource.data.embedPrivacyMode}
+        />
+      </div>
+    )}
+  </div>
+</article>
+
+<style>
+  .lesson-step {
+    background: color-mix(in srgb, var(--aiv-bg-panel) 70%, transparent);
+    border: 1px solid color-mix(in srgb, var(--aiv-action-primary) 28%, var(--aiv-line-subtle));
+    border-radius: 8px;
+    display: grid;
+    gap: 0.85rem;
+    grid-template-columns: auto minmax(0, 1fr);
+    min-width: 0;
+    padding: 0.95rem;
+  }
+
+  .lesson-step__marker {
+    align-items: center;
+    background: var(--aiv-action-primary);
+    border-radius: 6px;
+    color: var(--aiv-bg-canvas);
+    display: inline-flex;
+    font-family: var(--aiv-font-mono);
+    font-size: 0.86rem;
+    font-weight: 900;
+    justify-content: center;
+    line-height: 1.15;
+    min-height: 2.55rem;
+    min-width: 3.2rem;
+    padding: 0.35rem 0.62rem;
+    text-align: center;
+  }
+
+  .lesson-step__body {
+    display: grid;
+    gap: 0.85rem;
+    min-width: 0;
+  }
+
+  .lesson-step--has-video .lesson-step__body {
+    align-items: start;
+    grid-template-columns: minmax(0, 1fr) minmax(240px, 340px);
+  }
+
+  .lesson-step__content {
+    display: grid;
+    gap: 0.55rem;
+    min-width: 0;
+  }
+
+  .lesson-step__action {
+    color: var(--aiv-action-secondary);
+    font-family: var(--aiv-font-mono);
+    font-size: 0.78rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .lesson-step h3,
+  .lesson-step p {
+    margin: 0;
+  }
+
+  .lesson-step h3 {
+    font-size: clamp(1.12rem, 1.8vw, 1.42rem);
+    line-height: 1.2;
+  }
+
+  .lesson-step p {
+    color: var(--aiv-text-secondary);
+    line-height: 1.45;
+    max-width: 74ch;
+  }
+
+  .lesson-step__meta,
+  .lesson-step__actions {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+
+  .lesson-step__meta {
+    color: var(--aiv-text-muted);
+    font-size: 0.88rem;
+  }
+
+  .lesson-step__badge {
+    background: var(--aiv-nested-bg);
+    border: 1px solid var(--aiv-nested-border);
+    border-radius: 999px;
+    color: var(--aiv-text-secondary);
+    display: inline-flex;
+    font-size: 0.78rem;
+    padding: 0.12rem 0.48rem;
+  }
+
+  .lesson-step__badge--review {
+    border-color: var(--aiv-warning);
+    color: var(--aiv-warning);
+  }
+
+  .lesson-step__link {
+    align-items: center;
+    border-radius: 6px;
+    display: inline-flex;
+    font-weight: 900;
+    justify-content: center;
+    min-height: 2.65rem;
+    padding: 0.46rem 0.78rem;
+    text-decoration: none;
+  }
+
+  .lesson-step__link--notes {
+    border: 1px solid var(--aiv-line-strong);
+    color: var(--aiv-action-primary);
+  }
+
+  .lesson-step__link--original {
+    background: var(--aiv-action-primary);
+    border: 1px solid var(--aiv-action-primary);
+    color: var(--aiv-bg-canvas);
+  }
+
+  .lesson-step__video {
+    max-width: 340px;
+    min-width: 0;
+    width: 100%;
+  }
+
+  .lesson-step a:focus-visible,
+  .lesson-step button:focus-visible {
+    outline: 3px solid var(--aiv-focus-ring);
+    outline-offset: 3px;
+  }
+
+  @media (max-width: 820px) {
+    .lesson-step,
+    .lesson-step--has-video .lesson-step__body {
+      grid-template-columns: 1fr;
+    }
+
+    .lesson-step__marker {
+      justify-self: start;
+    }
+
+    .lesson-step__video {
+      max-width: none;
+    }
+  }
+</style>

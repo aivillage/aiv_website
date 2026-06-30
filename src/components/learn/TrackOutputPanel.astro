@@ -1,0 +1,235 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+type Props = {
+  track: CollectionEntry<"learnTracks">;
+  modules: CollectionEntry<"learnModules">[];
+  compact?: boolean;
+};
+
+const { track, modules, compact = false } = Astro.props;
+
+function trackOutputForTrack(track: CollectionEntry<"learnTracks">) {
+  const outputs = {
+    "ai-practitioner": {
+      title: "AI Workflow Plan",
+      rollup: "Module artifacts become one reviewed AI workflow plan with allowed tools, allowed data, review levels, records, and escalation.",
+      fields: ["workflow", "allowed tools", "allowed data", "review level", "recordkeeping", "escalation"],
+    },
+    "ai-builder-core": {
+      title: "Team Knowledge Assistant design package",
+      rollup: "Each module adds one design-package part for a small AI app: boundary, API plan, schema, retrieval, tools, evals, and observability.",
+      fields: ["architecture", "API boundary", "schema", "retrieval", "tools", "evals", "observability"],
+    },
+    "agentic-ai-advanced-builder": {
+      title: "Agent Risk Note",
+      rollup: "The path rolls autonomy, tools, memory, retrieval, approvals, observability, evals, MCP scope, rollback, and stop controls into one risk note.",
+      fields: ["goal", "autonomy", "tools", "memory", "approvals", "evals", "MCP scope", "rollback"],
+    },
+    "evals-reliability-grt": {
+      title: "Inspect eval package + eval card + finding memo",
+      rollup: "Inspect run notes, sample review, eval-card fields, transparency checks, and GRT-style claims form the evidence package.",
+      fields: ["run package", "eval card", "sample evidence", "limitations", "non-claims", "finding memo"],
+    },
+    "ai-security-core": {
+      title: "AI Security Core review pack",
+      rollup: "Threat-model, OWASP, ATLAS, NIST, control, owner, and evidence entries become a reusable review pack for one AI system boundary.",
+      fields: ["system boundary", "risk category", "evidence", "control", "owner", "review question"],
+    },
+    "defensive-ai-engineering": {
+      title: "Thin beta Defensive AI Engineering control pack",
+      rollup: "This beta path builds a thin defensive control pack for review. It is not a complete defensive AI engineering curriculum.",
+      fields: ["risk pattern", "control", "log signal", "regression test", "owner", "escalation"],
+    },
+    "offensive-ai-security-red-teaming": {
+      title: "ROE + defensive red-team report package",
+      rollup: "Rules of engagement, bounded lab debriefs, scoped evidence, mitigations, regression tests, and disclosure boundaries become the report package.",
+      fields: ["scope", "authorized target", "finding", "evidence", "impact", "mitigation", "disclosure boundary"],
+    },
+    "governance-responsible-use": {
+      title: "Governance evidence pack",
+      rollup: "This evidence pack is coming soon. The public page is a roadmap while governance modules remain draft.",
+      fields: ["use case", "framework", "owner", "evidence", "caveat", "review cadence"],
+    },
+  } as const;
+
+  return outputs[track.data.slug as keyof typeof outputs] || {
+    title: track.data.requiredArtifacts[0] || "Track output",
+    rollup: "Module artifacts build toward the track output and keep evidence, limits, and review ownership visible.",
+    fields: track.data.requiredArtifacts.slice(0, 6),
+  };
+}
+
+const trackOutput = trackOutputForTrack(track);
+const supportingArtifacts = track.data.requiredArtifacts.filter(Boolean);
+const visibleSupportingArtifacts = supportingArtifacts.slice(0, compact ? 2 : 3);
+const hiddenSupportingCount = Math.max(supportingArtifacts.length - visibleSupportingArtifacts.length, 0);
+const moduleArtifacts = Array.from(new Set(modules.map((module) => module.data.requiredArtifact).filter(Boolean)));
+const supportingArtifactText = visibleSupportingArtifacts.length > 0
+  ? `${visibleSupportingArtifacts.join(" / ")}${hiddenSupportingCount > 0 ? ` / +${hiddenSupportingCount} more` : ""}`
+  : trackOutput.title;
+const moduleRollupText = moduleArtifacts.length > 0
+  ? `${moduleArtifacts.length} module ${moduleArtifacts.length === 1 ? "artifact rolls" : "artifacts roll"} into this output; each artifact is called out in the path below.`
+  : "Module-level artifact details will appear in the path when public modules are available.";
+const needsStatusNote = track.data.status === "stale" || (modules.length === 0 && track.data.slug !== "governance-responsible-use");
+const statusNote = track.data.slug === "governance-responsible-use"
+  ? "Governance evidence-pack modules are not public yet; treat this page as a coming-soon roadmap."
+  : track.data.slug === "defensive-ai-engineering"
+    ? "This is a thin beta control-pack path, not a claim of complete defensive coverage."
+    : modules.length === 0
+      ? "Public module worksheets are not available for this track yet."
+      : track.data.status === "stale"
+        ? "This track is marked for review; use it as beta curriculum context."
+        : "";
+---
+
+<section class:list={["track-output learn-surface-worksheet", compact && "track-output--compact"]} aria-labelledby="track-output-heading">
+  <div class="track-output__intro">
+    <span>You will produce</span>
+    <h2 id="track-output-heading">{trackOutput.title}</h2>
+    <p>{trackOutput.rollup}</p>
+  </div>
+
+  <div class="track-output__grid">
+    <div>
+      <h3>Track output fields</h3>
+      <ul class="track-output__field-list">
+        {trackOutput.fields.map((field) => <li>{field}</li>)}
+      </ul>
+    </div>
+    <div>
+      <h3>Supporting artifacts</h3>
+      <p class="track-output__artifact-summary">{supportingArtifactText}</p>
+    </div>
+    <div>
+      <h3>Path rollup</h3>
+      <p class="track-output__rollup">{moduleRollupText}</p>
+    </div>
+  </div>
+
+  {needsStatusNote && statusNote && <p class="track-output__note">{statusNote}</p>}
+</section>
+
+<style>
+  .track-output {
+    align-items: start;
+    display: grid;
+    gap: 0.55rem 0.85rem;
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.15fr);
+    padding: 0.7rem 0.85rem;
+  }
+
+  .track-output--compact {
+    gap: 0.85rem;
+    padding: 1rem;
+  }
+
+  .track-output__intro {
+    display: grid;
+    gap: 0.25rem;
+  }
+
+  .track-output__intro span {
+    color: var(--aiv-text-muted);
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  .track-output h2,
+  .track-output h3,
+  .track-output p,
+  .track-output ul {
+    margin: 0;
+  }
+
+  .track-output h2 {
+    font-size: clamp(1.18rem, 1.45vw, 1.52rem);
+    line-height: 1.15;
+  }
+
+  .track-output h3 {
+    font-size: 0.98rem;
+  }
+
+  .track-output__intro p,
+  .track-output__rollup {
+    color: var(--aiv-text-secondary);
+    font-size: 0.96rem;
+    line-height: 1.4;
+    max-width: 82ch;
+  }
+
+  .track-output__grid {
+    display: grid;
+    gap: 0.45rem;
+    grid-template-columns: 1fr;
+  }
+
+  .track-output__grid > div {
+    display: grid;
+    gap: 0.55rem;
+    min-width: 0;
+  }
+
+  .track-output__field-list,
+  .track-output__artifact-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.28rem;
+    list-style: none;
+    padding: 0;
+  }
+
+  .track-output__field-list li {
+    border-bottom: 1px dotted color-mix(in srgb, var(--aiv-action-secondary) 58%, var(--aiv-line-subtle));
+    color: var(--aiv-text-primary);
+    font-size: 0.88rem;
+    font-weight: 700;
+    padding-block: 0.12rem;
+  }
+
+  .track-output__artifact-list li {
+    background: color-mix(in srgb, var(--aiv-bg-canvas) 18%, transparent);
+    border: 1px solid color-mix(in srgb, var(--aiv-action-secondary) 32%, var(--aiv-line-subtle));
+    border-radius: 6px;
+    color: var(--aiv-text-primary);
+    font-size: 0.88rem;
+    line-height: 1.3;
+    padding: 0.35rem 0.55rem;
+  }
+
+  .track-output__artifact-summary {
+    color: var(--aiv-text-secondary);
+    display: -webkit-box;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .track-output__rollup {
+    color: var(--aiv-text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.4;
+    max-width: 82ch;
+  }
+
+  .track-output__note {
+    color: var(--aiv-text-muted);
+    font-size: 0.94rem;
+    grid-column: 1 / -1;
+  }
+
+  @media (max-width: 760px) {
+    .track-output {
+      grid-template-columns: 1fr;
+    }
+
+    .track-output__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
