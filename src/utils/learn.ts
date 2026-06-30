@@ -139,6 +139,127 @@ export function isPlaylistResource(entry: { data: { resourceType?: string; media
   return entry.data.resourceType === "playlist" || entry.data.mediaType === "playlist";
 }
 
+type ResourceReferenceLike = string | { id?: string; slug?: string };
+
+type ModuleVideoLike = {
+  id: string;
+  data: {
+    resources?: Array<{
+      resource: ResourceReferenceLike;
+      role?: string;
+      step?: number;
+    }>;
+  };
+};
+
+type AcceptedVideoLike = {
+  id: string;
+  data: {
+    slug?: string;
+    title?: string;
+    provider?: string;
+    creator?: string;
+    attribution?: string;
+    canonicalFor?: string[];
+    sourcePlatform?: string;
+    mediaType?: string;
+    resourceType?: string;
+    embedAllowed?: boolean;
+    reviewStatus?: string;
+    accessMode?: string;
+    loginRequired?: boolean;
+    ageRestricted?: boolean;
+    status?: string;
+    rightsMode?: string;
+    videoId?: string;
+    featuredEmbed?: boolean;
+  };
+};
+
+const blockedVideoSurfacePattern = /hackaprompt|dreadnode|crucible|ctf/i;
+const hiddenVideoStatuses = new Set(["draft", "coming_soon", "deferred", "rejected"]);
+const moduleResourceRoleRank: Record<string, number> = {
+  required: 0,
+  optional: 1,
+  deeper: 2,
+};
+
+function resourceIdentityText(resource: AcceptedVideoLike) {
+  return [
+    resource.id,
+    resource.data.slug,
+    resource.data.title,
+    resource.data.provider,
+    resource.data.creator,
+    resource.data.attribution,
+    ...(resource.data.canonicalFor || []),
+  ].filter(Boolean).join(" ");
+}
+
+function moduleResourceLinks(module: ModuleVideoLike) {
+  return (module.data.resources || []).map((link, sourceIndex) => ({ ...link, sourceIndex }));
+}
+
+function resourceMapByRef<TResource extends AcceptedVideoLike>(resources: TResource[]) {
+  return new Map(resources.flatMap((resource) => [[entrySlug(resource), resource], [resource.id, resource]]));
+}
+
+export function hasAcceptedEmbeddableVideo(resource: AcceptedVideoLike) {
+  const type = resource.data.mediaType || resource.data.resourceType;
+
+  return Boolean(
+    resource.data.sourcePlatform === "youtube" &&
+    type === "video" &&
+    resource.data.embedAllowed === true &&
+    resource.data.reviewStatus === "accepted" &&
+    resource.data.accessMode === "direct_open" &&
+    resource.data.loginRequired === false &&
+    resource.data.ageRestricted === false &&
+    resource.data.videoId &&
+    resource.data.rightsMode === "official_embed" &&
+    !hiddenVideoStatuses.has(resource.data.status || "") &&
+    !blockedVideoSurfacePattern.test(resourceIdentityText(resource)),
+  );
+}
+
+export function getModuleAcceptedVideos<TModule extends ModuleVideoLike, TResource extends AcceptedVideoLike>(
+  module: TModule,
+  resources: TResource[],
+) {
+  const byRef = resourceMapByRef(resources);
+  const seen = new Set<string>();
+
+  return moduleResourceLinks(module)
+    .map((link) => ({
+      link,
+      resource: byRef.get(refId(link.resource)),
+    }))
+    .filter((item): item is { link: ReturnType<typeof moduleResourceLinks>[number]; resource: TResource } =>
+      Boolean(item.resource && hasAcceptedEmbeddableVideo(item.resource))
+    )
+    .sort((left, right) =>
+      (moduleResourceRoleRank[left.link.role || "deeper"] - moduleResourceRoleRank[right.link.role || "deeper"]) ||
+      ((left.link.step ?? left.link.sourceIndex + 10000) - (right.link.step ?? right.link.sourceIndex + 10000)) ||
+      ((right.resource.data.featuredEmbed ? 1 : 0) - (left.resource.data.featuredEmbed ? 1 : 0)) ||
+      ((left.resource.data.title || "").localeCompare(right.resource.data.title || ""))
+    )
+    .map(({ resource }) => resource)
+    .filter((resource) => {
+      const key = entrySlug(resource);
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+}
+
+export function getModuleFeaturedVideo<TModule extends ModuleVideoLike, TResource extends AcceptedVideoLike>(
+  module: TModule,
+  resources: TResource[],
+) {
+  const acceptedVideos = getModuleAcceptedVideos(module, resources);
+  return acceptedVideos.find((resource) => resource.data.featuredEmbed) || acceptedVideos[0];
+}
+
 export function byTitle<T extends { data: { title?: string; term?: string } }>(left: T, right: T) {
   return (left.data.title || left.data.term || "").localeCompare(right.data.title || right.data.term || "");
 }

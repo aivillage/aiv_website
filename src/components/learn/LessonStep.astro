@@ -1,7 +1,7 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import YouTubeEmbed from "./YouTubeEmbed.astro";
-import { accessModeLabels, formatLabel, resourcePath } from "../../utils/learn";
+import { accessModeLabels, formatLabel, hasAcceptedEmbeddableVideo, resourcePath } from "../../utils/learn";
 
 type ResourceItem = {
   resource: CollectionEntry<"learnResources">;
@@ -16,9 +16,10 @@ type Props = {
   totalSteps: number;
   moduleArtifact?: string;
   isFeatured?: boolean;
+  videoAnchorId?: string;
 };
 
-const { item, index, totalSteps, moduleArtifact = "module checkpoint", isFeatured = false } = Astro.props;
+const { item, index, totalSteps, moduleArtifact = "module checkpoint", isFeatured = false, videoAnchorId } = Astro.props;
 const resource = item.resource;
 const mediaType = resource.data.mediaType || resource.data.resourceType;
 const stepNumber = item.step ?? index + 1;
@@ -29,12 +30,7 @@ const supportText = item.note
   || `Use this ${formatLabel(resource.data.resourceType).toLowerCase()} to support the ${moduleArtifact}.`;
 const accessLabel = accessModeLabels[resource.data.accessMode] || accessModeLabels.direct_open;
 const isUnderReview = resource.data.reviewStatus !== "accepted";
-const shouldRenderVideo = Boolean(
-  isFeatured &&
-  resource.data.sourcePlatform === "youtube" &&
-  resource.data.embedAllowed &&
-  (resource.data.videoId || resource.data.playlistId),
-);
+const shouldRenderVideo = Boolean(isFeatured && hasAcceptedEmbeddableVideo(resource));
 
 function actionLabel(resource: CollectionEntry<"learnResources">) {
   if (/template/i.test(resource.data.title)) return "Use template";
@@ -64,15 +60,13 @@ function actionLabel(resource: CollectionEntry<"learnResources">) {
     </div>
 
     {shouldRenderVideo && (
-      <div class="lesson-step__video">
+      <div id={videoAnchorId} class="lesson-step__video">
         <YouTubeEmbed
           title={resource.data.title}
           creator={resource.data.creator || resource.data.attribution || resource.data.provider}
           canonicalUrl={resource.data.canonicalUrl}
           channelUrl={resource.data.channelUrl}
           videoId={resource.data.videoId}
-          playlistId={resource.data.playlistId}
-          playlistUrl={resource.data.playlistUrl}
           mediaType={mediaType}
           embedPrivacyMode={resource.data.embedPrivacyMode}
         />

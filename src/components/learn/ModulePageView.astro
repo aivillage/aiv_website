@@ -196,11 +196,14 @@ const templateResource = templateResourceItem
       href: resourcePath(templateResourceItem.resource),
     }
   : undefined;
+const hasWatchAnchor = Boolean(featuredEmbed);
 const jumpLinks = [
-  requiredGroup && { href: "#lesson-steps", label: "Steps" },
-  { href: "#artifact-worksheet", label: "Worksheet" },
-  hasSecurityLensText && { href: "#security-review", label: "Security" },
+  { href: "#start", label: "Start" },
+  hasWatchAnchor && { href: "#watch", label: "Watch" },
+  { href: "#worksheet", label: "Worksheet" },
+  hasSecurityLensText && { href: "#security", label: "Security" },
   labs.length > 0 && { href: "#practice", label: "Practice" },
+  supplementalSections.length > 0 && { href: "#resources", label: "Resources" },
 ].filter(Boolean) as JumpLink[];
 ---
 
@@ -242,7 +245,7 @@ const jumpLinks = [
 
       <main class="learn-workbook-layout">
         {requiredGroup ? (
-          <section id="lesson-steps" class="learn-steps-section learn-surface-task" aria-labelledby="lesson-steps-heading">
+          <section id="start" class="learn-steps-section learn-surface-task" aria-labelledby="lesson-steps-heading">
             <div class="learn-section-heading">
               <div>
                 <span class="learn-kicker">Required path</span>
@@ -251,19 +254,23 @@ const jumpLinks = [
               <p>Do these required steps before reading the full notes or opening extra resources.</p>
             </div>
             <div class="learn-step-list">
-              {requiredGroup.items.map((item, index) => (
-                <LessonStep
-                  item={item}
-                  index={index}
-                  totalSteps={requiredGroup.items.length}
-                  moduleArtifact={learnModule.data.requiredArtifact}
-                  isFeatured={isFeaturedResourceItem(item)}
-                />
-              ))}
+              {requiredGroup.items.map((item, index) => {
+                const isFeatured = isFeaturedResourceItem(item);
+                return (
+                  <LessonStep
+                    item={item}
+                    index={index}
+                    totalSteps={requiredGroup.items.length}
+                    moduleArtifact={learnModule.data.requiredArtifact}
+                    isFeatured={isFeatured}
+                    videoAnchorId={isFeatured ? "watch" : undefined}
+                  />
+                );
+              })}
             </div>
           </section>
         ) : (
-          <section id="lesson-steps" class="learn-steps-section learn-surface-task" aria-labelledby="lesson-steps-heading">
+          <section id="start" class="learn-steps-section learn-surface-task" aria-labelledby="lesson-steps-heading">
             <div class="learn-section-heading">
               <div>
                 <span class="learn-kicker">Required path</span>
@@ -285,6 +292,7 @@ const jumpLinks = [
               relatedTrackTitle={artifactGuideTrack?.data.title}
               relatedModuleTitle={learnModule.data.title}
               compact
+              id="worksheet"
             />
 
             {hasSecurityLensText && (
@@ -292,6 +300,7 @@ const jumpLinks = [
                 lens={learnModule.data.securityLens}
                 text={learnModule.data.securityLensText}
                 checklist={securityChecklist}
+                id="security"
               />
             )}
 
@@ -375,7 +384,7 @@ const jumpLinks = [
           )}
 
           {supplementalSections.length > 0 && (
-            <section class="learn-more-resources learn-surface-reference" aria-labelledby="more-resources-heading">
+            <section id="resources" class="learn-more-resources learn-surface-reference" aria-labelledby="more-resources-heading">
               <div class="learn-section-heading">
                 <div>
                   <span class="learn-kicker">Support</span>
