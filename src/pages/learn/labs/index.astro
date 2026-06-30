@@ -2,11 +2,40 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import PageShell from "../../../components/layout/PageShell.astro";
-import { byTitle, canRenderLearnLab, formatLabel, labPath } from "../../../utils/learn";
+import {
+  byTitle,
+  canRenderLearnLab,
+  canRenderLearnModule,
+  entrySlug,
+  findPublicCanonicalTracksForModule,
+  formatLabel,
+  labPath,
+  modulePath,
+  refId,
+  trackScopedModulePath,
+} from "../../../utils/learn";
 
 const labs = (await getCollection("learnLabs", canRenderLearnLab)).sort(byTitle);
+const modules = (await getCollection("learnModules", canRenderLearnModule)).sort(byTitle);
+const tracks = await getCollection("learnTracks", ({ data }) => data.status !== "draft");
 const offensiveLabs = labs.filter((lab) => lab.data.isOffensive);
 const otherLabs = labs.filter((lab) => !lab.data.isOffensive);
+const labContextBySlug = new Map<string, { title: string; href: string; trackTitle?: string }>();
+
+for (const module of modules) {
+  const canonicalTracks = findPublicCanonicalTracksForModule(module, tracks);
+  const href = canonicalTracks.length === 1 ? trackScopedModulePath(canonicalTracks[0], module) : modulePath(module);
+  for (const labRef of module.data.labs || []) {
+    const labSlug = refId(labRef);
+    if (labSlug && !labContextBySlug.has(labSlug)) {
+      labContextBySlug.set(labSlug, {
+        title: module.data.title,
+        href,
+        trackTitle: canonicalTracks.length === 1 ? canonicalTracks[0].data.title : undefined,
+      });
+    }
+  }
+}
 ---
 
 <BaseLayout title="Learn Labs" canonical="/learn/labs/" description="Safety-bounded AI Village Learn exercise appendix.">
@@ -25,30 +54,34 @@ const otherLabs = labs.filter((lab) => !lab.data.isOffensive);
       <section>
         <h2>Safety-Bounded Challenge Labs</h2>
         <div class="learn-lab-row-list">
-          {offensiveLabs.map((lab) => (
-            <article class="learn-lab-row learn-surface-exercise">
-              <div>
-                <span>Exercise</span>
-                <h3><a href={labPath(lab)}>{lab.data.title}</a></h3>
-                <p>{lab.data.summary}</p>
-              </div>
-              <dl>
+          {offensiveLabs.map((lab) => {
+            const context = labContextBySlug.get(entrySlug(lab));
+            return (
+              <article class="learn-lab-row learn-surface-exercise">
                 <div>
-                  <dt>Safety boundary</dt>
-                  <dd>{lab.data.safetyBoundary}</dd>
+                  <span>Exercise</span>
+                  <h3><a href={labPath(lab)}>{lab.data.title}</a></h3>
+                  <p>{lab.data.summary}</p>
+                  {context && <p class="learn-lab-row__used-in">Used in <a href={context.href}>{context.title}</a>{context.trackTitle && ` / ${context.trackTitle}`}</p>}
                 </div>
-                <div>
-                  <dt>Artifact</dt>
-                  <dd>{lab.data.requiredArtifact}</dd>
+                <dl>
+                  <div>
+                    <dt>Safety boundary</dt>
+                    <dd>{lab.data.safetyBoundary}</dd>
+                  </div>
+                  <div>
+                    <dt>Artifact</dt>
+                    <dd>{lab.data.requiredArtifact}</dd>
+                  </div>
+                </dl>
+                <div class="learn-lab-row__meta">
+                  <span>{lab.data.estimatedMinutes} min</span>
+                  <span>{formatLabel(lab.data.difficulty)}</span>
+                  <a href={labPath(lab)}>Open exercise</a>
                 </div>
-              </dl>
-              <div class="learn-lab-row__meta">
-                <span>{lab.data.estimatedMinutes} min</span>
-                <span>{formatLabel(lab.data.difficulty)}</span>
-                <a href={labPath(lab)}>Open exercise</a>
-              </div>
-            </article>
-          ))}
+              </article>
+            );
+          })}
         </div>
       </section>
     )}
@@ -56,30 +89,34 @@ const otherLabs = labs.filter((lab) => !lab.data.isOffensive);
       <section>
         <h2>Evaluation And Reporting Labs</h2>
         <div class="learn-lab-row-list">
-          {otherLabs.map((lab) => (
-            <article class="learn-lab-row learn-surface-exercise">
-              <div>
-                <span>Exercise</span>
-                <h3><a href={labPath(lab)}>{lab.data.title}</a></h3>
-                <p>{lab.data.summary}</p>
-              </div>
-              <dl>
+          {otherLabs.map((lab) => {
+            const context = labContextBySlug.get(entrySlug(lab));
+            return (
+              <article class="learn-lab-row learn-surface-exercise">
                 <div>
-                  <dt>Safety boundary</dt>
-                  <dd>{lab.data.safetyBoundary}</dd>
+                  <span>Exercise</span>
+                  <h3><a href={labPath(lab)}>{lab.data.title}</a></h3>
+                  <p>{lab.data.summary}</p>
+                  {context && <p class="learn-lab-row__used-in">Used in <a href={context.href}>{context.title}</a>{context.trackTitle && ` / ${context.trackTitle}`}</p>}
                 </div>
-                <div>
-                  <dt>Artifact</dt>
-                  <dd>{lab.data.requiredArtifact}</dd>
+                <dl>
+                  <div>
+                    <dt>Safety boundary</dt>
+                    <dd>{lab.data.safetyBoundary}</dd>
+                  </div>
+                  <div>
+                    <dt>Artifact</dt>
+                    <dd>{lab.data.requiredArtifact}</dd>
+                  </div>
+                </dl>
+                <div class="learn-lab-row__meta">
+                  <span>{lab.data.estimatedMinutes} min</span>
+                  <span>{formatLabel(lab.data.difficulty)}</span>
+                  <a href={labPath(lab)}>Open exercise</a>
                 </div>
-              </dl>
-              <div class="learn-lab-row__meta">
-                <span>{lab.data.estimatedMinutes} min</span>
-                <span>{formatLabel(lab.data.difficulty)}</span>
-                <a href={labPath(lab)}>Open exercise</a>
-              </div>
-            </article>
-          ))}
+              </article>
+            );
+          })}
         </div>
       </section>
     )}
@@ -155,9 +192,14 @@ const otherLabs = labs.filter((lab) => !lab.data.isOffensive);
   }
 
   .learn-lab-row p,
+  .learn-lab-row__used-in,
   .learn-lab-row dd,
   .learn-lab-row__meta {
     color: var(--aiv-text-secondary);
+  }
+
+  .learn-lab-row__used-in {
+    font-size: 0.9rem;
   }
 
   .learn-lab-row dl {

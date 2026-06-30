@@ -198,19 +198,6 @@ function moduleLinkHref(module: CollectionEntry<"learnModules">, track?: Collect
             )}
           </section>
 
-          <section class="learn-run-section learn-surface-task" aria-labelledby="run-section-heading">
-            <div class="learn-section-heading">
-              <div>
-                <span class="learn-kicker">Exercise</span>
-                <h2 id="run-section-heading">Run / Debrief</h2>
-              </div>
-              <p>Use the existing lab instructions inside the safety boundary above; source links and mappings stay in the reference rail.</p>
-            </div>
-            <div class="learn-content-body">
-              <Content />
-            </div>
-          </section>
-
           {modules.length > 0 && (
             <section class="learn-continue-module learn-surface-reference" aria-labelledby="continue-module-heading">
               <div class="learn-section-heading">
@@ -247,6 +234,19 @@ function moduleLinkHref(module: CollectionEntry<"learnModules">, track?: Collect
               )}
             </section>
           )}
+
+          <section class="learn-run-section learn-surface-task" aria-labelledby="run-section-heading">
+            <div class="learn-section-heading">
+              <div>
+                <span class="learn-kicker">Exercise</span>
+                <h2 id="run-section-heading">Run / Debrief</h2>
+              </div>
+              <p>Use the existing lab instructions inside the safety boundary above; source links and mappings stay in the reference rail.</p>
+            </div>
+            <div class="learn-content-body">
+              <Content />
+            </div>
+          </section>
         </main>
 
         <ReferenceRail title="Lab Reference" sections={railSections} />
