@@ -3,12 +3,11 @@ import { getCollection, render } from "astro:content";
 import type { CollectionEntry } from "astro:content";
 import BaseLayout from "../../../../layouts/BaseLayout.astro";
 import PageShell from "../../../../components/layout/PageShell.astro";
-import ArtifactBadge from "../../../../components/learn/ArtifactBadge.astro";
-import LabCard from "../../../../components/learn/LabCard.astro";
-import DifficultyBadge from "../../../../components/learn/DifficultyBadge.astro";
+import PathMap from "../../../../components/learn/PathMap.astro";
 import StageBadge from "../../../../components/learn/StageBadge.astro";
 import StatusBadge from "../../../../components/learn/StatusBadge.astro";
-import { canRenderLearnLab, canRenderLearnModule, canRenderLearnTrack, entrySlug, moduleTypeLabels, refId, securityLensLabels, trackPath, trackScopedModulePath } from "../../../../utils/learn";
+import TrackOutputPanel from "../../../../components/learn/TrackOutputPanel.astro";
+import { canRenderLearnLab, canRenderLearnModule, canRenderLearnTrack, entrySlug, labPath, refId, securityLensLabels, trackPath, trackScopedModulePath } from "../../../../utils/learn";
 
 type Props = {
   track: CollectionEntry<"learnTracks">;
@@ -48,95 +47,45 @@ export async function getStaticPaths() {
 
 const { track, modules, labs, prerequisiteTracks } = Astro.props;
 const { Content } = await render(track);
-
-function shouldShowModuleStatus(status: CollectionEntry<"learnModules">["data"]["status"]) {
-  return ["coming_soon", "stale"].includes(status);
-}
-
-function trackOutputForTrack(track: CollectionEntry<"learnTracks">) {
-  const outputs = {
-    "ai-practitioner": {
-      title: "AI Workflow Plan",
-      rollup: "Module artifacts become the prompt frame, claim-source matrix, data matrix, human-review rubric, and workflow policy for one reviewed AI workflow.",
-      fields: ["workflow", "allowed tools", "allowed data", "review level", "recordkeeping", "escalation"],
-    },
-    "ai-builder-core": {
-      title: "Team Knowledge Assistant design package",
-      rollup: "Each module adds one design package part: architecture sketch, API plan, schema, RAG path, retrieval plan, tool contract, eval suite, and observability note.",
-      fields: ["architecture", "API boundary", "schema", "retrieval", "tools", "evals", "observability"],
-    },
-    "agentic-ai-advanced-builder": {
-      title: "Agent Risk Note",
-      rollup: "Module artifacts accumulate into one risk note covering autonomy, tools, memory, retrieval, approvals, observability, evals, MCP scope, rollback, and stop controls.",
-      fields: ["goal", "autonomy", "tools", "memory", "approvals", "evals", "MCP scope", "rollback"],
-    },
-    "evals-reliability-grt": {
-      title: "Inspect eval package + eval card + finding memo",
-      rollup: "Inspect run notes, sample-level review, eval-card fields, transparency checks, and GRT-style claims form the evidence package.",
-      fields: ["run package", "eval card", "sample evidence", "limitations", "non-claims", "finding memo"],
-    },
-    "ai-security-core": {
-      title: "AI Security Core review pack",
-      rollup: "Threat-model, OWASP, ATLAS, NIST, control, owner, and evidence entries become a reusable review pack for one AI system boundary.",
-      fields: ["system boundary", "risk category", "evidence", "control", "owner", "review question"],
-    },
-    "defensive-ai-engineering": {
-      title: "Defensive AI Engineering Control Pack",
-      rollup: "Architecture controls, RAG/tool/agent controls, defensive evals, and telemetry specs become a control pack defenders can review.",
-      fields: ["risk pattern", "control", "log signal", "regression test", "owner", "escalation"],
-    },
-    "offensive-ai-security-red-teaming": {
-      title: "ROE + defensive red-team report package",
-      rollup: "Rules of engagement, lab debrief findings, scoped evidence, mitigations, regression tests, and disclosure boundaries become the report package.",
-      fields: ["scope", "authorized target", "finding", "evidence", "impact", "mitigation", "disclosure boundary"],
-    },
-    "governance-responsible-use": {
-      title: "Governance evidence pack",
-      rollup: "Coming-soon modules will build an evidence pack for responsible-use review without exposing draft lessons yet.",
-      fields: ["use case", "framework", "owner", "evidence", "caveat", "review cadence"],
-    },
-  } as const;
-  return outputs[track.data.slug as keyof typeof outputs] || {
-    title: track.data.requiredArtifacts[0] || "Track output",
-    rollup: "Module artifacts build toward the track output and keep evidence, limits, and review ownership visible.",
-    fields: track.data.requiredArtifacts.slice(0, 6),
-  };
-}
-
-const trackOutput = trackOutputForTrack(track);
+const firstModule = modules[0];
+const showTrackStatus = track.data.status !== "beta";
 ---
 
 <BaseLayout title={track.data.title} canonical={trackPath(track)} description={track.data.summary}>
-  <PageShell class="learn-track-page" width="wide">
+  <PageShell class="learn-track-page" width="full">
     <nav class="learn-breadcrumb" aria-label="Breadcrumb"><a href="/learn/">Learn</a> / <span>{track.data.title}</span></nav>
 
-    <header class="learn-track-header">
-      <div>
+    <header class="learn-track-hero">
+      <div class="learn-track-hero__main">
         <div class="learn-meta-row">
-          <StatusBadge value={track.data.status} />
+          {showTrackStatus && <StatusBadge value={track.data.status} />}
           <StageBadge value={track.data.stageStart} />
           <span>to</span>
           <StageBadge value={track.data.stageEnd} />
         </div>
         <h1>{track.data.title}</h1>
         <p class="text-lead">{track.data.summary}</p>
-      </div>
-      <div class="learn-side-panel">
-        <h2>Required Artifacts</h2>
-        <div class="learn-artifacts">
-          {track.data.requiredArtifacts.map((artifact) => <ArtifactBadge value={artifact} />)}
-        </div>
+        {firstModule ? (
+          <a class="button" href={trackScopedModulePath(track, firstModule)}>Start Module 1</a>
+        ) : (
+          <p class="learn-track-hero__empty">Public modules are not available yet.</p>
+        )}
       </div>
     </header>
 
-    <section class="learn-two-column">
-      <div>
+    <div class="learn-track-layout">
+      <main class="learn-track-main" aria-label={`${track.data.title} output and path`}>
+        <TrackOutputPanel track={track} modules={modules} />
+        <PathMap track={track} modules={modules} />
+      </main>
+
+      <aside class="learn-track-rail learn-surface-reference" aria-label="Track context">
         <h2>Who Should Start Here</h2>
         <ul>
           {track.data.audiences.map((audience) => <li>{audience}</li>)}
         </ul>
         {prerequisiteTracks.length > 0 && (
-          <>
+          <section>
             <h2>Track Prerequisites</h2>
             <ul>
               {
@@ -147,115 +96,69 @@ const trackOutput = trackOutputForTrack(track);
                 ))
               }
             </ul>
-          </>
+          </section>
         )}
-      </div>
-      <div>
-        <h2>Security Lens</h2>
-        <p>{securityLensLabels[track.data.securityLens]}</p>
-        {track.data.securityCheckpoints.length > 0 && (
-          <ul>
-            {track.data.securityCheckpoints.map((checkpoint) => <li>{checkpoint}</li>)}
-          </ul>
-        )}
-      </div>
-    </section>
+        <section class="learn-track-rail__security">
+          <h2>Security Lens</h2>
+          <p>{securityLensLabels[track.data.securityLens]}</p>
+          {track.data.securityCheckpoints.length > 0 && (
+            <ul>
+              {track.data.securityCheckpoints.map((checkpoint) => <li>{checkpoint}</li>)}
+            </ul>
+          )}
+        </section>
+      </aside>
+    </div>
 
-    <section class="learn-content-body">
-      <Content />
-    </section>
-
-    <section>
-      <div class="learn-section-heading">
-        <h2>Learning Path</h2>
-        {modules.length > 0 && <a class="button" href={trackScopedModulePath(track, modules[0])}>Start Module 1</a>}
-      </div>
-      {
-        modules.length > 0 ? (
-          <ol class="learn-module-path">
-            {modules.map((module, index) => (
-              <li>
-                <div class="learn-module-path__number">{index + 1}</div>
-                <div>
-                  <div class="learn-card__meta">
-                    {shouldShowModuleStatus(module.data.status) && <StatusBadge value={module.data.status} />}
-                    <DifficultyBadge value={module.data.difficulty} />
-                    <span>{moduleTypeLabels[module.data.moduleType]}</span>
-                  </div>
-                  <h3><a href={trackScopedModulePath(track, module)}>{module.data.title}</a></h3>
-                  <p>{module.data.summary}</p>
-                  <div class="learn-card__meta">
-                    <StageBadge value={module.data.stageStart} />
-                    <span>to</span>
-                    <StageBadge value={module.data.stageEnd} />
-                    <span>{module.data.resources.length} resources</span>
-                    {module.data.labs?.length ? <span>{module.data.labs.length} lab links</span> : null}
-                  </div>
-                </div>
-              </li>
-            ))}
-          </ol>
-        ) : track.data.status === "coming_soon" ? (
-          <p class="text-muted">Modules are being prepared for this track.</p>
-        ) : (
-          <p class="text-muted">No public modules are available for this track yet.</p>
-        )
-      }
-    </section>
-
-    <section class="learn-track-output">
-      <div class="learn-track-output__intro">
-        <span>Track output</span>
-        <h2>What You Will Produce</h2>
-        <p>{trackOutput.rollup}</p>
-      </div>
-      <div class="learn-track-output__primary">
-        <h3>{trackOutput.title}</h3>
-        <ul>
-          {trackOutput.fields.map((field) => <li>{field}</li>)}
-        </ul>
-      </div>
-      {modules.length > 0 ? (
-        <ol class="learn-artifact-path">
-          {modules.map((module, index) => (
+    {labs.length > 0 && (
+      <section class="learn-track-practice learn-surface-exercise" aria-labelledby="track-practice-heading">
+        <div class="learn-section-heading">
+          <h2 id="track-practice-heading">Practice In This Track</h2>
+          <p>Use labs after the relevant module introduces the concept, boundary, and artifact.</p>
+        </div>
+        <ul class="learn-track-practice__list">
+          {labs.map((lab) => (
             <li>
-              <div class="learn-module-path__number">{index + 1}</div>
               <div>
-                <h3><a href={trackScopedModulePath(track, module)}>{module.data.title}</a></h3>
-                <p>{module.data.requiredArtifact || "Checkpoint being refined."}</p>
+                <h3><a href={labPath(lab)}>{lab.data.title}</a></h3>
+                <p>{lab.data.summary}</p>
               </div>
+              <span>{lab.data.estimatedMinutes} min</span>
             </li>
           ))}
-        </ol>
-      ) : (
-        <p class="learn-track-output__empty">
-          Module worksheets are not public yet. The track remains {track.data.status === "coming_soon" ? "coming soon" : "in beta"} until reviewed modules are available.
-        </p>
-      )}
-    </section>
+        </ul>
+      </section>
+    )}
 
-    <section class="learn-two-column">
-      <div class="card card--accent-primary">
-        <h2 class="mt-0">What Exists Now</h2>
-        <p>{track.data.whatExistsNow}</p>
-      </div>
-      <div class="card card--accent-muted">
-        <h2 class="mt-0">What Is Coming Next</h2>
-        <p>{track.data.whatComingNext}</p>
+    <section class="learn-track-about learn-surface-reference" aria-labelledby="track-about-heading">
+      <h2 id="track-about-heading">About This Track</h2>
+      <div class="learn-content-body">
+        <Content />
       </div>
     </section>
 
-    {labs.length > 0 && <section>
-      <h2>Related Labs</h2>
-      <div class="learn-grid">{labs.map((lab) => <LabCard lab={lab} />)}</div>
-    </section>}
+    <details class="learn-track-roadmap learn-surface-roadmap">
+      <summary>Beta Status And Roadmap</summary>
+      <div class="learn-track-roadmap__grid">
+        <div>
+          <h2>What Exists Now</h2>
+          <p>{track.data.whatExistsNow}</p>
+        </div>
+        <div>
+          <h2>What Is Coming Next</h2>
+          <p>{track.data.whatComingNext}</p>
+        </div>
+      </div>
+    </details>
   </PageShell>
 </BaseLayout>
 
 <style>
   .learn-track-page {
     display: grid;
-    gap: 2rem;
+    gap: 0.9rem;
+    margin-inline: auto;
+    max-width: min(100%, 1440px);
   }
 
   .learn-breadcrumb,
@@ -267,49 +170,101 @@ const trackOutput = trackOutputForTrack(track);
     gap: 0.5rem;
   }
 
-  .learn-track-header,
-  .learn-two-column {
+  .learn-track-hero {
+    align-items: start;
     display: grid;
-    gap: 1.25rem;
-    grid-template-columns: minmax(0, 1fr) minmax(260px, 0.55fr);
+    gap: 0.75rem;
+    grid-template-columns: minmax(0, 1fr);
   }
 
-  .learn-side-panel {
+  .learn-track-hero__main {
+    align-items: end;
+    display: grid;
+    gap: 0.55rem 1rem;
+    grid-template-columns: minmax(0, 1fr) auto;
+    max-width: none;
+  }
+
+  .learn-track-hero h1,
+  .learn-track-hero p {
+    margin: 0;
+  }
+
+  .learn-track-hero h1 {
+    font-size: clamp(2rem, 3vw, 3rem);
+    line-height: 1.05;
+  }
+
+  .learn-track-hero .learn-meta-row,
+  .learn-track-hero h1,
+  .learn-track-hero .text-lead,
+  .learn-track-hero__empty {
+    grid-column: 1;
+  }
+
+  .learn-track-hero .button {
+    align-self: end;
+    grid-column: 2;
+    grid-row: 1 / span 3;
+  }
+
+  .learn-track-hero__empty {
+    color: var(--aiv-text-muted);
+    font-weight: 800;
+  }
+
+  .learn-track-layout {
+    align-items: start;
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: minmax(0, 1fr) minmax(17rem, 22rem);
+  }
+
+  .learn-track-main {
+    display: grid;
+    gap: 0.55rem;
+    min-width: 0;
+  }
+
+  .learn-track-rail {
     align-self: start;
-    background: var(--aiv-nested-bg);
-    border: 1px solid var(--aiv-nested-border);
-    border-radius: 8px;
+    display: grid;
+    gap: 1rem;
     padding: 1rem;
   }
 
-  .learn-side-panel h2 {
-    font-size: 1.1rem;
-    margin-top: 0;
+  .learn-track-rail h2 {
+    font-size: 1rem;
+    margin: 0 0 0.45rem;
   }
 
-  .learn-artifacts,
-  .learn-artifact-path,
-  .learn-grid,
-  .learn-module-path {
+  .learn-track-rail ul {
     display: grid;
-    gap: 0.75rem;
+    gap: 0.5rem;
+    margin: 0;
+    padding-left: 1.1rem;
   }
 
-  .learn-content-body {
-    max-width: 76ch;
-  }
-
-  .learn-grid {
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  .learn-track-rail p {
+    color: var(--aiv-text-secondary);
+    margin: 0;
   }
 
   .learn-section-heading {
-    align-items: center;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
+    align-items: end;
+    display: grid;
+    gap: 0.45rem;
+    grid-template-columns: minmax(0, 1fr) minmax(16rem, 42ch);
     justify-content: space-between;
-    margin-bottom: 1rem;
+  }
+
+  .learn-section-heading h2,
+  .learn-section-heading p {
+    margin: 0;
+  }
+
+  .learn-section-heading p {
+    color: var(--aiv-text-muted);
   }
 
   .button {
@@ -323,140 +278,117 @@ const trackOutput = trackOutputForTrack(track);
     min-height: 2.75rem;
     padding: 0.6rem 0.95rem;
     text-decoration: none;
+    width: fit-content;
   }
 
-  .learn-module-path {
-    counter-reset: module-path;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  .learn-artifact-path {
-    list-style: none;
-    margin: 1rem 0 0;
-    padding: 0;
-  }
-
-  .learn-artifact-path li {
-    align-items: start;
-    border-top: 1px solid var(--aiv-line-subtle);
-    display: grid;
-    gap: 0.85rem;
-    grid-template-columns: auto minmax(0, 1fr);
-    padding: 0.85rem 0;
-  }
-
-  .learn-artifact-path h3 {
-    font-size: 1rem;
-    margin: 0 0 0.25rem;
-  }
-
-  .learn-artifact-path p {
-    color: var(--aiv-text-secondary);
-    margin: 0;
-  }
-
-  .learn-track-output {
-    background: color-mix(in srgb, var(--aiv-action-secondary) 9%, var(--aiv-bg-panel));
-    border: 1px solid color-mix(in srgb, var(--aiv-action-secondary) 48%, var(--aiv-line-subtle));
-    border-left: 4px solid var(--aiv-action-secondary);
-    border-radius: 8px;
+  .learn-track-practice,
+  .learn-track-about,
+  .learn-track-roadmap {
     display: grid;
     gap: 1rem;
-    padding: 1.2rem;
-  }
-
-  .learn-track-output__intro {
-    display: grid;
-    gap: 0.4rem;
-  }
-
-  .learn-track-output__intro span {
-    color: var(--aiv-text-muted);
-    font-size: 0.78rem;
-    font-weight: 800;
-    letter-spacing: 0.02em;
-    text-transform: uppercase;
-  }
-
-  .learn-track-output__intro h2,
-  .learn-track-output__intro p,
-  .learn-track-output__primary h3,
-  .learn-track-output__empty {
-    margin: 0;
-  }
-
-  .learn-track-output__intro p,
-  .learn-track-output__empty {
-    color: var(--aiv-text-secondary);
-    max-width: 78ch;
-  }
-
-  .learn-track-output__primary {
-    background: color-mix(in srgb, var(--aiv-bg-canvas) 20%, transparent);
-    border: 1px solid color-mix(in srgb, var(--aiv-action-secondary) 32%, var(--aiv-line-subtle));
-    border-radius: 8px;
-    display: grid;
-    gap: 0.7rem;
-    padding: 0.9rem;
-  }
-
-  .learn-track-output__primary h3 {
-    font-size: 1.15rem;
-  }
-
-  .learn-track-output__primary ul {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.45rem;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  .learn-track-output__primary li {
-    border-bottom: 1px dotted color-mix(in srgb, var(--aiv-action-secondary) 58%, var(--aiv-line-subtle));
-    color: var(--aiv-text-primary);
-    font-weight: 700;
-    padding-block: 0.12rem;
-  }
-
-  .learn-module-path li {
-    background: var(--aiv-card-bg);
-    border: 1px solid var(--aiv-card-border);
-    border-radius: 8px;
-    box-shadow: var(--aiv-card-shadow);
-    display: grid;
-    gap: 1rem;
-    grid-template-columns: auto minmax(0, 1fr);
     padding: 1rem;
   }
 
-  .learn-module-path__number {
-    align-items: center;
-    background: var(--aiv-nested-bg);
-    border: 1px solid var(--aiv-nested-border);
-    border-radius: 999px;
-    display: inline-flex;
-    font-weight: 800;
-    height: 2rem;
-    justify-content: center;
-    width: 2rem;
+  .learn-track-practice__list {
+    display: grid;
+    gap: 0;
+    list-style: none;
+    margin: 0;
+    padding: 0;
   }
 
-  .learn-card__meta {
-    align-items: center;
+  .learn-track-practice__list li {
+    align-items: start;
+    display: grid;
+    gap: 0.75rem;
+    grid-template-columns: minmax(0, 1fr) auto;
+    padding-block: 0.85rem;
+  }
+
+  .learn-track-practice__list li + li {
+    border-top: 1px solid color-mix(in srgb, var(--aiv-risk) 28%, var(--aiv-line-subtle));
+  }
+
+  .learn-track-practice__list h3,
+  .learn-track-practice__list p {
+    margin: 0;
+  }
+
+  .learn-track-practice__list p {
+    color: var(--aiv-text-secondary);
+    margin-top: 0.25rem;
+  }
+
+  .learn-track-practice__list span {
     color: var(--aiv-text-muted);
-    display: flex;
-    flex-wrap: wrap;
+    font-family: var(--aiv-font-mono);
     font-size: 0.9rem;
-    gap: 0.5rem;
+    white-space: nowrap;
   }
 
-  @media (max-width: 780px) {
-    .learn-track-header,
-    .learn-two-column {
+  .learn-content-body {
+    max-width: 82ch;
+  }
+
+  .learn-track-about h2 {
+    margin: 0;
+  }
+
+  .learn-track-roadmap {
+    display: block;
+  }
+
+  .learn-track-roadmap summary {
+    color: var(--aiv-action-primary);
+    cursor: pointer;
+    font-weight: 800;
+    min-height: 2.75rem;
+    padding: 0.7rem 1rem;
+  }
+
+  .learn-track-roadmap__grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 0 1rem 1rem;
+  }
+
+  .learn-track-roadmap h2,
+  .learn-track-roadmap p {
+    margin: 0;
+  }
+
+  .learn-track-roadmap h2 {
+    font-size: 1rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .button:focus-visible,
+  .learn-track-practice a:focus-visible,
+  .learn-track-roadmap summary:focus-visible {
+    outline: 3px solid var(--aiv-focus-ring);
+    outline-offset: 3px;
+  }
+
+  @media (max-width: 980px) {
+    .learn-track-layout,
+    .learn-section-heading,
+    .learn-track-roadmap__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .learn-track-hero__main {
+      grid-template-columns: 1fr;
+    }
+
+    .learn-track-hero .button {
+      grid-column: auto;
+      grid-row: auto;
+    }
+  }
+
+  @media (max-width: 620px) {
+    .learn-track-practice__list li {
       grid-template-columns: 1fr;
     }
   }
