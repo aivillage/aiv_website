@@ -102,10 +102,10 @@ function episodeModuleTrack(module: CollectionEntry<"learnModules">) {
         </p>
       </div>
       <aside class="learn-side-panel">
-        <h2>Source</h2>
+        <h2>Source Summary</h2>
         <p>{series.data.provider}</p>
-        <a href={series.data.canonicalUrl} target="_blank" rel="noopener noreferrer">Open original series</a>
-        {series.data.playlistUrl && <a href={series.data.playlistUrl} target="_blank" rel="noopener noreferrer">Open playlist</a>}
+        <p>{creator}</p>
+        <p>{accessLabel}</p>
       </aside>
     </header>
 
@@ -121,21 +121,13 @@ function episodeModuleTrack(module: CollectionEntry<"learnModules">) {
       {series.data.accessNotes && <p>{series.data.accessNotes}</p>}
     </section>
 
-    {tracks.length > 0 && (
-      <section>
-        <h2>Related Tracks</h2>
-        <ul class="learn-link-list">
-          {tracks.map((track) => <li><a href={trackPath(track)}>{track.data.title}</a></li>)}
-        </ul>
-      </section>
-    )}
-
     <section>
       <h2>{episodeCount === 1 ? "Selected Episode" : "Episodes"}</h2>
       {episodes.length > 0 ? (
         <ol class="learn-episode-list">
           {episodes.map((episode, index) => {
             const mappedModules = episodeModules(episode);
+            const seenTrackSlugs = new Set();
 
             return (
               <li class="learn-episode-card">
@@ -160,11 +152,14 @@ function episodeModuleTrack(module: CollectionEntry<"learnModules">) {
                           <ul class="learn-module-link-list">
                             {mappedModules.map((module) => {
                               const track = episodeModuleTrack(module);
+                              const trackSlug = track ? entrySlug(track) : "";
+                              const showTrack = Boolean(track && trackSlug && !seenTrackSlugs.has(trackSlug));
+                              if (trackSlug) seenTrackSlugs.add(trackSlug);
                               return (
                                 <li>
                                   <a href={episodeModulePath(module)}>
                                     <strong>{module.data.title}</strong>
-                                    {track && <span>{" · "}{track.data.title}</span>}
+                                    {track && showTrack && <span>{" · "}{track.data.title}</span>}
                                   </a>
                                 </li>
                               );
@@ -186,10 +181,30 @@ function episodeModuleTrack(module: CollectionEntry<"learnModules">) {
       ) : (
         <section class="learn-callout">
           <h3>Episodes Coming Later</h3>
-          <p>Episode records have not been added to this series yet. Use the source links above for the original series.</p>
+          <p>Episode records have not been added to this series yet. Use the source links below for the original series.</p>
         </section>
       )}
     </section>
+
+    <section class="learn-callout learn-source-panel">
+      <h2>Source Links</h2>
+      <p>Use the original source after choosing an episode path or module checkpoint.</p>
+      <div class="learn-source-actions">
+        <a href={series.data.canonicalUrl} target="_blank" rel="noopener noreferrer">Open original series</a>
+        {series.data.playlistUrl && series.data.playlistUrl !== series.data.canonicalUrl && (
+          <a href={series.data.playlistUrl} target="_blank" rel="noopener noreferrer">Open playlist</a>
+        )}
+      </div>
+    </section>
+
+    {tracks.length > 0 && (
+      <section>
+        <h2>Related Tracks</h2>
+        <ul class="learn-link-list">
+          {tracks.map((track) => <li><a href={trackPath(track)}>{track.data.title}</a></li>)}
+        </ul>
+      </section>
+    )}
   </PageShell>
 </BaseLayout>
 
@@ -224,6 +239,17 @@ function episodeModuleTrack(module: CollectionEntry<"learnModules">) {
     display: grid;
     gap: 0.5rem;
     padding: 1rem;
+  }
+
+  .learn-source-panel {
+    max-width: 76ch;
+  }
+
+  .learn-source-actions {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
   }
 
   .learn-side-panel h2,
@@ -310,6 +336,14 @@ function episodeModuleTrack(module: CollectionEntry<"learnModules">) {
     padding-top: 0.75rem;
   }
 
+  .learn-episode-card__actions a,
+  .learn-source-actions a,
+  .learn-link-list a {
+    align-items: center;
+    display: inline-flex;
+    min-height: 2.75rem;
+  }
+
   .learn-access-badge {
     background: var(--aiv-nested-bg);
     border: 1px solid var(--aiv-nested-border);
@@ -319,6 +353,8 @@ function episodeModuleTrack(module: CollectionEntry<"learnModules">) {
   }
 
   .learn-episode-card a:focus-visible,
+  .learn-link-list a:focus-visible,
+  .learn-source-actions a:focus-visible,
   .learn-side-panel a:focus-visible {
     outline: 3px solid var(--aiv-focus-ring);
     outline-offset: 3px;

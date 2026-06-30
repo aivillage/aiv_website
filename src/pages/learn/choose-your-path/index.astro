@@ -124,6 +124,13 @@ function groupTracks(group: (typeof groups)[number]) {
   .learn-grid {
     display: grid;
     gap: 1rem;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(260px, 340px));
+    justify-content: start;
+  }
+
+  @media (max-width: 720px) {
+    .learn-grid {
+      grid-template-columns: 1fr;
+    }
   }
 </style>

@@ -2103,7 +2103,7 @@ details {
   transform-origin: 1px;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1100px) {
   .site-header {
     position: fixed;
     top: 0;
@@ -2125,18 +2125,34 @@ details {
   }
 
   .theme-toggle {
+    height: 2.75rem;
     margin-left: 0;
-    margin-right: 3rem;
+    margin-right: 3.5rem;
+    min-height: 2.75rem;
+    min-width: 2.75rem;
     position: relative;
+    width: 2.75rem;
     z-index: 11;
   }
 
   .hamburger {
+    align-items: center;
     display: flex;
+    height: 2.75rem;
+    justify-content: center;
+    min-height: 2.75rem;
+    min-width: 2.75rem;
+    padding: 0.55rem;
     position: absolute;
     right: 1rem;
     top: 50%;
     transform: translateY(-50%);
+    width: 2.75rem;
+  }
+
+  .hamburger span {
+    height: 0.2rem;
+    width: 1.65rem;
   }
 
   .site-header .nav-menu,

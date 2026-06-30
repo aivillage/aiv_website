@@ -151,13 +151,15 @@ const resolvedCtaLabel = ctaLabel || (track.data.status === "coming_soon" ? "Pre
   }
 
   .learn-track-card__cta {
-    color: var(--aiv-action-primary);
-    font-weight: 800;
-    min-height: 2.5rem;
-    display: inline-flex;
     align-items: center;
+    color: var(--aiv-action-primary);
+    display: inline-flex;
+    font-weight: 800;
+    min-height: 2.75rem;
+    padding-inline: 0.15rem;
   }
 
+  .learn-track-card a:focus-visible,
   .learn-track-card__cta:focus-visible {
     outline: 3px solid var(--aiv-focus-ring);
     outline-offset: 3px;

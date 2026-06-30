@@ -36,7 +36,7 @@ const embedTitle = usePlaylist ? `${title} playlist` : title;
       <p class="youtube-embed__eyebrow">YouTube</p>
       <h3>{title}</h3>
       <p>
-        Embedded from YouTube. Video belongs to
+        Embedded from YouTube. Video by{" "}
         {channelUrl ? <a href={channelUrl} target="_blank" rel="noopener noreferrer">{creator}</a> : creator}.
       </p>
       <button type="button" data-youtube-load>Load embedded video</button>

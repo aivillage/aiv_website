@@ -182,11 +182,12 @@ const supplementalSections = supplementalSectionOrder
         <h1>{moduleTitle}</h1>
         <p class="text-lead">{learnModule.data.summary}</p>
       </div>
-      <aside class="learn-side-panel">
+      <aside class:list={["learn-side-panel", trackContext && "learn-side-panel--track-context"]} data-track-context={trackContext ? "true" : undefined}>
         <h2>{trackContext ? "Track Context" : "Related Tracks"}</h2>
         {trackContext ? (
           <>
-            <p>Continue through this module inside {trackContext.track.data.title}.</p>
+            <p class="learn-side-panel__desktop">Continue through this module inside {trackContext.track.data.title}.</p>
+            <p class="learn-track-context-summary">{trackContext.track.data.title} · Module {trackContext.moduleIndex + 1} of {trackContext.moduleCount}</p>
             <a href={trackPath(trackContext.track)}>Back to track</a>
           </>
         ) : (
@@ -496,6 +497,10 @@ const supplementalSections = supplementalSectionOrder
     padding-left: 1.2rem;
   }
 
+  .learn-track-context-summary {
+    display: none;
+  }
+
   .learn-grid,
   .learn-module-nav,
   .learn-resource-card-list,
@@ -515,9 +520,9 @@ const supplementalSections = supplementalSectionOrder
 
   .learn-section-heading {
     align-items: end;
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
     gap: 1rem;
+    grid-template-columns: minmax(12rem, max-content) minmax(18rem, 62ch);
     justify-content: space-between;
   }
 
@@ -529,6 +534,11 @@ const supplementalSections = supplementalSectionOrder
   .learn-section-heading p {
     color: var(--aiv-text-muted);
     max-width: 62ch;
+    min-width: 0;
+  }
+
+  .learn-section-heading h2 {
+    white-space: nowrap;
   }
 
   .learn-start-here {
@@ -537,7 +547,12 @@ const supplementalSections = supplementalSectionOrder
     border-radius: 8px;
     display: grid;
     gap: 1rem;
-    padding: 1.2rem 0;
+    min-width: 0;
+    padding: 1.2rem;
+  }
+
+  .learn-start-here .learn-step-list {
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .learn-step-card,
@@ -552,6 +567,7 @@ const supplementalSections = supplementalSectionOrder
 
   .learn-step-card {
     grid-template-columns: auto minmax(0, 1fr);
+    min-width: min(100%, 22rem);
   }
 
   .learn-step-card__number {
@@ -614,12 +630,15 @@ const supplementalSections = supplementalSectionOrder
     align-items: center;
     display: inline-flex;
     font-weight: 800;
-    min-height: 2.45rem;
+    min-height: 2.75rem;
+    padding-inline: 0.15rem;
   }
 
   .learn-step-card__embed {
+    justify-self: start;
     margin-top: 0.25rem;
-    max-width: 760px;
+    max-width: 680px;
+    width: 100%;
   }
 
   .learn-objectives-section {
@@ -741,6 +760,13 @@ const supplementalSections = supplementalSectionOrder
     padding: 0.9rem;
   }
 
+  .learn-module-nav__item a,
+  .learn-link-list a {
+    align-items: center;
+    display: inline-flex;
+    min-height: 2.75rem;
+  }
+
   .learn-module-nav__item--next {
     background: color-mix(in srgb, var(--aiv-action-primary) 12%, var(--aiv-bg-panel));
     border-color: var(--aiv-action-primary);
@@ -758,17 +784,51 @@ const supplementalSections = supplementalSectionOrder
     outline-offset: 3px;
   }
 
-  @media (max-width: 780px) {
+  @media (max-width: 1100px) {
+    .learn-section-heading {
+      align-items: start;
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 900px) {
     .learn-module-header,
     .learn-checkpoint-panel {
       grid-template-columns: 1fr;
     }
 
-    .learn-section-heading {
-      align-items: start;
-      display: grid;
+    .learn-side-panel[data-track-context] {
+      align-items: center;
+      display: flex;
+      gap: 0.75rem;
+      justify-content: space-between;
+      padding: 0.7rem 0.85rem;
     }
 
+    .learn-side-panel[data-track-context] h2 {
+      display: none;
+    }
+
+    .learn-side-panel[data-track-context] .learn-side-panel__desktop {
+      display: none;
+    }
+
+    .learn-track-context-summary {
+      color: var(--aiv-text-secondary);
+      display: block;
+      font-weight: 800;
+      margin: 0;
+    }
+
+    .learn-side-panel[data-track-context] a {
+      align-items: center;
+      display: inline-flex;
+      min-height: 2.75rem;
+      white-space: nowrap;
+    }
+  }
+
+  @media (max-width: 780px) {
     .learn-step-card {
       grid-template-columns: 1fr;
     }
@@ -776,6 +836,17 @@ const supplementalSections = supplementalSectionOrder
     .learn-step-card__number {
       height: 2.6rem;
       width: 2.6rem;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .learn-start-here {
+      padding-inline: 0.85rem;
+    }
+
+    .learn-side-panel[data-track-context] {
+      align-items: start;
+      display: grid;
     }
   }
 </style>

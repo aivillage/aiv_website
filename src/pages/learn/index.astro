@@ -297,6 +297,7 @@ function publicModuleCount(track: (typeof tracks)[number]) {
   }
 
   .learn-flow-strip ol {
+    counter-reset: learn-flow;
     display: grid;
     gap: 0.75rem;
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -307,14 +308,32 @@ function publicModuleCount(track: (typeof tracks)[number]) {
 
   .learn-flow-strip li {
     align-items: center;
-    border-left: 3px solid var(--aiv-action-secondary);
+    background: color-mix(in srgb, var(--aiv-card-bg) 72%, transparent);
+    border: 1px solid var(--aiv-line-subtle);
     border-radius: 8px;
     color: var(--aiv-text-secondary);
     display: flex;
+    gap: 0.65rem;
     font-weight: 800;
     min-height: 3rem;
-    padding: 0.35rem 0.85rem;
-    text-align: center;
+    padding: 0.55rem 0.85rem;
+  }
+
+  .learn-flow-strip li::before {
+    align-items: center;
+    background: color-mix(in srgb, var(--aiv-action-secondary) 22%, transparent);
+    border: 1px solid var(--aiv-action-secondary);
+    border-radius: 999px;
+    color: var(--aiv-text-primary);
+    content: counter(learn-flow);
+    counter-increment: learn-flow;
+    display: inline-flex;
+    flex: 0 0 auto;
+    font-family: var(--aiv-font-mono);
+    font-size: 0.85rem;
+    height: 2rem;
+    justify-content: center;
+    width: 2rem;
   }
 
   .learn-starting-points,

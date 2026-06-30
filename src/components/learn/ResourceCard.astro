@@ -96,7 +96,8 @@ const isOffRamp = resource.data.accessMode !== "direct_open" || resource.data.lo
   .learn-card__footer span {
     align-items: center;
     display: inline-flex;
-    min-height: 2.35rem;
+    min-height: 2.75rem;
+    padding-block: 0.2rem;
   }
 
   .learn-access-badge {
@@ -110,5 +111,10 @@ const isOffRamp = resource.data.accessMode !== "direct_open" || resource.data.lo
   .learn-access-badge--review {
     border-color: var(--aiv-warning);
     color: var(--aiv-warning);
+  }
+
+  .learn-card a:focus-visible {
+    outline: 3px solid var(--aiv-focus-ring);
+    outline-offset: 3px;
   }
 </style>

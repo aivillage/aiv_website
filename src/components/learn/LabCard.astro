@@ -95,7 +95,8 @@ const href = canRenderLearnLab(lab) ? labPath(lab) : "";
   .learn-card__actions span {
     align-items: center;
     display: inline-flex;
-    min-height: 2.35rem;
+    min-height: 2.75rem;
+    padding-block: 0.2rem;
   }
 
   .learn-card dl {
@@ -113,5 +114,10 @@ const href = canRenderLearnLab(lab) ? labPath(lab) : "";
 
   .learn-card dd {
     margin: 0;
+  }
+
+  .learn-card a:focus-visible {
+    outline: 3px solid var(--aiv-focus-ring);
+    outline-offset: 3px;
   }
 </style>
