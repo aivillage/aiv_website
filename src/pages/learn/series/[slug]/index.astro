@@ -57,7 +57,6 @@ export async function getStaticPaths() {
 
 const { series, episodes, tracks, allTracks, modules } = Astro.props;
 const creator = series.data.creator || series.data.attribution || series.data.provider;
-const showCreator = creator !== series.data.provider;
 const accessLabel = accessModeLabels[series.data.accessMode] || accessModeLabels.direct_open;
 const episodeCount = episodes.length;
 const pathLabel = episodeCount === 0 ? "Episode Path Not Ready" : episodeCount === 1 ? "Single Selected Episode" : "AIV-Selected Episode Path";
@@ -87,7 +86,7 @@ function episodeModuleTrack(module: CollectionEntry<"learnModules">) {
     <nav class="learn-breadcrumb" aria-label="Breadcrumb"><a href="/learn/">Learn</a> / <a href="/learn/series/">Series</a> / <span>{series.data.title}</span></nav>
 
     <header class="learn-series-header">
-      <div>
+      <div class="learn-series-header__main">
         <div class="learn-meta-row">
           <span>{formatLabel(series.data.resourceType)}</span>
           <span class="learn-access-badge">{accessLabel}</span>
@@ -102,12 +101,6 @@ function episodeModuleTrack(module: CollectionEntry<"learnModules">) {
               : `Episode records for this playlist are not ready yet. Use the original source links as secondary context.`}
         </p>
       </div>
-      <aside class="learn-side-panel">
-        <h2>Source Summary</h2>
-        <p>{series.data.provider}</p>
-        {showCreator && <p>{creator}</p>}
-        <p>{accessLabel}</p>
-      </aside>
     </header>
 
     <section class="learn-callout">
@@ -188,7 +181,7 @@ function episodeModuleTrack(module: CollectionEntry<"learnModules">) {
     </section>
 
     <section class="learn-callout learn-source-panel">
-      <h2>Source Links</h2>
+      <h2>Series Actions</h2>
       <p>Use the original source after choosing an episode path or module checkpoint.</p>
       <div class="learn-source-actions">
         <a href={series.data.canonicalUrl} target="_blank" rel="noopener noreferrer">Open original series</a>
@@ -224,14 +217,16 @@ function episodeModuleTrack(module: CollectionEntry<"learnModules">) {
     gap: 0.5rem;
   }
 
-  .learn-series-header,
   .learn-two-column {
     display: grid;
     gap: 1.25rem;
     grid-template-columns: minmax(0, 1fr) minmax(260px, 0.55fr);
   }
 
-  .learn-side-panel,
+  .learn-series-header__main {
+    max-width: 82ch;
+  }
+
   .learn-callout {
     align-self: start;
     background: var(--aiv-nested-bg);
@@ -253,7 +248,6 @@ function episodeModuleTrack(module: CollectionEntry<"learnModules">) {
     gap: 0.75rem;
   }
 
-  .learn-side-panel h2,
   .learn-callout h2 {
     font-size: 1.1rem;
     margin-top: 0;
@@ -355,14 +349,12 @@ function episodeModuleTrack(module: CollectionEntry<"learnModules">) {
 
   .learn-episode-card a:focus-visible,
   .learn-link-list a:focus-visible,
-  .learn-source-actions a:focus-visible,
-  .learn-side-panel a:focus-visible {
+  .learn-source-actions a:focus-visible {
     outline: 3px solid var(--aiv-focus-ring);
     outline-offset: 3px;
   }
 
   @media (max-width: 780px) {
-    .learn-series-header,
     .learn-two-column {
       grid-template-columns: 1fr;
     }

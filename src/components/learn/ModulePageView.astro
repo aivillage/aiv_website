@@ -73,6 +73,7 @@ const hasCustomLearningObjectives = learnModule.data.learningObjectives.some(
 );
 const visibleResourceGroups = resourceGroups.filter((group) => group.items.length > 0);
 const requiredGroup = visibleResourceGroups.find((group) => group.role === "required");
+const requiredStepCount = requiredGroup?.items.length ?? 0;
 const optionalGroups = visibleResourceGroups.filter((group) => group.role !== "required");
 type SupplementalResourceKind = "optional" | "deeper" | "off_ramp" | "under_review";
 const supplementalSectionLabels: Record<SupplementalResourceKind, string> = {
@@ -205,7 +206,7 @@ const supplementalSections = supplementalSectionOrder
     </header>
 
     {requiredGroup && (
-      <section class="learn-start-here" aria-labelledby="start-here-heading">
+      <section class:list={["learn-start-here", requiredStepCount === 1 && "learn-start-here--single"]} aria-labelledby="start-here-heading">
         <div class="learn-section-heading">
           <div>
             <span class="learn-kicker">Required path</span>
@@ -213,28 +214,32 @@ const supplementalSections = supplementalSectionOrder
           </div>
           <p>Use these steps first, then produce the checkpoint artifact before moving on.</p>
         </div>
-        <div class="learn-step-list">
+        <div class:list={["learn-step-list", requiredStepCount === 1 ? "learn-step-list--single" : "learn-step-list--sequence"]}>
           {requiredGroup.items.map((item, index) => {
             const resource = item.resource;
             const framing = resourceSupportText(item);
+            const isFeatured = isFeaturedResourceItem(item);
+            const stepLabel = requiredStepCount === 1 ? "First action" : `Step ${item.step ?? index + 1}`;
             return (
-              <article class="learn-step-card">
-                <div class="learn-step-card__number">Step {item.step ?? index + 1}</div>
+              <article class:list={["learn-step-card", requiredStepCount === 1 && "learn-step-card--primary", isFeatured && "learn-step-card--has-embed"]}>
+                <div class="learn-step-card__number">{stepLabel}</div>
                 <div class="learn-step-card__body">
-                  <span class="learn-step-card__action">{actionLabel(resource)}</span>
-                  <h3><a href={resourcePath(resource)}>{resource.data.title}</a></h3>
-                  <p>{framing}</p>
-                  <div class="learn-step-card__meta">
-                    <span>{resource.data.provider}</span>
-                    <span>{formatLabel(resource.data.resourceType)}</span>
-                    <span class="learn-access-badge">{accessLabel(resource)}</span>
-                    {isUnderReview(resource) && <span class="learn-access-badge learn-access-badge--review">Under review</span>}
+                  <div class="learn-step-card__content">
+                    <span class="learn-step-card__action">{actionLabel(resource)}</span>
+                    <h3><a href={resourcePath(resource)}>{resource.data.title}</a></h3>
+                    <p>{framing}</p>
+                    <div class="learn-step-card__meta">
+                      <span>{resource.data.provider}</span>
+                      <span>{formatLabel(resource.data.resourceType)}</span>
+                      <span class="learn-access-badge">{accessLabel(resource)}</span>
+                      {isUnderReview(resource) && <span class="learn-access-badge learn-access-badge--review">Under review</span>}
+                    </div>
+                    <div class="learn-step-card__actions">
+                      <a class="learn-step-card__action-link learn-step-card__action-link--secondary" href={resourcePath(resource)}>View AIV notes</a>
+                      <a class="learn-step-card__action-link learn-step-card__action-link--primary" href={resource.data.canonicalUrl} target="_blank" rel="noopener noreferrer">Open original</a>
+                    </div>
                   </div>
-                  <div class="learn-step-card__actions">
-                    <a href={resourcePath(resource)}>View AIV notes</a>
-                    <a href={resource.data.canonicalUrl} target="_blank" rel="noopener noreferrer">Open original</a>
-                  </div>
-                  {isFeaturedResourceItem(item) && (
+                  {isFeatured && (
                     <div class="learn-step-card__embed">
                       <YouTubeEmbed
                         title={resource.data.title}
@@ -542,8 +547,9 @@ const supplementalSections = supplementalSectionOrder
   }
 
   .learn-start-here {
-    background: color-mix(in srgb, var(--aiv-bg-panel) 70%, transparent);
-    border-block: 1px solid var(--aiv-action-primary);
+    background: color-mix(in srgb, var(--aiv-action-primary) 8%, var(--aiv-bg-panel));
+    border: 1px solid color-mix(in srgb, var(--aiv-action-primary) 62%, var(--aiv-line-subtle));
+    border-left: 4px solid var(--aiv-action-primary);
     border-radius: 8px;
     display: grid;
     gap: 1rem;
@@ -553,6 +559,10 @@ const supplementalSections = supplementalSectionOrder
 
   .learn-start-here .learn-step-list {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .learn-start-here--single .learn-section-heading {
+    align-items: center;
   }
 
   .learn-step-card,
@@ -570,6 +580,18 @@ const supplementalSections = supplementalSectionOrder
     min-width: min(100%, 22rem);
   }
 
+  .learn-start-here .learn-step-card {
+    background: color-mix(in srgb, var(--aiv-bg-panel) 68%, transparent);
+    border-color: color-mix(in srgb, var(--aiv-action-primary) 28%, var(--aiv-line-subtle));
+    box-shadow: none;
+  }
+
+  .learn-start-here--single .learn-step-card {
+    background: transparent;
+    border-color: transparent;
+    padding: 0.25rem 0 0;
+  }
+
   .learn-step-card__number {
     align-items: center;
     background: var(--aiv-nested-bg);
@@ -582,18 +604,36 @@ const supplementalSections = supplementalSectionOrder
     justify-content: center;
     line-height: 1.15;
     text-align: center;
-    width: 3rem;
+    width: 4.2rem;
+  }
+
+  .learn-step-card--primary .learn-step-card__number {
+    background: var(--aiv-action-primary);
+    border-color: var(--aiv-action-primary);
+    border-radius: 6px;
+    color: var(--aiv-bg-canvas);
+    height: auto;
+    min-height: 2.75rem;
+    padding: 0 0.65rem;
+    width: auto;
   }
 
   .learn-step-card__body,
+  .learn-step-card__content,
   .learn-resource-card {
     min-width: 0;
   }
 
   .learn-step-card__body,
+  .learn-step-card__content,
   .learn-step-card__embed {
     display: grid;
     gap: 0.75rem;
+  }
+
+  .learn-step-card--has-embed .learn-step-card__body {
+    align-items: start;
+    grid-template-columns: minmax(0, 1fr) minmax(240px, 360px);
   }
 
   .learn-step-card h3,
@@ -634,10 +674,29 @@ const supplementalSections = supplementalSectionOrder
     padding-inline: 0.15rem;
   }
 
+  .learn-step-card__action-link {
+    border: 1px solid transparent;
+    border-radius: 6px;
+    justify-content: center;
+    padding: 0.55rem 0.85rem;
+    text-decoration: none;
+  }
+
+  .learn-step-card__action-link--primary {
+    background: var(--aiv-action-primary);
+    border-color: var(--aiv-action-primary);
+    color: var(--aiv-bg-canvas);
+  }
+
+  .learn-step-card__action-link--secondary {
+    border-color: var(--aiv-line-strong);
+    color: var(--aiv-action-primary);
+  }
+
   .learn-step-card__embed {
     justify-self: start;
     margin-top: 0.25rem;
-    max-width: 680px;
+    max-width: 360px;
     width: 100%;
   }
 
@@ -829,13 +888,24 @@ const supplementalSections = supplementalSectionOrder
   }
 
   @media (max-width: 780px) {
-    .learn-step-card {
+    .learn-step-card,
+    .learn-step-card--has-embed .learn-step-card__body {
       grid-template-columns: 1fr;
     }
 
     .learn-step-card__number {
       height: 2.6rem;
-      width: 2.6rem;
+      width: 3.8rem;
+    }
+
+    .learn-step-card--primary .learn-step-card__number {
+      height: auto;
+      min-height: 2.75rem;
+      width: auto;
+    }
+
+    .learn-step-card__embed {
+      max-width: none;
     }
   }
 

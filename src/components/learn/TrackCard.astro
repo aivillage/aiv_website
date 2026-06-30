@@ -8,6 +8,9 @@ type Props = {
   publicModuleCount?: number;
   contextLabel?: string;
   ctaLabel?: string;
+  firstModuleTitle?: string;
+  priorityLabel?: string;
+  cardTone?: "primary" | "secondary";
 };
 
 const {
@@ -15,32 +18,45 @@ const {
   publicModuleCount = track.data.canonicalModules.length,
   contextLabel,
   ctaLabel,
+  firstModuleTitle,
+  priorityLabel,
+  cardTone,
 } = Astro.props;
 const href = canRenderLearnTrack(track) ? trackPath(track) : "";
-const firstAudience = track.data.audiences[0] || "Learners";
-const audienceMore = Math.max(track.data.audiences.length - 1, 0);
 const firstArtifact = track.data.requiredArtifacts[0] || "Track checkpoint";
 const artifactMore = Math.max(track.data.requiredArtifacts.length - 1, 0);
-const showStatus = ["coming_soon", "stable", "stale"].includes(track.data.status);
+const showStatus = ["coming_soon", "stale"].includes(track.data.status);
+const hasTopLine = showStatus || contextLabel || priorityLabel;
 const resolvedCtaLabel = ctaLabel || (track.data.status === "coming_soon" ? "Preview path" : "View track");
 ---
 
-<article class:list={["card", "learn-track-card", track.data.status === "coming_soon" && "learn-track-card--muted"]}>
-  <div class="learn-track-card__top">
-    {showStatus && <StatusBadge value={track.data.status} />}
-    {contextLabel && <span class="learn-track-card__context">{contextLabel}</span>}
-  </div>
+<article class:list={[
+  "card",
+  "learn-track-card",
+  cardTone === "primary" && "learn-track-card--featured",
+  cardTone === "secondary" && "learn-track-card--secondary",
+  track.data.status === "coming_soon" && "learn-track-card--muted",
+]}>
+  {hasTopLine && (
+    <div class="learn-track-card__top">
+      {priorityLabel && <span class="learn-track-card__priority">{priorityLabel}</span>}
+      {showStatus && <StatusBadge value={track.data.status} />}
+      {contextLabel && <span class="learn-track-card__context">{contextLabel}</span>}
+    </div>
+  )}
   <h2>{href ? <a href={href}>{track.data.title}</a> : track.data.title}</h2>
   <p class="learn-track-card__summary">{track.data.summary}</p>
   <dl class="learn-track-card__details">
     <div>
-      <dt>For:</dt>
-      <dd>{firstAudience}{audienceMore > 0 ? ` +${audienceMore} more` : ""}</dd>
-    </div>
-    <div>
-      <dt>You will produce:</dt>
+      <dt>Main artifact</dt>
       <dd>{firstArtifact}{artifactMore > 0 ? ` +${artifactMore} more` : ""}</dd>
     </div>
+    {firstModuleTitle && (
+      <div>
+        <dt>Start with</dt>
+        <dd>{firstModuleTitle}</dd>
+      </div>
+    )}
   </dl>
   <div class="learn-track-card__footer">
     <span>{publicModuleCount} public {publicModuleCount === 1 ? "module" : "modules"}</span>
@@ -71,6 +87,18 @@ const resolvedCtaLabel = ctaLabel || (track.data.status === "coming_soon" ? "Pre
     border-color: var(--aiv-card-hover-border);
     box-shadow: var(--aiv-card-hover-shadow);
     transform: none;
+  }
+
+  .learn-track-card--featured {
+    background: color-mix(in srgb, var(--aiv-action-primary) 10%, var(--aiv-card-bg));
+    border-color: var(--aiv-action-primary);
+    box-shadow: none;
+  }
+
+  .learn-track-card--secondary {
+    background: color-mix(in srgb, var(--aiv-card-bg) 62%, transparent);
+    border-color: var(--aiv-line-subtle);
+    box-shadow: none;
   }
 
   .learn-track-card--muted {
@@ -105,9 +133,10 @@ const resolvedCtaLabel = ctaLabel || (track.data.status === "coming_soon" ? "Pre
   }
 
   .learn-track-card__top {
-    min-height: 1.65rem;
+    min-height: 0;
   }
 
+  .learn-track-card__priority,
   .learn-track-card__context {
     border: 1px solid var(--aiv-line-strong);
     border-radius: 999px;
@@ -115,6 +144,12 @@ const resolvedCtaLabel = ctaLabel || (track.data.status === "coming_soon" ? "Pre
     font-size: 0.78rem;
     font-weight: 800;
     padding: 0.14rem 0.5rem;
+  }
+
+  .learn-track-card__priority {
+    background: color-mix(in srgb, var(--aiv-action-primary) 18%, transparent);
+    border-color: var(--aiv-action-primary);
+    color: var(--aiv-text-primary);
   }
 
   .learn-track-card__details {

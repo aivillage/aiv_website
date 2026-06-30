@@ -48,6 +48,10 @@ export async function getStaticPaths() {
 
 const { track, modules, labs, prerequisiteTracks } = Astro.props;
 const { Content } = await render(track);
+
+function shouldShowModuleStatus(status: CollectionEntry<"learnModules">["data"]["status"]) {
+  return ["coming_soon", "stale"].includes(status);
+}
 ---
 
 <BaseLayout title={track.data.title} canonical={trackPath(track)} description={track.data.summary}>
@@ -122,7 +126,7 @@ const { Content } = await render(track);
                 <div class="learn-module-path__number">{index + 1}</div>
                 <div>
                   <div class="learn-card__meta">
-                    <StatusBadge value={module.data.status} />
+                    {shouldShowModuleStatus(module.data.status) && <StatusBadge value={module.data.status} />}
                     <DifficultyBadge value={module.data.difficulty} />
                     <span>{moduleTypeLabels[module.data.moduleType]}</span>
                   </div>

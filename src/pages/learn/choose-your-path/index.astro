@@ -12,21 +12,25 @@ const trackBySlug = new Map(tracks.flatMap((track) => [[entrySlug(track), track]
 const groups = [
   {
     title: "New to AI",
+    primarySlug: "ai-fundamentals",
     slugs: ["ai-fundamentals"],
     summary: "Start with shared vocabulary, notebooks, ML basics, LLMs, embeddings, and retrieval.",
   },
   {
     title: "Use AI Better at Work",
+    primarySlug: "ai-practitioner",
     slugs: ["ai-practitioner", "governance-responsible-use"],
     summary: "Focus on prompting, review, workflow policy, responsible use, and risk frameworks.",
   },
   {
     title: "Build AI Systems",
+    primarySlug: "ai-builder-core",
     slugs: ["ai-builder-core", "agentic-ai-advanced-builder"],
     summary: "Move through AI app architecture, RAG, tools, evals, agents, MCP, and containment.",
   },
   {
     title: "Secure and Evaluate AI",
+    primarySlug: "ai-security-core",
     slugs: ["ai-security-core", "defensive-ai-engineering", "evals-reliability-grt", "offensive-ai-security-red-teaming"],
     summary: "Work on AI security fundamentals, defensive controls, eval evidence, and advanced authorized-lab red teaming.",
   },
@@ -34,12 +38,21 @@ const groups = [
 const contextLabels = new Map([
   ["offensive-ai-security-red-teaming", "Advanced authorized-lab path"],
   ["governance-responsible-use", "Coming soon roadmap"],
+  ["agentic-ai-advanced-builder", "Advanced builder path"],
+  ["defensive-ai-engineering", "Specialized defensive path"],
+  ["evals-reliability-grt", "Specialized evals path"],
 ]);
 
 function publicModuleCount(track: (typeof tracks)[number]) {
   return track.data.canonicalModules
     .map((moduleRef) => moduleBySlug.get(refId(moduleRef)))
     .filter((module) => module && canRenderLearnModule(module)).length;
+}
+
+function firstPublicModuleTitle(track: (typeof tracks)[number]) {
+  return track.data.canonicalModules
+    .map((moduleRef) => moduleBySlug.get(refId(moduleRef)))
+    .find((module) => module && canRenderLearnModule(module))?.data.title;
 }
 
 function groupTracks(group: (typeof groups)[number]) {
@@ -64,20 +77,40 @@ function groupTracks(group: (typeof groups)[number]) {
     </header>
     {groups.map((group) => {
       const tracksInGroup = groupTracks(group);
+      const primaryTrack = tracksInGroup.find((track) => entrySlug(track) === group.primarySlug) || tracksInGroup[0];
+      const secondaryTracks = tracksInGroup.filter((track) => track !== primaryTrack);
       return (
         <section class="intent-group">
           <div class="intent-group__heading">
             <h2>{group.title}</h2>
             <p>{group.summary}</p>
           </div>
-          <div class="learn-grid">
-            {tracksInGroup.map((track) => (
-              <TrackCard
-                track={track}
-                publicModuleCount={publicModuleCount(track)}
-                contextLabel={contextLabels.get(entrySlug(track))}
-              />
-            ))}
+          <div class="intent-group__paths">
+            {primaryTrack && (
+              <div class="intent-group__primary">
+                <TrackCard
+                  track={primaryTrack}
+                  publicModuleCount={publicModuleCount(primaryTrack)}
+                  firstModuleTitle={firstPublicModuleTitle(primaryTrack)}
+                  priorityLabel={group.title === "New to AI" ? "Best first path" : "Primary path"}
+                  cardTone="primary"
+                  ctaLabel="Start here"
+                />
+              </div>
+            )}
+            {secondaryTracks.length > 0 && (
+              <div class="intent-group__secondary">
+                {secondaryTracks.map((track) => (
+                  <TrackCard
+                    track={track}
+                    publicModuleCount={publicModuleCount(track)}
+                    firstModuleTitle={firstPublicModuleTitle(track)}
+                    contextLabel={contextLabels.get(entrySlug(track))}
+                    cardTone="secondary"
+                  />
+                ))}
+              </div>
+            )}
           </div>
         </section>
       );
@@ -121,15 +154,22 @@ function groupTracks(group: (typeof groups)[number]) {
     color: var(--aiv-text-secondary);
   }
 
-  .learn-grid {
+  .intent-group__paths {
     display: grid;
     gap: 1rem;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 340px));
+    grid-template-columns: minmax(280px, 380px) minmax(0, 1fr);
+  }
+
+  .intent-group__secondary {
+    display: grid;
+    gap: 0.85rem;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 320px));
     justify-content: start;
   }
 
-  @media (max-width: 720px) {
-    .learn-grid {
+  @media (max-width: 860px) {
+    .intent-group__paths,
+    .intent-group__secondary {
       grid-template-columns: 1fr;
     }
   }

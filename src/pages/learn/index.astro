@@ -70,6 +70,12 @@ function publicModuleCount(track: (typeof tracks)[number]) {
     .map((moduleRef) => moduleBySlug.get(refId(moduleRef)))
     .filter((module) => module && canRenderLearnModule(module)).length;
 }
+
+function firstPublicModuleTitle(track: (typeof tracks)[number]) {
+  return track.data.canonicalModules
+    .map((moduleRef) => moduleBySlug.get(refId(moduleRef)))
+    .find((module) => module && canRenderLearnModule(module))?.data.title;
+}
 ---
 
 <BaseLayout
@@ -120,7 +126,12 @@ function publicModuleCount(track: (typeof tracks)[number]) {
       </div>
       <div class="learn-grid learn-grid--starting">
         {recommendedTracks.map((track) => (
-          <TrackCard track={track} publicModuleCount={publicModuleCount(track)} ctaLabel="Start track" />
+          <TrackCard
+            track={track}
+            publicModuleCount={publicModuleCount(track)}
+            firstModuleTitle={firstPublicModuleTitle(track)}
+            ctaLabel="Start track"
+          />
         ))}
       </div>
     </section>
@@ -131,7 +142,13 @@ function publicModuleCount(track: (typeof tracks)[number]) {
         Tracks represent learner intent. Start with the closest path, then use advanced and specialist tracks when their prerequisites match your current work.
       </p>
       <div class="learn-grid">
-        {tracks.map((track) => <TrackCard track={track} publicModuleCount={publicModuleCount(track)} />)}
+        {tracks.map((track) => (
+          <TrackCard
+            track={track}
+            publicModuleCount={publicModuleCount(track)}
+            firstModuleTitle={firstPublicModuleTitle(track)}
+          />
+        ))}
       </div>
     </section>
 
@@ -354,14 +371,56 @@ function publicModuleCount(track: (typeof tracks)[number]) {
   }
 
   @media (max-width: 780px) {
+    .learn-page {
+      gap: 1.45rem;
+    }
+
     .learn-hero,
     .learn-flow-strip ol,
     .learn-grid--starting {
       grid-template-columns: 1fr;
     }
 
+    .learn-hero {
+      gap: 1.1rem;
+      padding-top: 0.25rem;
+    }
+
     .learn-actions {
       justify-content: start;
+    }
+
+    .learn-flow-strip {
+      padding: 0.7rem 0;
+    }
+
+    .learn-flow-strip h2 {
+      font-size: 1rem;
+      margin-bottom: 0.55rem;
+    }
+
+    .learn-flow-strip ol {
+      gap: 0.3rem;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .learn-flow-strip li {
+      background: transparent;
+      border: 0;
+      border-radius: 0;
+      font-size: 0.95rem;
+      min-height: 2.35rem;
+      padding: 0.08rem 0;
+    }
+
+    .learn-flow-strip li::before {
+      font-size: 0.7rem;
+      height: 1.4rem;
+      width: 1.4rem;
+    }
+
+    .learn-grid {
+      margin-top: 0.8rem;
     }
   }
 </style>

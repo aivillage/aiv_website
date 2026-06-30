@@ -26,6 +26,12 @@ function publicModuleCount(track: (typeof tracks)[number]) {
     .map((moduleRef) => moduleBySlug.get(refId(moduleRef)))
     .filter((module) => module && canRenderLearnModule(module)).length;
 }
+
+function firstPublicModuleTitle(track: (typeof tracks)[number]) {
+  return track.data.canonicalModules
+    .map((moduleRef) => moduleBySlug.get(refId(moduleRef)))
+    .find((module) => module && canRenderLearnModule(module))?.data.title;
+}
 ---
 
 <BaseLayout title="Learn Deep Dives" canonical="/learn/deep-dives/" description="Advanced AI Village Learn beta tracks and resources.">
@@ -37,7 +43,14 @@ function publicModuleCount(track: (typeof tracks)[number]) {
     <section>
       <h2>Advanced Tracks</h2>
       <div class="learn-grid">
-        {tracks.map((track) => <TrackCard track={track} publicModuleCount={publicModuleCount(track)} />)}
+        {tracks.map((track) => (
+          <TrackCard
+            track={track}
+            publicModuleCount={publicModuleCount(track)}
+            firstModuleTitle={firstPublicModuleTitle(track)}
+            cardTone="secondary"
+          />
+        ))}
       </div>
     </section>
     <section>

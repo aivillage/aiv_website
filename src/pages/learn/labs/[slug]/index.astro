@@ -134,6 +134,23 @@ function moduleLinkHref(module: CollectionEntry<"learnModules">, track?: Collect
       </div>
     </header>
 
+    <section class="learn-two-column learn-exercise-priority">
+      <div>
+        <h2>Safety Boundary</h2>
+        <p>{lab.data.safetyBoundary}</p>
+      </div>
+      <div>
+        <h2>Expected Artifact</h2>
+        <ArtifactBadge value={lab.data.requiredArtifact} />
+      </div>
+      {lab.data.isOffensive && (
+        <div class="learn-callout--safety learn-exercise-priority__warning">
+          <h2>Authorized toy-lab boundary</h2>
+          <p>This exercise is for the provided toy lab and defensive debrief only. Do not transfer prompts, payloads, or techniques to real systems without explicit authorization and a documented scope.</p>
+        </div>
+      )}
+    </section>
+
     {modules.length > 0 && (
       <section class="learn-callout learn-callout--primary">
         <h2>Continue in related module</h2>
@@ -166,27 +183,24 @@ function moduleLinkHref(module: CollectionEntry<"learnModules">, track?: Collect
       </section>
     )}
 
-    <section class="learn-two-column learn-exercise-priority">
-      <div>
-        <h2>Safety Boundary</h2>
-        <p>{lab.data.safetyBoundary}</p>
-      </div>
-      <div>
-        <h2>Expected Artifact</h2>
-        <ArtifactBadge value={lab.data.requiredArtifact} />
-      </div>
-    </section>
-
-    {lab.data.isOffensive && (
-      <section class="learn-callout learn-callout--safety">
-        <h2>Authorized toy-lab boundary</h2>
-        <p>This exercise is for the provided toy lab and defensive debrief only. Do not transfer prompts, payloads, or techniques to real systems without explicit authorization and a documented scope.</p>
-      </section>
-    )}
-
     <section class="learn-content-body">
       <Content />
     </section>
+
+    {sourceUrl && (
+      <section class="learn-callout learn-source-panel">
+        <h2>{sourceHeading}</h2>
+        <p>{lab.data.sourceRepo}{lab.data.sourcePath ? ` / ${lab.data.sourcePath}` : ""}</p>
+        <a class="button button--secondary" href={sourceUrl} target="_blank" rel="noopener noreferrer">{sourceLinkLabel}</a>
+      </section>
+    )}
+
+    {!sourceUrl && (
+      <section class="learn-callout learn-source-panel">
+        <h2>{sourceHeading}</h2>
+        <p class="text-muted">No public source link is attached to this lab.</p>
+      </section>
+    )}
 
     <section class="learn-two-column">
       <div>
@@ -226,21 +240,6 @@ function moduleLinkHref(module: CollectionEntry<"learnModules">, track?: Collect
         </div>
       )}
     </section>
-
-    {sourceUrl && (
-      <section class="learn-callout learn-source-panel">
-        <h2>{sourceHeading}</h2>
-        <p>{lab.data.sourceRepo}{lab.data.sourcePath ? ` / ${lab.data.sourcePath}` : ""}</p>
-        <a class="button button--secondary" href={sourceUrl} target="_blank" rel="noopener noreferrer">{sourceLinkLabel}</a>
-      </section>
-    )}
-
-    {!sourceUrl && (
-      <section class="learn-callout learn-source-panel">
-        <h2>{sourceHeading}</h2>
-        <p class="text-muted">No public source link is attached to this lab.</p>
-      </section>
-    )}
 
     {(tracks.length > 0 || resources.length > 0) && (
       <section>
@@ -335,6 +334,23 @@ function moduleLinkHref(module: CollectionEntry<"learnModules">, track?: Collect
     border: 1px solid color-mix(in srgb, var(--aiv-action-secondary) 48%, var(--aiv-line-subtle));
     border-radius: 8px;
     padding: 1rem;
+  }
+
+  .learn-exercise-priority__warning {
+    border: 1px solid color-mix(in srgb, var(--aiv-risk) 50%, var(--aiv-line-subtle));
+    border-radius: 8px;
+    grid-column: 1 / -1;
+    padding: 0.9rem;
+  }
+
+  .learn-exercise-priority__warning h2,
+  .learn-exercise-priority__warning p {
+    margin: 0;
+  }
+
+  .learn-exercise-priority__warning {
+    display: grid;
+    gap: 0.45rem;
   }
 
   .learn-source-panel {
