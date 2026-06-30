@@ -14,13 +14,13 @@ rightsMode: link_only
 license: Dreadnode site terms
 cost: free
 loginRequired: true
-accessMode: direct_open
+accessMode: free_account_required
 embedAllowed: false
 ageRestricted: false
 attribution: Dreadnode
 canonicalFor:
   - ctf-path
-reviewStatus: needs_verification
+reviewStatus: deferred
 maintenanceRisk: medium
 caveats:
   - Rights metadata needs review before reuse beyond linking.
@@ -28,7 +28,7 @@ caveats:
   - Instructor or human review only.
   - Do not surface in the public CTF path.
 reviewOwner: AI Village Learn
-lastChecked: "2026-06-26"
+lastChecked: "2026-06-30"
 status: draft
 ---
 

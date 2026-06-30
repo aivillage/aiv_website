@@ -20,18 +20,18 @@ embedAllowed: false
 ageRestricted: false
 attribution: PortSwigger
 canonicalFor:
-  - agent-abuse-intro
-  - indirect-prompt-injection-lab-wrapper
-  - prompt-extraction-lab-wrapper
   - prompt-injection-basics
-  - red-team-report-writing
-  - rules-of-engagement-lab-safety
-reviewStatus: accepted
+reviewStatus: human_review
 maintenanceRisk: low
 caveats:
   - Rights metadata needs review before reuse beyond linking.
+  - Topic page only; do not add or link individual hands-on exercises from this provider in the public Learn path.
+  - Optional human-review reference only, never required core.
 reviewOwner: AI Village Learn
-lastChecked: "2026-06-26"
+lastChecked: "2026-06-30"
+recommendedRole: deeper
+watchFocus: Use only as high-level topic orientation after AIV/OWASP safety framing is complete.
+checkpointPrompt: Note one defensive concept worth reviewing and do not copy lab steps or payloads into the Learn artifact.
 ---
 
 Catalog metadata for this linked resource is included for the curriculum beta. Review rights and attribution before reuse beyond linking.
