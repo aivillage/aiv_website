@@ -4,9 +4,7 @@ import type { CollectionEntry } from "astro:content";
 import BaseLayout from "../../../../layouts/BaseLayout.astro";
 import PageShell from "../../../../components/layout/PageShell.astro";
 import ArtifactBadge from "../../../../components/learn/ArtifactBadge.astro";
-import DifficultyBadge from "../../../../components/learn/DifficultyBadge.astro";
-import StageBadge from "../../../../components/learn/StageBadge.astro";
-import StatusBadge from "../../../../components/learn/StatusBadge.astro";
+import ReferenceRail from "../../../../components/learn/ReferenceRail.astro";
 import {
   canRenderLearnLab,
   canRenderLearnModule,
@@ -17,6 +15,7 @@ import {
   labPath,
   modulePath,
   refId,
+  resourcePath,
   trackPath,
   trackScopedModulePath,
 } from "../../../../utils/learn";
@@ -92,7 +91,6 @@ const sourceUrl = lab.data.sourceRepo
   : "";
 const isWorkshopBacked = lab.data.sourceRepo === "aivillage/workshops";
 const sourceHeading = isWorkshopBacked ? "Workshop Source" : "Source Reference";
-const sourceLinkLabel = isWorkshopBacked ? "Open workshop source" : "Open reference";
 const moduleTrackPriority = [
   "ai-security-core",
   "defensive-ai-engineering",
@@ -112,6 +110,54 @@ const prioritizedModules = [...modules].sort((left, right) =>
 );
 const primaryModuleLinks = prioritizedModules.slice(0, 3);
 const additionalModuleLinks = prioritizedModules.slice(3);
+const sourceFacts = [
+  { label: "Repository", value: lab.data.sourceRepo || "No public source link attached", href: sourceUrl || undefined, external: Boolean(sourceUrl) },
+  { label: "Source path", value: lab.data.sourcePath },
+  { label: "Setup status", value: formatLabel(lab.data.setupStatus) },
+  { label: "Debrief status", value: formatLabel(lab.data.debriefStatus) },
+  { label: "Instructor guide", value: formatLabel(lab.data.instructorGuideStatus) },
+];
+const railSections = [
+  {
+    title: "Exercise Specs",
+    facts: [
+      { label: "Run modes", value: lab.data.runModes.map(formatLabel).join(", ") },
+      { label: "LLM", value: lab.data.llmRequired ? "Required" : "Not required" },
+      { label: "GPU", value: lab.data.gpuRequired ? "Required" : "Not required" },
+      { label: "Time", value: `${lab.data.estimatedMinutes} minutes` },
+      { label: "Stage", value: `${formatLabel(lab.data.stageStart)} to ${formatLabel(lab.data.stageEnd)}` },
+    ],
+  },
+  {
+    title: sourceHeading,
+    facts: sourceFacts,
+  },
+  {
+    title: "Concepts",
+    tags: lab.data.concepts,
+  },
+  {
+    title: "Threat Categories",
+    tags: lab.data.threatCategories,
+  },
+  {
+    title: "Related Tracks",
+    links: tracks.map((track) => ({ label: track.data.title, href: trackPath(track) })),
+  },
+  {
+    title: "Related Resources",
+    links: resources.map((resource) => ({
+      label: resource.data.title,
+      href: resourcePath(resource),
+      meta: resource.data.provider,
+    })),
+  },
+  {
+    title: "Framework Mappings",
+    collapsed: true,
+    links: mappings.flatMap((mapping) => mapping.values.map((value) => ({ label: value, meta: mapping.label }))),
+  },
+];
 
 function moduleLinkHref(module: CollectionEntry<"learnModules">, track?: CollectionEntry<"learnTracks">) {
   return track ? trackScopedModulePath(track, module) : modulePath(module);
@@ -119,176 +165,107 @@ function moduleLinkHref(module: CollectionEntry<"learnModules">, track?: Collect
 ---
 
 <BaseLayout title={lab.data.title} canonical={labPath(lab)} description={lab.data.summary}>
-  <PageShell class="learn-lab-page">
-    <nav class="learn-breadcrumb" aria-label="Breadcrumb"><a href="/learn/">Learn</a> / <a href="/learn/labs/">Labs</a> / <span>{lab.data.title}</span></nav>
+  <PageShell class="learn-lab-page" width="full">
+    <div class="learn-lab-page__inner">
+      <nav class="learn-breadcrumb" aria-label="Breadcrumb"><a href="/learn/">Learn</a> / <a href="/learn/labs/">Labs</a> / <span>{lab.data.title}</span></nav>
 
-    <header class="learn-lab-header">
-      <div>
+      <header class="learn-lab-header">
         <div class="learn-meta-row">
-          <StatusBadge value={lab.data.status} />
-          <DifficultyBadge value={lab.data.difficulty} />
-          {lab.data.isOffensive && <span class="learn-flag">Offensive</span>}
+          <span>{formatLabel(lab.data.difficulty)}</span>
+          <span>{lab.data.estimatedMinutes} min</span>
+          {lab.data.isOffensive && <span class="learn-flag">Offensive toy lab</span>}
         </div>
         <h1>{lab.data.title}</h1>
-        <p class="text-lead">{lab.data.summary}</p>
-      </div>
-    </header>
+        <p>{lab.data.summary}</p>
+      </header>
 
-    <section class="learn-two-column learn-exercise-priority">
-      <div>
-        <h2>Safety Boundary</h2>
-        <p>{lab.data.safetyBoundary}</p>
-      </div>
-      <div>
-        <h2>Expected Artifact</h2>
-        <ArtifactBadge value={lab.data.requiredArtifact} />
-      </div>
-      {lab.data.isOffensive && (
-        <div class="learn-callout--safety learn-exercise-priority__warning">
-          <h2>Authorized toy-lab boundary</h2>
-          <p>This exercise is for the provided toy lab and defensive debrief only. Do not transfer prompts, payloads, or techniques to real systems without explicit authorization and a documented scope.</p>
-        </div>
-      )}
-    </section>
-
-    {modules.length > 0 && (
-      <section class="learn-callout learn-callout--primary">
-        <h2>Continue in related module</h2>
-        <p class="learn-callout__hint">Start with the closest curriculum mapping, then use the remaining links only when you need another track context.</p>
-        <ul class="learn-link-list">
-          {primaryModuleLinks.map(({ module, track }) => (
-            <li>
-              <a class="learn-module-link" href={moduleLinkHref(module, track)}>
-                <strong>{module.data.title}</strong>
-                {track && <span>{" · "}{track.data.title}</span>}
-              </a>
-            </li>
-          ))}
-        </ul>
-        {additionalModuleLinks.length > 0 && (
-          <details class="learn-continuation-more">
-            <summary>Show {additionalModuleLinks.length} more related {additionalModuleLinks.length === 1 ? "module" : "modules"}</summary>
-            <ul class="learn-link-list">
-              {additionalModuleLinks.map(({ module, track }) => (
-                <li>
-                  <a class="learn-module-link" href={moduleLinkHref(module, track)}>
-                    <strong>{module.data.title}</strong>
-                    {track && <span>{" · "}{track.data.title}</span>}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </details>
-        )}
-      </section>
-    )}
-
-    <section class="learn-content-body">
-      <Content />
-    </section>
-
-    {sourceUrl && (
-      <section class="learn-callout learn-source-panel">
-        <h2>{sourceHeading}</h2>
-        <p>{lab.data.sourceRepo}{lab.data.sourcePath ? ` / ${lab.data.sourcePath}` : ""}</p>
-        <a class="button button--secondary" href={sourceUrl} target="_blank" rel="noopener noreferrer">{sourceLinkLabel}</a>
-      </section>
-    )}
-
-    {!sourceUrl && (
-      <section class="learn-callout learn-source-panel">
-        <h2>{sourceHeading}</h2>
-        <p class="text-muted">No public source link is attached to this lab.</p>
-      </section>
-    )}
-
-    <section class="learn-two-column">
-      <div>
-        <h2>Run Modes</h2>
-        <p>{lab.data.runModes.map(formatLabel).join(", ")}</p>
-        <h2>Stage</h2>
-        <div class="learn-meta-row">
-          <StageBadge value={lab.data.stageStart} />
-          <span>to</span>
-          <StageBadge value={lab.data.stageEnd} />
-        </div>
-        <h2>Requirements</h2>
-        <ul>
-          <li>LLM: {lab.data.llmRequired ? "Required" : "Not required"}</li>
-          <li>GPU: {lab.data.gpuRequired ? "Required" : "Not required"}</li>
-          <li>Estimated time: {lab.data.estimatedMinutes} minutes</li>
-        </ul>
-      </div>
-      {(lab.data.concepts.length > 0 || lab.data.threatCategories.length > 0) && (
-        <div>
-        {lab.data.concepts.length > 0 && (
-          <>
-            <h2>Concepts</h2>
-            <ul>
-              {lab.data.concepts.map((concept) => <li>{concept}</li>)}
-            </ul>
-          </>
-        )}
-        {lab.data.threatCategories.length > 0 && (
-          <>
-            <h2>Threat Categories</h2>
-            <ul>
-              {lab.data.threatCategories.map((category) => <li>{category}</li>)}
-            </ul>
-          </>
-        )}
-        </div>
-      )}
-    </section>
-
-    {(tracks.length > 0 || resources.length > 0) && (
-      <section>
-        <h2>Related Tracks And Resources</h2>
-        <div class="learn-related-grid">
-          {tracks.length > 0 && (
+      <div class="learn-lab-layout">
+        <main class="learn-lab-main">
+          <section class="learn-exercise-brief learn-surface-exercise" aria-labelledby="exercise-brief-heading">
             <div>
-              <h3>Tracks</h3>
-              <ul class="learn-link-list">
-                {tracks.map((track) => <li><a href={trackPath(track)}>{track.data.title}</a></li>)}
-              </ul>
+              <span id="exercise-brief-heading">Safety Boundary</span>
+              <p>{lab.data.safetyBoundary}</p>
             </div>
-          )}
-          {resources.length > 0 && (
             <div>
-              <h3>Resources</h3>
-              <ul class="learn-link-list">
-                {resources.map((resource) => <li><a href={resource.data.canonicalUrl} target="_blank" rel="noopener noreferrer">{resource.data.title}</a> <span>{resource.data.provider}</span></li>)}
-              </ul>
+              <span>Expected Artifact</span>
+              <ArtifactBadge value={lab.data.requiredArtifact} />
             </div>
-          )}
-        </div>
-      </section>
-    )}
-
-    {mappings.length > 0 && (
-      <section>
-        <details class="learn-mapping-panel">
-          <summary>Framework mappings</summary>
-          <div class="learn-mapping-grid">
-            {mappings.map((mapping) => (
-              <div>
-                <h3>{mapping.label}</h3>
-                <ul>
-                  {mapping.values.map((value) => <li>{value}</li>)}
-                </ul>
+            {lab.data.isOffensive && (
+              <div class="learn-exercise-brief__warning">
+                <span>Authorized toy-lab boundary</span>
+                <p>This exercise is for the provided toy lab and defensive debrief only. Do not transfer prompts, payloads, or techniques to real systems without explicit authorization and a documented scope.</p>
               </div>
-            ))}
-          </div>
-        </details>
-      </section>
-    )}
+            )}
+          </section>
+
+          <section class="learn-run-section learn-surface-task" aria-labelledby="run-section-heading">
+            <div class="learn-section-heading">
+              <div>
+                <span class="learn-kicker">Exercise</span>
+                <h2 id="run-section-heading">Run / Debrief</h2>
+              </div>
+              <p>Use the existing lab instructions inside the safety boundary above; source links and mappings stay in the reference rail.</p>
+            </div>
+            <div class="learn-content-body">
+              <Content />
+            </div>
+          </section>
+
+          {modules.length > 0 && (
+            <section class="learn-continue-module learn-surface-reference" aria-labelledby="continue-module-heading">
+              <div class="learn-section-heading">
+                <div>
+                  <span class="learn-kicker">Continue</span>
+                  <h2 id="continue-module-heading">Continue in module</h2>
+                </div>
+                <p>Return to the closest curriculum module after completing the exercise artifact.</p>
+              </div>
+              <ul class="learn-link-list">
+                {primaryModuleLinks.map(({ module, track }) => (
+                  <li>
+                    <a class="learn-module-link" href={moduleLinkHref(module, track)}>
+                      <strong>{module.data.title}</strong>
+                      {track && <span>{track.data.title}</span>}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+              {additionalModuleLinks.length > 0 && (
+                <details class="learn-continuation-more">
+                  <summary>Show {additionalModuleLinks.length} more related {additionalModuleLinks.length === 1 ? "module" : "modules"}</summary>
+                  <ul class="learn-link-list">
+                    {additionalModuleLinks.map(({ module, track }) => (
+                      <li>
+                        <a class="learn-module-link" href={moduleLinkHref(module, track)}>
+                          <strong>{module.data.title}</strong>
+                          {track && <span>{track.data.title}</span>}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </details>
+              )}
+            </section>
+          )}
+        </main>
+
+        <ReferenceRail title="Lab Reference" sections={railSections} />
+      </div>
+    </div>
   </PageShell>
 </BaseLayout>
 
 <style>
   .learn-lab-page {
+    width: 100%;
+  }
+
+  .learn-lab-page__inner {
     display: grid;
-    gap: 2rem;
+    gap: 1rem;
+    margin-inline: auto;
+    max-width: 1360px;
+    min-width: 0;
   }
 
   .learn-breadcrumb,
@@ -300,86 +277,109 @@ function moduleLinkHref(module: CollectionEntry<"learnModules">, track?: Collect
     gap: 0.5rem;
   }
 
-  .learn-two-column {
+  .learn-lab-header {
     display: grid;
-    gap: 1.25rem;
-    grid-template-columns: minmax(0, 1fr) minmax(260px, 0.55fr);
+    gap: 0.5rem;
   }
 
-  .learn-callout,
-  .learn-mapping-panel,
-  .learn-mapping-grid > div {
-    background: var(--aiv-nested-bg);
-    border: 1px solid var(--aiv-nested-border);
-    border-radius: 8px;
-    padding: 1rem;
-  }
-
-  .learn-callout--primary {
-    border-color: var(--aiv-action-primary);
-  }
-
-  .learn-callout__hint {
-    color: var(--aiv-text-muted);
-    margin: 0 0 0.75rem;
-  }
-
-  .learn-callout--safety {
-    background: color-mix(in srgb, var(--aiv-risk) 10%, var(--aiv-bg-panel));
-    border-color: color-mix(in srgb, var(--aiv-risk) 50%, var(--aiv-line-subtle));
-  }
-
-  .learn-exercise-priority {
-    background: color-mix(in srgb, var(--aiv-action-secondary) 10%, var(--aiv-bg-panel));
-    border: 1px solid color-mix(in srgb, var(--aiv-action-secondary) 48%, var(--aiv-line-subtle));
-    border-radius: 8px;
-    padding: 1rem;
-  }
-
-  .learn-exercise-priority__warning {
-    border: 1px solid color-mix(in srgb, var(--aiv-risk) 50%, var(--aiv-line-subtle));
-    border-radius: 8px;
-    grid-column: 1 / -1;
-    padding: 0.9rem;
-  }
-
-  .learn-exercise-priority__warning h2,
-  .learn-exercise-priority__warning p {
+  .learn-lab-header h1,
+  .learn-lab-header p {
     margin: 0;
   }
 
-  .learn-exercise-priority__warning {
+  .learn-lab-header h1 {
+    font-size: clamp(2.05rem, 4vw, 3.4rem);
+    line-height: 1.02;
+    max-width: 16ch;
+  }
+
+  .learn-lab-header p {
+    color: var(--aiv-text-secondary);
+    font-size: clamp(1rem, 1.3vw, 1.16rem);
+    line-height: 1.45;
+    max-width: 74ch;
+  }
+
+  .learn-lab-layout {
+    align-items: start;
     display: grid;
-    gap: 0.45rem;
+    gap: 1rem;
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 340px);
   }
 
-  .learn-source-panel {
-    max-width: 76ch;
+  .learn-lab-main {
+    display: grid;
+    gap: 1rem;
+    min-width: 0;
   }
 
-  .button {
-    background: var(--aiv-action-primary);
-    border: 1px solid var(--aiv-action-primary);
-    border-radius: 6px;
-    color: var(--aiv-bg-canvas);
-    display: inline-flex;
-    font-weight: 800;
-    justify-content: center;
-    min-height: 2.75rem;
-    padding: 0.6rem 0.95rem;
-    text-decoration: none;
+  .learn-exercise-brief,
+  .learn-run-section,
+  .learn-continue-module {
+    display: grid;
+    gap: 0.85rem;
+    padding: 1rem;
   }
 
-  .button--secondary {
-    background: transparent;
-    color: var(--aiv-action-primary);
+  .learn-exercise-brief {
+    grid-template-columns: minmax(0, 1fr) minmax(16rem, 0.55fr);
   }
 
-  .learn-callout h2,
-  .learn-mapping-panel summary,
-  .learn-mapping-grid h3 {
-    font-size: 1.1rem;
-    font-weight: 800;
+  .learn-exercise-brief > div {
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .learn-exercise-brief span,
+  .learn-kicker {
+    color: var(--aiv-text-muted);
+    font-size: 0.78rem;
+    font-weight: 900;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  .learn-exercise-brief p,
+  .learn-section-heading p {
+    color: var(--aiv-text-secondary);
+    line-height: 1.45;
+    margin: 0;
+  }
+
+  .learn-exercise-brief__warning {
+    background: color-mix(in srgb, var(--aiv-risk) 10%, var(--aiv-bg-panel));
+    border: 1px solid color-mix(in srgb, var(--aiv-risk) 50%, var(--aiv-line-subtle));
+    border-radius: 8px;
+    grid-column: 1 / -1;
+    padding: 0.85rem;
+  }
+
+  .learn-section-heading {
+    align-items: start;
+    display: grid;
+    gap: 0.75rem;
+    grid-template-columns: minmax(11rem, max-content) minmax(18rem, 62ch);
+    justify-content: space-between;
+  }
+
+  .learn-section-heading h2,
+  .learn-section-heading p {
+    margin: 0;
+  }
+
+  .learn-section-heading h2 {
+    font-size: clamp(1.24rem, 2vw, 1.62rem);
+    line-height: 1.15;
+  }
+
+  .learn-content-body {
+    max-width: 82ch;
+    min-width: 0;
+  }
+
+  .learn-content-body :global(h2:first-child),
+  .learn-content-body :global(h3:first-child),
+  .learn-content-body :global(p:first-child) {
     margin-top: 0;
   }
 
@@ -389,25 +389,22 @@ function moduleLinkHref(module: CollectionEntry<"learnModules">, track?: Collect
     color: var(--aiv-risk);
     font-size: 0.8rem;
     font-weight: 700;
-    padding: 0.28rem 0.65rem;
+    padding: 0.22rem 0.55rem;
   }
 
-  .learn-link-list,
-  .learn-related-grid,
-  .learn-mapping-grid {
+  .learn-link-list {
     display: grid;
-    gap: 0.75rem;
-  }
-
-  .learn-link-list span {
-    color: var(--aiv-text-muted);
+    gap: 0.65rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
   }
 
   .learn-module-link {
     display: inline-grid;
     gap: 0.12rem;
     line-height: 1.3;
-    min-height: 2.75rem;
+    min-height: 2.65rem;
     padding-block: 0.2rem;
   }
 
@@ -422,45 +419,32 @@ function moduleLinkHref(module: CollectionEntry<"learnModules">, track?: Collect
 
   .learn-continuation-more {
     border-top: 1px solid var(--aiv-line-subtle);
-    margin-top: 0.75rem;
-    padding-top: 0.75rem;
+    padding-top: 0.65rem;
   }
 
   .learn-continuation-more summary {
-    color: var(--aiv-action-primary);
     cursor: pointer;
-    font-weight: 800;
-    min-height: 2.75rem;
-    padding-block: 0.55rem;
+    font-weight: 900;
+    min-height: 2.65rem;
   }
 
-  .learn-continuation-more .learn-link-list {
-    margin-top: 0.5rem;
-  }
-
-  .learn-mapping-grid {
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  }
-
-  .learn-related-grid {
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  }
-
-  .learn-content-body {
-    max-width: 76ch;
-  }
-
-  .button:focus-visible,
   .learn-module-link:focus-visible,
-  .learn-continuation-more summary:focus-visible,
-  .learn-related-grid a:focus-visible,
-  .learn-mapping-panel summary:focus-visible {
+  .learn-continuation-more summary:focus-visible {
     outline: 3px solid var(--aiv-focus-ring);
     outline-offset: 3px;
   }
 
-  @media (max-width: 780px) {
-    .learn-two-column {
+  @media (max-width: 1099px) {
+    .learn-lab-layout,
+    .learn-exercise-brief {
+      grid-template-columns: 1fr;
+    }
+
+    .learn-lab-header h1 {
+      max-width: none;
+    }
+
+    .learn-section-heading {
       grid-template-columns: 1fr;
     }
   }

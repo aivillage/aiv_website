@@ -3,6 +3,7 @@ import { getCollection } from "astro:content";
 import type { CollectionEntry } from "astro:content";
 import BaseLayout from "../../../../layouts/BaseLayout.astro";
 import PageShell from "../../../../components/layout/PageShell.astro";
+import ReferenceRail from "../../../../components/learn/ReferenceRail.astro";
 import {
   accessModeLabels,
   byTitle,
@@ -59,7 +60,35 @@ const { series, episodes, tracks, allTracks, modules } = Astro.props;
 const creator = series.data.creator || series.data.attribution || series.data.provider;
 const accessLabel = accessModeLabels[series.data.accessMode] || accessModeLabels.direct_open;
 const episodeCount = episodes.length;
-const pathLabel = episodeCount === 0 ? "Episode Path Not Ready" : episodeCount === 1 ? "Single Selected Episode" : "AIV-Selected Episode Path";
+const pathLabel = episodeCount === 0 ? "Episode path not ready" : episodeCount === 1 ? "Single selected episode" : "AIV-selected episode path";
+const introText = episodeCount >= 2
+  ? series.data.watchFocus || "Use the selected episodes in order, then continue through the module checkpoint each episode supports."
+  : episodeCount === 1
+    ? "AI Village has selected one episode from this source. Treat it as a focused resource path, not a full video course."
+    : "Episode records for this playlist are not public yet. Use the original source only as secondary reference.";
+const railSections = [
+  {
+    title: "Series Source",
+    facts: [
+      { label: "Provider", value: series.data.provider },
+      { label: "Creator", value: creator },
+      { label: "Access", value: accessLabel },
+      { label: "Episodes mapped", value: `${episodeCount}` },
+      { label: "Original", value: "Open original series", href: series.data.canonicalUrl, external: true },
+      series.data.playlistUrl && series.data.playlistUrl !== series.data.canonicalUrl
+        ? { label: "Playlist", value: "Open playlist", href: series.data.playlistUrl, external: true }
+        : { label: "Playlist", value: "" },
+    ],
+  },
+  {
+    title: "Related Tracks",
+    links: tracks.map((track) => ({ label: track.data.title, href: trackPath(track) })),
+  },
+  {
+    title: "Use Pattern",
+    text: "Choose an episode row first. Open the original playlist only after the module focus and checkpoint are clear.",
+  },
+];
 
 function episodeModules(episode: CollectionEntry<"learnResources">) {
   const episodeSlug = entrySlug(episode);
@@ -82,130 +111,104 @@ function episodeModuleTrack(module: CollectionEntry<"learnModules">) {
 ---
 
 <BaseLayout title={series.data.title} canonical={seriesPath(series)} description={`Learn series from ${series.data.provider}: ${series.data.title}.`}>
-  <PageShell class="learn-series-page">
-    <nav class="learn-breadcrumb" aria-label="Breadcrumb"><a href="/learn/">Learn</a> / <a href="/learn/series/">Series</a> / <span>{series.data.title}</span></nav>
+  <PageShell class="learn-series-page" width="full">
+    <div class="learn-series-page__inner">
+      <nav class="learn-breadcrumb" aria-label="Breadcrumb"><a href="/learn/">Learn</a> / <a href="/learn/series/">Series</a> / <span>{series.data.title}</span></nav>
 
-    <header class="learn-series-header">
-      <div class="learn-series-header__main">
+      <header class="learn-series-header">
         <div class="learn-meta-row">
+          <span>{pathLabel}</span>
           <span>{formatLabel(series.data.resourceType)}</span>
           <span class="learn-access-badge">{accessLabel}</span>
-          <span>{pathLabel}</span>
         </div>
         <h1>{series.data.title}</h1>
-        <p class="text-lead">
-          {episodeCount >= 2
-            ? series.data.watchFocus || `An ordered learning path from ${creator}.`
-            : episodeCount === 1
-              ? `AI Village has selected one episode from ${creator}. Treat this as a focused resource path, not a full series.`
-              : `Episode records for this playlist are not ready yet. Use the original source links as secondary context.`}
-        </p>
-      </div>
-    </header>
+        <p>{introText}</p>
+      </header>
 
-    <section class="learn-callout">
-      <h2>How To Use This Series</h2>
-      <p>
-        {episodeCount >= 2
-          ? "Watch episodes in order when you want the full path, or jump from a related module to the episode that supports its checkpoint. Each episode links to a resource detail page with focus and checkpoint notes."
-          : episodeCount === 1
-            ? "Use the selected episode from its resource page or related module. The full source remains secondary until more AIV-selected episodes are mapped."
-            : "This playlist is not presented as a full Learn series until public episode records are mapped."}
-      </p>
-      {series.data.accessNotes && <p>{series.data.accessNotes}</p>}
-    </section>
+      <div class="learn-series-layout">
+        <main class="learn-series-main">
+          <section class="episode-path learn-surface-path" aria-labelledby="episode-path-heading">
+            <div class="episode-path__header">
+              <div>
+                <span>Episode path</span>
+                <h2 id="episode-path-heading">{episodeCount === 1 ? "Selected episode" : "Episodes"}</h2>
+              </div>
+              {episodeCount > 0 && <p>{episodeCount} mapped {episodeCount === 1 ? "episode" : "episodes"}</p>}
+            </div>
 
-    <section>
-      <h2>{episodeCount === 1 ? "Selected Episode" : "Episodes"}</h2>
-      {episodes.length > 0 ? (
-        <ol class="learn-episode-list">
-          {episodes.map((episode, index) => {
-            const mappedModules = episodeModules(episode);
-            const seenTrackSlugs = new Set();
+            {episodes.length > 0 ? (
+              <ol class="episode-path__list">
+                {episodes.map((episode, index) => {
+                  const mappedModules = episodeModules(episode);
 
-            return (
-              <li class="learn-episode-card">
-                <div class="learn-episode-card__order">Episode {episode.data.episodeOrder ?? index + 1}</div>
-                <div class="learn-episode-card__body">
-                  <h3><a href={resourcePath(episode)}>{episode.data.title}</a></h3>
-                  <dl>
-                    <div>
-                      <dt>Focus</dt>
-                      <dd>{episode.data.watchFocus || episode.data.provider}</dd>
-                    </div>
-                    {episode.data.checkpointPrompt && (
-                      <div>
-                        <dt>Checkpoint</dt>
-                        <dd>{episode.data.checkpointPrompt}</dd>
+                  return (
+                    <li class="episode-path__item">
+                      <div class="episode-path__marker" aria-label={`Episode ${episode.data.episodeOrder ?? index + 1}`}>{episode.data.episodeOrder ?? index + 1}</div>
+                      <div class="episode-path__main">
+                        <h3><a href={resourcePath(episode)}>{episode.data.title}</a></h3>
+                        <div class="episode-path__details">
+                          <div>
+                            <span>Focus</span>
+                            <p>{episode.data.watchFocus || "Use the resource page for AIV focus notes before opening the source."}</p>
+                          </div>
+                          <div>
+                            <span>Checkpoint</span>
+                            <p>{episode.data.checkpointPrompt || "Write one note about how this episode changes the related module artifact."}</p>
+                          </div>
+                        </div>
                       </div>
-                    )}
-                    {mappedModules.length > 0 && (
-                      <div>
-                        <dt>Module mapping</dt>
-                        <dd>
-                          <ul class="learn-module-link-list">
+                      <div class="episode-path__mapping">
+                        <span>Module mapping</span>
+                        {mappedModules.length > 0 ? (
+                          <ul>
                             {mappedModules.map((module) => {
                               const track = episodeModuleTrack(module);
-                              const trackSlug = track ? entrySlug(track) : "";
-                              const showTrack = Boolean(track && trackSlug && !seenTrackSlugs.has(trackSlug));
-                              if (trackSlug) seenTrackSlugs.add(trackSlug);
                               return (
                                 <li>
-                                  <a href={episodeModulePath(module)}>
-                                    <strong>{module.data.title}</strong>
-                                    {track && showTrack && <span>{" · "}{track.data.title}</span>}
-                                  </a>
+                                  <a href={episodeModulePath(module)}>{module.data.title}</a>
+                                  {track && <small>{track.data.title}</small>}
                                 </li>
                               );
                             })}
                           </ul>
-                        </dd>
+                        ) : (
+                          <p>No public module mapping yet.</p>
+                        )}
                       </div>
-                    )}
-                  </dl>
-                  <div class="learn-episode-card__actions">
-                    <a href={resourcePath(episode)}>View resource details</a>
-                    {mappedModules.length > 0 && <a href={episodeModulePath(mappedModules[0])}>Continue in module</a>}
-                  </div>
-                </div>
-              </li>
-            );
-          })}
-        </ol>
-      ) : (
-        <section class="learn-callout">
-          <h3>Episodes Coming Later</h3>
-          <p>Episode records have not been added to this series yet. Use the source links below for the original series.</p>
-        </section>
-      )}
-    </section>
+                      <div class="episode-path__actions">
+                        {mappedModules.length > 0 && <a class="episode-path__continue" href={episodeModulePath(mappedModules[0])}>Continue in module</a>}
+                        <a href={resourcePath(episode)}>Open resource page</a>
+                      </div>
+                    </li>
+                  );
+                })}
+              </ol>
+            ) : (
+              <div class="episode-path__empty">
+                <h3>Episodes coming later</h3>
+                <p>Episode records have not been added to this series yet. Use the source links in the reference rail as secondary context.</p>
+              </div>
+            )}
+          </section>
+        </main>
 
-    <section class="learn-callout learn-source-panel">
-      <h2>Series Actions</h2>
-      <p>Use the original source after choosing an episode path or module checkpoint.</p>
-      <div class="learn-source-actions">
-        <a href={series.data.canonicalUrl} target="_blank" rel="noopener noreferrer">Open original series</a>
-        {series.data.playlistUrl && series.data.playlistUrl !== series.data.canonicalUrl && (
-          <a href={series.data.playlistUrl} target="_blank" rel="noopener noreferrer">Open playlist</a>
-        )}
+        <ReferenceRail title="Series Reference" sections={railSections} />
       </div>
-    </section>
-
-    {tracks.length > 0 && (
-      <section>
-        <h2>Related Tracks</h2>
-        <ul class="learn-link-list">
-          {tracks.map((track) => <li><a href={trackPath(track)}>{track.data.title}</a></li>)}
-        </ul>
-      </section>
-    )}
+    </div>
   </PageShell>
 </BaseLayout>
 
 <style>
   .learn-series-page {
+    width: 100%;
+  }
+
+  .learn-series-page__inner {
     display: grid;
-    gap: 2rem;
+    gap: 1rem;
+    margin-inline: auto;
+    max-width: 1360px;
+    min-width: 0;
   }
 
   .learn-breadcrumb,
@@ -217,126 +220,38 @@ function episodeModuleTrack(module: CollectionEntry<"learnModules">) {
     gap: 0.5rem;
   }
 
-  .learn-two-column {
-    display: grid;
-    gap: 1.25rem;
-    grid-template-columns: minmax(0, 1fr) minmax(260px, 0.55fr);
-  }
-
-  .learn-series-header__main {
-    max-width: 82ch;
-  }
-
-  .learn-callout {
-    align-self: start;
-    background: var(--aiv-nested-bg);
-    border: 1px solid var(--aiv-nested-border);
-    border-radius: 8px;
+  .learn-series-header {
     display: grid;
     gap: 0.5rem;
-    padding: 1rem;
   }
 
-  .learn-source-panel {
-    max-width: 76ch;
-  }
-
-  .learn-source-actions {
-    align-items: center;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-  }
-
-  .learn-callout h2 {
-    font-size: 1.1rem;
-    margin-top: 0;
-  }
-
-  .learn-episode-list {
-    display: grid;
-    gap: 0.9rem;
-    list-style: none;
-    margin: 0;
-    padding-left: 0;
-  }
-
-  .learn-episode-card {
-    background: var(--aiv-card-bg);
-    border: 1px solid var(--aiv-card-border);
-    border-radius: 8px;
-    display: grid;
-    gap: 0.9rem;
-    grid-template-columns: auto minmax(0, 1fr);
-    padding: 1rem;
-  }
-
-  .learn-episode-card__order {
-    align-items: center;
-    background: var(--aiv-nested-bg);
-    border: 1px solid var(--aiv-nested-border);
-    border-radius: 999px;
-    display: inline-flex;
-    font-weight: 800;
-    height: 3rem;
-    justify-content: center;
-    line-height: 1.15;
-    text-align: center;
-    width: 4.6rem;
-  }
-
-  .learn-episode-card__body,
-  .learn-episode-card dl,
-  .learn-module-link-list {
-    display: grid;
-    gap: 0.75rem;
-  }
-
-  .learn-episode-card h3,
-  .learn-episode-card dl,
-  .learn-episode-card dd,
-  .learn-module-link-list {
+  .learn-series-header h1,
+  .learn-series-header p {
     margin: 0;
   }
 
-  .learn-episode-card dt {
-    color: var(--aiv-text-muted);
-    font-size: 0.78rem;
-    font-weight: 800;
-    text-transform: uppercase;
+  .learn-series-header h1 {
+    font-size: clamp(2.05rem, 4vw, 3.4rem);
+    line-height: 1.02;
+    max-width: 17ch;
   }
 
-  .learn-module-link-list {
-    list-style: none;
-    padding-left: 0;
+  .learn-series-header p {
+    color: var(--aiv-text-secondary);
+    font-size: clamp(1rem, 1.3vw, 1.16rem);
+    line-height: 1.45;
+    max-width: 78ch;
   }
 
-  .learn-module-link-list a {
-    display: inline-grid;
-    gap: 0.12rem;
-    min-height: 2.35rem;
+  .learn-series-layout {
+    align-items: start;
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 340px);
   }
 
-  .learn-module-link-list span {
-    color: var(--aiv-text-muted);
-    font-size: 0.92rem;
-  }
-
-  .learn-episode-card__actions {
-    align-items: center;
-    border-top: 1px solid var(--aiv-line-subtle);
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-    padding-top: 0.75rem;
-  }
-
-  .learn-episode-card__actions a,
-  .learn-source-actions a,
-  .learn-link-list a {
-    align-items: center;
-    display: inline-flex;
-    min-height: 2.75rem;
+  .learn-series-main {
+    min-width: 0;
   }
 
   .learn-access-badge {
@@ -347,19 +262,191 @@ function episodeModuleTrack(module: CollectionEntry<"learnModules">) {
     padding: 0.12rem 0.45rem;
   }
 
-  .learn-episode-card a:focus-visible,
-  .learn-link-list a:focus-visible,
-  .learn-source-actions a:focus-visible {
+  .episode-path {
+    display: grid;
+    gap: 0.8rem;
+    padding: 0.95rem;
+  }
+
+  .episode-path__header {
+    align-items: end;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: space-between;
+  }
+
+  .episode-path__header span,
+  .episode-path__details span,
+  .episode-path__mapping > span {
+    color: var(--aiv-text-muted);
+    font-size: 0.78rem;
+    font-weight: 900;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  .episode-path h2,
+  .episode-path h3,
+  .episode-path p,
+  .episode-path ul,
+  .episode-path__header p,
+  .episode-path__empty h3 {
+    margin: 0;
+  }
+
+  .episode-path h2 {
+    font-size: clamp(1.28rem, 2vw, 1.7rem);
+    line-height: 1.15;
+  }
+
+  .episode-path__header p,
+  .episode-path__details p,
+  .episode-path__mapping p {
+    color: var(--aiv-text-secondary);
+  }
+
+  .episode-path__list {
+    display: grid;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .episode-path__item {
+    align-items: start;
+    display: grid;
+    gap: 0.72rem;
+    grid-template-columns: auto minmax(0, 1fr) minmax(13rem, 0.35fr) auto;
+    padding: 0.85rem 0;
+  }
+
+  .episode-path__item + .episode-path__item {
+    border-top: 1px solid color-mix(in srgb, var(--aiv-action-primary) 30%, var(--aiv-line-subtle));
+  }
+
+  .episode-path__marker {
+    align-items: center;
+    background: var(--aiv-action-primary);
+    border-radius: 999px;
+    color: var(--aiv-bg-canvas);
+    display: inline-flex;
+    font-family: var(--aiv-font-mono);
+    font-weight: 900;
+    height: 2.15rem;
+    justify-content: center;
+    margin-top: 0.1rem;
+    width: 2.15rem;
+  }
+
+  .episode-path__main,
+  .episode-path__details,
+  .episode-path__mapping {
+    display: grid;
+    gap: 0.5rem;
+    min-width: 0;
+  }
+
+  .episode-path h3 {
+    font-size: 1.12rem;
+    line-height: 1.22;
+  }
+
+  .episode-path__details {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .episode-path__details > div,
+  .episode-path__mapping li {
+    display: grid;
+    gap: 0.18rem;
+  }
+
+  .episode-path__mapping {
+    background: color-mix(in srgb, var(--aiv-bg-canvas) 16%, transparent);
+    border: 1px solid color-mix(in srgb, var(--aiv-action-secondary) 32%, var(--aiv-line-subtle));
+    border-radius: 8px;
+    padding: 0.58rem 0.65rem;
+  }
+
+  .episode-path__mapping ul {
+    display: grid;
+    gap: 0.45rem;
+    list-style: none;
+    padding: 0;
+  }
+
+  .episode-path__mapping small {
+    color: var(--aiv-text-muted);
+  }
+
+  .episode-path__actions {
+    display: grid;
+    gap: 0.42rem;
+    justify-items: stretch;
+  }
+
+  .episode-path__actions a {
+    align-items: center;
+    border: 1px solid var(--aiv-line-strong);
+    border-radius: 6px;
+    display: inline-flex;
+    font-weight: 900;
+    justify-content: center;
+    min-height: 2.45rem;
+    padding: 0.4rem 0.62rem;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .episode-path__continue {
+    background: var(--aiv-action-primary);
+    border-color: var(--aiv-action-primary) !important;
+    color: var(--aiv-bg-canvas);
+  }
+
+  .episode-path__empty {
+    display: grid;
+    gap: 0.35rem;
+    padding-block: 0.75rem;
+  }
+
+  .episode-path a:focus-visible {
     outline: 3px solid var(--aiv-focus-ring);
     outline-offset: 3px;
   }
 
-  @media (max-width: 780px) {
-    .learn-two-column {
+  @media (max-width: 1180px) {
+    .episode-path__item {
+      grid-template-columns: auto minmax(0, 1fr);
+    }
+
+    .episode-path__mapping,
+    .episode-path__actions {
+      grid-column: 2;
+    }
+
+    .episode-path__actions {
+      justify-items: start;
+    }
+  }
+
+  @media (max-width: 1099px) {
+    .learn-series-layout,
+    .episode-path__details {
       grid-template-columns: 1fr;
     }
 
-    .learn-episode-card {
+    .learn-series-header h1 {
+      max-width: none;
+    }
+  }
+
+  @media (max-width: 620px) {
+    .episode-path__item,
+    .episode-path__mapping,
+    .episode-path__actions {
+      grid-column: auto;
       grid-template-columns: 1fr;
     }
   }
