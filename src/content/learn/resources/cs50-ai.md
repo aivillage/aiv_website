@@ -25,9 +25,7 @@ accessMode: direct_open
 embedAllowed: false
 ageRestricted: false
 attribution: Harvard CS50
-canonicalFor:
-  - classical-ai-search
-  - what-is-ai
+canonicalFor: []
 reviewStatus: accepted
 maintenanceRisk: low
 caveats:

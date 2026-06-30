@@ -14,12 +14,18 @@ learningObjectives:
 prerequisites:
   - transformers-llms
 resources:
-  - resource: huggingface-llm-course
+  - resource: sentence-transformers-semantic-search
     role: required
     step: 1
-    note: "Use the retrieval material to name embeddings, similarity, and retrieval checks for your demo."
+    note: "Use the semantic-search docs to name the corpus, query embedding, similarity comparison, and top results for your demo."
+  - resource: huggingface-llm-course
+    role: deeper
+    step: 2
+    note: "Use only as broader LLM context after the retrieval-specific sketch is complete."
   - resource: 3blue1brown-transformers
     role: deeper
+    step: 3
+    note: "Use as visual context for attention and embeddings, not as the core retrieval reference."
 requiredArtifact: Mini semantic-search demo
 securityLens: awareness
 securityLensText: "Embeddings and retrieval systems can expose sensitive material and can retrieve poisoned or outdated chunks. Treat indexed content, metadata, and retrieved passages as part of the application attack surface."

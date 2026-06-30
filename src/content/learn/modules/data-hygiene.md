@@ -14,8 +14,10 @@ learningObjectives:
 prerequisites:
   - ai-for-security-workflows
 resources:
-  - resource: anthropic-prompt-engineering
+  - resource: ncsc-ai-cyber-security
     role: required
+    step: 1
+    note: "Use this to classify allowed inputs, restricted inputs, review owners, and escalation points for AI data use."
 requiredArtifact: Red/yellow/green data matrix
 securityLens: awareness
 securityLensText: "Data hygiene is an access-control and privacy issue, not just a cleanup task. Know what data you are allowed to use, where it goes, and how long it remains available."

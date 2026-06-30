@@ -14,8 +14,10 @@ learningObjectives:
 prerequisites:
   - ai-assisted-research
 resources:
-  - resource: anthropic-prompt-engineering
+  - resource: anthropic-prompting-best-practices
     role: required
+    step: 1
+    note: "Use this to structure writing prompts with task, audience, constraints, examples, and review expectations."
 requiredArtifact: Draft-edit-verify worksheet
 securityLens: awareness
 securityLensText: "Generated writing can leak sensitive context, invent support, or change obligations in subtle ways. Review inputs, claims, tone, and audience before sharing AI-assisted text."

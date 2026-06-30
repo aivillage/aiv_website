@@ -14,11 +14,17 @@ learningObjectives:
 prerequisites:
   - ml-basics
 resources:
-  - resource: cs50-ai
+  - resource: cs50-ai-lecture0-notes
     role: required
+    step: 1
+    note: "Use the notes to identify states, actions, goal tests, path costs, and constraints."
+  - resource: cs50-ai-week0-search
+    role: optional
+    step: 2
+    note: "Use the Week 0 page to connect the notes, examples, and original CS50 lesson context."
   - resource: cs50-ai-search-lecture-0
     role: deeper
-    step: 2
+    step: 3
     note: "Use the search examples to sketch states, actions, goal tests, and cost for one problem."
 requiredArtifact: Search problem sketch
 securityLens: awareness

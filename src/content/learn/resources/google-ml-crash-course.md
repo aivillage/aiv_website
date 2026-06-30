@@ -22,7 +22,6 @@ ageRestricted: false
 attribution: Google
 canonicalFor:
   - ml-basics
-  - what-is-ai
 reviewStatus: accepted
 maintenanceRisk: low
 caveats:

@@ -14,8 +14,14 @@ learningObjectives:
 prerequisites:
   - prompting-context
 resources:
-  - resource: microsoft-genai-beginners
+  - resource: anthropic-reduce-hallucinations
     role: required
+    step: 1
+    note: "Use this to add source grounding, uncertainty language, and verification checks to your claim-source matrix."
+  - resource: microsoft-genai-beginners
+    role: optional
+    step: 2
+    note: "Use as broader background only after the claim-source matrix has concrete verification steps."
 requiredArtifact: Claim-source matrix
 securityLens: awareness
 securityLensText: "AI-assisted research can mix accurate summaries with unsupported claims. Track sources, separate model-generated synthesis from evidence, and verify important facts before reuse."

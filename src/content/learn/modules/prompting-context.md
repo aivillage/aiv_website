@@ -13,17 +13,21 @@ learningObjectives:
   - Produce a Prompt Frame that keeps sensitive data and unsupported claims out of scope.
 prerequisites: []
 resources:
-  - resource: anthropic-prompt-engineering
+  - resource: anthropic-prompting-best-practices
     role: required
     step: 1
     note: "Use this as the required prompt structure source for your Prompt Frame."
+  - resource: anthropic-prompt-engineering
+    role: optional
+    step: 2
+    note: "Use this as broader Anthropic prompting context after the core prompt frame is drafted."
   - resource: microsoft-prompt-engineering-fundamentals-video
     role: deeper
-    step: 2
+    step: 3
     note: "Use this video as a direct-open companion for examples and review language."
   - resource: deeplearningai-prompt-engineering
     role: deeper
-    step: 3
+    step: 4
     note: "Optional off-ramp only after the no-login core prompt frame is complete."
 requiredArtifact: Prompt Frame
 securityLens: awareness

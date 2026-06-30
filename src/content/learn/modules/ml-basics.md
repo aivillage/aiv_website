@@ -14,10 +14,18 @@ learningObjectives:
 prerequisites:
   - python-notebook-readiness
 resources:
-  - resource: google-ml-crash-course
+  - resource: google-introduction-to-ml
     role: required
-  - resource: fastai-practical-deep-learning
+    step: 1
+    note: "Use this direct introduction to define the task, examples, labels, metric, and limitation in your baseline note."
+  - resource: google-ml-crash-course
     role: optional
+    step: 2
+    note: "Use the broader course only after your baseline ML note has the core vocabulary."
+  - resource: fastai-practical-deep-learning
+    role: deeper
+    step: 3
+    note: "Optional off-ramp for learners who want a broader hands-on course."
 requiredArtifact: Baseline ML model note
 securityLens: awareness
 securityLensText: "Metrics define what good means for a model. A high score on the wrong metric can hide bias, brittleness, or unsafe behavior in the situations users actually face."

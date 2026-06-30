@@ -13,12 +13,14 @@ learningObjectives:
   - Create an AI concept map that names inputs, outputs, limits, and human review points.
 prerequisites: []
 resources:
-  - resource: cs50-ai
+  - resource: cs50-ai-lecture0-notes
     role: required
     step: 1
-    note: "Use this to separate AI, machine learning, search, and generative AI in your concept map."
-  - resource: google-ml-crash-course
+    note: "Use the direct notes to separate search, learning, inputs, outputs, and uncertainty in your concept map."
+  - resource: google-introduction-to-ml
     role: optional
+    step: 2
+    note: "Use this to add machine-learning vocabulary after the first concept map draft."
   - resource: cs50-ai-search-lecture-0
     role: deeper
     step: 3

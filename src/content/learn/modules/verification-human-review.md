@@ -14,8 +14,10 @@ learningObjectives:
 prerequisites:
   - data-hygiene
 resources:
-  - resource: anthropic-prompt-engineering
+  - resource: anthropic-reduce-hallucinations
     role: required
+    step: 1
+    note: "Use this to define evidence checks, uncertainty handling, source comparison, and escalation triggers."
 requiredArtifact: Human review rubric
 securityLens: awareness
 securityLensText: "Human review works only when reviewers know what they are responsible for checking. Define evidence, failure cases, and escalation paths instead of relying on a vague final glance."

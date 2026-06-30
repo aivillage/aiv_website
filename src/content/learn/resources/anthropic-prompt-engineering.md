@@ -19,10 +19,7 @@ embedAllowed: false
 ageRestricted: false
 attribution: Anthropic
 canonicalFor:
-  - ai-assisted-writing
-  - data-hygiene
   - prompting-context
-  - verification-human-review
 reviewStatus: accepted
 maintenanceRisk: low
 caveats:

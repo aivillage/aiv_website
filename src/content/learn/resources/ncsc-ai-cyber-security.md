@@ -20,6 +20,9 @@ accessMode: direct_open
 embedAllowed: false
 ageRestricted: false
 attribution: UK National Cyber Security Centre
+recommendedRole: required
+watchFocus: Use this to identify AI-specific cyber risks, data boundaries, human review points, and where workflow policy needs escalation.
+checkpointPrompt: Add allowed inputs, restricted data, review owners, and escalation conditions to a security workflow or data hygiene note.
 maintenanceRisk: low
 caveats:
   - Public guidance; map recommendations to the learner's approved tools and organizational policy.
@@ -27,6 +30,7 @@ reviewOwner: AI Village Learn
 lastChecked: "2026-06-27"
 canonicalFor:
   - ai-for-security-workflows
+  - data-hygiene
 reviewStatus: accepted
 ---
 
