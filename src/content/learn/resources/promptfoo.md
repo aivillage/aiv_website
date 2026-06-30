@@ -11,7 +11,6 @@ targetStage: builder
 difficulty: intermediate
 tracks:
   - ai-builder-core
-  - defensive-ai-engineering
 rightsMode: link_only
 license: promptfoo documentation license and site terms
 cost: free
@@ -27,7 +26,6 @@ reviewOwner: AI Village Learn
 lastChecked: "2026-06-26"
 canonicalFor:
   - basic-app-evals
-  - defensive-evals
 reviewStatus: accepted
 ---
 

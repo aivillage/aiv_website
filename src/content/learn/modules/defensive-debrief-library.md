@@ -1,7 +1,7 @@
 ---
 title: Defensive Debrief Library
 slug: defensive-debrief-library
-summary: This beta module provides the learning goal, curated resources, and expected artifact.
+summary: Roadmap module for reviewed defensive debrief patterns, examples, and reusable learning cards.
 tracks:
   - defensive-ai-engineering
 stageStart: builder
@@ -9,19 +9,18 @@ stageEnd: risk_evaluative_practitioner
 difficulty: advanced
 moduleType: concept
 learningObjectives:
-  - Describe the main concepts for Defensive Debrief Library.
-  - Identify the artifact or checkpoint this module supports.
+  - Placeholder for future reviewed defensive debrief examples.
+  - Placeholder for future reusable debrief card patterns.
 prerequisites:
   - ai-incident-response
-resources:
-  - resource: inspect-ai
-    role: required
-requiredArtifact: Defensive Debrief Library artifact
+resources: []
 securityLens: primary
-securityLensText: ""
+securityLensText: "Draft roadmap module. Do not treat this as a usable debrief library until reviewed examples, evidence standards, and reusable card templates are authored."
 status: draft
 reviewOwner: AI Village Learn
-lastReviewed: "2026-06-26"
+lastReviewed: "2026-06-30"
 ---
 
-This beta module provides the learning goal, curated resources, and expected artifact. Full exercises and debriefs are being expanded over time.
+This roadmap module is held back from the beta because a debrief library needs reviewed examples, evidence standards, and reusable card templates before it can guide learners responsibly. The current Defensive AI Engineering beta links directly to bounded labs and asks learners to write narrow control artifacts.
+
+Do not treat this draft as a public debrief corpus or incident record. A later pass should promote it only after it has real body copy, required artifacts, resources, Security Lens text, and at least a small set of reviewed debrief examples.
