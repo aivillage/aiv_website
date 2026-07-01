@@ -37,8 +37,8 @@ function trackOutputForTrack(track: CollectionEntry<"learnTracks">) {
       fields: ["system boundary", "risk category", "evidence", "control", "owner", "review question"],
     },
     "defensive-ai-engineering": {
-      title: "Thin beta Defensive AI Engineering control pack",
-      rollup: "This beta path builds a thin defensive control pack for review. It is not a complete defensive AI engineering curriculum.",
+      title: "Defensive AI Engineering control pack",
+      rollup: "This beta path builds an initial defensive control pack for review. It is a control-oriented beta path, not a full defensive operations curriculum.",
       fields: ["risk pattern", "control", "log signal", "regression test", "owner", "escalation"],
     },
     "offensive-ai-security-red-teaming": {
@@ -71,11 +71,11 @@ const supportingArtifactText = visibleSupportingArtifacts.length > 0
 const moduleRollupText = moduleArtifacts.length > 0
   ? `${moduleArtifacts.length} module ${moduleArtifacts.length === 1 ? "artifact rolls" : "artifacts roll"} into this output; each artifact is called out in the path below.`
   : "Module-level artifact details will appear in the path when public modules are available.";
-const needsStatusNote = track.data.status === "stale" || (modules.length === 0 && track.data.slug !== "governance-responsible-use");
+const needsStatusNote = track.data.status === "stale" || modules.length === 0;
 const statusNote = track.data.slug === "governance-responsible-use"
-  ? "Governance evidence-pack modules are not public yet; treat this page as a coming-soon roadmap."
+  ? "Governance evidence-pack modules are not public yet; use the related public tracks first and return here when modules are available."
   : track.data.slug === "defensive-ai-engineering"
-    ? "This is a thin beta control-pack path, not a claim of complete defensive coverage."
+    ? "This is a control-oriented beta path, not a full defensive operations curriculum."
     : modules.length === 0
       ? "Public module worksheets are not available for this track yet."
       : track.data.status === "stale"

@@ -53,7 +53,9 @@ const { Content } = await render(track);
 const firstModule = modules[0];
 const firstModuleHref = firstModule ? trackScopedModulePath(track, firstModule) : "";
 const showTrackStatus = track.data.status !== "beta";
-const isOffensiveTrack = entrySlug(track) === "offensive-ai-security-red-teaming";
+const trackSlug = entrySlug(track);
+const isGovernanceTrack = trackSlug === "governance-responsible-use";
+const isOffensiveTrack = trackSlug === "offensive-ai-security-red-teaming";
 
 function labModuleTitle(lab: CollectionEntry<"learnLabs">) {
   const labSlug = entrySlug(lab);
@@ -66,137 +68,149 @@ function labModuleTitle(lab: CollectionEntry<"learnLabs">) {
 
 <BaseLayout title={track.data.title} canonical={trackPath(track)} description={track.data.summary}>
   <PageShell class="learn-track-page" width="full">
-    <nav class="learn-breadcrumb" aria-label="Breadcrumb"><a href="/learn/">Learn</a> / <span>{track.data.title}</span></nav>
+    <div class="learn-track-page__inner">
+      <nav class="learn-breadcrumb" aria-label="Breadcrumb"><a href="/learn/">Learn</a> / <span>{track.data.title}</span></nav>
 
-    <header class="learn-track-hero">
-      <div class="learn-track-hero__main">
-        <div class="learn-meta-row">
-          {showTrackStatus && <StatusBadge value={track.data.status} />}
-          <StageBadge value={track.data.stageStart} />
-          <span>to</span>
-          <StageBadge value={track.data.stageEnd} />
-        </div>
-        <h1>{track.data.title}</h1>
-        <p class="text-lead">{track.data.summary}</p>
-        {firstModule ? (
-          <a class="button" href={firstModuleHref}>Start Module 1</a>
-        ) : (
-          <p class="learn-track-hero__empty">Public modules are not available yet.</p>
-        )}
-      </div>
-    </header>
-
-    <div class="learn-track-layout">
-      <main class="learn-track-main" aria-label={`${track.data.title} output and path`}>
-        <TrackOutputPanel track={track} modules={modules} />
-        <PathMap track={track} modules={modules} resources={resources} labs={labs} />
-      </main>
-
-      <aside class="learn-track-rail" aria-label="Track actions and context">
-        <section class="learn-track-rail-card learn-track-rail-card--action learn-surface-task" aria-labelledby="track-continue-heading">
-          <h2 id="track-continue-heading">Continue path</h2>
+      <header class="learn-track-hero">
+        <div class="learn-track-hero__main">
+          <div class="learn-meta-row">
+            {showTrackStatus && <StatusBadge value={track.data.status} />}
+            <StageBadge value={track.data.stageStart} />
+            <span>to</span>
+            <StageBadge value={track.data.stageEnd} />
+          </div>
+          <h1>{track.data.title}</h1>
+          <p class="text-lead">{track.data.summary}</p>
           {firstModule ? (
+            <a class="button" href={firstModuleHref}>Start Module 1</a>
+          ) : (
+            <p class="learn-track-hero__empty">Public modules are not available yet.</p>
+          )}
+        </div>
+      </header>
+
+      <div class="learn-track-layout">
+        <main class="learn-track-main" aria-label={`${track.data.title} output and path`}>
+          <TrackOutputPanel track={track} modules={modules} />
+          <PathMap track={track} modules={modules} resources={resources} labs={labs} />
+        </main>
+
+        <aside class="learn-track-rail" aria-label="Track actions and context">
+          <section class="learn-track-rail-card learn-track-rail-card--action learn-surface-task" aria-labelledby="track-continue-heading">
+            <h2 id="track-continue-heading">Continue path</h2>
+            {firstModule ? (
+              <>
+                <p>Start with {firstModule.data.title}, then follow the path below.</p>
+                <a class="learn-track-rail-card__button" href={firstModuleHref}>Start Module 1</a>
+              </>
+            ) : isGovernanceTrack ? (
+              <>
+                <p>Start with AI Practitioner for workflow policy basics, or AI Security Core for risk framing. Return here when Governance modules are public.</p>
+                <a class="learn-track-rail-card__button" href="/learn/tracks/ai-practitioner/">Start With AI Practitioner</a>
+              </>
+            ) : (
+              <p>Public modules are not available yet.</p>
+            )}
+          </section>
+
+          <TrackVideoShortcuts track={track} modules={modules} resources={resources} />
+
+          {labs.length > 0 && (
+            <section class="learn-track-rail-card learn-track-rail-card--practice learn-surface-exercise" aria-labelledby="track-practice-heading">
+              <h2 id="track-practice-heading">Practice</h2>
+              <ul class="learn-track-rail-card__item-list">
+                {labs.map((lab) => (
+                  <li>
+                    <span>{labModuleTitle(lab) || "Track practice"}</span>
+                    <a href={labPath(lab)}>{lab.data.title}</a>
+                    <small>{lab.data.estimatedMinutes} min</small>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+
+          <section class="learn-track-rail-card learn-track-rail-card--security learn-surface-security">
+            <h2>Security Lens</h2>
+            <p>{securityLensLabels[track.data.securityLens]}</p>
+            {track.data.securityCheckpoints.length > 0 && (
+              <ul>
+                {track.data.securityCheckpoints.map((checkpoint) => <li>{checkpoint}</li>)}
+              </ul>
+            )}
+          </section>
+
+          <section class="learn-track-rail-card learn-surface-reference" aria-labelledby="track-audience-heading">
+            <h2 id="track-audience-heading">Who Should Start</h2>
+            <ul>
+              {track.data.audiences.map((audience) => <li>{audience}</li>)}
+            </ul>
+            {prerequisiteTracks.length > 0 && (
+              <div>
+                <h3>Prerequisites</h3>
+                <ul>
+                  {
+                    prerequisiteTracks.map((prerequisite) => (
+                      <li>
+                        {canRenderLearnTrack(prerequisite) ? <a href={trackPath(prerequisite)}>{prerequisite.data.title}</a> : prerequisite.data.title}
+                      </li>
+                    ))
+                  }
+                </ul>
+              </div>
+            )}
+          </section>
+
+          <details class="learn-track-roadmap learn-surface-roadmap">
+            <summary>Beta Status And Roadmap</summary>
+            <div class="learn-track-roadmap__grid">
+              <div>
+                <h2>What Exists Now</h2>
+                <p>{track.data.whatExistsNow}</p>
+              </div>
+              <div>
+                <h2>What Is Coming Next</h2>
+                <p>{track.data.whatComingNext}</p>
+              </div>
+            </div>
+          </details>
+        </aside>
+      </div>
+
+      <section class="learn-track-about learn-surface-reference" aria-labelledby="track-about-heading">
+        <h2 id="track-about-heading">About This Track</h2>
+        <div class="learn-content-body">
+          {isOffensiveTrack ? (
             <>
-              <p>Start with {firstModule.data.title}, then follow the path below.</p>
-              <a class="learn-track-rail-card__button" href={firstModuleHref}>Start Module 1</a>
+              <p>
+                Offensive AI Security and Red Teaming is for practitioners working in authorized labs or approved assessment contexts.
+                The public beta is intentionally narrow: rules of engagement come first, practical work uses AIV toy-lab wrappers,
+                agent-abuse material stays conceptual, and the path ends with defensive report writing.
+              </p>
+              <p>
+                The external CTF/off-ramp path remains unpublished. Challenge-platform links remain held for instructor review.
+              </p>
             </>
           ) : (
-            <p>Public modules are not available yet.</p>
+            <Content />
           )}
-        </section>
-
-        <TrackVideoShortcuts track={track} modules={modules} resources={resources} />
-
-        {labs.length > 0 && (
-          <section class="learn-track-rail-card learn-track-rail-card--practice learn-surface-exercise" aria-labelledby="track-practice-heading">
-            <h2 id="track-practice-heading">Practice</h2>
-            <ul class="learn-track-rail-card__item-list">
-              {labs.map((lab) => (
-                <li>
-                  <span>{labModuleTitle(lab) || "Track practice"}</span>
-                  <a href={labPath(lab)}>{lab.data.title}</a>
-                  <small>{lab.data.estimatedMinutes} min</small>
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
-
-        <section class="learn-track-rail-card learn-track-rail-card--security learn-surface-security">
-          <h2>Security Lens</h2>
-          <p>{securityLensLabels[track.data.securityLens]}</p>
-          {track.data.securityCheckpoints.length > 0 && (
-            <ul>
-              {track.data.securityCheckpoints.map((checkpoint) => <li>{checkpoint}</li>)}
-            </ul>
-          )}
-        </section>
-
-        <section class="learn-track-rail-card learn-surface-reference" aria-labelledby="track-audience-heading">
-          <h2 id="track-audience-heading">Who Should Start</h2>
-          <ul>
-            {track.data.audiences.map((audience) => <li>{audience}</li>)}
-          </ul>
-          {prerequisiteTracks.length > 0 && (
-            <div>
-              <h3>Prerequisites</h3>
-              <ul>
-                {
-                  prerequisiteTracks.map((prerequisite) => (
-                    <li>
-                      {canRenderLearnTrack(prerequisite) ? <a href={trackPath(prerequisite)}>{prerequisite.data.title}</a> : prerequisite.data.title}
-                    </li>
-                  ))
-                }
-              </ul>
-            </div>
-          )}
-        </section>
-
-        <details class="learn-track-roadmap learn-surface-roadmap">
-          <summary>Beta Status And Roadmap</summary>
-          <div class="learn-track-roadmap__grid">
-            <div>
-              <h2>What Exists Now</h2>
-              <p>{track.data.whatExistsNow}</p>
-            </div>
-            <div>
-              <h2>What Is Coming Next</h2>
-              <p>{track.data.whatComingNext}</p>
-            </div>
-          </div>
-        </details>
-      </aside>
+        </div>
+      </section>
     </div>
-
-    <section class="learn-track-about learn-surface-reference" aria-labelledby="track-about-heading">
-      <h2 id="track-about-heading">About This Track</h2>
-      <div class="learn-content-body">
-        {isOffensiveTrack ? (
-          <>
-            <p>
-              Offensive AI Security and Red Teaming is for practitioners working in authorized labs or approved assessment contexts.
-              The public beta is intentionally narrow: rules of engagement come first, practical work uses AIV toy-lab wrappers,
-              agent-abuse material stays conceptual, and the path ends with defensive report writing.
-            </p>
-            <p>
-              The external CTF/off-ramp path remains unpublished. Challenge-platform links remain held for instructor review.
-            </p>
-          </>
-        ) : (
-          <Content />
-        )}
-      </div>
-    </section>
   </PageShell>
 </BaseLayout>
 
 <style>
   .learn-track-page {
+    width: 100%;
+  }
+
+  .learn-track-page__inner {
     display: grid;
     gap: 0.9rem;
     margin-inline: auto;
-    max-width: min(100%, 1440px);
+    max-width: min(100%, 1220px);
+    width: 100%;
   }
 
   .learn-breadcrumb,
@@ -255,8 +269,9 @@ function labModuleTitle(lab: CollectionEntry<"learnLabs">) {
   .learn-track-layout {
     align-items: start;
     display: grid;
-    gap: 1rem;
-    grid-template-columns: minmax(0, 1fr) minmax(18rem, 23rem);
+    gap: 1.5rem;
+    grid-template-columns: minmax(0, 52rem) minmax(17rem, 18.5rem);
+    justify-content: center;
   }
 
   .learn-track-main {
@@ -269,8 +284,7 @@ function labModuleTitle(lab: CollectionEntry<"learnLabs">) {
     align-self: start;
     display: grid;
     gap: 0.78rem;
-    position: sticky;
-    top: 1rem;
+    min-width: 0;
   }
 
   .learn-track-rail-card,
@@ -391,6 +405,11 @@ function labModuleTitle(lab: CollectionEntry<"learnLabs">) {
     padding: 1rem;
   }
 
+  .learn-track-about {
+    max-width: min(100%, 52rem);
+    width: 100%;
+  }
+
   .learn-track-practice__list {
     display: grid;
     gap: 0;
@@ -473,15 +492,11 @@ function labModuleTitle(lab: CollectionEntry<"learnLabs">) {
     outline-offset: 3px;
   }
 
-  @media (max-width: 980px) {
+  @media (max-width: 1099px) {
     .learn-track-layout,
     .learn-section-heading,
     .learn-track-roadmap__grid {
       grid-template-columns: 1fr;
-    }
-
-    .learn-track-rail {
-      position: static;
     }
 
     .learn-track-hero__main {

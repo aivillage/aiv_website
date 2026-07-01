@@ -106,13 +106,13 @@ function modulePriority({ module, track }: ModuleLink) {
 }
 
 function publicSetupStatus(status: CollectionEntry<"learnLabs">["data"]["setupStatus"]) {
-  if (status === "draft") return "Setup notes are being refined";
+  if (status === "draft") return "Use the workshop source for setup.";
   if (status === "missing") return undefined;
   return "Setup tested";
 }
 
 function publicDebriefStatus(status: CollectionEntry<"learnLabs">["data"]["debriefStatus"]) {
-  if (status === "draft") return "Debrief support is being refined";
+  if (status === "draft") return "Use the exercise spine on this page for the learner debrief.";
   if (status === "missing") return undefined;
   return "Debrief published";
 }
