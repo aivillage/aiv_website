@@ -31,7 +31,7 @@ mappings:
     - AML.T0070
     - AML.T0066
     - AML.T0071
-requiredArtifact: Lab notes and defensive debrief stub
+requiredArtifact: Lab notes and defensive debrief note
 status: beta
 reviewOwner: AI Village Learn
 lastReviewed: "2026-06-26"
