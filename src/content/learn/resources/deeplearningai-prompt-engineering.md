@@ -20,6 +20,8 @@ accessNotes: Platform access may require a free account, so this is an optional 
 embedAllowed: false
 ageRestricted: false
 attribution: DeepLearning.AI
+watchFocus: Use this optional course for additional prompt examples after the direct-open AIV and vendor docs are enough for the module checkpoint.
+checkpointPrompt: Adapt one course idea into the Prompt Frame, then mark what depends on platform access or course context.
 canonicalFor:
   - prompting-context
 reviewStatus: accepted
@@ -31,4 +33,6 @@ reviewOwner: AI Village Learn
 lastChecked: "2026-06-26"
 ---
 
-Catalog metadata for this linked resource is included for the curriculum beta. Review rights and attribution before reuse beyond linking.
+Use this short course as an optional off-ramp for learners who want more guided prompt examples after completing the direct-open required material. In AIV Learn it should reinforce prompt framing, examples, constraints, and review steps without becoming core.
+
+The checkpoint should adapt one idea into the Prompt Frame and name any platform-access assumption. Do not make course enrollment or sign-in part of the required practitioner path.

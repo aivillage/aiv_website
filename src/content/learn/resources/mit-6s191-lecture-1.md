@@ -42,4 +42,6 @@ lastChecked: "2026-06-28"
 status: beta
 ---
 
-Catalog metadata for this linked video is included for the curriculum beta. Use the course site for the full lecture context and materials.
+Use this selected lecture to make deep-learning systems concrete: data, model architecture, training, validation, inference, and deployment assumptions. In AIV Learn it supports a systems sketch, not a full MIT course requirement.
+
+The checkpoint should name one limitation or evaluation signal alongside the system pieces. Do not treat lecture-level understanding as enough to validate a model's behavior.

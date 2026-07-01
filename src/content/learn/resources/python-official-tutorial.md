@@ -21,6 +21,8 @@ accessNotes: Public documentation is directly accessible without an account.
 embedAllowed: false
 ageRestricted: false
 attribution: Python Software Foundation
+watchFocus: "Use this for Python syntax needed in notebooks: values, lists and dictionaries, loops, functions, imports, and reading errors."
+checkpointPrompt: Write one tiny notebook-ready Python snippet and annotate the input, transformation, output, and error you would expect if it fails.
 canonicalFor:
   - python-notebook-readiness
 reviewStatus: accepted
@@ -32,4 +34,6 @@ lastChecked: "2026-06-28"
 status: beta
 ---
 
-Catalog metadata for this direct-open resource is included for the curriculum beta.
+Use the official tutorial as the direct-open Python reference for learners who need syntax before notebook exercises. The AIV module should keep the scope narrow: enough Python to read cells, understand small transformations, and debug basic errors.
+
+The checkpoint should produce a tiny annotated snippet. Do not turn notebook readiness into a full Python course or require account-based practice material.

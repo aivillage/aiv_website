@@ -21,6 +21,8 @@ accessNotes: Kaggle Learn requires account access for the interactive course pat
 embedAllowed: false
 ageRestricted: false
 attribution: Kaggle
+watchFocus: Use this optional course only after basic notebook readiness is clear and the learner wants account-based tabular-data practice.
+checkpointPrompt: Note one pandas operation that would help a notebook exercise and mark any account or dataset assumption before using it.
 canonicalFor:
   - python-notebook-readiness
 reviewStatus: accepted
@@ -32,4 +34,6 @@ reviewOwner: AI Village Learn
 lastChecked: "2026-06-26"
 ---
 
-Catalog metadata for this linked resource is included for the curriculum beta. Review rights and attribution before reuse beyond linking.
+Use this as an optional off-ramp for learners who want hands-on tabular-data practice after the notebook basics. It is helpful for data manipulation context, but it requires account-based course access and should stay outside the required path.
+
+The checkpoint should capture one pandas operation and any dataset or platform assumptions. Do not present Kaggle completion as evidence that a learner is ready for every AI notebook workflow.

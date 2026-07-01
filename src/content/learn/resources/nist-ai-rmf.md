@@ -35,4 +35,6 @@ watchFocus: Use the RMF as the primary framework source for governance evidence 
 checkpointPrompt: Map one AI use case to Govern, Map, Measure, or Manage with owner and evidence fields.
 ---
 
-Catalog metadata for this linked resource is included for the curriculum beta. Review rights and attribution before reuse beyond linking.
+Use the AI RMF as shared governance vocabulary for mapping risks, controls, owners, and evidence. In AIV Learn it supports an evidence map that keeps claims tied to artifacts rather than broad assurances.
+
+The checkpoint should add one risk or control row with owner and evidence. Do not imply that reading the framework creates NIST compliance or validates a system.

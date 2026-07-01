@@ -36,4 +36,6 @@ reviewOwner: AI Village Learn
 lastChecked: "2026-06-26"
 ---
 
-Catalog metadata for this linked resource is included for the curriculum beta. Review rights and attribution before reuse beyond linking.
+Use this source when the MCP threat model moves from roles to controls. The AIV focus is token audience, resource metadata, user consent, server trust, authorization boundaries, and avoiding confused-deputy behavior.
+
+The checkpoint should turn one best practice into a testable threat-model row. Do not treat the checklist as complete coverage for every remote server or tool capability.

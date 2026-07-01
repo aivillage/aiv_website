@@ -34,4 +34,6 @@ reviewStatus: accepted
 status: beta
 ---
 
-Catalog metadata for this linked resource is included for the curriculum beta. Use it as an optional operating guide for code-agent workflows.
+Use this page as operating discipline for AI-assisted coding: define scope, review generated changes, keep commits auditable, and run checks. In AIV Learn it supports a small change log for one coding-assistant task.
+
+The checkpoint should record files touched, checks run, and the review decision. Do not treat code-agent output as accepted work until a human can inspect the diff and verification.

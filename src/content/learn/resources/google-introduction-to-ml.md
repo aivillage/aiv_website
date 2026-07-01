@@ -35,4 +35,6 @@ reviewStatus: accepted
 status: beta
 ---
 
-Catalog metadata for this linked resource is included for the curriculum beta. Use it as the direct written entry point before broader machine-learning courses.
+Use this direct introduction to define supervised learning, features, labels, training, inference, and evaluation before learners choose a deeper ML course. In AIV Learn it feeds a baseline ML note that stays small and concrete.
+
+The checkpoint should name the task, input data, target, metric, and one limitation the metric could miss. Do not treat a basic ML framing as enough to justify deployment or safety claims.

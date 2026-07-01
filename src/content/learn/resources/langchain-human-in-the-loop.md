@@ -35,4 +35,6 @@ reviewStatus: accepted
 status: beta
 ---
 
-Catalog metadata for this linked resource is included for the curriculum beta. Use it as a concrete implementation reference, not the only way to design approval gates.
+Use this page as a concrete implementation reference for approval, pause, review, and resume patterns. The AIV focus is the approval matrix: which actions need a human, what information the reviewer sees, and what happens when approval is denied.
+
+Do not mistake a framework feature for a complete containment design. The module still needs policy boundaries, logs, rollback, and disallowed-action handling.

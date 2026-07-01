@@ -34,4 +34,6 @@ watchFocus: Use the repo as the lab-backed anchor for creating a small Inspect e
 checkpointPrompt: Record the task, dataset, solver, scorer, model, run config, result, and limitation fields from your run.
 ---
 
-Catalog metadata for this linked resource is included for the curriculum beta. Review rights and attribution before reuse beyond linking.
+Use this repo as the lab-backed anchor for a small Inspect eval package. In AIV Learn it is valuable because it gives learners a concrete place to capture task, dataset, solver, scorer, run configuration, result, and limitation evidence.
+
+The checkpoint should leave an auditable run note, not just a passing command. Do not generalize beyond the task and samples actually inspected.

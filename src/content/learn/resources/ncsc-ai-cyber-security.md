@@ -34,4 +34,6 @@ canonicalFor:
 reviewStatus: accepted
 ---
 
-Catalog metadata for this linked resource is included for the curriculum beta. Review current organizational policy before applying it to a live workflow.
+Use this guidance to connect AI workflow ideas to practical cyber-security questions: data boundaries, review ownership, restricted inputs, escalation, and operational controls. In AIV Learn it supports workflow triage and data-hygiene notes.
+
+The checkpoint should produce a bounded internal note, not live policy. Do not apply generic guidance to a production workflow without organizational approval and current local requirements.

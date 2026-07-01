@@ -35,4 +35,6 @@ reviewStatus: accepted
 status: beta
 ---
 
-Catalog metadata for this linked resource is included for the curriculum beta. Use the direct Unit 1 page rather than the course onboarding page for agent fundamentals.
+Use this direct concept page for the agent loop vocabulary: goals, tools, actions, observations, memory, state, and stopping conditions. In AIV Learn it supports a diagram that makes autonomy and review points visible.
+
+The artifact should show where the model decides, where the application enforces limits, and where logs capture evidence. Do not treat a conceptual agent loop as a safe production design.

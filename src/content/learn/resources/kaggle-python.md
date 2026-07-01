@@ -21,6 +21,8 @@ accessNotes: Kaggle Learn requires account access for the interactive course pat
 embedAllowed: false
 ageRestricted: false
 attribution: Kaggle
+watchFocus: Use this optional course only if a learner wants account-based Python practice after the direct-open tutorial.
+checkpointPrompt: Compare one Kaggle exercise to the notebook readiness checklist and note what requires sign-in or platform-specific setup.
 canonicalFor:
   - python-notebook-readiness
 reviewStatus: accepted
@@ -32,4 +34,6 @@ reviewOwner: AI Village Learn
 lastChecked: "2026-06-26"
 ---
 
-Catalog metadata for this linked resource is included for the curriculum beta. Review rights and attribution before reuse beyond linking.
+Use this as an optional off-ramp for learners who want interactive Python drills after the direct-open Python tutorial. It can help with practice, but the core Learn path should not depend on a Kaggle account or platform notebook.
+
+The checkpoint is to compare one exercise against the notebook readiness checklist and record any account, data, or platform assumptions. Do not make this course a prerequisite for the module.

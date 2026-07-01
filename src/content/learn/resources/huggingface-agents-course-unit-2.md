@@ -35,4 +35,6 @@ reviewStatus: accepted
 status: beta
 ---
 
-Catalog metadata for this linked resource is included for the curriculum beta. Use the original course for current examples and exercises.
+Use Unit 2 as a framework comparison source after the learner already understands the agent loop. The AIV task is to identify framework defaults, control points, state handling, tool execution, retries, and approval support.
+
+The checkpoint is a framework ADR, not a tutorial completion badge. Do not let framework convenience hide logging, isolation, rollback, or human-approval requirements.

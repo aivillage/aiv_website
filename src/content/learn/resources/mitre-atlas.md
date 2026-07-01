@@ -31,4 +31,6 @@ watchFocus: Use ATLAS as vocabulary for organizing observations, not as proof of
 checkpointPrompt: Write one conservative mapping note and mark any unverified identifiers for human review.
 ---
 
-Catalog metadata for this linked resource is included for the curriculum beta. Review rights and attribution before reuse beyond linking.
+Use ATLAS as vocabulary for organizing AI security observations into tactics, techniques, and evidence needs. In AIV Learn it supports a conservative mapping note rather than a hunt for impressive labels.
+
+The checkpoint should include uncertainty and human-review flags for any mapping that is not directly supported. Do not use ATLAS terminology as proof of coverage or severity by itself.

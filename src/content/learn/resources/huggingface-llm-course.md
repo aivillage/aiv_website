@@ -20,6 +20,8 @@ accessMode: direct_open
 embedAllowed: false
 ageRestricted: false
 attribution: Hugging Face
+watchFocus: Use selected course sections as broad transformer and embedding context after the module's direct required reading.
+checkpointPrompt: Add one vocabulary map entry connecting tokens, embeddings, attention, and retrieval to the module artifact, then mark what remains outside scope.
 canonicalFor:
   - embeddings-retrieval
   - transformers-llms
@@ -31,4 +33,6 @@ reviewOwner: AI Village Learn
 lastChecked: "2026-06-26"
 ---
 
-Catalog metadata for this linked resource is included for the curriculum beta. Review rights and attribution before reuse beyond linking.
+Use this course as broad background for transformer and embedding concepts, especially when learners want a deeper path after the required direct pages. In AIV Learn it is a support source for vocabulary and mental models, not the only path through Fundamentals.
+
+The checkpoint should connect one course concept to the current artifact, then name what the module is intentionally skipping. Do not make the full course a hidden requirement for progress.

@@ -35,4 +35,6 @@ reviewStatus: accepted
 status: beta
 ---
 
-Catalog metadata for this linked resource is included for the curriculum beta. Use the current MCP documentation for implementation details.
+Use this introduction to establish MCP roles and boundaries before security details are added: host, client, server, tools, resources, authorization server, scopes, and consent. In AIV Learn it supports a protocol-boundary diagram.
+
+The checkpoint should separate protocol vocabulary from trust decisions. Do not assume MCP makes a tool safe; the later threat model still needs token audience, server trust, consent UI, and containment checks.

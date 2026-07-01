@@ -33,4 +33,6 @@ reviewOwner: AI Village Learn
 lastChecked: "2026-06-26"
 ---
 
-Catalog metadata for this linked resource is included for the curriculum beta. Review rights and attribution before reuse beyond linking.
+Use this as the main reading for the workflow-vs-agent decision point. The AIV wrapper asks learners to identify when a deterministic workflow is enough, when added autonomy is justified, and what review burden appears when the system starts choosing steps or using tools.
+
+The artifact should be a decision memo, not an agent demo. Do not treat a pattern described in the article as permission to remove approval gates, logging, rollback, or task boundaries.

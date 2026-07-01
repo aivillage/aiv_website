@@ -39,4 +39,6 @@ canonicalFor:
 reviewStatus: accepted
 ---
 
-Catalog metadata for this linked resource is included for the curriculum beta. Use current Inspect documentation for implementation details.
+Use the tutorial to connect an Inspect task, dataset, solver, scorer, run command, and log review into one small reproducible eval. The AIV module uses it as the practical spine before sending learners into the lab.
+
+The checkpoint should record the minimum files and commands needed for a rerunnable eval. Do not let the tutorial output become a broad model-quality claim without sample review and limitations.

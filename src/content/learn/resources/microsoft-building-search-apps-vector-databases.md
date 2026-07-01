@@ -36,4 +36,6 @@ canonicalFor:
 reviewStatus: accepted
 ---
 
-Catalog metadata for this linked resource is included for the curriculum beta. Use the official YouTube player when embedding.
+Use this video when the vector-search module needs a concrete application view of indexes, vector databases, metadata, ranking, and result inspection. The AIV task is to translate those ideas into retrieval-plan fields.
+
+The checkpoint should name source content, index choices, metadata filters, and a review step. Do not treat a vector database choice as proof that retrieval is relevant, authorized, or current.

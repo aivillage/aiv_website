@@ -43,4 +43,6 @@ reviewStatus: accepted
 status: beta
 ---
 
-Catalog metadata for this linked video is included for the curriculum beta. Use the official YouTube player when embedding.
+Use this video to place the AI app architecture sketch inside a lifecycle: design, build, evaluate, monitor, improve, and review. The AIV module uses it to make reliability and robustness checkpoints visible in the application plan.
+
+The checkpoint should add evaluation, monitoring, and improvement ownership to the sketch. Do not treat the lifecycle overview as a compliance process or production-readiness proof by itself.

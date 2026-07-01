@@ -40,4 +40,6 @@ reviewStatus: accepted
 status: beta
 ---
 
-Catalog metadata for this linked video is included for the curriculum beta. Use the official YouTube player when embedding.
+Use this video as one opinionated framework-selection reference after learners know the basic agent loop. The AIV task is to compare control points, state handling, debugging, retries, logging, and human-approval support.
+
+The checkpoint should add a tradeoff to the framework ADR. Do not treat a vendor framework overview as a default architecture choice or as evidence that a design is contained.

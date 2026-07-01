@@ -36,4 +36,6 @@ reviewStatus: accepted
 status: beta
 ---
 
-Catalog metadata for this linked resource is included for the curriculum beta. Use it as direct text support for AI search vocabulary and beginner concept mapping.
+Use the notes as the text anchor for beginner AI-search vocabulary: states, actions, goals, frontiers, explored sets, and heuristics. The AIV module turns those terms into a small constrained search problem rather than asking learners to memorize algorithms in isolation.
+
+The checkpoint should name invalid paths and stopping conditions. Do not overclaim that classical search covers modern AI systems; it is the first vocabulary layer for thinking about objectives and constraints.

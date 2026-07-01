@@ -40,4 +40,6 @@ reviewOwner: AI Village Learn
 lastChecked: "2026-06-26"
 ---
 
-Catalog metadata for this linked resource is included for the curriculum beta. Review rights and attribution before reuse beyond linking.
+Use this chapter as the selected visual bridge from neural-network intuition into attention and transformer structure. In AIV Learn, it supports the token and attention explainer rather than replacing implementation docs or model-evaluation work.
+
+The useful output is a plain-language explanation of what attention lets a model compare within context. Do not overclaim that understanding attention explains truthfulness, safety, or whether a generated answer is correct.

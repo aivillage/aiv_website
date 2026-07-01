@@ -35,4 +35,6 @@ reviewStatus: accepted
 status: beta
 ---
 
-Catalog metadata for this linked resource is included for the curriculum beta. Use it as direct written prompting support for everyday practitioner workflows.
+Use this page as a written reference for making prompts explicit: task, context, examples, constraints, output shape, and review expectations. In AIV Learn it supports the Prompt Frame and assisted-writing workflow rather than a collection of clever prompt tricks.
+
+The useful artifact is a prompt that someone else can inspect and revise. Do not treat a well-phrased prompt as a control for sensitive data, unsupported claims, or actions that still need human approval.

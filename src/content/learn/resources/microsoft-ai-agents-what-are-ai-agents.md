@@ -40,4 +40,6 @@ reviewStatus: accepted
 status: beta
 ---
 
-Catalog metadata for this linked video is included for the curriculum beta. Use the official YouTube player when embedding.
+Use this short video to ground the core agent vocabulary before framework decisions appear. In AIV Learn it supports the agent-loop diagram: model, tools, state, memory, environment, stop condition, and approval point.
+
+The artifact should show where the application constrains the agent. Do not let the video turn the module into a tool demo or imply that every workflow needs agentic behavior.

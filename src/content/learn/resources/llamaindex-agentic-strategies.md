@@ -35,4 +35,6 @@ reviewStatus: accepted
 status: beta
 ---
 
-Catalog metadata for this linked resource is included for the curriculum beta. Use the current LlamaIndex docs for implementation details.
+Use this resource to reason about agentic retrieval patterns after the learner has a basic RAG boundary. The AIV artifact should name sources, retrieval permissions, trust labels, metadata, tool use, approval points, and eval checks.
+
+Do not use an agentic strategy to skip provenance or least-authority thinking. More autonomy should create a clearer boundary spec, not a looser one.

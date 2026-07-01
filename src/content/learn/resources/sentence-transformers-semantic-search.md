@@ -35,4 +35,6 @@ reviewStatus: accepted
 status: beta
 ---
 
-Catalog metadata for this linked resource is included for the curriculum beta. Use it as retrieval-specific written support for the embeddings module.
+Use this page to explain semantic search as query embeddings, corpus embeddings, similarity comparison, and top-k retrieval. In AIV Learn it supports a conceptual mini demo before learners move into production RAG tooling.
+
+The checkpoint should include one review check on retrieved results. Do not imply semantic similarity is the same as correctness, authorization, freshness, or source quality.

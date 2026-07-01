@@ -38,4 +38,6 @@ reviewOwner: AI Village Learn
 lastChecked: "2026-06-29"
 ---
 
-Catalog metadata for this linked resource is included for the curriculum beta. Review rights and attribution before reuse beyond linking.
+Use this OWASP adjunct when agentic behavior changes the risk picture: tool authority, memory, planning, server trust, action execution, and containment. In AIV Learn it supports a specific MCP or agent threat-model row.
+
+The checkpoint should map one risk category to one control and one test or evidence source. Do not treat the Top 10 list as a complete assessment or as safe offensive training material.

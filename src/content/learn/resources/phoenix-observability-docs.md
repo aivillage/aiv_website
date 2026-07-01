@@ -36,4 +36,6 @@ canonicalFor:
 reviewStatus: accepted
 ---
 
-Catalog metadata for this linked resource is included for the curriculum beta. Review current Phoenix documentation before implementation.
+Use this quickstart to decide what traces and signals an AI app should capture: LLM calls, retrieval, tool execution, latency, token use, feedback, and failure evidence. The AIV task is to add observability and cost rows to the Team Knowledge Assistant plan.
+
+The checkpoint should include redaction and access owners before any tracing example is copied. Do not collect prompts, outputs, or user data without a clear review boundary.

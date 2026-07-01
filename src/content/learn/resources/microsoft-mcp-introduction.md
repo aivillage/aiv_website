@@ -42,4 +42,6 @@ reviewStatus: accepted
 status: beta
 ---
 
-Catalog metadata for this linked video is included for the curriculum beta. Use the official YouTube player when embedding.
+Use this video as the visual MCP overview after the written protocol boundary is introduced. The AIV diagram should still name host, client, server, tools, resources, authorization server, consent, and where trust decisions happen.
+
+The checkpoint should connect the protocol picture to the threat model. Do not assume the video covers token audience, remote-server trust, or every security practice needed later.

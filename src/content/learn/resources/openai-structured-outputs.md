@@ -21,6 +21,8 @@ accessMode: direct_open
 embedAllowed: false
 ageRestricted: false
 attribution: OpenAI
+watchFocus: Focus on schema-constrained responses, refusals or errors, downstream validation, and what the schema does not prove.
+checkpointPrompt: Write a response contract with schema fields, invalid-response handling, reviewer-visible errors, and one downstream validation check.
 maintenanceRisk: low
 caveats:
   - Schema conformance still requires application-level validation and authorization.
@@ -31,4 +33,6 @@ canonicalFor:
 reviewStatus: accepted
 ---
 
-Catalog metadata for this linked resource is included for the curriculum beta. Use current platform documentation for implementation details.
+Use this guide when the module asks for a response contract rather than free-form model text. The AIV focus is schema shape, invalid-response handling, user-visible errors, and downstream validation.
+
+The checkpoint should state what the schema guarantees and what it does not. Do not treat structured output as truth, policy compliance, or permission to skip business-rule checks.

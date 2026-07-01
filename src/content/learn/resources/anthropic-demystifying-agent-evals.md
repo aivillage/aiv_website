@@ -34,4 +34,6 @@ reviewStatus: accepted
 status: beta
 ---
 
-Catalog metadata for this linked resource is included for the curriculum beta. Use it for eval design framing, not as proof that a particular agent is safe.
+Use this reading to shape agent-eval tasks before implementation details take over. The AIV focus is representative task design, trace review, failure interpretation, and how multi-step agents create evidence needs beyond single-turn model checks.
+
+The checkpoint is an eval plan with tasks, security cases, traces to inspect, and limits on the claim. Do not cite the article as proof that an agent is safe; it is a framing source for designing tests.

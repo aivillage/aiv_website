@@ -22,6 +22,8 @@ accessNotes: The Colab landing page is public; running notebooks may require sig
 embedAllowed: false
 ageRestricted: false
 attribution: Google
+watchFocus: Use Colab only to orient notebook cells, runtimes, files, and execution order before learners run or adapt any notebook.
+checkpointPrompt: "Label the notebook pieces you would need for a small exercise: setup cell, data input, code cell, output, and cleanup or review note."
 canonicalFor:
   - python-notebook-readiness
 reviewStatus: accepted
@@ -33,4 +35,6 @@ lastChecked: "2026-06-28"
 status: beta
 ---
 
-Catalog metadata for this direct-open resource is included for the curriculum beta.
+Use the public Colab landing page as orientation to hosted notebooks and runtime concepts. The AIV module should keep account-dependent execution optional, because viewing the landing page is direct-open but running notebooks may require a Google sign-in.
+
+The useful artifact is a notebook readiness checklist: cells, runtime, data location, outputs, and what should not be uploaded. Do not make Colab account access a core requirement for the Learn path.

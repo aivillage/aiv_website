@@ -40,4 +40,6 @@ canonicalFor:
 reviewStatus: accepted
 ---
 
-Catalog metadata for this linked resource is included for the curriculum beta. Use the official YouTube player when embedding.
+Use this video when the operations module needs concrete LLM-app signals: traces, logs, evaluation feedback, latency, cost, and failure review. The AIV checkpoint turns those signals into an operations sketch with owners and redaction boundaries.
+
+Do not treat the video as a deployment checklist by itself. Learners still need to decide which signals are collected, who can see them, how sensitive data is handled, and what triggers escalation.

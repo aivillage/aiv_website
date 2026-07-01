@@ -36,4 +36,6 @@ canonicalFor:
 reviewStatus: accepted
 ---
 
-Catalog metadata for this linked resource is included for the curriculum beta. Use the official YouTube player when embedding.
+Use this video as a companion for understanding function arguments, tool outputs, and where the application executes actions. In AIV Learn it supports a tool contract with one read-only tool and one approval gate.
+
+The checkpoint should name the checks that happen outside the model: authorization, business rules, logging, and rollback. Do not confuse model-requested tool calls with permission to act.

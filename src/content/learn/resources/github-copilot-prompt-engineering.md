@@ -34,4 +34,6 @@ reviewStatus: accepted
 status: beta
 ---
 
-Catalog metadata for this linked resource is included for the curriculum beta. Use it as practical prompt guidance for AI-assisted coding workflows.
+Use this page to make coding-assistant work auditable: provide relevant context, name constraints, ask for tests or checks, and review generated changes before accepting them. In AIV Learn it supports a small code-change log rather than a blind productivity claim.
+
+The checkpoint should record the prompt, the change produced, checks run, and what was rejected. Do not treat assistant output as trusted just because it compiles.

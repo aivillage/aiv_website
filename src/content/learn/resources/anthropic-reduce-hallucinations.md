@@ -35,4 +35,6 @@ reviewStatus: accepted
 status: beta
 ---
 
-Catalog metadata for this linked resource is included for the curriculum beta. Use it as direct written support for claim verification and review rubrics.
+Use this reading to turn "check the answer" into a repeatable verification habit: require sources, separate claims from evidence, say when confidence is low, and escalate high-impact outputs. In AIV Learn it feeds the claim-source matrix and human-review rubric.
+
+The output should name what evidence is enough for a low-risk draft and what evidence is needed before a decision. Do not use the page to imply hallucination risk can be eliminated by prompting alone.

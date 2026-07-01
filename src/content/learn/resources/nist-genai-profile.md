@@ -37,4 +37,6 @@ watchFocus: Use this as the GenAI-specific companion to the AI RMF, without clai
 checkpointPrompt: Add one GenAI Profile risk or action to the evidence map with an owner and review artifact.
 ---
 
-Catalog metadata for this linked resource is included for the curriculum beta. Review rights and attribution before reuse beyond linking.
+Use the GenAI Profile as the AI RMF companion for generative-AI-specific risks and actions. The AIV task is to translate one profile item into the evidence map with owner, artifact, and open review question.
+
+The checkpoint should keep the claim narrow. Do not treat a short module or profile reference as a compliance certification or legal conclusion.

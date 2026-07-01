@@ -20,6 +20,8 @@ accessMode: direct_open
 embedAllowed: false
 ageRestricted: false
 attribution: LlamaIndex
+watchFocus: Focus on ingestion, indexing, retrieval, response synthesis, and where source evidence appears in a RAG flow.
+checkpointPrompt: Add sources, chunking or indexing choices, retrieval step, answer format, and evidence review to the RAG design note.
 canonicalFor:
   - rag-basics
   - secure-rag
@@ -32,4 +34,6 @@ reviewOwner: AI Village Learn
 lastChecked: "2026-06-26"
 ---
 
-Catalog metadata for this linked resource is included for the curriculum beta. Review rights and attribution before reuse beyond linking.
+Use the RAG docs to anchor the basic retrieval pipeline: source material, indexing, retrieval, response assembly, and review of supporting evidence. In AIV Learn this feeds the RAG design note rather than asking learners to adopt every framework feature.
+
+The checkpoint should show how a retrieved source becomes visible enough to verify. Do not claim that adding RAG automatically fixes hallucination, access control, or stale-source problems.

@@ -42,4 +42,6 @@ lastChecked: "2026-06-28"
 status: beta
 ---
 
-Catalog metadata for this linked video is included for the curriculum beta. Use it as a visual companion to the broader neural-network playlist.
+Use this episode when the neural-network module asks for a visual sketch of layers, activations, weights, and training feedback. The AIV task is not to reproduce the full math; it is to make the learner draw the path from input pixels to output confidence and label where training changes the system.
+
+Do not treat the sketch as evidence that a model is reliable. Pair the drawing with one limitation, such as data dependence, objective mismatch, or behavior that still needs evaluation.

@@ -35,4 +35,6 @@ reviewStatus: accepted
 status: beta
 ---
 
-Catalog metadata for this linked resource is included for the curriculum beta. Use current OpenAI documentation for implementation details.
+Use this guide to plan a minimal text-generation endpoint: inputs, model call, output handling, error path, and review step. In AIV Learn it supports the API integration plan before learners add more complex tool or retrieval behavior.
+
+The checkpoint should name one validation check and one failure case. Do not treat text generation as a complete application design without input boundaries, output handling, and monitoring.

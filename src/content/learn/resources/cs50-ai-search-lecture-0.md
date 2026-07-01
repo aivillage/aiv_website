@@ -43,4 +43,6 @@ lastChecked: "2026-06-28"
 status: beta
 ---
 
-Catalog metadata for this linked video is included for the curriculum beta. Link learners back to the original CS50 source for the full course context.
+Use this lecture as the optional visual companion for the CS50 search notes. It is useful when learners need to see search problems animated and connected to examples before writing their own constrained state-space sketch.
+
+Keep the AIV artifact small: one problem, one goal test, allowed actions, invalid paths, and a stopping condition. Do not turn the module into the full CS50 course path.
