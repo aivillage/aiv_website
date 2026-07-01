@@ -34,11 +34,12 @@ attribution: Full Stack Deep Learning
 maintenanceRisk: medium
 caveats:
   - Concept scaffolding only; use current framework and API docs for implementation details.
+  - Keep link-only until human review confirms embed fit and that it will not make the module video-first.
 reviewOwner: AI Village Learn
 lastChecked: "2026-06-28"
 canonicalFor:
   - workflows-vs-agents
-reviewStatus: accepted
+reviewStatus: human_review
 status: beta
 ---
 

@@ -22,6 +22,18 @@ resources:
     role: deeper
     step: 2
     note: "Use the full series only if you need more context after the sketch."
+  - resource: 3blue1brown-neural-networks-chapter-2
+    role: deeper
+    step: 3
+    note: "Use this selected chapter after the required video to understand gradient descent as the training update loop."
+  - resource: 3blue1brown-neural-networks-chapter-3
+    role: deeper
+    step: 4
+    note: "Use this selected chapter when you want the intuition for how training feedback moves backward through layers."
+  - resource: 3blue1brown-neural-networks-chapter-4
+    role: deeper
+    step: 5
+    note: "Use this selected chapter only if the calculus details help your sketch; it is not required for the checkpoint."
   - resource: karpathy-zero-to-hero
     role: deeper
 requiredArtifact: Neural network intuition sketch

@@ -34,11 +34,12 @@ attribution: LangChain
 maintenanceRisk: medium
 caveats:
   - Concrete tooling example only; eval design should transfer beyond one platform.
+  - Keep link-only until human review confirms embed fit and that it will not make the module video-first.
 reviewOwner: AI Village Learn
 lastChecked: "2026-06-28"
 canonicalFor:
   - agent-observability-evals
-reviewStatus: accepted
+reviewStatus: human_review
 status: beta
 ---
 

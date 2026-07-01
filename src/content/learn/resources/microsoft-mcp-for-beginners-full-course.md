@@ -33,11 +33,12 @@ attribution: Microsoft Developer
 maintenanceRisk: medium
 caveats:
   - Full-course compilation is linked from MCP security basics but not embedded inline.
+  - Keep link-only until human review confirms the full-course video is safe to embed without making the security module video-first.
 reviewOwner: AI Village Learn
 lastChecked: "2026-06-28"
 canonicalFor:
   - mcp-security-basics
-reviewStatus: accepted
+reviewStatus: human_review
 status: beta
 ---
 

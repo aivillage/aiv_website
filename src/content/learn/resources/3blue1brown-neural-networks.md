@@ -25,6 +25,8 @@ ageRestricted: false
 attribution: 3Blue1Brown
 canonicalFor:
   - neural-network-intuition
+watchFocus: "AIV-selected chapters path: use Chapters 1 through 4 for neural-network intuition and Chapters 5 through 6 for transformer attention, not as a claim of full source coverage."
+checkpointPrompt: "After a selected chapter, add one explanation and one limitation to the related module artifact before opening another episode."
 reviewStatus: accepted
 maintenanceRisk: low
 caveats:

@@ -20,6 +20,10 @@ resources:
     role: required
     step: 2
     note: "Use this to explain tokens, attention, context, and generation in your own words."
+  - resource: 3blue1brown-transformers-chapter-6
+    role: deeper
+    step: 3
+    note: "Use this selected follow-up chapter when you need a slower step-by-step attention example."
 requiredArtifact: Token and attention explainer
 securityLens: awareness
 securityLensText: "Language models respond to context, not just user intent. Treat system prompts, retrieved text, chat history, and pasted documents as inputs that can shape behavior and require review."

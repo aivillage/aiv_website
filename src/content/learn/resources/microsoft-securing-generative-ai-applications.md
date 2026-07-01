@@ -33,11 +33,12 @@ attribution: Microsoft Developer
 maintenanceRisk: low
 caveats:
   - Video remains hosted by YouTube and the original creator.
+  - Keep link-only until human review confirms security framing and embed fit.
 reviewOwner: AI Village Learn
 lastChecked: "2026-06-27"
 canonicalFor:
   - ai-for-security-workflows
-reviewStatus: accepted
+reviewStatus: human_review
 ---
 
-Catalog metadata for this linked resource is included for the curriculum beta. Use the official YouTube player when embedding.
+Use this as a link-only security workflow reference. AI Village keeps it out of the embedded path until a human reviewer confirms the framing and fit.
