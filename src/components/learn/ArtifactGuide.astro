@@ -180,6 +180,7 @@ const boundedFields = fields.filter(Boolean).slice(0, compact ? 12 : 16);
     gap: 0.45rem;
     grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
     list-style: none;
+    min-width: 0;
     padding: 0;
   }
 
@@ -187,7 +188,8 @@ const boundedFields = fields.filter(Boolean).slice(0, compact ? 12 : 16);
     align-items: center;
     display: grid;
     gap: 0.55rem;
-    grid-template-columns: max-content minmax(2rem, 1fr);
+    grid-template-columns: minmax(0, 1fr) minmax(2rem, 1fr);
+    max-width: 100%;
     min-width: 0;
   }
 
@@ -200,6 +202,8 @@ const boundedFields = fields.filter(Boolean).slice(0, compact ? 12 : 16);
   .artifact-guide__fields span {
     color: var(--aiv-text-primary);
     font-weight: 700;
+    min-width: 0;
+    overflow-wrap: anywhere;
   }
 
   .artifact-guide__section--evidence {
