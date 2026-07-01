@@ -128,8 +128,8 @@ function firstLabForModule(module: CollectionEntry<"learnModules">) {
   .path-map__item {
     align-items: start;
     display: grid;
-    gap: 0.55rem;
-    grid-template-columns: minmax(0, 1fr);
+    gap: 0.65rem 0.9rem;
+    grid-template-columns: minmax(0, 1fr) auto;
     padding: 0.76rem 0 0.92rem;
     position: relative;
   }
@@ -219,8 +219,8 @@ function firstLabForModule(module: CollectionEntry<"learnModules">) {
     gap: 0.42rem;
     justify-content: flex-start;
     justify-self: start;
-    margin-left: calc(2.25rem + 0.72rem);
-    max-width: calc(100% - (2.25rem + 0.72rem));
+    margin-top: 1.58rem;
+    max-width: 100%;
     width: fit-content;
   }
 
@@ -289,8 +289,13 @@ function firstLabForModule(module: CollectionEntry<"learnModules">) {
       grid-template-columns: 1fr;
     }
 
+    .path-map__item {
+      grid-template-columns: 1fr;
+    }
+
     .path-map__actions {
       margin-left: 0;
+      margin-top: 0;
       max-width: 100%;
     }
 
