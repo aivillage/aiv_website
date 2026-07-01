@@ -209,7 +209,7 @@ function labModuleTitle(lab: CollectionEntry<"learnLabs">) {
     display: grid;
     gap: 0.9rem;
     margin-inline: auto;
-    max-width: min(100%, 1220px);
+    max-width: min(100%, 72rem);
     width: 100%;
   }
 
@@ -225,16 +225,17 @@ function labModuleTitle(lab: CollectionEntry<"learnLabs">) {
   .learn-track-hero {
     align-items: start;
     display: grid;
-    gap: 0.75rem;
-    grid-template-columns: minmax(0, 1fr);
+    gap: 0.75rem 1.5rem;
+    grid-template-columns: minmax(0, 52rem) minmax(17rem, 18.5rem);
   }
 
   .learn-track-hero__main {
     align-items: start;
     display: grid;
     gap: 0.55rem 1rem;
+    grid-column: 1;
     grid-template-columns: minmax(0, 1fr);
-    max-width: 92ch;
+    max-width: 100%;
   }
 
   .learn-track-hero h1,
@@ -494,6 +495,7 @@ function labModuleTitle(lab: CollectionEntry<"learnLabs">) {
 
   @media (max-width: 1099px) {
     .learn-track-layout,
+    .learn-track-hero,
     .learn-section-heading,
     .learn-track-roadmap__grid {
       grid-template-columns: 1fr;
