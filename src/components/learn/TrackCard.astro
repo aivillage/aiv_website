@@ -27,7 +27,10 @@ const firstArtifact = track.data.requiredArtifacts[0] || "Track checkpoint";
 const artifactMore = Math.max(track.data.requiredArtifacts.length - 1, 0);
 const showStatus = ["coming_soon", "stale"].includes(track.data.status);
 const hasTopLine = showStatus || contextLabel || priorityLabel;
-const resolvedCtaLabel = ctaLabel || (track.data.status === "coming_soon" ? "Preview path" : "View track");
+const resolvedCtaLabel = ctaLabel || (track.data.status === "coming_soon" ? "View roadmap" : "View track");
+const moduleCountLabel = track.data.status === "coming_soon" && publicModuleCount === 0
+  ? "Roadmap only"
+  : `${publicModuleCount} public ${publicModuleCount === 1 ? "module" : "modules"}`;
 ---
 
 <article class:list={[
@@ -59,7 +62,7 @@ const resolvedCtaLabel = ctaLabel || (track.data.status === "coming_soon" ? "Pre
     )}
   </dl>
   <div class="learn-track-card__footer">
-    <span>{publicModuleCount} public {publicModuleCount === 1 ? "module" : "modules"}</span>
+    <span>{moduleCountLabel}</span>
     {href && <a class="learn-track-card__cta" href={href}>{resolvedCtaLabel}</a>}
   </div>
 </article>

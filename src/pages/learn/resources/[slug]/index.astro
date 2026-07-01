@@ -117,6 +117,8 @@ const fallbackRationale = primaryModuleLink
 const providerLine = creator === resource.data.provider ? resource.data.provider : `${resource.data.provider}${creator ? ` / ${creator}` : ""}`;
 const sourceActionText = isAivTemplate
   ? "Use the AIV-authored template when the module asks you to draft this artifact."
+  : isOffRamp
+    ? "This source may need an account, course context, product commitment, or extra review. Use the AIV focus and checkpoint first, then open the original only if it fits your context."
   : canEmbedVideo
     ? "Load the official embedded player only when you are ready to watch."
     : "Open the original source when you are ready to use this resource.";
@@ -192,7 +194,7 @@ function moduleLinkHref(module: CollectionEntry<"learnModules">, track?: Collect
         </div>
         {primaryModuleLink && (
           <div class="learn-support-banner__actions">
-            <a class="learn-support-banner__action" href={moduleLinkHref(primaryModuleLink.module, primaryModuleLink.track)}>Continue in module</a>
+            <a class="learn-support-banner__action" href={moduleLinkHref(primaryModuleLink.module, primaryModuleLink.track)}>Return to module checkpoint</a>
             {watchInModuleHref && <a class="learn-support-banner__text-link" href={watchInModuleHref}>Watch in module</a>}
           </div>
         )}

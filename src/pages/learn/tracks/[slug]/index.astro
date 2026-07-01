@@ -56,6 +56,8 @@ const showTrackStatus = track.data.status !== "beta";
 const trackSlug = entrySlug(track);
 const isGovernanceTrack = trackSlug === "governance-responsible-use";
 const isOffensiveTrack = trackSlug === "offensive-ai-security-red-teaming";
+const alternateStartHref = isGovernanceTrack ? "/learn/tracks/ai-practitioner/" : "";
+const alternateStartLabel = isGovernanceTrack ? "Start With AI Practitioner" : "";
 
 function labModuleTitle(lab: CollectionEntry<"learnLabs">) {
   const labSlug = entrySlug(lab);
@@ -83,8 +85,10 @@ function labModuleTitle(lab: CollectionEntry<"learnLabs">) {
           <p class="text-lead">{track.data.summary}</p>
           {firstModule ? (
             <a class="button" href={firstModuleHref}>Start Module 1</a>
+          ) : alternateStartHref ? (
+            <a class="button" href={alternateStartHref}>{alternateStartLabel}</a>
           ) : (
-            <p class="learn-track-hero__empty">Public modules are not available yet.</p>
+            <p class="learn-track-hero__empty">This track is a roadmap until public modules are reviewed.</p>
           )}
         </div>
       </header>
@@ -107,9 +111,10 @@ function labModuleTitle(lab: CollectionEntry<"learnLabs">) {
               <>
                 <p>Start with AI Practitioner for workflow policy basics, or AI Security Core for risk framing. Return here when Governance modules are public.</p>
                 <a class="learn-track-rail-card__button" href="/learn/tracks/ai-practitioner/">Start With AI Practitioner</a>
+                <a class="learn-track-rail-card__text-link" href="/learn/tracks/ai-security-core/">Use AI Security Core for risk framing</a>
               </>
             ) : (
-              <p>Public modules are not available yet.</p>
+              <p>This track is a roadmap until public modules are reviewed.</p>
             )}
           </section>
 
@@ -141,7 +146,7 @@ function labModuleTitle(lab: CollectionEntry<"learnLabs">) {
           </section>
 
           <section class="learn-track-rail-card learn-surface-reference" aria-labelledby="track-audience-heading">
-            <h2 id="track-audience-heading">Who Should Start</h2>
+            <h2 id="track-audience-heading">Best For</h2>
             <ul>
               {track.data.audiences.map((audience) => <li>{audience}</li>)}
             </ul>
@@ -169,7 +174,7 @@ function labModuleTitle(lab: CollectionEntry<"learnLabs">) {
                 <p>{track.data.whatExistsNow}</p>
               </div>
               <div>
-                <h2>What Is Coming Next</h2>
+                <h2>What Is Planned</h2>
                 <p>{track.data.whatComingNext}</p>
               </div>
             </div>
@@ -336,6 +341,13 @@ function labModuleTitle(lab: CollectionEntry<"learnLabs">) {
     padding: 0.46rem 0.72rem;
     text-decoration: none;
     width: fit-content;
+  }
+
+  .learn-track-rail-card__text-link {
+    color: var(--aiv-text-secondary);
+    display: inline-flex;
+    font-weight: 800;
+    min-height: 2.4rem;
   }
 
   .learn-track-rail-card__item-list {
