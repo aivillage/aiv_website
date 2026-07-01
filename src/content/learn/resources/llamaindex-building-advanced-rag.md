@@ -24,6 +24,8 @@ accessMode: direct_open
 embedAllowed: false
 ageRestricted: false
 attribution: LlamaIndex
+watchFocus: "AIV-selected episode path: use the mapped agents-from-scratch episode for the module, then treat the full playlist as optional implementation context."
+checkpointPrompt: "After the selected episode, write one agentic RAG design note that names tools, retrieval state, approval points, and eval checks."
 maintenanceRisk: medium
 caveats:
   - Series page is link-only; current LlamaIndex docs are authoritative for implementation.

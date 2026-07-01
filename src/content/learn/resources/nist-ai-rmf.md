@@ -22,9 +22,7 @@ embedAllowed: false
 ageRestricted: false
 attribution: NIST
 canonicalFor:
-  - ai-risk-frameworks
   - nist-ai-rmf-genai-profile
-  - responsible-ai-use
   - secure-ai-architecture
 reviewStatus: accepted
 maintenanceRisk: low

@@ -22,14 +22,6 @@ resources:
     role: required
     step: 2
     note: "Use this to compare agent-ready task framing and review expectations."
-  - resource: anthropic-code-with-claude-ysPbXH0LpIE
-    role: optional
-    step: 3
-    note: "Draft reference retained for later verification; do not use as the core path."
-  - resource: anthropic-code-with-claude-XSZP9GhhuAc
-    role: deeper
-    step: 4
-    note: "Draft reference retained for later verification; do not use as the core path."
 requiredArtifact: Coding task brief
 securityLens: awareness
 securityLensText: "AI-generated code can be plausible, insecure, or incompatible with project constraints. Treat generated changes like untrusted contributions that need tests, review, and dependency checks."

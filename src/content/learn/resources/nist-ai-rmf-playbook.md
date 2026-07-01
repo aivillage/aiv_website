@@ -29,7 +29,6 @@ recommendedRole: optional
 watchFocus: Use the playbook to turn framework language into evidence, owners, controls, and review actions.
 checkpointPrompt: Add one playbook-informed evidence row to the governance evidence map.
 canonicalFor:
-  - ai-risk-frameworks
   - nist-ai-rmf-genai-profile
 reviewStatus: accepted
 ---

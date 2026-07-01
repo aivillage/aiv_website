@@ -28,8 +28,7 @@ lastChecked: "2026-06-30"
 recommendedRole: optional
 watchFocus: "Focus on due-diligence process language: identify, prevent, mitigate, track, communicate, and remediate."
 checkpointPrompt: Add one due-diligence action, owner, and evidence field to the responsible-use checklist.
-canonicalFor:
-  - responsible-ai-use
+canonicalFor: []
 reviewStatus: accepted
 ---
 

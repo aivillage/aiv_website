@@ -18,8 +18,7 @@ accessMode: free_account_required
 embedAllowed: false
 ageRestricted: false
 attribution: Dreadnode
-canonicalFor:
-  - ctf-path
+canonicalFor: []
 reviewStatus: deferred
 maintenanceRisk: medium
 caveats:

@@ -18,8 +18,7 @@ accessMode: free_account_required
 embedAllowed: false
 ageRestricted: false
 attribution: HackAPrompt
-canonicalFor:
-  - ctf-path
+canonicalFor: []
 reviewStatus: deferred
 maintenanceRisk: medium
 caveats:

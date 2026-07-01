@@ -28,8 +28,7 @@ lastChecked: "2026-06-30"
 recommendedRole: required
 watchFocus: Watch for intended use, factors, metrics, evaluation data, ethical considerations, caveats, and recommendations.
 checkpointPrompt: Critique one model or system card by naming supported claims, unsupported claims, and missing evidence.
-canonicalFor:
-  - model-system-cards
+canonicalFor: []
 reviewStatus: accepted
 ---
 

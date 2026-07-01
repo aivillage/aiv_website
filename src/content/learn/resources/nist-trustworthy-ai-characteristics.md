@@ -28,9 +28,7 @@ lastChecked: "2026-06-30"
 recommendedRole: required
 watchFocus: Use the characteristics as shared vocabulary for security, safety, resilience, transparency, privacy, and accountability.
 checkpointPrompt: Map one AI use case to security, safety, and governance questions using the trustworthy AI characteristics.
-canonicalFor:
-  - ai-safety-fundamentals
-  - security-vs-safety-vs-governance
+canonicalFor: []
 reviewStatus: accepted
 ---
 

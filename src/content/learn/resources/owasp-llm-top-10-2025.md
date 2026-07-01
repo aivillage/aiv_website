@@ -21,7 +21,6 @@ ageRestricted: false
 attribution: OWASP
 canonicalFor:
   - ai-threat-modeling
-  - misinformation-unbounded-consumption
   - secure-ai-architecture
 reviewStatus: accepted
 maintenanceRisk: medium

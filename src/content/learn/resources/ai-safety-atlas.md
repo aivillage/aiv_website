@@ -18,9 +18,7 @@ accessMode: direct_open
 embedAllowed: false
 ageRestricted: false
 attribution: AI Safety Atlas
-canonicalFor:
-  - security-vs-safety-vs-governance
-  - ai-safety-fundamentals
+canonicalFor: []
 reviewStatus: accepted
 maintenanceRisk: medium
 caveats:

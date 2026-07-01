@@ -29,8 +29,7 @@ caveats:
 status: draft
 reviewOwner: AI Village Learn
 lastChecked: "2026-06-27"
-canonicalFor:
-  - ai-assisted-coding
+canonicalFor: []
 reviewStatus: needs_verification
 ---
 

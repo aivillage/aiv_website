@@ -28,8 +28,7 @@ lastChecked: "2026-06-30"
 recommendedRole: optional
 watchFocus: Focus on roles, coordination, timelines, evidence handling, and disclosure boundaries.
 checkpointPrompt: Add recipient, evidence boundary, coordination need, and next step to the disclosure decision note.
-canonicalFor:
-  - responsible-disclosure
+canonicalFor: []
 reviewStatus: accepted
 ---
 

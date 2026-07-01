@@ -26,6 +26,8 @@ embedAllowed: false
 ageRestricted: false
 attribution: Harvard CS50
 canonicalFor: []
+watchFocus: "AIV-selected episode path: use the mapped Week 0 Search lecture and notes first, then open the full CS50 course only as optional broader context."
+checkpointPrompt: "After the selected episode, write a search problem note with state, actions, goal test, and one limitation before browsing the full course."
 reviewStatus: accepted
 maintenanceRisk: low
 caveats:

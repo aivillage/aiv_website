@@ -28,8 +28,7 @@ lastChecked: "2026-06-30"
 recommendedRole: optional
 watchFocus: Review how the system card states capabilities, evaluations, limitations, mitigations, and remaining risks.
 checkpointPrompt: Name one supported claim, one limitation, and one decision the card should not be used to support.
-canonicalFor:
-  - model-system-cards
+canonicalFor: []
 reviewStatus: accepted
 ---
 

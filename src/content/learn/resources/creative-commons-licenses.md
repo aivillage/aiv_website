@@ -28,8 +28,7 @@ lastChecked: "2026-06-30"
 recommendedRole: required
 watchFocus: Focus on attribution, share-alike, noncommercial, no-derivatives, public domain, and license compatibility questions.
 checkpointPrompt: Record the license signal, attribution need, use limit, and unresolved question for one source.
-canonicalFor:
-  - copyright-licensing-basics
+canonicalFor: []
 reviewStatus: accepted
 ---
 

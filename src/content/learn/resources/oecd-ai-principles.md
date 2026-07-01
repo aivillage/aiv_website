@@ -28,8 +28,7 @@ lastChecked: "2026-06-30"
 recommendedRole: required
 watchFocus: Translate principles into concrete allowed-use, review, escalation, and owner fields.
 checkpointPrompt: Write one responsible-use rule that maps to a principle and names the workflow owner.
-canonicalFor:
-  - responsible-ai-use
+canonicalFor: []
 reviewStatus: accepted
 ---
 

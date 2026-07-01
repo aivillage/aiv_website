@@ -20,8 +20,7 @@ accessNotes: BlueDot course pages may involve cohort enrollment or account acces
 embedAllowed: false
 ageRestricted: false
 attribution: BlueDot Impact
-canonicalFor:
-  - ai-safety-fundamentals
+canonicalFor: []
 reviewStatus: needs_verification
 maintenanceRisk: medium
 caveats:

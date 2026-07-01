@@ -26,6 +26,8 @@ type EntryData = {
   loginRequired?: boolean;
   accessMode?: string;
   accessNotes?: string;
+  watchFocus?: string;
+  checkpointPrompt?: string;
   resourceType?: string;
   mediaType?: string;
   seriesSlug?: string;
@@ -43,6 +45,7 @@ type EntryData = {
   safetyBoundary?: string;
   isOffensive?: boolean;
   debriefStatus?: string;
+  caveats?: string[];
 };
 type Entry = {
   collection: string;
@@ -114,6 +117,17 @@ function isValidYouTubePlaylistId(value: string | undefined) {
   return !value || /^PL[A-Za-z0-9_-]+$/.test(value);
 }
 
+function documentsSelectedEpisodePath(entry: Entry) {
+  const text = [
+    entry.data.watchFocus,
+    entry.data.checkpointPrompt,
+    entry.data.accessNotes,
+    ...(Array.isArray(entry.data.caveats) ? entry.data.caveats : []),
+  ].filter(Boolean).join(" ");
+
+  return /\b(AIV-selected episode path|selected episode path|single selected episode|selected lecture|selected episode)\b/i.test(text);
+}
+
 function runParserRegression() {
   const withBlockScalar = parseFrontmatter(`---\nsecurityLens: "required"\nsecurityLensText: >\n  This is multi-line Security Lens text.\n  The validator must read the full string.\nstatus: "stable"\n---\n`).frontmatter as EntryData;
   const parsedText = withBlockScalar.securityLensText || "";
@@ -163,7 +177,7 @@ for (const resource of publicResources) {
     const episodeCount = publicEpisodeCountBySeries.get(resource.slug) || 0;
     if (episodeCount === 0) {
       warn(resource, "Public playlist resources should not be presented as full series until child episode records exist.");
-    } else if (episodeCount === 1) {
+    } else if (episodeCount === 1 && !documentsSelectedEpisodePath(resource)) {
       warn(resource, "Public playlist resources with one child episode should be treated as selected episode paths, not full series.");
     }
   }

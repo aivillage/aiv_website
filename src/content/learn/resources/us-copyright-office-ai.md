@@ -28,8 +28,7 @@ lastChecked: "2026-06-30"
 recommendedRole: required
 watchFocus: Use this to identify copyright questions and unresolved legal review needs in AI workflows.
 checkpointPrompt: Add one U.S.-anchored copyright question and one unresolved legal review question to the source-use note.
-canonicalFor:
-  - copyright-licensing-basics
+canonicalFor: []
 reviewStatus: accepted
 ---
 

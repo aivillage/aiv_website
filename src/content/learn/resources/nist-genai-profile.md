@@ -22,7 +22,6 @@ embedAllowed: false
 ageRestricted: false
 attribution: NIST
 canonicalFor:
-  - ai-risk-frameworks
   - ai-workflow-policy-basics
   - nist-ai-rmf-genai-profile
   - secure-ai-architecture
