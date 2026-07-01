@@ -1,7 +1,7 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import StatusBadge from "./StatusBadge.astro";
-import { difficultyLabels, entrySlug, getModuleFeaturedVideo, labPath, moduleTypeLabels, refId, trackScopedModulePath } from "../../utils/learn";
+import { difficultyLabels, entrySlug, getModuleWatchTarget, labPath, moduleTypeLabels, refId, trackScopedModulePath } from "../../utils/learn";
 
 type Props = {
   track: CollectionEntry<"learnTracks">;
@@ -40,7 +40,7 @@ function firstLabForModule(module: CollectionEntry<"learnModules">) {
       {modules.map((module, index) => {
         const href = trackScopedModulePath(track, module);
         const actionLabel = index === 0 ? "Start module" : "Open module";
-        const featuredVideo = module.data.status === "coming_soon" ? undefined : getModuleFeaturedVideo(module, resources);
+        const watchTarget = getModuleWatchTarget(module, resources, { governingTrack: track });
         const relatedLab = firstLabForModule(module);
         return (
           <li class="path-map__item">
@@ -60,7 +60,7 @@ function firstLabForModule(module: CollectionEntry<"learnModules">) {
             <div class="path-map__actions" aria-label={`${module.data.title} actions`}>
               <a class="path-map__action path-map__action--primary" href={href}>{actionLabel}</a>
               <div class="path-map__secondary-actions">
-                {featuredVideo && <a class="path-map__action path-map__action--secondary" href={`${href}#watch`}>Watch</a>}
+                {watchTarget && <a class="path-map__action path-map__action--secondary" href={watchTarget.href}>Watch</a>}
                 {relatedLab && <a class="path-map__action path-map__action--secondary" href={labPath(relatedLab)}>Practice</a>}
               </div>
             </div>
@@ -180,7 +180,7 @@ function firstLabForModule(module: CollectionEntry<"learnModules">) {
     line-height: 1.45;
     overflow: hidden;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 1;
+    -webkit-line-clamp: 2;
   }
 
   .path-map__main .path-map__produces {

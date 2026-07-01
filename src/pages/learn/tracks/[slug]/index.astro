@@ -105,16 +105,6 @@ function labModuleTitle(lab: CollectionEntry<"learnLabs">) {
           )}
         </section>
 
-        <section class="learn-track-rail-card learn-track-rail-card--output learn-surface-worksheet" aria-labelledby="track-output-mini-heading">
-          <h2 id="track-output-mini-heading">Track output</h2>
-          <p>{track.data.requiredArtifacts[0] || "Track output"}</p>
-          {track.data.requiredArtifacts.length > 1 && (
-            <ul>
-              {track.data.requiredArtifacts.slice(1, 4).map((artifact) => <li>{artifact}</li>)}
-            </ul>
-          )}
-        </section>
-
         <TrackVideoShortcuts track={track} modules={modules} resources={resources} />
 
         {labs.length > 0 && (
@@ -226,11 +216,11 @@ function labModuleTitle(lab: CollectionEntry<"learnLabs">) {
   }
 
   .learn-track-hero__main {
-    align-items: end;
+    align-items: start;
     display: grid;
     gap: 0.55rem 1rem;
-    grid-template-columns: minmax(0, 1fr) auto;
-    max-width: none;
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 92ch;
   }
 
   .learn-track-hero h1,
@@ -251,9 +241,10 @@ function labModuleTitle(lab: CollectionEntry<"learnLabs">) {
   }
 
   .learn-track-hero .button {
-    align-self: end;
-    grid-column: 2;
-    grid-row: 1 / span 3;
+    align-self: start;
+    grid-column: 1;
+    grid-row: auto;
+    margin-top: 0.1rem;
   }
 
   .learn-track-hero__empty {

@@ -8,10 +8,12 @@ import CompactPathNav from "./CompactPathNav.astro";
 import LessonStep from "./LessonStep.astro";
 import LessonTaskHeader from "./LessonTaskHeader.astro";
 import SecurityReview from "./SecurityReview.astro";
+import YouTubeEmbed from "./YouTubeEmbed.astro";
 import {
   accessModeLabels,
   artifactFieldsForModule,
   formatLabel,
+  hasAcceptedEmbeddableVideo,
   labPath,
   modulePath,
   resourcePath,
@@ -196,7 +198,10 @@ const templateResource = templateResourceItem
       href: resourcePath(templateResourceItem.resource),
     }
   : undefined;
-const hasWatchAnchor = Boolean(featuredEmbed);
+const featuredEmbedCanRender = Boolean(featuredEmbed && hasAcceptedEmbeddableVideo(featuredEmbed.resource));
+const isFeaturedInRequiredPath = Boolean(requiredGroup?.items.some((item) => isFeaturedResourceItem(item)));
+const shouldRenderDedicatedWatch = Boolean(featuredEmbed && featuredEmbedCanRender && !isFeaturedInRequiredPath);
+const hasWatchAnchor = featuredEmbedCanRender;
 const jumpLinks = [
   { href: "#start", label: "Start" },
   hasWatchAnchor && { href: "#watch", label: "Watch" },
@@ -278,6 +283,27 @@ const jumpLinks = [
               </div>
               <p>Use the worksheet and lesson notes below while this module checkpoint is completed.</p>
             </div>
+          </section>
+        )}
+
+        {shouldRenderDedicatedWatch && featuredEmbed && (
+          <section id="watch" class="learn-watch-section learn-surface-task" aria-labelledby="watch-section-heading">
+            <div class="learn-section-heading">
+              <div>
+                <span class="learn-kicker">Watch</span>
+                <h2 id="watch-section-heading">{featuredEmbed.resource.data.title}</h2>
+              </div>
+              <p>{resourceSupportText(featuredEmbed)}</p>
+            </div>
+            <YouTubeEmbed
+              title={featuredEmbed.resource.data.title}
+              creator={featuredEmbed.resource.data.creator || featuredEmbed.resource.data.attribution || featuredEmbed.resource.data.provider}
+              canonicalUrl={featuredEmbed.resource.data.canonicalUrl}
+              channelUrl={featuredEmbed.resource.data.channelUrl}
+              videoId={featuredEmbed.resource.data.videoId}
+              mediaType={featuredEmbed.resource.data.mediaType || featuredEmbed.resource.data.resourceType}
+              embedPrivacyMode={featuredEmbed.resource.data.embedPrivacyMode}
+            />
           </section>
         )}
 
@@ -480,6 +506,7 @@ const jumpLinks = [
   }
 
   .learn-steps-section,
+  .learn-watch-section,
   .learn-lesson-notes,
   .learn-disclosure,
   .learn-prerequisites-strip,
@@ -537,6 +564,7 @@ const jumpLinks = [
   }
 
   .learn-steps-section,
+  .learn-watch-section,
   .learn-lesson-notes,
   .learn-practice-panel,
   .learn-more-resources {
@@ -869,6 +897,7 @@ const jumpLinks = [
 
     .learn-workbook-rail,
     .learn-steps-section,
+    .learn-watch-section,
     .learn-lesson-notes,
     .learn-disclosure,
     .learn-prerequisites-strip,
@@ -906,6 +935,7 @@ const jumpLinks = [
     }
 
     .learn-steps-section,
+    .learn-watch-section,
     .learn-lesson-notes,
     .learn-practice-panel,
     .learn-more-resources {

@@ -93,7 +93,7 @@ const navLabel = variant === "rail" ? "Path navigation" : "Module path navigatio
     </div>
   )}
 
-  {jumpLinks.length > 0 && (
+  {variant !== "footer" && jumpLinks.length > 0 && (
     <div class="compact-path-nav__jumps" aria-label="Jump to section">
       {jumpLinks.map((link) => <a href={link.href}>{link.label}</a>)}
     </div>

@@ -27,7 +27,7 @@ securityCheckpoints:
   - Risk framework checkpoint
   - Responsible disclosure checkpoint
 whatExistsNow: >-
-  The curriculum beta includes draft governance module scaffolding, primary-source resource records, and
+  The curriculum beta includes planned governance module scaffolding, primary-source resource records, and
   artifact prompts for a future evidence-pack path.
 whatComingNext: Full lessons need human review before publication, especially for AIV-specific disclosure,
   remediation, rights, legal, and jurisdiction-specific policy guidance.
@@ -45,4 +45,4 @@ lastReviewed: "2026-06-30"
 
 Governance and Responsible Use is an announced Learn track for program leads, governance learners, and responsible-use reviewers. It belongs in Learn because AI adoption needs more than model knowledge: teams need risk frameworks, documentation, disclosure decisions, source-use awareness, and review evidence that connect to real workflows. The planned artifact path is an evidence pack: a security/safety/governance map, risk-review note, responsible-use checklist, model/system card critique, disclosure decision note, licensing/source-use note, and governance evidence map.
 
-This track remains coming soon. The module drafts now use primary-source, direct-open resources and clearer artifact scaffolding, but they are not yet a reviewed public curriculum and should not be read as legal advice, compliance advice, AIV policy, or jurisdiction-specific guidance. AIV-specific disclosure, remediation, rights, and policy positions need human review before publication.
+This track remains coming soon. The planned modules now use primary-source, direct-open resources and clearer artifact scaffolding, but they are not yet a reviewed public curriculum and should not be read as legal advice, compliance advice, AIV policy, or jurisdiction-specific guidance. AIV-specific disclosure, remediation, rights, and policy positions need human review before publication.

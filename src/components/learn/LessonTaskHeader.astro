@@ -180,6 +180,12 @@ const artifact = learnModule.data.requiredArtifact || "Module checkpoint";
     outline-offset: 3px;
   }
 
+  @media (max-width: 1099px) {
+    .lesson-task-header__jumps {
+      display: none;
+    }
+  }
+
   @media (max-width: 860px) {
     .lesson-task-header {
       grid-template-columns: 1fr;

@@ -10,7 +10,7 @@ import {
   entrySlug,
   findPublicCanonicalTracksForModule,
   formatLabel,
-  hasAcceptedEmbeddableVideo,
+  getModuleWatchTarget,
   isPlaylistResource,
   modulePath,
   refId,
@@ -26,6 +26,7 @@ type Props = {
   tracks: CollectionEntry<"learnTracks">[];
   allTracks: CollectionEntry<"learnTracks">[];
   modules: CollectionEntry<"learnModules">[];
+  resources: CollectionEntry<"learnResources">[];
 };
 
 export async function getStaticPaths() {
@@ -52,12 +53,12 @@ export async function getStaticPaths() {
 
     return {
       params: { slug: seriesSlug },
-      props: { series, episodes, tracks: relatedTracks, allTracks: tracks, modules },
+      props: { series, episodes, tracks: relatedTracks, allTracks: tracks, modules, resources },
     };
   });
 }
 
-const { series, episodes, tracks, allTracks, modules } = Astro.props;
+const { series, episodes, tracks, allTracks, modules, resources } = Astro.props;
 const creator = series.data.creator || series.data.attribution || series.data.provider;
 const accessLabel = accessModeLabels[series.data.accessMode] || accessModeLabels.direct_open;
 const episodeCount = episodes.length;
@@ -109,6 +110,13 @@ function episodeModuleTrack(module: CollectionEntry<"learnModules">) {
   const canonicalTracks = findPublicCanonicalTracksForModule(module, allTracks);
   return canonicalTracks.length === 1 ? canonicalTracks[0] : undefined;
 }
+
+function hasEpisodeWatchTarget(episode: CollectionEntry<"learnResources">, module: CollectionEntry<"learnModules">) {
+  const track = episodeModuleTrack(module);
+  if (!track) return undefined;
+  const watchTarget = getModuleWatchTarget(module, resources, { governingTrack: track });
+  return watchTarget?.resource.id === episode.id ? watchTarget : undefined;
+}
 ---
 
 <BaseLayout title={series.data.title} canonical={seriesPath(series)} description={`Learn series from ${series.data.provider}: ${series.data.title}.`}>
@@ -141,20 +149,9 @@ function episodeModuleTrack(module: CollectionEntry<"learnModules">) {
               <ol class="episode-path__list">
                 {episodes.map((episode, index) => {
                   const mappedModules = episodeModules(episode);
-                  const primaryMappedModule = mappedModules[0];
-                  const canWatchInModule = Boolean(primaryMappedModule && hasAcceptedEmbeddableVideo(episode));
-                  const primaryActionHref = canWatchInModule && primaryMappedModule
-                    ? `${episodeModulePath(primaryMappedModule)}#watch`
-                    : primaryMappedModule
-                      ? episodeModulePath(primaryMappedModule)
-                      : resourcePath(episode);
-                  const primaryActionLabel = canWatchInModule
-                    ? "Watch in module"
-                    : primaryMappedModule
-                      ? "Continue in module"
-                      : (episode.data.mediaType === "video" || episode.data.resourceType === "video")
-                        ? "Watch episode"
-                        : "Open resource page";
+                  const watchTarget = mappedModules.map((module) => hasEpisodeWatchTarget(episode, module)).find(Boolean);
+                  const primaryActionHref = watchTarget ? watchTarget.href : resourcePath(episode);
+                  const primaryActionLabel = watchTarget ? "Watch in module" : "Open resource";
 
                   return (
                     <li class="episode-path__item">
@@ -173,7 +170,7 @@ function episodeModuleTrack(module: CollectionEntry<"learnModules">) {
                         </div>
                       </div>
                       <div class="episode-path__mapping">
-                        <span>Module mapping</span>
+                        <span>Supports</span>
                         {mappedModules.length > 0 ? (
                           <ul>
                             {mappedModules.map((module) => {
@@ -192,7 +189,7 @@ function episodeModuleTrack(module: CollectionEntry<"learnModules">) {
                       </div>
                       <div class="episode-path__actions">
                         <a class="episode-path__continue" href={primaryActionHref}>{primaryActionLabel}</a>
-                        {primaryActionHref !== resourcePath(episode) && <a href={resourcePath(episode)}>Open resource page</a>}
+                        {watchTarget && <a href={resourcePath(episode)}>Open resource</a>}
                       </div>
                     </li>
                   );
@@ -332,7 +329,7 @@ function episodeModuleTrack(module: CollectionEntry<"learnModules">) {
     align-items: start;
     display: grid;
     gap: 0.72rem;
-    grid-template-columns: auto minmax(0, 1fr) minmax(13rem, 0.35fr) auto;
+    grid-template-columns: auto minmax(0, 1fr) minmax(10.5rem, auto);
     padding: 0.85rem 0;
   }
 
@@ -381,6 +378,7 @@ function episodeModuleTrack(module: CollectionEntry<"learnModules">) {
     background: color-mix(in srgb, var(--aiv-bg-canvas) 16%, transparent);
     border: 1px solid color-mix(in srgb, var(--aiv-action-secondary) 32%, var(--aiv-line-subtle));
     border-radius: 8px;
+    grid-column: 2;
     padding: 0.58rem 0.65rem;
   }
 
@@ -398,6 +396,8 @@ function episodeModuleTrack(module: CollectionEntry<"learnModules">) {
   .episode-path__actions {
     display: grid;
     gap: 0.42rem;
+    grid-column: 3;
+    grid-row: 1 / span 2;
     justify-items: stretch;
   }
 
@@ -439,6 +439,7 @@ function episodeModuleTrack(module: CollectionEntry<"learnModules">) {
     .episode-path__mapping,
     .episode-path__actions {
       grid-column: 2;
+      grid-row: auto;
     }
 
     .episode-path__actions {

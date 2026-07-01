@@ -7,7 +7,7 @@ import {
   canRenderLearnModule,
   entrySlug,
   findPublicCanonicalTracksForModule,
-  getModuleFeaturedVideo,
+  getModuleWatchTarget,
   modulePath,
   previousNextModulesInTrack,
   refId,
@@ -54,8 +54,7 @@ export async function getStaticPaths() {
     return items.sort((a, b) => (a.step ?? a.sourceIndex + 10000) - (b.step ?? b.sourceIndex + 10000));
   }
 
-  function featuredEmbedForGroups(module: CollectionEntry<"learnModules">, resources: CollectionEntry<"learnResources">[], resourceGroups: ResourceGroup[]) {
-    const featuredVideo = getModuleFeaturedVideo(module, resources);
+  function featuredEmbedForGroups(featuredVideo: CollectionEntry<"learnResources"> | undefined, resourceGroups: ResourceGroup[]) {
     if (!featuredVideo) return undefined;
     return resourceGroups.flatMap((group) => group.items).find((item) => item.resource.id === featuredVideo.id);
   }
@@ -83,10 +82,8 @@ export async function getStaticPaths() {
       heading: resourceGroupLabels[role],
       items: resourceItemsForRole(module, resourceBySlug, role),
     })) satisfies ResourceGroup[];
-    const hasComingSoonTrack = relatedTracks.some((track) => track.data.status === "coming_soon");
-    const featuredEmbed = module.data.status === "coming_soon" || hasComingSoonTrack
-      ? undefined
-      : featuredEmbedForGroups(module, resources, resourceGroups);
+    const watchTarget = getModuleWatchTarget(module, resources, { relatedTracks });
+    const featuredEmbed = featuredEmbedForGroups(watchTarget?.resource, resourceGroups);
     const linkedLabs = (module.data.labs || [])
       .map((labRef) => labBySlug.get(refId(labRef)))
       .filter((lab) => lab && canRenderLearnLab(lab)) as CollectionEntry<"learnLabs">[];

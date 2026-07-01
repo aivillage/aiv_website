@@ -1,6 +1,6 @@
 ---
 import type { CollectionEntry } from "astro:content";
-import { entrySlug, getModuleFeaturedVideo, resourcePath, trackScopedModulePath } from "../../utils/learn";
+import { entrySlug, getModuleWatchTarget, resourcePath } from "../../utils/learn";
 
 type Props = {
   track: CollectionEntry<"learnTracks">;
@@ -19,16 +19,15 @@ const shouldSuppressShortcuts = mutedVideoTrackSlugs.has(entrySlug(track));
 const videoShortcuts = shouldSuppressShortcuts
   ? []
   : modules
-      .filter((module) => module.data.status !== "coming_soon")
       .map((module) => {
-        const video = getModuleFeaturedVideo(module, resources);
-        return video
+        const watchTarget = getModuleWatchTarget(module, resources, { governingTrack: track });
+        return watchTarget
           ? {
               module,
-              video,
-              href: `${trackScopedModulePath(track, module)}#watch`,
-              fallbackHref: resourcePath(video),
-              creator: video.data.creator || video.data.attribution || video.data.provider,
+              video: watchTarget.resource,
+              href: watchTarget.href,
+              fallbackHref: resourcePath(watchTarget.resource),
+              creator: watchTarget.resource.data.creator || watchTarget.resource.data.attribution || watchTarget.resource.data.provider,
             }
           : undefined;
       })

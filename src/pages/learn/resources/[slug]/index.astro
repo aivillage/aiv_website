@@ -12,6 +12,7 @@ import {
   findPublicCanonicalTracksForModule,
   formatLabel,
   hasAcceptedEmbeddableVideo,
+  getModuleWatchTarget,
   modulePath,
   refId,
   resourceActionLabel,
@@ -33,6 +34,7 @@ type Props = {
   resource: CollectionEntry<"learnResources">;
   tracks: CollectionEntry<"learnTracks">[];
   modules: ModuleLink[];
+  resources: CollectionEntry<"learnResources">[];
 };
 
 export async function getStaticPaths() {
@@ -75,12 +77,12 @@ export async function getStaticPaths() {
 
     return {
       params: { slug: resourceSlug },
-      props: { resource, tracks: relatedTracks, modules: relatedModules },
+      props: { resource, tracks: relatedTracks, modules: relatedModules, resources },
     };
   });
 }
 
-const { resource, tracks, modules } = Astro.props;
+const { resource, tracks, modules, resources } = Astro.props;
 const { Content } = await render(resource);
 const creator = resource.data.creator || resource.data.attribution || resource.data.provider;
 const isPlaylist = resource.data.resourceType === "playlist" || resource.data.mediaType === "playlist";
@@ -120,8 +122,11 @@ const sourceActionText = isAivTemplate
     : "Open the original source when you are ready to use this resource.";
 const sourceActionHref = isAivTemplate ? "#template-content" : resource.data.canonicalUrl;
 const sourceActionButtonLabel = isAivTemplate ? actionLabel : "Open original";
-const watchInModuleHref = canEmbedVideo && primaryModuleLink?.track
-  ? `${trackScopedModulePath(primaryModuleLink.track, primaryModuleLink.module)}#watch`
+const primaryWatchTarget = primaryModuleLink?.track
+  ? getModuleWatchTarget(primaryModuleLink.module, resources, { governingTrack: primaryModuleLink.track })
+  : undefined;
+const watchInModuleHref = canEmbedVideo && primaryWatchTarget?.resource.id === resource.id
+  ? primaryWatchTarget.href
   : undefined;
 const railSections = [
   {
@@ -187,8 +192,8 @@ function moduleLinkHref(module: CollectionEntry<"learnModules">, track?: Collect
         </div>
         {primaryModuleLink && (
           <div class="learn-support-banner__actions">
-            {watchInModuleHref && <a class="learn-support-banner__action learn-support-banner__action--secondary" href={watchInModuleHref}>Watch in module</a>}
             <a class="learn-support-banner__action" href={moduleLinkHref(primaryModuleLink.module, primaryModuleLink.track)}>Continue in module</a>
+            {watchInModuleHref && <a class="learn-support-banner__text-link" href={watchInModuleHref}>Watch in module</a>}
           </div>
         )}
       </section>
@@ -222,7 +227,6 @@ function moduleLinkHref(module: CollectionEntry<"learnModules">, track?: Collect
               <span>Source action</span>
               <h2 id="source-action-heading">{actionLabel}</h2>
               <p>{sourceActionText}</p>
-              {watchInModuleHref && <a class="learn-source-action__module-link" href={watchInModuleHref}>Watch in module</a>}
             </div>
             {canEmbedVideo ? (
               <YouTubeEmbed
@@ -329,10 +333,8 @@ function moduleLinkHref(module: CollectionEntry<"learnModules">, track?: Collect
   .learn-support-banner__action,
   .learn-source-action__button {
     align-items: center;
-    background: var(--aiv-action-primary);
     border: 1px solid var(--aiv-action-primary);
     border-radius: 6px;
-    color: var(--aiv-bg-canvas);
     display: inline-flex;
     font-weight: 900;
     justify-content: center;
@@ -341,9 +343,22 @@ function moduleLinkHref(module: CollectionEntry<"learnModules">, track?: Collect
     text-decoration: none;
   }
 
-  .learn-support-banner__action--secondary {
+  .learn-support-banner__action {
     background: transparent;
     color: var(--aiv-action-primary);
+  }
+
+  .learn-support-banner__text-link {
+    align-items: center;
+    color: var(--aiv-text-secondary);
+    display: inline-flex;
+    font-weight: 800;
+    min-height: 2.45rem;
+  }
+
+  .learn-source-action__button {
+    background: var(--aiv-action-primary);
+    color: var(--aiv-bg-canvas);
   }
 
   .learn-resource-layout {
@@ -357,6 +372,11 @@ function moduleLinkHref(module: CollectionEntry<"learnModules">, track?: Collect
     display: grid;
     gap: 1rem;
     min-width: 0;
+  }
+
+  .learn-resource-layout :global(.reference-rail) {
+    background: color-mix(in srgb, var(--aiv-bg-panel) 42%, transparent);
+    border-color: color-mix(in srgb, var(--aiv-line-subtle) 58%, transparent);
   }
 
   .learn-resource-header {
@@ -437,21 +457,6 @@ function moduleLinkHref(module: CollectionEntry<"learnModules">, track?: Collect
 
   .learn-source-action__button {
     justify-self: start;
-  }
-
-  .learn-source-action__module-link {
-    align-items: center;
-    border: 1px solid var(--aiv-action-primary);
-    border-radius: 6px;
-    color: var(--aiv-action-primary);
-    display: inline-flex;
-    font-weight: 900;
-    justify-content: center;
-    margin-top: 0.35rem;
-    min-height: 2.45rem;
-    padding: 0.42rem 0.72rem;
-    text-decoration: none;
-    width: fit-content;
   }
 
   .learn-content-body,

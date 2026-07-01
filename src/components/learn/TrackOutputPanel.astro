@@ -48,7 +48,7 @@ function trackOutputForTrack(track: CollectionEntry<"learnTracks">) {
     },
     "governance-responsible-use": {
       title: "Governance evidence pack",
-      rollup: "This evidence pack is coming soon. The public page is a roadmap while governance modules remain draft.",
+      rollup: "This evidence pack is coming soon. The public page is a roadmap while governance modules are not yet public.",
       fields: ["use case", "framework", "owner", "evidence", "caveat", "review cadence"],
     },
   } as const;
@@ -90,21 +90,13 @@ const statusNote = track.data.slug === "governance-responsible-use"
     <p>{trackOutput.rollup}</p>
   </div>
 
-  <div class="track-output__grid">
-    <div>
-      <h3>Track output fields</h3>
-      <ul class="track-output__field-list">
-        {trackOutput.fields.map((field) => <li>{field}</li>)}
-      </ul>
-    </div>
-    <div>
-      <h3>Supporting artifacts</h3>
-      <p class="track-output__artifact-summary">{supportingArtifactText}</p>
-    </div>
-    <div>
-      <h3>Path rollup</h3>
-      <p class="track-output__rollup">{moduleRollupText}</p>
-    </div>
+  <ul class="track-output__field-list" aria-label="Track output fields">
+    {trackOutput.fields.map((field) => <li>{field}</li>)}
+  </ul>
+
+  <div class="track-output__support">
+    <p><span>Supports:</span> {supportingArtifactText}</p>
+    <p>{moduleRollupText}</p>
   </div>
 
   {needsStatusNote && statusNote && <p class="track-output__note">{statusNote}</p>}
@@ -114,14 +106,12 @@ const statusNote = track.data.slug === "governance-responsible-use"
   .track-output {
     align-items: start;
     display: grid;
-    gap: 0.55rem 0.85rem;
-    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.15fr);
-    padding: 0.7rem 0.85rem;
+    gap: 0.55rem;
+    padding: 0.78rem 0.9rem;
   }
 
   .track-output--compact {
-    gap: 0.85rem;
-    padding: 1rem;
+    gap: 0.55rem;
   }
 
   .track-output__intro {
@@ -138,7 +128,6 @@ const statusNote = track.data.slug === "governance-responsible-use"
   }
 
   .track-output h2,
-  .track-output h3,
   .track-output p,
   .track-output ul {
     margin: 0;
@@ -149,28 +138,15 @@ const statusNote = track.data.slug === "governance-responsible-use"
     line-height: 1.15;
   }
 
-  .track-output h3 {
-    font-size: 0.98rem;
-  }
-
-  .track-output__intro p,
-  .track-output__rollup {
+  .track-output__intro p {
     color: var(--aiv-text-secondary);
+    display: -webkit-box;
     font-size: 0.96rem;
     line-height: 1.4;
     max-width: 82ch;
-  }
-
-  .track-output__grid {
-    display: grid;
-    gap: 0.45rem;
-    grid-template-columns: 1fr;
-  }
-
-  .track-output__grid > div {
-    display: grid;
-    gap: 0.55rem;
-    min-width: 0;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
   }
 
   .track-output__field-list,
@@ -183,11 +159,14 @@ const statusNote = track.data.slug === "governance-responsible-use"
   }
 
   .track-output__field-list li {
-    border-bottom: 1px dotted color-mix(in srgb, var(--aiv-action-secondary) 58%, var(--aiv-line-subtle));
+    background: color-mix(in srgb, var(--aiv-bg-canvas) 18%, transparent);
+    border: 1px solid color-mix(in srgb, var(--aiv-action-secondary) 34%, var(--aiv-line-subtle));
+    border-radius: 999px;
     color: var(--aiv-text-primary);
-    font-size: 0.88rem;
+    font-size: 0.84rem;
     font-weight: 700;
-    padding-block: 0.12rem;
+    line-height: 1.2;
+    padding: 0.22rem 0.52rem;
   }
 
   .track-output__artifact-list li {
@@ -200,36 +179,35 @@ const statusNote = track.data.slug === "governance-responsible-use"
     padding: 0.35rem 0.55rem;
   }
 
-  .track-output__artifact-summary {
+  .track-output__support {
+    display: grid;
+    gap: 0.25rem;
+  }
+
+  .track-output__support p {
     color: var(--aiv-text-secondary);
     display: -webkit-box;
     font-size: 0.9rem;
     line-height: 1.4;
     overflow: hidden;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 1;
   }
 
-  .track-output__rollup {
-    color: var(--aiv-text-secondary);
-    font-size: 0.9rem;
-    line-height: 1.4;
-    max-width: 82ch;
+  .track-output__support span {
+    color: var(--aiv-text-muted);
+    font-weight: 900;
   }
 
   .track-output__note {
     color: var(--aiv-text-muted);
     font-size: 0.94rem;
-    grid-column: 1 / -1;
   }
 
   @media (max-width: 760px) {
-    .track-output {
-      grid-template-columns: 1fr;
-    }
-
-    .track-output__grid {
-      grid-template-columns: 1fr;
+    .track-output__intro p,
+    .track-output__support p {
+      -webkit-line-clamp: 2;
     }
   }
 </style>

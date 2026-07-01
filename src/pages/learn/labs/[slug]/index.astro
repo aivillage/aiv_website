@@ -105,6 +105,18 @@ function modulePriority({ module, track }: ModuleLink) {
   return trackRank * 10 + offensiveWrapperPenalty;
 }
 
+function publicSetupStatus(status: CollectionEntry<"learnLabs">["data"]["setupStatus"]) {
+  if (status === "draft") return "Setup notes are being refined";
+  if (status === "missing") return undefined;
+  return "Setup tested";
+}
+
+function publicDebriefStatus(status: CollectionEntry<"learnLabs">["data"]["debriefStatus"]) {
+  if (status === "draft") return "Debrief support is being refined";
+  if (status === "missing") return undefined;
+  return "Debrief published";
+}
+
 const prioritizedModules = [...modules].sort((left, right) =>
   modulePriority(left) - modulePriority(right) || left.module.data.title.localeCompare(right.module.data.title),
 );
@@ -113,11 +125,14 @@ const additionalModuleLinks = prioritizedModules.slice(3);
 const sourceFacts = [
   { label: "Repository", value: lab.data.sourceRepo || "No public source link attached", href: sourceUrl || undefined, external: Boolean(sourceUrl) },
   { label: "Source path", value: lab.data.sourcePath },
-  { label: "Setup status", value: formatLabel(lab.data.setupStatus) },
-  { label: "Debrief status", value: formatLabel(lab.data.debriefStatus) },
-  { label: "Instructor guide", value: formatLabel(lab.data.instructorGuideStatus) },
+  { label: "Setup", value: publicSetupStatus(lab.data.setupStatus) },
+  { label: "Debrief support", value: publicDebriefStatus(lab.data.debriefStatus) },
 ];
 const railSections = [
+  {
+    title: sourceHeading,
+    facts: sourceFacts,
+  },
   {
     title: "Exercise Specs",
     facts: [
@@ -127,10 +142,6 @@ const railSections = [
       { label: "Time", value: `${lab.data.estimatedMinutes} minutes` },
       { label: "Stage", value: `${formatLabel(lab.data.stageStart)} to ${formatLabel(lab.data.stageEnd)}` },
     ],
-  },
-  {
-    title: sourceHeading,
-    facts: sourceFacts,
   },
   {
     title: "Concepts",
@@ -181,21 +192,56 @@ function moduleLinkHref(module: CollectionEntry<"learnModules">, track?: Collect
 
       <div class="learn-lab-layout">
         <main class="learn-lab-main">
-          <section class="learn-exercise-brief learn-surface-exercise" aria-labelledby="exercise-brief-heading">
-            <div>
-              <span id="exercise-brief-heading">Safety Boundary</span>
-              <p>{lab.data.safetyBoundary}</p>
-            </div>
-            <div>
-              <span>Expected Artifact</span>
-              <ArtifactBadge value={lab.data.requiredArtifact} />
-            </div>
-            {lab.data.isOffensive && (
-              <div class="learn-exercise-brief__warning">
-                <span>Authorized toy-lab boundary</span>
-                <p>This exercise is for the provided toy lab and defensive debrief only. Do not transfer prompts, payloads, or techniques to real systems without explicit authorization and a documented scope.</p>
+          <section class="learn-exercise-spine learn-surface-exercise" aria-labelledby="exercise-spine-heading">
+            <div class="learn-section-heading learn-section-heading--single">
+              <div>
+                <span class="learn-kicker">Exercise spine</span>
+                <h2 id="exercise-spine-heading">Safety to debrief</h2>
               </div>
-            )}
+            </div>
+            <ol>
+              <li>
+                <span class="learn-exercise-spine__marker">1</span>
+                <div>
+                  <span class="learn-exercise-spine__label">Safety</span>
+                  <p>{lab.data.safetyBoundary}</p>
+                  {lab.data.isOffensive && <p class="learn-exercise-spine__warning">This exercise is for the provided toy lab and defensive debrief only. Do not transfer prompts, payloads, or techniques to real systems without explicit authorization and a documented scope.</p>}
+                </div>
+              </li>
+              <li>
+                <span class="learn-exercise-spine__marker">2</span>
+                <div>
+                  <span class="learn-exercise-spine__label">Artifact</span>
+                  <ArtifactBadge value={lab.data.requiredArtifact} />
+                </div>
+              </li>
+              <li>
+                <span class="learn-exercise-spine__marker">3</span>
+                <div>
+                  <span class="learn-exercise-spine__label">Run</span>
+                  <p>{lab.data.summary}</p>
+                </div>
+              </li>
+              <li>
+                <span class="learn-exercise-spine__marker">4</span>
+                <div>
+                  <span class="learn-exercise-spine__label">Debrief</span>
+                  <p>{lab.data.requiredArtifact}</p>
+                </div>
+              </li>
+            </ol>
+          </section>
+
+          <section class="learn-run-section learn-surface-task" aria-labelledby="run-section-heading">
+            <div class="learn-section-heading">
+              <div>
+                <span class="learn-kicker">Exercise</span>
+                <h2 id="run-section-heading">Run and debrief notes</h2>
+              </div>
+            </div>
+            <div class="learn-content-body">
+              <Content />
+            </div>
           </section>
 
           {modules.length > 0 && (
@@ -234,19 +280,6 @@ function moduleLinkHref(module: CollectionEntry<"learnModules">, track?: Collect
               )}
             </section>
           )}
-
-          <section class="learn-run-section learn-surface-task" aria-labelledby="run-section-heading">
-            <div class="learn-section-heading">
-              <div>
-                <span class="learn-kicker">Exercise</span>
-                <h2 id="run-section-heading">Run / Debrief</h2>
-              </div>
-              <p>Use the existing lab instructions inside the safety boundary above; source links and mappings stay in the reference rail.</p>
-            </div>
-            <div class="learn-content-body">
-              <Content />
-            </div>
-          </section>
         </main>
 
         <ReferenceRail title="Lab Reference" sections={railSections} />
@@ -313,7 +346,7 @@ function moduleLinkHref(module: CollectionEntry<"learnModules">, track?: Collect
     min-width: 0;
   }
 
-  .learn-exercise-brief,
+  .learn-exercise-spine,
   .learn-run-section,
   .learn-continue-module {
     display: grid;
@@ -321,16 +354,43 @@ function moduleLinkHref(module: CollectionEntry<"learnModules">, track?: Collect
     padding: 1rem;
   }
 
-  .learn-exercise-brief {
-    grid-template-columns: minmax(0, 1fr) minmax(16rem, 0.55fr);
-  }
-
-  .learn-exercise-brief > div {
+  .learn-exercise-spine ol {
     display: grid;
-    gap: 0.35rem;
+    gap: 0.75rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
   }
 
-  .learn-exercise-brief span,
+  .learn-exercise-spine li {
+    align-items: start;
+    display: grid;
+    gap: 0.72rem;
+    grid-template-columns: auto minmax(0, 1fr);
+    min-width: 0;
+  }
+
+  .learn-exercise-spine li > div {
+    display: grid;
+    gap: 0.32rem;
+    min-width: 0;
+  }
+
+  .learn-exercise-spine__marker {
+    align-items: center;
+    background: var(--aiv-risk);
+    border-radius: 6px;
+    color: var(--aiv-bg-canvas);
+    display: inline-flex;
+    font-family: var(--aiv-font-mono);
+    font-weight: 900;
+    height: 2rem;
+    justify-content: center;
+    margin-top: 0.1rem;
+    width: 2rem;
+  }
+
+  .learn-exercise-spine__label,
   .learn-kicker {
     color: var(--aiv-text-muted);
     font-size: 0.78rem;
@@ -339,19 +399,16 @@ function moduleLinkHref(module: CollectionEntry<"learnModules">, track?: Collect
     text-transform: uppercase;
   }
 
-  .learn-exercise-brief p,
+  .learn-exercise-spine p,
   .learn-section-heading p {
     color: var(--aiv-text-secondary);
     line-height: 1.45;
     margin: 0;
   }
 
-  .learn-exercise-brief__warning {
-    background: color-mix(in srgb, var(--aiv-risk) 10%, var(--aiv-bg-panel));
-    border: 1px solid color-mix(in srgb, var(--aiv-risk) 50%, var(--aiv-line-subtle));
-    border-radius: 8px;
-    grid-column: 1 / -1;
-    padding: 0.85rem;
+  .learn-exercise-spine__warning {
+    color: var(--aiv-risk) !important;
+    font-weight: 800;
   }
 
   .learn-section-heading {
@@ -370,6 +427,10 @@ function moduleLinkHref(module: CollectionEntry<"learnModules">, track?: Collect
   .learn-section-heading h2 {
     font-size: clamp(1.24rem, 2vw, 1.62rem);
     line-height: 1.15;
+  }
+
+  .learn-section-heading--single {
+    grid-template-columns: 1fr;
   }
 
   .learn-content-body {
@@ -435,8 +496,7 @@ function moduleLinkHref(module: CollectionEntry<"learnModules">, track?: Collect
   }
 
   @media (max-width: 1099px) {
-    .learn-lab-layout,
-    .learn-exercise-brief {
+    .learn-lab-layout {
       grid-template-columns: 1fr;
     }
 

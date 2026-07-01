@@ -144,6 +144,8 @@ type ResourceReferenceLike = string | { id?: string; slug?: string };
 type ModuleVideoLike = {
   id: string;
   data: {
+    slug?: string;
+    status?: string;
     resources?: Array<{
       resource: ResourceReferenceLike;
       role?: string;
@@ -174,6 +176,19 @@ type AcceptedVideoLike = {
     videoId?: string;
     featuredEmbed?: boolean;
   };
+};
+
+type ModuleWatchTrackLike = {
+  id: string;
+  data: {
+    slug?: string;
+    status?: string;
+  };
+};
+
+type ModuleWatchTargetOptions<TTrack extends ModuleWatchTrackLike> = {
+  governingTrack?: TTrack;
+  relatedTracks?: TTrack[];
 };
 
 const blockedVideoSurfacePattern = /hackaprompt|dreadnode|crucible|ctf/i;
@@ -258,6 +273,40 @@ export function getModuleFeaturedVideo<TModule extends ModuleVideoLike, TResourc
 ) {
   const acceptedVideos = getModuleAcceptedVideos(module, resources);
   return acceptedVideos.find((resource) => resource.data.featuredEmbed) || acceptedVideos[0];
+}
+
+export function getModuleWatchTarget<
+  TModule extends ModuleVideoLike,
+  TResource extends AcceptedVideoLike,
+  TTrack extends ModuleWatchTrackLike,
+>(
+  module: TModule,
+  resources: TResource[],
+  options: ModuleWatchTargetOptions<TTrack> = {},
+) {
+  if (module.data.status === "coming_soon") return undefined;
+  if (options.governingTrack?.data.status === "coming_soon") return undefined;
+  if (!options.governingTrack && options.relatedTracks?.some((track) => track.data.status === "coming_soon")) return undefined;
+
+  const resource = getModuleFeaturedVideo(module, resources);
+  if (!resource) return undefined;
+
+  return {
+    resource,
+    href: `${options.governingTrack ? trackScopedModulePath(options.governingTrack, module) : modulePath(module)}#watch`,
+  };
+}
+
+export function moduleHasWatchAnchor<
+  TModule extends ModuleVideoLike,
+  TResource extends AcceptedVideoLike,
+  TTrack extends ModuleWatchTrackLike,
+>(
+  module: TModule,
+  resources: TResource[],
+  options: ModuleWatchTargetOptions<TTrack> = {},
+) {
+  return Boolean(getModuleWatchTarget(module, resources, options));
 }
 
 export function byTitle<T extends { data: { title?: string; term?: string } }>(left: T, right: T) {
