@@ -2,7 +2,7 @@
 layout: post
 title: AI Cyber League
 author: Sven Cattell
-date: 2026-03-19 00:00:00 +0000
+date: 2026-06-30 00:00:00 +0000
 category: "competition"
 toc: true
 cover: /assets/images/2026-06-03-aicl/20260628_0370_01.jpg
