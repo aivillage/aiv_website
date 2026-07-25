@@ -15,7 +15,7 @@ const author = Array.isArray(post.data.author) ? post.data.author.join(", ") : p
 const shareUrl = new URL(url, Astro.site ?? "https://aivillage.org").toString();
 const description = post.data.description ?? post.data.excerpt ?? excerptFromBody(post.body ?? "", 30);
 ---
-<BaseLayout title={post.data.title} description={description} canonical={url} image={post.data.cover} type="article" publishedTime={post.data.date} author={author}>
+<BaseLayout title={post.data.title} description={description} canonical={url} image={post.data.cover} type="article" publishedTime={post.data.date} author={post.data.author}>
   <PageShell>
     <article class="post">
       <header class="post-header">
