@@ -100,24 +100,34 @@ const programs = [
           AI Village brings hackers, researchers, engineers, and policymakers together through hands-on AI security education, red-team exercises, workshops, events, and open resources.
         </p>
         <div class="home-hero__actions" aria-label="Homepage primary actions">
-          <Button href="#programs">Explore Programs</Button>
+          <Button href="#programs" variant="secondary">Explore Programs</Button>
           <Button href="/learn/" variant="secondary">Start Learning</Button>
           <Button href="/sponsors/" variant="secondary">Sponsor AI Village</Button>
         </div>
       </div>
 
-      {featuredEvent && (
+      <div class="home-hero-panels">
+        {/* TEMP: HalCTF promo — remove after DEF CON 34. Tracked in #83. */}
         <Card as="section" class="home-hero-panel" tone="nested" padding="lg">
-          <p class="home-hero-panel__eyebrow">{upcomingEvent ? "Upcoming event" : "Recent event"}</p>
-          <h2>{featuredEvent.data.title}</h2>
-          <p class="home-hero-panel__meta">
-            {formatShortDate(featuredEvent.data.date)}
-            {featuredEvent.data.location && <> · {featuredEvent.data.location}</>}
-          </p>
-          {featuredEvent.data.description && <p>{featuredEvent.data.description}</p>}
-          <Button href={eventPath(featuredEvent)} variant="secondary" size="sm">View event</Button>
+          <p class="home-hero-panel__eyebrow">New &middot; DEF CON 34</p>
+          <h2>HalCTF: Autonomous Agent CTF</h2>
+          <p class="home-hero-panel__meta">Teams up to 5 &middot; Models hosted</p>
+          <p>Design and deploy an AI agent that exploits sandboxed targets and captures flags on its own. Bring your code, not your GPUs.</p>
+          <Button href="/blog/halctf/" size="sm">Read the announcement</Button>
         </Card>
-      )}
+        {featuredEvent && (
+          <Card as="section" class="home-hero-panel" tone="nested" padding="lg">
+            <p class="home-hero-panel__eyebrow">{upcomingEvent ? "Upcoming event" : "Recent event"}</p>
+            <h2>{featuredEvent.data.title}</h2>
+            <p class="home-hero-panel__meta">
+              {formatShortDate(featuredEvent.data.date)}
+              {featuredEvent.data.location && <> · {featuredEvent.data.location}</>}
+            </p>
+            {featuredEvent.data.description && <p>{featuredEvent.data.description}</p>}
+            <Button href={eventPath(featuredEvent)} variant="secondary" size="sm">View event</Button>
+          </Card>
+        )}
+      </div>
     </div>
     <div class="home-hero-proof">
       <ProofStrip items={proofItems} mobileHeading="Our programming includes" />
@@ -307,8 +317,13 @@ const programs = [
     gap: 0.75rem;
   }
 
-  :global(.home-hero-panel.aiv-card) {
+  .home-hero-panels {
     align-self: center;
+    display: grid;
+    gap: 1rem;
+  }
+
+  :global(.home-hero-panel.aiv-card) {
     background: var(--aiv-nested-bg) !important;
     background-color: var(--aiv-nested-bg) !important;
     display: grid;
