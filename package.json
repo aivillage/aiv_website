@@ -16,7 +16,9 @@
     "format": "prettier --write .",
     "verify:redirects": "tsx scripts/verify-redirects.ts",
     "check:internal-links": "tsx scripts/check-internal-links.ts",
-    "check:contrast": "node scripts/contrast-check.mjs"
+    "check:contrast": "node scripts/contrast-check.mjs",
+    "posters:import": "tsx scripts/posters/import-posters.ts",
+    "posters:test": "tsx scripts/posters/slug-stability.test.ts"
   },
   "dependencies": {
     "@astrojs/mdx": "^7.0.0",

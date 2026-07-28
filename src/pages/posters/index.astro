@@ -1,0 +1,538 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageShell from "../../components/layout/PageShell.astro";
+import Button from "../../components/ui/Button.astro";
+import { posterEvents, type Poster } from "../../data/poster-events";
+import { posters } from "../../data/posters";
+
+function formatAuthors(authors: Poster["authors"]): string {
+  return authors
+    .map((author) => (author.affiliation ? `${author.name} (${author.affiliation})` : author.name))
+    .join(", ");
+}
+
+/** "P-01", so attendees can match the site to the physical poster boards. */
+function formatPosterNumber(value: number): string {
+  return `P-${String(value).padStart(2, "0")}`;
+}
+
+/**
+ * Thumbnails are progressive enhancement, nothing more.
+ *
+ * This endpoint is undocumented and carries no stability contract from Google —
+ * `/uc?export=view` was just as widely used until it was withdrawn without
+ * notice in January 2024. So the card is built to be complete without it: title,
+ * authors, abstract, link, and permalink all render from Git. If the image
+ * fails, throttles, or the endpoint disappears, the script at the bottom of this
+ * page hides the container and the archive degrades to text.
+ *
+ * Do not use the Drive API's `thumbnailLink` here. Google documents it as
+ * short-lived — "typically lasts on the order of hours" — and explicitly not
+ * intended for direct use in web applications.
+ */
+function thumbnailUrl(driveFileId: string): string {
+  return `https://drive.google.com/thumbnail?id=${encodeURIComponent(driveFileId)}&sz=w1200`;
+}
+
+/** Must match `anchorId()` in scripts/posters/queue.ts, which validates it. */
+function anchorId(slug: string): string {
+  return `poster-${slug}`;
+}
+
+// Numbered posters first in board order, then unnumbered ones alphabetically.
+// The page must not depend on anyone keeping the spreadsheet manually sorted.
+const groups = posterEvents
+  .map((event) => ({
+    event,
+    items: posters
+      .filter((poster) => poster.event === event.id)
+      .sort((a, b) => {
+        const aNumber = a.posterNumber ?? Number.POSITIVE_INFINITY;
+        const bNumber = b.posterNumber ?? Number.POSITIVE_INFINITY;
+        return (
+          aNumber - bNumber || a.title.localeCompare(b.title, "en", { sensitivity: "base" })
+        );
+      }),
+  }))
+  .filter((group) => group.items.length > 0);
+
+const total = groups.reduce((sum, group) => sum + group.items.length, 0);
+
+// No `image` prop: the site default applies. Using the first poster's thumbnail
+// would make one researcher's work represent the whole archive, and would
+// silently change whenever the sort order changes.
+---
+
+<BaseLayout
+  title="Poster Archive"
+  description="Research posters presented at AI Village events, published as submitted by their authors."
+  canonical="/posters/"
+>
+  <PageShell>
+    <header class="posters-intro">
+      <p class="posters-intro__eyebrow">AI Village</p>
+      <h1>Poster Archive</h1>
+      <p class="posters-intro__lede">
+        Research posters presented at AI Village events, published as submitted by their authors.
+      </p>
+    </header>
+
+    {
+      total > 0 && (
+        <div class="posters-search">
+          <label class="posters-search__label" for="poster-search">
+            Search posters
+          </label>
+          <input
+            type="search"
+            id="poster-search"
+            class="posters-search__input"
+            placeholder="Title, author, affiliation, keyword, or abstract"
+            autocomplete="off"
+            data-poster-search
+          />
+          <p class="posters-search__count" data-poster-count aria-live="polite">
+            {`${total} ${total === 1 ? "poster" : "posters"}`}
+          </p>
+        </div>
+      )
+    }
+
+    {
+      total === 0 && (
+        <p class="posters-empty">
+          Accepted DEF CON 34 posters will be published here as final materials arrive.
+        </p>
+      )
+    }
+
+    {
+      groups.map(({ event, items }) => (
+        <section class="posters-group" aria-labelledby={`${event.id}-heading`} data-poster-group>
+          <div class="posters-group__header">
+            <h2 id={`${event.id}-heading`}>
+              <a class="posters-group__anchor" href={`#${event.id}`} id={event.id}>
+                {event.label}
+              </a>
+            </h2>
+            <p class="posters-group__meta">
+              {`${event.dateLabel} · ${items.length} ${
+                items.length === 1 ? "poster" : "posters"
+              } · `}
+              <a href={event.eventPath}>Event details</a>
+            </p>
+            {event.blurb && <p class="posters-group__blurb">{event.blurb}</p>}
+          </div>
+
+          {/* The wrapping div matters: global.scss caps `.container > section > ul`
+              at 72ch for prose. Nesting one level deeper opts the grid out. */}
+          <div class="posters-grid-wrap">
+            <ul class="posters-grid" role="list">
+              {items.map((poster) => (
+                <li
+                  class="poster-card"
+                  id={anchorId(poster.slug)}
+                  data-poster-card
+                  data-search={[
+                    poster.title,
+                    formatAuthors(poster.authors),
+                    poster.abstract,
+                    ...(poster.keywords ?? []),
+                  ]
+                    .join(" ")
+                    .toLowerCase()}
+                >
+                  {poster.driveFileId && (
+                    <div class="poster-card__thumb" data-poster-thumb>
+                      {/* Decorative: the title, authors, and abstract sit
+                          directly below and carry the same information. */}
+                      <img
+                        src={thumbnailUrl(poster.driveFileId)}
+                        alt=""
+                        loading="lazy"
+                        decoding="async"
+                        referrerpolicy="no-referrer"
+                        data-poster-thumb-img
+                      />
+                    </div>
+                  )}
+                  <div class="poster-card__body">
+                    {poster.posterNumber !== undefined && (
+                      <p class="poster-card__number">{formatPosterNumber(poster.posterNumber)}</p>
+                    )}
+                    <h3 class="poster-card__title">{poster.title}</h3>
+                    <p class="poster-card__authors">{formatAuthors(poster.authors)}</p>
+                    <details class="poster-card__abstract">
+                      <summary>Abstract</summary>
+                      <p>{poster.abstract}</p>
+                    </details>
+                    <div class="poster-card__actions">
+                      <Button
+                        href={poster.sourceUrl}
+                        variant="secondary"
+                        size="sm"
+                        target="_blank"
+                        ariaLabel={`View poster: ${poster.title}`}
+                      >
+                        View poster
+                      </Button>
+                      <a
+                        class="poster-card__permalink"
+                        href={`#${anchorId(poster.slug)}`}
+                        aria-label={`Permalink to ${poster.title}`}
+                      >
+                        Permalink
+                      </a>
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <p class="posters-group__none" data-poster-group-empty hidden>
+            No posters in this event match your search.
+          </p>
+        </section>
+      ))
+    }
+
+    <aside class="posters-note">
+      <p>
+        Posters are hosted on Google Drive and open in a new tab. Copyright remains with the
+        authors. If a link is broken, or you are an author who would like a poster corrected or
+        removed, please <a href="/community/">get in touch</a>.
+      </p>
+    </aside>
+  </PageShell>
+</BaseLayout>
+
+<script is:inline>
+  // Collapse the thumbnail area when Drive does not serve an image, so a
+  // throttled or withdrawn endpoint leaves clean text cards rather than a grid
+  // of broken-image icons. Bound as a listener rather than an inline onerror so
+  // it survives a strict Content-Security-Policy later.
+  document.querySelectorAll("[data-poster-thumb-img]").forEach(function (image) {
+    image.addEventListener("error", function () {
+      const container = image.closest("[data-poster-thumb]");
+      if (container) container.hidden = true;
+    });
+  });
+
+  (function () {
+    const input = document.querySelector("[data-poster-search]");
+    if (!input) return;
+
+    const cards = Array.from(document.querySelectorAll("[data-poster-card]"));
+    const groups = Array.from(document.querySelectorAll("[data-poster-group]"));
+    const count = document.querySelector("[data-poster-count]");
+    const total = cards.length;
+
+    function apply() {
+      const query = input.value.trim().toLowerCase();
+      const terms = query.split(/\s+/).filter(Boolean);
+      let shown = 0;
+
+      for (const card of cards) {
+        const haystack = card.getAttribute("data-search") || "";
+        const match = terms.every(function (term) {
+          return haystack.includes(term);
+        });
+        card.hidden = !match;
+        if (match) shown += 1;
+      }
+
+      for (const group of groups) {
+        const visible = group.querySelectorAll("[data-poster-card]:not([hidden])").length;
+        const empty = group.querySelector("[data-poster-group-empty]");
+        if (empty) empty.hidden = visible !== 0;
+      }
+
+      if (count) {
+        count.textContent = terms.length
+          ? "Showing " + shown + " of " + total + " posters"
+          : total + (total === 1 ? " poster" : " posters");
+      }
+    }
+
+    input.addEventListener("input", apply);
+    // Restore state on bfcache restore / back navigation.
+    if (input.value) apply();
+  })();
+</script>
+
+<style>
+  .posters-intro {
+    max-width: var(--aiv-measure-prose);
+    margin-bottom: 1.75rem;
+  }
+
+  .posters-intro__eyebrow {
+    font-family: var(--aiv-font-mono);
+    font-size: 0.8125rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--aiv-text-muted);
+    margin: 0 0 0.25rem;
+  }
+
+  .posters-intro__lede {
+    color: var(--aiv-text-secondary);
+    font-size: 1.0625rem;
+  }
+
+  .posters-search {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1rem;
+    max-width: var(--aiv-measure-prose);
+    margin-bottom: 2.5rem;
+  }
+
+  .posters-search__label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .posters-search__input {
+    flex: 1 1 22rem;
+    padding: 0.6rem 0.85rem;
+    font: inherit;
+    font-size: 0.9375rem;
+    color: var(--aiv-text-primary);
+    background: var(--aiv-card-bg);
+    border: 1px solid var(--aiv-card-border);
+    border-radius: 0.5rem;
+  }
+
+  .posters-search__input:focus-visible {
+    outline: 2px solid var(--aiv-focus-ring);
+    outline-offset: 2px;
+    border-color: var(--aiv-card-hover-border);
+  }
+
+  .posters-search__count {
+    margin: 0;
+    font-family: var(--aiv-font-mono);
+    font-size: 0.8125rem;
+    color: var(--aiv-text-muted);
+  }
+
+  .posters-empty {
+    color: var(--aiv-text-secondary);
+    padding: 2rem;
+    border: 1px dashed var(--aiv-card-border);
+    border-radius: 0.5rem;
+    text-align: center;
+  }
+
+  .posters-group {
+    margin-bottom: 3.5rem;
+  }
+
+  .posters-group__header {
+    max-width: var(--aiv-measure-prose);
+    padding-bottom: 0.75rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--aiv-rule-color);
+  }
+
+  .posters-group__header h2 {
+    margin: 0 0 0.25rem;
+  }
+
+  .posters-group__anchor {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .posters-group__anchor:hover,
+  .posters-group__anchor:focus-visible {
+    text-decoration: underline;
+  }
+
+  .posters-group__meta {
+    font-family: var(--aiv-font-mono);
+    font-size: 0.875rem;
+    color: var(--aiv-text-muted);
+    margin: 0;
+  }
+
+  .posters-group__blurb {
+    color: var(--aiv-text-secondary);
+    margin: 0.75rem 0 0;
+  }
+
+  .posters-group__none {
+    color: var(--aiv-text-muted);
+    font-size: 0.9375rem;
+    margin: 0;
+  }
+
+  .posters-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    list-style: none;
+    padding: 0;
+    /* global.scss caps `ul` at --aiv-measure-prose (72ch); the grid needs full width */
+    max-width: none;
+    margin: 0;
+  }
+
+  /* global.scss adds a "▸ " marker to every `ul li`; suppress it for cards */
+  .posters-grid li::before {
+    content: none;
+  }
+
+  .poster-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--aiv-card-bg);
+    border: 1px solid var(--aiv-card-border);
+    border-radius: 0.75rem;
+    overflow: hidden;
+    scroll-margin-top: 6rem;
+  }
+
+  .poster-card[hidden] {
+    display: none;
+  }
+
+  .poster-card:target {
+    border-color: var(--aiv-action-primary);
+    box-shadow: var(--aiv-card-hover-shadow);
+  }
+
+  .poster-card__thumb {
+    background: var(--aiv-nested-bg);
+    border-bottom: 1px solid var(--aiv-card-border);
+    aspect-ratio: 16 / 9;
+  }
+
+  .poster-card__thumb[hidden] {
+    display: none;
+  }
+
+  /* Submissions are predominantly 16:9 landscape, but portrait posters do turn
+     up. `contain` letterboxes them rather than cropping the content away. */
+  .poster-card__thumb img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .poster-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1.1rem 1.25rem 1.25rem;
+    flex: 1;
+  }
+
+  .poster-card__number {
+    margin: 0 0 -0.25rem;
+    font-family: var(--aiv-font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    color: var(--aiv-action-primary);
+  }
+
+  .poster-card__title {
+    margin: 0;
+    font-size: 1.0625rem;
+    line-height: 1.35;
+  }
+
+  .poster-card__authors {
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--aiv-text-muted);
+  }
+
+  /* global.scss gives every `details` full card treatment — background, border,
+     shadow, blur, 1rem margin. Inside a card that reads as a box in a box, so
+     flatten it back to a plain disclosure. */
+  .poster-card__abstract {
+    background: none;
+    border: 0;
+    box-shadow: none;
+    backdrop-filter: none;
+    border-radius: 0;
+    margin: 0;
+    overflow: visible;
+    font-size: 0.9375rem;
+    color: var(--aiv-text-secondary);
+  }
+
+  .poster-card__abstract summary {
+    background: none;
+    border-bottom: 0;
+    padding: 0.15rem 0;
+    cursor: pointer;
+    font-family: var(--aiv-font-mono);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--aiv-text-muted);
+  }
+
+  .poster-card__abstract summary:hover {
+    background: none;
+    color: var(--aiv-text-primary);
+  }
+
+  .poster-card__abstract summary:focus-visible {
+    outline: 2px solid var(--aiv-focus-ring);
+    outline-offset: 2px;
+    border-radius: 0.25rem;
+  }
+
+  .poster-card__abstract p {
+    margin: 0.5rem 0 0;
+  }
+
+  .poster-card__actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: auto;
+    padding-top: 0.9rem;
+  }
+
+  .poster-card__permalink {
+    font-family: var(--aiv-font-mono);
+    font-size: 0.8125rem;
+    color: var(--aiv-text-muted);
+  }
+
+  .posters-note {
+    max-width: var(--aiv-measure-prose);
+    margin-top: 1rem;
+    padding: 1rem 1.25rem;
+    background: var(--aiv-nested-bg);
+    border: 1px solid var(--aiv-nested-border);
+    border-radius: 0.5rem;
+    font-size: 0.9375rem;
+    color: var(--aiv-text-secondary);
+  }
+
+  .posters-note p {
+    margin: 0;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .poster-card {
+      transition:
+        border-color 150ms ease,
+        box-shadow 150ms ease;
+    }
+  }
+</style>

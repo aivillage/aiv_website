@@ -8,3 +8,9 @@ node_modules/
 .env.*
 .direnv/
 .pnpm-store/
+
+/public/assets/images/posters/
+/public/generated/posters/
+
+/csv/*
+!/csv/README.md

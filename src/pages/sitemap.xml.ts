@@ -49,6 +49,7 @@ export async function GET() {
     "/grt/",
     "/hacker-journal-club/",
     "/learn/",
+    "/posters/",
     "/research/",
     "/sponsors/",
     ...sponsors.map(sponsorPath),
