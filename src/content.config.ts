@@ -1,12 +1,15 @@
 import { defineCollection } from "astro:content";
 import { glob } from "astro/loaders";
 import { z } from "astro/zod";
+import { validateEventDateRange } from "./utils/site";
 
 const image = z.union([
   z.string(),
   z.object({
     path: z.string(),
     alt: z.string().optional(),
+    width: z.number().int().positive().optional(),
+    height: z.number().int().positive().optional(),
   }),
 ]);
 
@@ -22,7 +25,8 @@ const blog = defineCollection({
     description: z.string().optional(),
     excerpt: z.string().optional(),
     image: image.optional(),
-    cover: z.string().optional(),
+    cover: image.optional(),
+    socialImage: image.optional(),
     author_profile: z.boolean().optional(),
     draft: z.boolean().default(false),
     slug: z.string().optional(),
@@ -34,16 +38,21 @@ const blog = defineCollection({
 
 const events = defineCollection({
   loader: glob({ pattern: "**/*.{md,mdx,markdown}", base: "./src/content/events" }),
-  schema: z.object({
-    title: z.string(),
-    date: z.coerce.date(),
-    description: z.string().optional(),
-    location: z.string().optional(),
-    permalink: z.string().optional(),
-    externalUrl: z.url().optional(),
-    canonicalSlug: z.string().optional(),
-    legacyUrls: z.array(z.string()).default([]),
-  }),
+  schema: z
+    .object({
+      title: z.string(),
+      date: z.coerce.date(),
+      endDate: z.coerce.date().optional(),
+      description: z.string().optional(),
+      location: z.string().optional(),
+      image: image.optional(),
+      socialImage: image.optional(),
+      permalink: z.string().optional(),
+      externalUrl: z.url().optional(),
+      canonicalSlug: z.string().optional(),
+      legacyUrls: z.array(z.string()).default([]),
+    })
+    .superRefine(validateEventDateRange),
 });
 
 const volunteers = defineCollection({

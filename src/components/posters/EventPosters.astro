@@ -1,0 +1,162 @@
+---
+import PosterCard from "./PosterCard.astro";
+import { posterEvents } from "../../data/poster-events";
+import { posters } from "../../data/posters";
+
+type Props = {
+  eventId: string;
+  variant: "archive" | "compact";
+  limit?: number;
+};
+
+const { eventId, variant, limit } = Astro.props as Props;
+const event = posterEvents.find((item) => item.id === eventId);
+
+if (!event) {
+  throw new Error(`Unknown poster event: ${eventId}`);
+}
+
+const allPosters = posters
+  .filter((poster) => poster.event === eventId)
+  .sort((a, b) => {
+    const aNumber = a.posterNumber ?? Number.POSITIVE_INFINITY;
+    const bNumber = b.posterNumber ?? Number.POSITIVE_INFINITY;
+    return aNumber - bNumber || a.title.localeCompare(b.title, "en", { sensitivity: "base" });
+  });
+
+const compactLimit = Math.min(Math.max(limit ?? 6, 0), 6);
+const visiblePosters = variant === "archive" ? allPosters : allPosters.slice(0, compactLimit);
+const headingId = `${event.id}-${variant}-posters-heading`;
+---
+
+{allPosters.length > 0 && (
+  <section
+    class:list={["event-posters", `event-posters--${variant}`]}
+    aria-labelledby={headingId}
+    data-poster-group={variant === "archive" ? true : undefined}
+    data-event-posters={event.id}
+  >
+    <header class="event-posters__header">
+      {variant === "archive" ? (
+        <>
+          <h2 id={headingId}>
+            <a class="event-posters__anchor" href={`#${event.id}`} id={event.id}>
+              {event.label}
+            </a>
+          </h2>
+          <p class="event-posters__meta">
+            {`${event.dateLabel} · ${allPosters.length} ${
+              allPosters.length === 1 ? "poster" : "posters"
+            } · `}
+            <a href={event.eventPath}>Event details</a>
+          </p>
+          {event.blurb && <p class="event-posters__blurb">{event.blurb}</p>}
+        </>
+      ) : (
+        <>
+          <h2 id={headingId}>Posters</h2>
+          <p class="event-posters__meta">
+            {`${allPosters.length} ${allPosters.length === 1 ? "poster" : "posters"}`}
+          </p>
+        </>
+      )}
+    </header>
+
+    {/* This wrapper is load-bearing. global.scss limits
+        `.main-content .container > section > ul` to `--aiv-measure-prose` (72ch).
+        Nesting the poster grid one level deeper keeps the grid full width. */}
+    <div class="event-posters__grid-wrap">
+      <ul class="event-posters__grid" role="list">
+        {visiblePosters.map((poster) => <PosterCard poster={poster} variant={variant} />)}
+      </ul>
+    </div>
+
+    {variant === "archive" ? (
+      <p class="event-posters__none" data-poster-group-empty hidden>
+        No posters in this event match your search.
+      </p>
+    ) : (
+      <p class="event-posters__all">
+        <a href={`/posters/#${event.id}`}>View all posters</a>
+      </p>
+    )}
+  </section>
+)}
+
+<style>
+  .event-posters {
+    margin-bottom: 3.5rem;
+  }
+
+  .event-posters--compact {
+    background: var(--aiv-nested-bg);
+    border: 1px solid var(--aiv-nested-border);
+    border-radius: 0.75rem;
+    margin-top: 2rem;
+    padding: 1.25rem;
+  }
+
+  .event-posters__header {
+    border-bottom: 1px solid var(--aiv-rule-color);
+    margin-bottom: 1.5rem;
+    max-width: var(--aiv-measure-prose);
+    padding-bottom: 0.75rem;
+  }
+
+  .event-posters__header h2 {
+    margin: 0 0 0.25rem;
+  }
+
+  .event-posters__anchor {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .event-posters__anchor:hover,
+  .event-posters__anchor:focus-visible {
+    text-decoration: underline;
+  }
+
+  .event-posters__meta {
+    color: var(--aiv-text-muted);
+    font-family: var(--aiv-font-mono);
+    font-size: 0.875rem;
+    margin: 0;
+  }
+
+  .event-posters__blurb {
+    color: var(--aiv-text-secondary);
+    margin: 0.75rem 0 0;
+  }
+
+  .event-posters__grid {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    list-style: none;
+    margin: 0;
+    max-width: none;
+    padding: 0;
+  }
+
+  .event-posters--compact .event-posters__grid {
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr));
+  }
+
+  .event-posters__grid :global(li::before) {
+    content: none;
+  }
+
+  .event-posters__none {
+    color: var(--aiv-text-muted);
+    font-size: 0.9375rem;
+    margin: 0;
+  }
+
+  .event-posters__all {
+    font-family: var(--aiv-font-mono);
+    font-size: 0.875rem;
+    margin: 1rem 0 0;
+  }
+</style>

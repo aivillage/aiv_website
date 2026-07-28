@@ -1,15 +1,22 @@
 ---
-import { site } from "../data/site";
+import { defaultSocialImageSource, site } from "../data/site";
+import {
+  generatedSocialImageDimensions,
+  generatedSocialImagePath,
+} from "../utils/social-images";
+import { isoDateOnly } from "../utils/site";
 
 type Props = {
   title?: string;
   description?: string;
   canonical?: string;
   image?: string;
+  socialImageAlt?: string;
   type?: "website" | "article" | "event";
   publishedTime?: Date;
   author?: string | string[];
   eventDate?: Date;
+  eventEndDate?: Date;
   eventLocation?: string;
   noindex?: boolean;
 };
@@ -19,18 +26,22 @@ const {
   description = site.description,
   canonical = "/",
   image,
+  socialImageAlt,
   type = "website",
   publishedTime,
   author,
   eventDate,
+  eventEndDate,
   eventLocation,
   noindex = false,
 } = Astro.props;
 
-const defaultImage = "/assets/images/aiv_logo.png";
 const pageTitle = title ? `${title} | ${site.title}` : site.title;
 const canonicalUrl = new URL(canonical, site.url).toString();
-const imageUrl = new URL(image ?? defaultImage, site.url).toString();
+const selectedImageSource = image ?? defaultSocialImageSource;
+const imageUrl = new URL(generatedSocialImagePath(selectedImageSource), site.url).toString();
+const imageDimensions = generatedSocialImageDimensions(selectedImageSource);
+const normalizedSocialImageAlt = socialImageAlt?.trim() || undefined;
 const authors = author ? (Array.isArray(author) ? author : [author]) : [];
 const structuredAuthors = authors.map((name) => ({
   "@type": name === site.title ? "Organization" : "Person",
@@ -66,7 +77,8 @@ const jsonLd =
           "@type": "Event",
           name: title ?? site.title,
           url: canonicalUrl,
-          startDate: eventDate?.toISOString(),
+          startDate: eventDate ? isoDateOnly(eventDate) : undefined,
+          endDate: eventEndDate ? isoDateOnly(eventEndDate) : undefined,
           description,
           location: eventLocation ? { "@type": "Place", name: eventLocation } : undefined,
         }
@@ -112,9 +124,13 @@ const jsonLd =
 <meta property="og:site_name" content={site.title} />
 <meta property="og:type" content={type === "event" ? "website" : type} />
 {imageUrl && <meta property="og:image" content={imageUrl} />}
+{imageDimensions && <meta property="og:image:width" content={imageDimensions.width.toString()} />}
+{imageDimensions && <meta property="og:image:height" content={imageDimensions.height.toString()} />}
+{normalizedSocialImageAlt && <meta property="og:image:alt" content={normalizedSocialImageAlt} />}
 <meta name="twitter:card" content="summary_large_image" />
-<meta property="twitter:title" content={title ?? site.title} />
+<meta name="twitter:title" content={title ?? site.title} />
 <meta name="twitter:site" content={`@${site.twitter}`} />
 {imageUrl && <meta name="twitter:image" content={imageUrl} />}
+{normalizedSocialImageAlt && <meta name="twitter:image:alt" content={normalizedSocialImageAlt} />}
 <link type="application/rss+xml" rel="alternate" href={new URL("/feed.xml", site.url).toString()} title={site.title} />
 <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />

@@ -1,9 +1,11 @@
 ---
 import type { EventEntry } from "../utils/site";
-import { eventPath } from "../utils/site";
+import { eventPath, formatDateRange, isoDateOnly } from "../utils/site";
 import DateBadge from "./DateBadge.astro";
 
 const { event } = Astro.props as { event: EventEntry };
+const isMultiDay =
+  event.data.endDate && isoDateOnly(event.data.endDate) > isoDateOnly(event.data.date);
 ---
 
 <article class="event-item">
@@ -12,6 +14,11 @@ const { event } = Astro.props as { event: EventEntry };
     <h3 class="event__item">
       <a class="event-link" href={eventPath(event)}>{event.data.title}</a>
     </h3>
+    {isMultiDay && (
+      <div class="event-date-range small-muted">
+        {formatDateRange(event.data.date, event.data.endDate)}
+      </div>
+    )}
     {event.data.location && <div class="event-location small-muted">{event.data.location}</div>}
     {event.data.description && <div class="event-description">{event.data.description}</div>}
   </div>

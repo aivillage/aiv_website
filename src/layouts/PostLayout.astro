@@ -4,6 +4,7 @@ import PageShell from "../components/layout/PageShell.astro";
 import type { AstroComponentFactory } from "astro/runtime/server/index.js";
 import type { BlogEntry } from "../utils/site";
 import { canonicalPostPath, excerptFromBody, formatDate, isoDate, truncate } from "../utils/site";
+import { normalizeImage, selectBlogSocialImage } from "../utils/social-images";
 const { post, previous, next, Content } = Astro.props as {
   post: BlogEntry;
   previous?: BlogEntry;
@@ -14,8 +15,10 @@ const url = canonicalPostPath(post);
 const author = Array.isArray(post.data.author) ? post.data.author.join(", ") : post.data.author;
 const shareUrl = new URL(url, Astro.site ?? "https://aivillage.org").toString();
 const description = post.data.description ?? post.data.excerpt ?? excerptFromBody(post.body ?? "", 30);
+const visibleCover = normalizeImage(post.data.cover);
+const socialImage = selectBlogSocialImage(post.data);
 ---
-<BaseLayout title={post.data.title} description={description} canonical={url} image={post.data.cover} type="article" publishedTime={post.data.date} author={post.data.author}>
+<BaseLayout title={post.data.title} description={description} canonical={url} image={socialImage.path} socialImageAlt={socialImage.alt} type="article" publishedTime={post.data.date} author={post.data.author}>
   <PageShell>
     <article class="post">
       <header class="post-header">
@@ -28,7 +31,7 @@ const description = post.data.description ?? post.data.excerpt ?? excerptFromBod
         </div>
         {post.data.description && <div class="post-description"><p>{post.data.description}</p></div>}
       </header>
-      {post.data.cover && <div class="post-cover-wrapper"><img src={post.data.cover} alt={post.data.title} class="post-cover" /></div>}
+      {visibleCover && <div class="post-cover-wrapper"><img src={visibleCover.path} alt={post.data.title} class="post-cover" /></div>}
       <div class="post-content">
         <Content />
       </div>

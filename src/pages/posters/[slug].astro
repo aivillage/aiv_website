@@ -1,0 +1,221 @@
+---
+import type { GetStaticPaths } from "astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageShell from "../../components/layout/PageShell.astro";
+import Button from "../../components/ui/Button.astro";
+import { posterEvents, type Poster, type PosterEvent } from "../../data/poster-events";
+import { posters } from "../../data/posters";
+
+type Props = {
+  poster: Poster;
+  event: PosterEvent;
+};
+
+export const getStaticPaths = (() =>
+  posters.map((poster) => {
+    const event = posterEvents.find((item) => item.id === poster.event);
+    if (!event) {
+      throw new Error(`Poster ${poster.slug} references unknown event ${poster.event}`);
+    }
+
+    return {
+      params: { slug: poster.slug },
+      props: { poster, event },
+    };
+  })) satisfies GetStaticPaths;
+
+const { poster, event } = Astro.props as Props;
+const canonical = `/posters/${poster.slug}/`;
+
+function descriptionFromAbstract(abstract: string): string {
+  const text = abstract.replace(/\s+/g, " ").trim();
+  if (text.length <= 160) return text;
+  const shortened = text.slice(0, 157);
+  const boundary = shortened.lastIndexOf(" ");
+  return `${shortened.slice(0, boundary > 100 ? boundary : 157).trimEnd()}…`;
+}
+
+function thumbnailUrl(driveFileId: string): string {
+  return `https://drive.google.com/thumbnail?id=${encodeURIComponent(driveFileId)}&sz=w1200`;
+}
+
+const description = descriptionFromAbstract(poster.abstract);
+const abstractParagraphs = poster.abstract.split(/\n{2,}/).filter(Boolean);
+---
+
+<BaseLayout
+  title={poster.title}
+  description={description}
+  canonical={canonical}
+>
+  <PageShell>
+    <article class="poster-detail">
+      <p class="poster-detail__back">
+        <a href={`/posters/#${event.id}`}>← Back to {event.label} posters</a>
+      </p>
+
+      <header class="poster-detail__header">
+        <p class="poster-detail__event">
+          Presented at <a href={event.eventPath}>{event.label}</a>
+        </p>
+        <h1>{poster.title}</h1>
+        <ul class="poster-detail__authors" role="list">
+          {poster.authors.map((author) => (
+            <li>
+              <span class="poster-detail__author-name">{author.name}</span>
+              {author.affiliation && (
+                <span class="poster-detail__affiliation">{author.affiliation}</span>
+              )}
+            </li>
+          ))}
+        </ul>
+      </header>
+
+      {poster.driveFileId && (
+        <div class="poster-detail__thumb" data-poster-thumb>
+          <img
+            src={thumbnailUrl(poster.driveFileId)}
+            alt=""
+            decoding="async"
+            referrerpolicy="no-referrer"
+            data-poster-thumb-img
+          />
+        </div>
+      )}
+
+      <section class="poster-detail__abstract" aria-labelledby="abstract-heading">
+        <h2 id="abstract-heading">Abstract</h2>
+        {abstractParagraphs.map((paragraph) => <p>{paragraph}</p>)}
+      </section>
+
+      <div class="poster-detail__actions">
+        <Button
+          href={poster.sourceUrl}
+          variant="secondary"
+          target="_blank"
+          ariaLabel={`View poster: ${poster.title}`}
+        >
+          View poster
+        </Button>
+        <a href={`/posters/#${event.id}`}>View all {event.label} posters</a>
+      </div>
+    </article>
+  </PageShell>
+</BaseLayout>
+
+<script>
+  document.querySelectorAll("[data-poster-thumb-img]").forEach((image) => {
+    const hide = () => {
+      const container = image.closest("[data-poster-thumb]");
+      if (container instanceof HTMLElement) {
+        container.hidden = true;
+      }
+    };
+
+    image.addEventListener("error", hide);
+
+    if (
+      image instanceof HTMLImageElement &&
+      image.complete &&
+      image.naturalWidth === 0
+    ) {
+      hide();
+    }
+  });
+</script>
+
+<style>
+  .poster-detail {
+    margin-inline: auto;
+    max-width: 64rem;
+  }
+
+  .poster-detail__back {
+    font-family: var(--aiv-font-mono);
+    font-size: 0.875rem;
+    margin: 0 0 2rem;
+  }
+
+  .poster-detail__header {
+    max-width: var(--aiv-measure-prose);
+  }
+
+  .poster-detail__event {
+    color: var(--aiv-text-muted);
+    font-family: var(--aiv-font-mono);
+    font-size: 0.875rem;
+    margin: 0 0 0.5rem;
+  }
+
+  .poster-detail__header h1 {
+    margin: 0;
+  }
+
+  .poster-detail__authors {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.5rem;
+    list-style: none;
+    margin: 1.25rem 0 0;
+    max-width: none;
+    padding: 0;
+  }
+
+  .poster-detail__authors li::before {
+    content: none;
+  }
+
+  .poster-detail__authors li {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .poster-detail__author-name {
+    font-weight: 700;
+  }
+
+  .poster-detail__affiliation {
+    color: var(--aiv-text-muted);
+    font-size: 0.875rem;
+  }
+
+  .poster-detail__thumb {
+    aspect-ratio: 16 / 9;
+    background: var(--aiv-nested-bg);
+    border: 1px solid var(--aiv-card-border);
+    border-radius: 0.75rem;
+    margin: 2rem 0;
+    overflow: hidden;
+  }
+
+  .poster-detail__thumb[hidden] {
+    display: none;
+  }
+
+  .poster-detail__thumb img {
+    display: block;
+    height: 100%;
+    object-fit: contain;
+    width: 100%;
+  }
+
+  .poster-detail__abstract {
+    max-width: var(--aiv-measure-prose);
+  }
+
+  .poster-detail__abstract h2 {
+    margin-top: 0;
+  }
+
+  .poster-detail__abstract p {
+    white-space: pre-line;
+  }
+
+  .poster-detail__actions {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+    margin-top: 2rem;
+  }
+</style>

@@ -31,6 +31,11 @@ const dayDateTime = new Intl.DateTimeFormat("en-US", {
   timeZone: "UTC",
 });
 
+const longMonthDateTime = new Intl.DateTimeFormat("en-US", {
+  month: "long",
+  timeZone: "UTC",
+});
+
 export function formatDate(date: Date) {
   return dateTime.format(date);
 }
@@ -49,6 +54,73 @@ export function dateDay(date: Date) {
 
 export function isoDate(date: Date) {
   return date.toISOString();
+}
+
+export function isoDateOnly(date: Date): string {
+  const year = date.getUTCFullYear().toString().padStart(4, "0");
+  const month = (date.getUTCMonth() + 1).toString().padStart(2, "0");
+  const day = date.getUTCDate().toString().padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+export function formatDateRange(startDate: Date, endDate?: Date): string {
+  if (!endDate || isoDateOnly(startDate) === isoDateOnly(endDate)) {
+    return formatDate(startDate);
+  }
+
+  const startMonth = longMonthDateTime.format(startDate);
+  const endMonth = longMonthDateTime.format(endDate);
+  const startDay = startDate.getUTCDate();
+  const endDay = endDate.getUTCDate();
+  const startYear = startDate.getUTCFullYear();
+  const endYear = endDate.getUTCFullYear();
+
+  if (startYear !== endYear) {
+    return `${startMonth} ${startDay}, ${startYear}–${endMonth} ${endDay}, ${endYear}`;
+  }
+
+  if (startDate.getUTCMonth() !== endDate.getUTCMonth()) {
+    return `${startMonth} ${startDay}–${endMonth} ${endDay}, ${startYear}`;
+  }
+
+  return `${startMonth} ${startDay}–${endDay}, ${startYear}`;
+}
+
+type EventDateRange = {
+  date: Date;
+  endDate?: Date;
+};
+
+type EventDateRangeRefinementContext = {
+  addIssue(issue: {
+    code: "custom";
+    path: (string | number)[];
+    message: string;
+  }): void;
+};
+
+export function validateEventDateRange(
+  data: EventDateRange,
+  ctx: EventDateRangeRefinementContext,
+): void {
+  if (data.endDate && isoDateOnly(data.endDate) < isoDateOnly(data.date)) {
+    ctx.addIssue({
+      code: "custom",
+      path: ["endDate"],
+      message: "endDate must be on or after date.",
+    });
+  }
+}
+
+export function effectiveEventEndDate(event: Pick<EventEntry, "data">): Date {
+  return event.data.endDate ?? event.data.date;
+}
+
+export function isEventUpcomingOrOngoing(
+  event: Pick<EventEntry, "data">,
+  now = new Date(),
+): boolean {
+  return isoDateOnly(effectiveEventEndDate(event)) >= isoDateOnly(now);
 }
 
 export function stripDatePrefix(id: string) {

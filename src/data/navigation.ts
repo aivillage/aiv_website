@@ -18,6 +18,7 @@ export const footerNavSections = [
       { label: "Generative Red Team", href: "/grt/" },
       { label: "Learn / Workshops", href: "/learn/" },
       { label: "Events", href: "/events/" },
+      { label: "Poster Archive", href: "/posters/" },
       { label: "Research", href: "/research/" },
     ],
   },

@@ -1,0 +1,202 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageShell from "../../components/layout/PageShell.astro";
+import EventPosters from "../../components/posters/EventPosters.astro";
+import { posterEvents } from "../../data/poster-events";
+import { posters } from "../../data/posters";
+
+const eventsWithPosters = posterEvents.filter((event) =>
+  posters.some((poster) => poster.event === event.id),
+);
+const total = posters.filter((poster) =>
+  eventsWithPosters.some((event) => event.id === poster.event),
+).length;
+---
+
+<BaseLayout
+  title="Poster Archive"
+  description="Research posters presented at AI Village events, published as submitted by their authors."
+  canonical="/posters/"
+>
+  <PageShell>
+    <header class="posters-intro">
+      <p class="posters-intro__eyebrow">AI Village</p>
+      <h1>Poster Archive</h1>
+      <p class="posters-intro__lede">
+        Research posters presented at AI Village events, published as submitted by their authors.
+      </p>
+    </header>
+
+    {
+      total > 0 && (
+        <div class="posters-search">
+          <label class="posters-search__label" for="poster-search">
+            Search posters
+          </label>
+          <input
+            type="search"
+            id="poster-search"
+            class="posters-search__input"
+            placeholder="Title, author, affiliation, keyword, or abstract"
+            autocomplete="off"
+            data-poster-search
+          />
+          <p class="posters-search__count" data-poster-count aria-live="polite">
+            {`${total} ${total === 1 ? "poster" : "posters"}`}
+          </p>
+        </div>
+      )
+    }
+
+    {
+      total === 0 ? (
+        <p class="posters-empty">
+          Accepted DEF CON 34 posters will be published here as final materials arrive.
+        </p>
+      ) : (
+        eventsWithPosters.map((event) => (
+          <EventPosters eventId={event.id} variant="archive" />
+        ))
+      )
+    }
+
+    <aside class="posters-note">
+      <p>
+        Posters are hosted on Google Drive and open in a new tab. Copyright remains with the
+        authors. If a link is broken, or you are an author who would like a poster corrected or
+        removed, please <a href="/community/">get in touch</a>.
+      </p>
+    </aside>
+  </PageShell>
+</BaseLayout>
+
+<script is:inline>
+  (function () {
+    const input = document.querySelector("[data-poster-search]");
+    if (!input) return;
+
+    const cards = Array.from(document.querySelectorAll("[data-poster-card]"));
+    const groups = Array.from(document.querySelectorAll("[data-poster-group]"));
+    const count = document.querySelector("[data-poster-count]");
+    const total = cards.length;
+
+    function apply() {
+      const query = input.value.trim().toLowerCase();
+      const terms = query.split(/\s+/).filter(Boolean);
+      let shown = 0;
+
+      for (const card of cards) {
+        const haystack = card.getAttribute("data-search") || "";
+        const match = terms.every(function (term) {
+          return haystack.includes(term);
+        });
+        card.hidden = !match;
+        if (match) shown += 1;
+      }
+
+      for (const group of groups) {
+        const visible = group.querySelectorAll("[data-poster-card]:not([hidden])").length;
+        const empty = group.querySelector("[data-poster-group-empty]");
+        if (empty) empty.hidden = visible !== 0;
+      }
+
+      if (count) {
+        count.textContent = terms.length
+          ? "Showing " + shown + " of " + total + " posters"
+          : total + (total === 1 ? " poster" : " posters");
+      }
+    }
+
+    input.addEventListener("input", apply);
+    if (input.value) apply();
+  })();
+</script>
+
+<style>
+  .posters-intro {
+    margin-bottom: 1.75rem;
+    max-width: var(--aiv-measure-prose);
+  }
+
+  .posters-intro__eyebrow {
+    color: var(--aiv-text-muted);
+    font-family: var(--aiv-font-mono);
+    font-size: 0.8125rem;
+    letter-spacing: 0.08em;
+    margin: 0 0 0.25rem;
+    text-transform: uppercase;
+  }
+
+  .posters-intro__lede {
+    color: var(--aiv-text-secondary);
+    font-size: 1.0625rem;
+  }
+
+  .posters-search {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1rem;
+    margin-bottom: 2.5rem;
+    max-width: var(--aiv-measure-prose);
+  }
+
+  .posters-search__label {
+    border: 0;
+    clip: rect(0, 0, 0, 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+  }
+
+  .posters-search__input {
+    background: var(--aiv-card-bg);
+    border: 1px solid var(--aiv-card-border);
+    border-radius: 0.5rem;
+    color: var(--aiv-text-primary);
+    flex: 1 1 22rem;
+    font: inherit;
+    font-size: 0.9375rem;
+    padding: 0.6rem 0.85rem;
+  }
+
+  .posters-search__input:focus-visible {
+    border-color: var(--aiv-card-hover-border);
+    outline: 2px solid var(--aiv-focus-ring);
+    outline-offset: 2px;
+  }
+
+  .posters-search__count {
+    color: var(--aiv-text-muted);
+    font-family: var(--aiv-font-mono);
+    font-size: 0.8125rem;
+    margin: 0;
+  }
+
+  .posters-empty {
+    border: 1px dashed var(--aiv-card-border);
+    border-radius: 0.5rem;
+    color: var(--aiv-text-secondary);
+    padding: 2rem;
+    text-align: center;
+  }
+
+  .posters-note {
+    background: var(--aiv-nested-bg);
+    border: 1px solid var(--aiv-nested-border);
+    border-radius: 0.5rem;
+    color: var(--aiv-text-secondary);
+    font-size: 0.9375rem;
+    margin-top: 1rem;
+    max-width: var(--aiv-measure-prose);
+    padding: 1rem 1.25rem;
+  }
+
+  .posters-note p {
+    margin: 0;
+  }
+</style>

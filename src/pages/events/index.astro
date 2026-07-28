@@ -3,14 +3,23 @@ import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import PageShell from "../../components/layout/PageShell.astro";
 import EventCard from "../../components/EventCard.astro";
-import { groupByYear, sortEventsAscending, sortEventsDescending } from "../../utils/site";
+import {
+  groupByYear,
+  isEventUpcomingOrOngoing,
+  sortEventsAscending,
+  sortEventsDescending,
+} from "../../utils/site";
 import { scheduleRoutes } from "../../data/schedules";
 import { volunteerApplicationUrl } from "../../data/site";
 
 const events = await getCollection("events");
 const now = new Date();
-const futureEvents = sortEventsAscending(events.filter((event) => event.data.date.getTime() >= now.getTime()));
-const pastEvents = sortEventsDescending(events.filter((event) => event.data.date.getTime() < now.getTime()));
+const futureEvents = sortEventsAscending(
+  events.filter((event) => isEventUpcomingOrOngoing(event, now)),
+);
+const pastEvents = sortEventsDescending(
+  events.filter((event) => !isEventUpcomingOrOngoing(event, now)),
+);
 const futureByYear = [...groupByYear(futureEvents)].sort(([a], [b]) => a.localeCompare(b));
 const pastByYear = [...groupByYear(pastEvents)].sort(([a], [b]) => b.localeCompare(a));
 ---

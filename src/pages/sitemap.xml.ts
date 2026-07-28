@@ -1,5 +1,6 @@
 import { getCollection } from "astro:content";
 import { site } from "../data/site";
+import { posters } from "../data/posters";
 import { canonicalPostPath, eventPath, schedulePath, sortEventsAscending, sponsorPath } from "../utils/site";
 
 const staticAssets = [
@@ -49,6 +50,8 @@ export async function GET() {
     "/grt/",
     "/hacker-journal-club/",
     "/learn/",
+    "/posters/",
+    ...posters.map((poster) => `/posters/${poster.slug}/`),
     "/research/",
     "/sponsors/",
     ...sponsors.map(sponsorPath),
