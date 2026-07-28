@@ -2,13 +2,16 @@
 import BaseLayout from "./BaseLayout.astro";
 import PageShell from "../components/layout/PageShell.astro";
 import EventPosters from "../components/posters/EventPosters.astro";
+import EmbeddedEventPosters from "../components/posters/EmbeddedEventPosters.astro";
 import type { AstroComponentFactory } from "astro/runtime/server/index.js";
 import type { EventEntry } from "../utils/site";
 import { eventPath, formatDateRange, isoDateOnly, truncate } from "../utils/site";
 import { posterEvents } from "../data/poster-events";
+import { posters } from "../data/posters";
 import { scheduleRoutesForEvent } from "../data/schedules";
 import { volunteerApplicationUrl } from "../data/site";
 import { normalizeImage, selectEventSocialImage } from "../utils/social-images";
+import { resolveEventPosterPlacement } from "../utils/event-content";
 
 const { event, previous, next, Content } = Astro.props as {
   event: EventEntry;
@@ -20,6 +23,23 @@ const url = eventPath(event);
 const shareUrl = new URL(url, Astro.site ?? "https://aivillage.org").toString();
 const scheduleLinks = scheduleRoutesForEvent(event.id);
 const posterEvent = posterEvents.find((item) => item.eventPath === url);
+const hasEventPosters =
+  posterEvent !== undefined &&
+  posters.some((poster) => poster.event === posterEvent.id);
+if (posterEvent && event.body === undefined) {
+  throw new Error(
+    `Raw event body is unavailable for ${event.id}; poster placement cannot be resolved.`,
+  );
+}
+const posterPlacement = resolveEventPosterPlacement({
+  body: event.body ?? "",
+  filePath: event.filePath,
+  hasPosterEvent: posterEvent !== undefined,
+});
+const isMdxEvent = event.filePath?.toLowerCase().endsWith(".mdx") ?? false;
+const eventContentComponents = {
+  EventPosters: EmbeddedEventPosters,
+};
 const eventImage = normalizeImage(event.data.image);
 const socialImage = selectEventSocialImage(event.data);
 const formattedDateRange = formatDateRange(event.data.date, event.data.endDate);
@@ -67,10 +87,17 @@ const [formattedStartDate, formattedEndDate] = isMultiDay
         </div>
       )}
       <div class="event-content event-layout__content">
-        <Content />
+        {isMdxEvent ? (
+          <Content components={eventContentComponents} />
+        ) : (
+          <Content />
+        )}
       </div>
-      {posterEvent && (
-        <div class="event-layout__posters">
+      {posterPlacement === "fallback" && hasEventPosters && posterEvent && (
+        <div
+          class="event-layout__posters"
+          data-event-posters-placement="fallback"
+        >
           <EventPosters
             eventId={posterEvent.id}
             variant="compact"

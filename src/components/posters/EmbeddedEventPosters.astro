@@ -1,0 +1,33 @@
+---
+import EventPosters from "./EventPosters.astro";
+import { posterEvents } from "../../data/poster-events";
+import { posters } from "../../data/posters";
+
+function normalizeRoute(path: string): string {
+  const normalized = `/${path}`.replace(/\/+/g, "/");
+  return normalized.endsWith("/") ? normalized : `${normalized}/`;
+}
+
+const currentRoute = normalizeRoute(Astro.url.pathname);
+const posterEvent = posterEvents.find(
+  (event) => normalizeRoute(event.eventPath) === currentRoute,
+);
+
+if (!posterEvent) {
+  throw new Error(
+    `Embedded EventPosters has no poster-event configuration for ${currentRoute}.`,
+  );
+}
+
+const hasPosters = posters.some((poster) => poster.event === posterEvent.id);
+---
+
+{hasPosters && (
+  <div data-event-posters-placement="inline">
+    <EventPosters
+      eventId={posterEvent.id}
+      variant="compact"
+      limit={6}
+    />
+  </div>
+)}
