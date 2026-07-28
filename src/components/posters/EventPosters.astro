@@ -62,6 +62,9 @@ const headingId = `${event.id}-${variant}-posters-heading`;
       )}
     </header>
 
+    {/* This wrapper is load-bearing. global.scss limits
+        `.main-content .container > section > ul` to `--aiv-measure-prose` (72ch).
+        Nesting the poster grid one level deeper keeps the grid full width. */}
     <div class="event-posters__grid-wrap">
       <ul class="event-posters__grid" role="list">
         {visiblePosters.map((poster) => <PosterCard poster={poster} variant={variant} />)}

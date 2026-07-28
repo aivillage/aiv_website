@@ -38,7 +38,14 @@ const socialImage = selectEventSocialImage(event.data);
         </div>
         {eventImage && (
           <figure class="event-layout__artwork">
-            <img src={eventImage.path} alt={eventImage.alt ?? event.data.title} loading="eager" decoding="async" />
+            <img
+              src={eventImage.path}
+              alt={eventImage.alt ?? event.data.title}
+              width={eventImage.width}
+              height={eventImage.height}
+              loading="eager"
+              decoding="async"
+            />
           </figure>
         )}
       </header>
