@@ -12,8 +12,9 @@ export type PosterAuthor = {
 
 export type Poster = {
   /**
-   * URL fragment, and the public permalink. Immutable once published — the
-   * importer preserves it across title edits. See sourceUrl below.
+   * Path segment for the canonical `/posters/<slug>/` page and the archive-local
+   * `#poster-<slug>` anchor. Immutable once published — the importer preserves
+   * it across title edits. See sourceUrl below.
    */
   slug: string;
   /** Matches a `PosterEvent.id` below. */

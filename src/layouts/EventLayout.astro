@@ -1,9 +1,11 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
 import PageShell from "../components/layout/PageShell.astro";
+import EventPosters from "../components/posters/EventPosters.astro";
 import type { AstroComponentFactory } from "astro/runtime/server/index.js";
 import type { EventEntry } from "../utils/site";
 import { eventPath, formatDate, isoDate, truncate } from "../utils/site";
+import { posterEvents } from "../data/poster-events";
 import { scheduleRoutesForEvent } from "../data/schedules";
 import { volunteerApplicationUrl } from "../data/site";
 
@@ -16,6 +18,7 @@ const { event, previous, next, Content } = Astro.props as {
 const url = eventPath(event);
 const shareUrl = new URL(url, Astro.site ?? "https://aivillage.org").toString();
 const scheduleLinks = scheduleRoutesForEvent(event.id);
+const posterEvent = posterEvents.find((item) => item.eventPath === url);
 ---
 
 <BaseLayout title={event.data.title} description={event.data.description} canonical={url} type="event" eventDate={event.data.date} eventLocation={event.data.location}>
@@ -32,6 +35,13 @@ const scheduleLinks = scheduleRoutesForEvent(event.id);
       <div class="event-content event-layout__content">
         <Content />
       </div>
+      {posterEvent && (
+        <EventPosters
+          eventId={posterEvent.id}
+          variant="compact"
+          limit={6}
+        />
+      )}
       {scheduleLinks.length > 0 && (
         <section class="card event-layout__schedule">
           <h2>Schedules and Talks</h2>

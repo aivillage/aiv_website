@@ -1,0 +1,299 @@
+---
+import Button from "../ui/Button.astro";
+import type { Poster } from "../../data/poster-events";
+
+type Props = {
+  poster: Poster;
+  variant: "archive" | "compact";
+};
+
+const { poster, variant } = Astro.props as Props;
+const isArchive = variant === "archive";
+const detailPath = `/posters/${poster.slug}/`;
+
+function formatAuthors(authors: Poster["authors"]): string {
+  return authors
+    .map((author) => (author.affiliation ? `${author.name} (${author.affiliation})` : author.name))
+    .join(", ");
+}
+
+function formatPosterNumber(value: number): string {
+  return `P-${String(value).padStart(2, "0")}`;
+}
+
+/**
+ * Direct Drive thumbnails are optional progressive enhancement. The card is
+ * complete without one, and the script below removes the thumbnail container
+ * if Google's unsupported endpoint fails.
+ */
+function thumbnailUrl(driveFileId: string): string {
+  return `https://drive.google.com/thumbnail?id=${encodeURIComponent(driveFileId)}&sz=w1200`;
+}
+---
+
+<li
+  class:list={["poster-card", `poster-card--${variant}`]}
+  id={isArchive ? `poster-${poster.slug}` : undefined}
+  data-poster-card={isArchive ? true : undefined}
+  data-search={
+    isArchive
+      ? [
+          poster.title,
+          formatAuthors(poster.authors),
+          poster.abstract,
+          ...(poster.keywords ?? []),
+        ]
+          .join(" ")
+          .toLowerCase()
+      : undefined
+  }
+>
+  {poster.driveFileId && (
+    <div class="poster-card__thumb" data-poster-thumb>
+      <img
+        src={thumbnailUrl(poster.driveFileId)}
+        alt=""
+        loading="lazy"
+        decoding="async"
+        referrerpolicy="no-referrer"
+        data-poster-thumb-img
+      />
+    </div>
+  )}
+  <div class="poster-card__body">
+    {isArchive && poster.posterNumber !== undefined && (
+      <p class="poster-card__number">{formatPosterNumber(poster.posterNumber)}</p>
+    )}
+    <h3 class="poster-card__title">
+      <a href={detailPath}>{poster.title}</a>
+    </h3>
+    <p class="poster-card__authors">{formatAuthors(poster.authors)}</p>
+    {isArchive && (
+      <details class="poster-card__abstract">
+        <summary>Abstract</summary>
+        <p>{poster.abstract}</p>
+      </details>
+    )}
+    {isArchive && (
+      <div class="poster-card__actions">
+        <Button
+          href={poster.sourceUrl}
+          variant="secondary"
+          size="sm"
+          target="_blank"
+          ariaLabel={`View poster: ${poster.title}`}
+        >
+          View poster
+        </Button>
+        <a class="poster-card__details" href={detailPath}>View details</a>
+      </div>
+    )}
+  </div>
+</li>
+
+<script>
+  document.querySelectorAll("[data-poster-thumb-img]").forEach((image) => {
+    const hide = () => {
+      const container = image.closest("[data-poster-thumb]");
+      if (container instanceof HTMLElement) {
+        container.hidden = true;
+      }
+
+      const card = image.closest(".poster-card");
+      if (card instanceof HTMLElement) {
+        card.classList.add("poster-card--no-thumb");
+      }
+    };
+
+    image.addEventListener("error", hide);
+
+    if (
+      image instanceof HTMLImageElement &&
+      image.complete &&
+      image.naturalWidth === 0
+    ) {
+      hide();
+    }
+  });
+</script>
+
+<style>
+  .poster-card {
+    background: var(--aiv-card-bg);
+    border: 1px solid var(--aiv-card-border);
+    border-radius: 0.75rem;
+    overflow: hidden;
+  }
+
+  .poster-card--archive {
+    display: flex;
+    flex-direction: column;
+    scroll-margin-top: 6rem;
+  }
+
+  .poster-card--archive[hidden] {
+    display: none;
+  }
+
+  .poster-card--archive:target {
+    border-color: var(--aiv-action-primary);
+    box-shadow: var(--aiv-card-hover-shadow);
+  }
+
+  .poster-card--compact {
+    display: grid;
+    grid-template-columns: minmax(0, 8rem) minmax(0, 1fr);
+    min-height: 7rem;
+  }
+
+  .poster-card--compact.poster-card--no-thumb {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .poster-card--compact.poster-card--no-thumb .poster-card__body {
+    grid-column: 1 / -1;
+  }
+
+  .poster-card__thumb {
+    background: var(--aiv-nested-bg);
+  }
+
+  .poster-card__thumb[hidden] {
+    display: none;
+  }
+
+  .poster-card--archive .poster-card__thumb {
+    aspect-ratio: 16 / 9;
+    border-bottom: 1px solid var(--aiv-card-border);
+  }
+
+  .poster-card--compact .poster-card__thumb {
+    border-right: 1px solid var(--aiv-card-border);
+  }
+
+  .poster-card__thumb img {
+    display: block;
+    height: 100%;
+    object-fit: contain;
+    width: 100%;
+  }
+
+  .poster-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .poster-card--archive .poster-card__body {
+    flex: 1;
+    padding: 1.1rem 1.25rem 1.25rem;
+  }
+
+  .poster-card--compact .poster-card__body {
+    justify-content: center;
+    padding: 0.9rem 1rem;
+  }
+
+  .poster-card__number {
+    color: var(--aiv-action-primary);
+    font-family: var(--aiv-font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    margin: 0 0 -0.25rem;
+  }
+
+  .poster-card__title {
+    line-height: 1.35;
+    margin: 0;
+  }
+
+  .poster-card--archive .poster-card__title {
+    font-size: 1.0625rem;
+  }
+
+  .poster-card--compact .poster-card__title {
+    font-size: 0.975rem;
+  }
+
+  .poster-card--compact .poster-card__title a {
+    align-items: center;
+    display: inline-flex;
+    min-height: 2.75rem;
+  }
+
+  .poster-card__title a {
+    color: inherit;
+  }
+
+  .poster-card__authors {
+    color: var(--aiv-text-muted);
+    font-size: 0.875rem;
+    margin: 0;
+  }
+
+  .poster-card__abstract {
+    backdrop-filter: none;
+    background: none;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    color: var(--aiv-text-secondary);
+    font-size: 0.9375rem;
+    margin: 0;
+    overflow: visible;
+  }
+
+  .poster-card__abstract summary {
+    background: none;
+    border-bottom: 0;
+    color: var(--aiv-text-muted);
+    cursor: pointer;
+    font-family: var(--aiv-font-mono);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    padding: 0.15rem 0;
+  }
+
+  .poster-card__abstract summary:hover {
+    background: none;
+    color: var(--aiv-text-primary);
+  }
+
+  .poster-card__abstract summary:focus-visible {
+    border-radius: 0.25rem;
+    outline: 2px solid var(--aiv-focus-ring);
+    outline-offset: 2px;
+  }
+
+  .poster-card__abstract p {
+    margin: 0.5rem 0 0;
+  }
+
+  .poster-card__actions {
+    align-items: center;
+    display: flex;
+    gap: 1rem;
+    margin-top: auto;
+    padding-top: 0.9rem;
+  }
+
+  .poster-card__details {
+    color: var(--aiv-text-muted);
+    font-family: var(--aiv-font-mono);
+    font-size: 0.8125rem;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .poster-card--archive {
+      transition:
+        border-color 150ms ease,
+        box-shadow 150ms ease;
+    }
+  }
+
+  @media (max-width: 34rem) {
+    .poster-card--compact {
+      grid-template-columns: minmax(0, 6rem) minmax(0, 1fr);
+    }
+  }
+</style>

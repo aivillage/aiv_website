@@ -177,7 +177,7 @@ function main() {
   // "documented rule nobody reads" this pipeline keeps trying to avoid.
   if (dropped.length > 0 && !allowPermalinkRemoval) {
     console.error(`\nRefusing to remove ${dropped.length} previously published permalink(s):`);
-    for (const slug of dropped) console.error(`  /posters/#poster-${slug}`);
+    for (const slug of dropped) console.error(`  /posters/${slug}/`);
     console.error(
       `\nIf this removal is intentional, re-run with --allow-permalink-removal.\n` +
         `Otherwise check whether Publish was changed by accident, or whether a Drive\n` +
@@ -205,7 +205,7 @@ function main() {
 
   if (movedSlugs.length > 0) {
     console.warn(`\n${movedSlugs.length} permalink(s) moved by --allow-slug-change:`);
-    for (const slug of movedSlugs) console.warn(`  /posters/#poster-${slug} is now retired`);
+    for (const slug of movedSlugs) console.warn(`  /posters/${slug}/ is now retired`);
   }
 
   if (allowSlugChange) {
@@ -219,7 +219,7 @@ function main() {
 
   if (dropped.length > 0) {
     console.warn(`\n--allow-permalink-removal: removing previously published URL(s):`);
-    for (const slug of dropped) console.warn(`  /posters/#poster-${slug}`);
+    for (const slug of dropped) console.warn(`  /posters/${slug}/`);
     console.warn("");
   }
 

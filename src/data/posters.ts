@@ -22,7 +22,7 @@ export const posters: Poster[] = [
     driveFileId: "1ms39W56OgrB0K3zuxXkSiba4Pwpr86v6",
   },
   {
-    slug: "from-recon-to-full-system-prompt-exfiltration-a-5-stage-attack-chain",
+    slug: "from-recon-to-full-system-prompt-exfiltration",
     event: "defcon-34",
     title: "From Recon to Full System Prompt Exfiltration: A 5-Stage Attack Chain Against a Production LLM Chatbot",
     authors: [
@@ -33,7 +33,7 @@ export const posters: Poster[] = [
     driveFileId: "1j2yHo4PyMi2nkj-efo7ACXvhyqY2JcAy",
   },
   {
-    slug: "poisoned-mandates-stealing-agency-from-agentic-commerce",
+    slug: "poisoned-mandates",
     event: "defcon-34",
     title: "Poisoned Mandates: Stealing Agency from Agentic Commerce",
     authors: [
@@ -74,7 +74,7 @@ export const posters: Poster[] = [
     driveFileId: "10W_HshKMlk-CAM8FRCnTEW8cLpFmsGLA",
   },
   {
-    slug: "the-collapse-of-the-skill-barrier-building-autonomous-ctf-tools-through",
+    slug: "the-collapse-of-the-skill-barrier",
     event: "defcon-34",
     title: "The Collapse of the Skill Barrier: Building Autonomous CTF Tools Through Pure Intent",
     authors: [

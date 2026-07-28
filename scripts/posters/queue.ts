@@ -82,6 +82,12 @@ if (!KNOWN_EVENTS.has(EVENT_ID)) {
  * namespace. It does not keep them out of every namespace: a slug of "search"
  * yields `poster-search`, the id of the search input. Duplicate ids are invalid
  * HTML and send the anchor to the wrong element, silently. Cheap to check.
+ *
+ * Poster slugs also become static child routes at `/posters/<slug>/`. If a
+ * future named child route is added under `/posters/`, reserve that path segment
+ * here before shipping the route so a poster cannot claim the same URL. There
+ * are no conflicting named child routes today, so there is no empty
+ * route-reservation set to maintain.
  */
 const RESERVED_IDS = new Set([
   ...posterEvents.map((event) => event.id),

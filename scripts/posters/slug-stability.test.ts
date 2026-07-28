@@ -147,7 +147,7 @@ try {
   );
   check(
     "refusal names the URL it is protecting",
-    removal.output.includes(bothSlugs[1]),
+    removal.output.includes(`/posters/${bothSlugs[1]}/`),
     removal.output.trim().split("\n").slice(0, 2).join(" / "),
   );
 
