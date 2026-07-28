@@ -17,8 +17,8 @@
  *    exited 0 and let CI carry on.
  */
 
-import { execFileSync } from "node:child_process";
-import { mkdtempSync, writeFileSync, readFileSync, rmSync } from "node:fs";
+import { execFileSync, spawnSync } from "node:child_process";
+import { existsSync, mkdtempSync, writeFileSync, readFileSync, rmSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve, join } from "node:path";
 import { tmpdir } from "node:os";
@@ -88,6 +88,30 @@ function check(name: string, condition: boolean, detail = "") {
 
 try {
   console.log("\ncanonical poster URL stability\n");
+
+  const missingOperandOutput = join(tmp, "missing-operand.ts");
+  const missingOperand = spawnSync(
+    "npx",
+    ["tsx", IMPORTER, "--out", missingOperandOutput],
+    {
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "pipe"],
+    },
+  );
+  check(
+    "missing CSV operand exits with status 2",
+    missingOperand.status === 2,
+    `exit status: ${missingOperand.status}`,
+  );
+  check(
+    "missing CSV operand prints usage",
+    missingOperand.stderr.includes("usage: pnpm posters:import <queue.csv>"),
+    missingOperand.stderr.trim(),
+  );
+  check(
+    "missing CSV operand writes no output file",
+    !existsSync(missingOperandOutput),
+  );
 
   // Generate two baseline poster records.
   const A = { title: "Poisoned Mandates in Agent Instruction Sets", id: "1AAA", number: 1 };

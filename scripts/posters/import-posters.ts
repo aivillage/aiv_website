@@ -110,6 +110,9 @@ function main() {
     parseArgs(process.argv.slice(2));
   const OUT_PATH = out ? resolve(out) : fileURLToPath(DEFAULT_DATA_PATH);
 
+  // This checks whether a required CLI operand was supplied. It is not an
+  // authentication, authorization, permission, or security-boundary decision.
+  // codeql[js/user-controlled-bypass]
   if (!csvPath) {
     console.error(
       "usage: pnpm posters:import <queue.csv> [--check]\n" +

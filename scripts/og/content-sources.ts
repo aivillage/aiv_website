@@ -1,12 +1,13 @@
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
-import matter from "gray-matter";
 import { defaultSocialImageSource } from "../../src/data/site";
 import {
   selectBlogSocialImage,
   selectEventSocialImage,
+  type ImageValue,
   type NormalizedImage,
 } from "../../src/utils/social-images";
+import { parseYamlFrontmatter } from "./yaml-frontmatter";
 
 export type ContentSocialImageSource = {
   collection: "blog" | "events" | "default";
@@ -28,7 +29,7 @@ async function contentFiles(directory: string): Promise<string[]> {
 
 async function parsedFrontmatter(file: string) {
   const source = await readFile(file, "utf8");
-  return matter(source).data;
+  return parseYamlFrontmatter(source, file);
 }
 
 export async function collectContentSocialImageSources(
@@ -49,7 +50,13 @@ export async function collectContentSocialImageSources(
     records.push({
       collection: "blog",
       file: path.relative(repositoryRoot, file),
-      image: selectBlogSocialImage(data),
+      image: selectBlogSocialImage(
+        data as {
+          socialImage?: ImageValue;
+          cover?: ImageValue;
+          image?: ImageValue;
+        },
+      ),
     });
   }
 
@@ -59,7 +66,12 @@ export async function collectContentSocialImageSources(
     records.push({
       collection: "events",
       file: path.relative(repositoryRoot, file),
-      image: selectEventSocialImage(data),
+      image: selectEventSocialImage(
+        data as {
+          socialImage?: ImageValue;
+          image?: ImageValue;
+        },
+      ),
     });
   }
 
