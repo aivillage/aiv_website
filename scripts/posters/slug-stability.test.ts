@@ -1,19 +1,20 @@
 /**
- * Regression tests for permalink stability.
+ * Regression tests for canonical poster URL stability.
  *
  *   pnpm posters:test
  *
  * These cover the one behaviour that cannot be undone once it goes wrong: a
- * published URL moving. Every case here corresponds to a bug that was actually
- * shipped and caught in review, so please do not delete them when refactoring.
+ * canonical URL in the baseline moving. Every case here corresponds to a bug
+ * caught in review, so please do not delete them when refactoring.
  *
  * The critical ones:
  *  - "flagged run does not reslug an unrelated poster": an earlier version
  *    skipped the whole preservation branch whenever --allow-slug-change was
  *    passed, so authorising one deliberate slug edit silently reslugged every
  *    title-corrected poster in the same batch.
- *  - "removing a published poster fails closed": an earlier version only warned,
- *    so a run that dropped a live URL still exited 0 and let CI carry on.
+ *  - "removing an existing poster route fails closed": an earlier version only
+ *    warned, so a run that dropped an existing canonical poster URL still
+ *    exited 0 and let CI carry on.
  */
 
 import { execFileSync } from "node:child_process";
@@ -86,19 +87,19 @@ function check(name: string, condition: boolean, detail = "") {
 }
 
 try {
-  console.log("\npermalink stability\n");
+  console.log("\ncanonical poster URL stability\n");
 
-  // Publish two posters.
+  // Generate two baseline poster records.
   const A = { title: "Poisoned Mandates in Agent Instruction Sets", id: "1AAA", number: 1 };
   const B = { title: "Agent to Agent Worm Propagation", id: "1BBB", number: 2 };
   run([A, B]);
   const [aSlug, bSlug] = slugs();
 
-  // 1. Title edited, Slug blank -> permalink retained.
+  // 1. Title edited, Slug blank -> existing canonical URL retained.
   run([{ ...A, title: "Poisoned Mandates" }, B]);
-  check("title edit does not move a published permalink", slugs()[0] === aSlug, slugs()[0]);
+  check("title edit does not move an existing canonical poster URL", slugs()[0] === aSlug, slugs()[0]);
 
-  // 2. Link re-copied in a different URL form -> same identity, same permalink.
+  // 2. Link re-copied in a different URL form -> same identity, same canonical URL.
   const path = join(tmp, "variant.csv");
   writeFileSync(
     path,
@@ -112,7 +113,7 @@ try {
   } catch {
     // fall through; the assertion below reports the real problem
   }
-  check("re-copied link keeps the same permalink", slugs()[0] === aSlug, slugs()[0]);
+  check("re-copied link keeps the same canonical poster URL", slugs()[0] === aSlug, slugs()[0]);
 
   // 3. Explicit Slug edit without the flag -> rejected, nothing written.
   const blocked = run([{ ...A, slug: "poisoned-mandates" }, B]);
@@ -135,11 +136,11 @@ try {
     after[1] === bSlug,
     `expected ${bSlug}, got ${after[1]}`,
   );
-  // 5. Removing a published poster must fail closed and write nothing.
+  // 5. Removing an existing generated record must fail closed and write nothing.
   run([A, B]);
   const bothSlugs = slugs();
   const removal = run([A]);
-  check("removing a published poster fails closed", !removal.ok);
+  check("removing an existing poster route fails closed", !removal.ok);
   check(
     "refused removal leaves posters.ts untouched",
     slugs().length === 2 && slugs().join() === bothSlugs.join(),
@@ -164,5 +165,7 @@ try {
   rmSync(tmp, { recursive: true, force: true });
 }
 
-console.log(failures === 0 ? "\nAll permalink tests passed.\n" : `\n${failures} test(s) failed.\n`);
+console.log(
+  failures === 0 ? "\nAll canonical poster URL tests passed.\n" : `\n${failures} test(s) failed.\n`,
+);
 process.exit(failures === 0 ? 0 : 1);

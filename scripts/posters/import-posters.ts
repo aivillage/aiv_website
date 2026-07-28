@@ -20,7 +20,7 @@ import { resolve } from "node:path";
 import {
   readQueue,
   QueueError,
-  publishedSlugsById,
+  existingSlugsById,
   DEFAULT_DATA_PATH,
   type QueueRow,
 } from "./queue.ts";
@@ -158,16 +158,17 @@ function main() {
     return a.title.localeCompare(b.title);
   });
 
-  // A permalink that was live and is now absent is the one silent way this
-  // pipeline breaks a shared URL. The usual innocent cause is Publish = NO; the
-  // dangerous one is a poster file that was deleted and re-uploaded instead of
-  // replaced via "Manage versions", which mints a new Drive ID and therefore a
-  // new identity. Both look identical in the diff.
+  // A canonical poster URL that exists in the current generated data and is
+  // absent after the import is the one silent way this pipeline can remove a
+  // stable route. The usual innocent cause is Publish = NO; the dangerous one
+  // is a poster file that was deleted and re-uploaded instead of replaced via
+  // "Manage versions", which mints a new Drive ID and therefore a new identity.
+  // Both look identical in the diff.
   //
   // Note this compares SLUGS, not Drive IDs: a re-uploaded file that keeps its
-  // title derives the same slug, the public anchor still resolves, and nothing
-  // is reported. Only an actually-vanished URL trips this.
-  const before = new Set(publishedSlugsById(OUT_PATH).values());
+  // title derives the same slug, the canonical route and archive anchor still
+  // resolve, and nothing is reported. Only a removed URL trips this.
+  const before = new Set(existingSlugsById(OUT_PATH).values());
   const after = new Set(rows.map((row) => row.slug));
   const moved = new Set(movedSlugs);
   const dropped = [...before].filter((slug) => !after.has(slug) && !moved.has(slug));
@@ -176,7 +177,7 @@ function main() {
   // can quietly proceed past a removed URL. A warning here would be exactly the
   // "documented rule nobody reads" this pipeline keeps trying to avoid.
   if (dropped.length > 0 && !allowPermalinkRemoval) {
-    console.error(`\nRefusing to remove ${dropped.length} previously published permalink(s):`);
+    console.error(`\nRefusing to remove ${dropped.length} existing canonical poster URL(s):`);
     for (const slug of dropped) console.error(`  /posters/${slug}/`);
     console.error(
       `\nIf this removal is intentional, re-run with --allow-permalink-removal.\n` +
@@ -204,27 +205,33 @@ function main() {
   }
 
   if (movedSlugs.length > 0) {
-    console.warn(`\n${movedSlugs.length} permalink(s) moved by --allow-slug-change:`);
-    for (const slug of movedSlugs) console.warn(`  /posters/${slug}/ is now retired`);
+    console.warn(`\n${movedSlugs.length} canonical poster URL(s) changed by --allow-slug-change:`);
+    for (const slug of movedSlugs) {
+      console.warn(`  /posters/${slug}/ will no longer resolve after this import`);
+    }
   }
 
   if (allowSlugChange) {
     console.warn(
-      `\n--allow-slug-change: Slug-column edits will move published permalinks.\n` +
-        `Any link already shared for those posters will break.\n`,
+      `\n--allow-slug-change: Slug-column edits will change existing canonical poster URLs.\n` +
+        `If this URL has already been shared, changing it will break those links.\n`,
     );
   }
 
   writeFileSync(OUT_PATH, output);
 
   if (dropped.length > 0) {
-    console.warn(`\n--allow-permalink-removal: removing previously published URL(s):`);
+    console.warn(
+      `\n--allow-permalink-removal: removing existing canonical poster URL(s):`,
+    );
     for (const slug of dropped) console.warn(`  /posters/${slug}/`);
     console.warn("");
   }
 
   if (keptSlugs.length > 0) {
-    console.log(`\nKept ${keptSlugs.length} published permalink(s) despite title changes:`);
+    console.log(
+      `\nKept ${keptSlugs.length} existing canonical poster URL(s) despite title changes:`,
+    );
     for (const line of keptSlugs) console.log(`  ${line}`);
     console.log(`Set the Slug column and pass --allow-slug-change to move one deliberately.`);
   }
@@ -234,7 +241,7 @@ function main() {
 
   console.log(`Wrote ${rows.length} poster(s) to ${out ?? "src/data/posters.ts"}`);
   for (const [key, count] of byEvent) console.log(`  ${key}: ${count}`);
-  if (skipped > 0) console.log(`Skipped ${skipped} row(s) not marked for publication.`);
+  if (skipped > 0) console.log(`Skipped ${skipped} row(s) not marked for site inclusion.`);
   console.log(`\nNext: pnpm build && pnpm posters:test`);
 }
 

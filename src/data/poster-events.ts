@@ -13,8 +13,8 @@ export type PosterAuthor = {
 export type Poster = {
   /**
    * Path segment for the canonical `/posters/<slug>/` page and the archive-local
-   * `#poster-<slug>` anchor. Immutable once published — the importer preserves
-   * it across title edits. See sourceUrl below.
+   * `#poster-<slug>` anchor. Immutable once present in generated data — the
+   * importer preserves it across title edits. See sourceUrl below.
    */
   slug: string;
   /** Matches a `PosterEvent.id` below. */
@@ -31,7 +31,7 @@ export type Poster = {
    * not reconstruct public URLs from a bare file ID.
    *
    * The importer extracts the Drive file ID from this URL and uses that ID —
-   * not the URL text — as the stable poster identity for permalink
+   * not the URL text — as the stable poster identity for canonical URL
    * preservation, so a title correction never moves an existing URL.
    *
    * Corrections to the poster file itself must use Drive's "Manage versions →
@@ -42,7 +42,7 @@ export type Poster = {
   /**
    * Drive file ID extracted from sourceUrl by the importer.
    *
-   * Two jobs: it is the stable identity used for permalink preservation, and
+   * Two jobs: it is the stable identity used for canonical URL preservation, and
    * the page derives an optional thumbnail from it. That thumbnail endpoint is
    * undocumented and unsupported — see the comment in index.astro — so nothing
    * on the page may depend on the image loading.

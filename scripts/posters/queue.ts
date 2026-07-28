@@ -2,8 +2,8 @@
  * Reader and validator for the poster publish queue CSV.
  *
  * The queue is the editorial source of truth; `import-posters.ts` turns it into
- * src/data/posters.ts. Everything that can silently break a published URL is
- * checked here rather than left to review.
+ * src/data/posters.ts. Everything that can silently change an existing
+ * canonical poster URL is checked here rather than left to review.
  */
 
 import { readFileSync } from "node:fs";
@@ -46,9 +46,9 @@ const REQUIRED = ["publish", "title", "authors", "abstract", "sourceUrl"] as con
  * `Publish` is the only thing that decides what appears on the site.
  *
  * It is deliberately not a workflow status. The importer regenerates the whole
- * data file, so whatever it selects *is* the site — and if it keyed off a
- * status, advancing a row to PUBLISHED after merge would delete that poster on
- * the next run. Publication intent and workflow state are different things.
+ * data file, so whatever it selects *is* the site — and keying off a changing
+ * workflow status could delete a poster on the next run. Site inclusion intent
+ * and workflow state are different things.
  */
 const TRUTHY = new Set(["yes", "y", "true", "1", "x", "checked"]);
 
@@ -57,11 +57,12 @@ const TRUTHY = new Set(["yes", "y", "true", "1", "x", "checked"]);
  *
  * It regenerates the whole of src/data/posters.ts from a single event's queue,
  * so there is no version of a `--event` flag that delivers multi-event support:
- * importing a DEF CON 35 queue would drop every DEF CON 34 permalink and trip
- * the removal guard. A flag would only make the interface look capable.
+ * importing a DEF CON 35 queue would remove every existing DEF CON 34 canonical
+ * poster URL and trip the removal guard. A flag would only make the interface
+ * look capable.
  *
  * Adding a second event is a real design decision — per-event generated files,
- * or one global queue carrying every historical poster — and should be made
+ * or one global queue carrying every event's posters — and should be made
  * then, not faked now.
  */
 export const EVENT_ID = "defcon-34";
@@ -138,7 +139,7 @@ export function slugify(value: string): string {
  * tags that vary by where the link was copied from, and a resource key may or
  * may not be appended — all of which are different strings for the same file.
  * Identity must key on the ID, not the URL text, or re-copying a link silently
- * mints a new permalink and defeats duplicate detection.
+ * creates a new identity and defeats duplicate detection.
  */
 export function driveFileId(value: string): string | null {
   try {
@@ -152,20 +153,20 @@ export function driveFileId(value: string): string | null {
 }
 
 /**
- * Slugs must survive title edits, because they are the public permalink.
+ * Slugs must survive title edits, because they define canonical poster URLs.
  *
  * Rather than requiring organizers to hand-curate a Slug column for 30-50
  * rows — new work, and a new way to get it wrong — identity is keyed on the
  * Drive link, which does not change when a title is corrected (and survives
- * "Manage versions" replacements). If a link is already published under a
- * slug, that slug is kept no matter what the title now says.
+ * "Manage versions" replacements). If a generated record already exists for a
+ * Drive file ID, its slug is kept no matter what the title now says.
  *
  * This is not the incremental-merge logic rejected elsewhere: record *content*
  * is still fully regenerated every run. Only the identifier is sticky.
  */
 export const DEFAULT_DATA_PATH = new URL("../../src/data/posters.ts", import.meta.url);
 
-export function publishedSlugsById(dataPath: URL | string = DEFAULT_DATA_PATH): Map<string, string> {
+export function existingSlugsById(dataPath: URL | string = DEFAULT_DATA_PATH): Map<string, string> {
   const map = new Map<string, string>();
   try {
     const source = readFileSync(dataPath, "utf8");
@@ -178,7 +179,7 @@ export function publishedSlugsById(dataPath: URL | string = DEFAULT_DATA_PATH): 
       if (id) map.set(id, JSON.parse(`"${slug[1]}"`));
     }
   } catch {
-    // First run, or the file was deleted. Nothing published yet.
+    // First run, or the file was deleted: no canonical poster routes existed in the baseline.
   }
   return map;
 }
@@ -235,11 +236,11 @@ export type ReadResult = {
   rows: QueueRow[];
   errors: string[];
   skipped: number;
-  /** Rows whose title changed after publication; the old slug was retained. */
+  /** Existing generated records whose title changed; the existing slug was retained. */
   keptSlugs: string[];
   /**
    * Old slugs deliberately vacated by an authorised --allow-slug-change.
-   * The permalink-removal guard subtracts these: moving a URL necessarily
+   * The canonical URL removal guard subtracts these: moving a URL necessarily
    * removes the old one, and that operation was already authorised by its own
    * flag. Requiring both flags for one intent would just train people to pass
    * both every time.
@@ -251,7 +252,7 @@ export function readQueue(
   csvPath: string,
   options: { allowSlugChange?: boolean; dataPath?: URL | string } = {},
 ): ReadResult {
-  const published = publishedSlugsById(options.dataPath);
+  const existingSlugs = existingSlugsById(options.dataPath);
   const keptSlugs: string[] = [];
   const movedSlugs: string[] = [];
   const table = parseCsv(readFileSync(csvPath, "utf8"));
@@ -290,33 +291,35 @@ export function readQueue(
 
     const suppliedSlug = cell(raw, "slug");
     const requestedSlug = slugify(suppliedSlug || title);
-    const alreadyPublished = sourceId ? published.get(sourceId) : undefined;
+    const existingSlug = sourceId ? existingSlugs.get(sourceId) : undefined;
 
-    // Once a poster is published its permalink is frozen — including against an
-    // edited Slug cell. A column humans can edit is a weaker guarantee than one
-    // they cannot, so moving a live URL takes an explicit flag, not a cell edit.
+    // Once a poster exists in generated data, its canonical URL is frozen —
+    // including against an edited Slug cell. A column humans can edit is a
+    // weaker guarantee than one they cannot, so changing an existing canonical
+    // poster URL takes an explicit flag, not a cell edit.
     //
-    // The published slug is the default for EVERY published row. --allow-slug-change
-    // authorises one specific Slug-column edit; it must not become a licence to
-    // reslug every title-corrected poster that happens to be in the same run.
+    // The existing slug is the default for EVERY existing generated record.
+    // --allow-slug-change authorises one specific Slug-column edit; it must not
+    // become a licence to reslug every title-corrected poster in the same run.
     let slug = requestedSlug;
-    if (alreadyPublished) {
-      const explicitChange = Boolean(suppliedSlug) && requestedSlug !== alreadyPublished;
+    if (existingSlug) {
+      const explicitChange = Boolean(suppliedSlug) && requestedSlug !== existingSlug;
 
       if (explicitChange && options.allowSlugChange) {
         slug = requestedSlug;
-        movedSlugs.push(alreadyPublished);
+        movedSlugs.push(existingSlug);
       } else if (explicitChange) {
-        slug = alreadyPublished;
+        slug = existingSlug;
         fail(
-          `slug change from "${alreadyPublished}" to "${requestedSlug}" ` +
-            `would break shared links — re-run with --allow-slug-change to confirm`,
+          `slug change from "${existingSlug}" to "${requestedSlug}" ` +
+            `would change an existing canonical poster URL — ` +
+            `re-run with --allow-slug-change to confirm`,
         );
       } else {
-        slug = alreadyPublished;
-        if (!suppliedSlug && requestedSlug !== alreadyPublished) {
+        slug = existingSlug;
+        if (!suppliedSlug && requestedSlug !== existingSlug) {
           keptSlugs.push(
-            `row ${rowNumber}: kept published slug "${alreadyPublished}" ` +
+            `row ${rowNumber}: kept existing slug "${existingSlug}" ` +
               `(title now suggests "${requestedSlug}")`,
           );
         }
