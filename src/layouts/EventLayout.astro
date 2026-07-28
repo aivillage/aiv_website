@@ -19,18 +19,34 @@ const url = eventPath(event);
 const shareUrl = new URL(url, Astro.site ?? "https://aivillage.org").toString();
 const scheduleLinks = scheduleRoutesForEvent(event.id);
 const posterEvent = posterEvents.find((item) => item.eventPath === url);
+const eventImage =
+  typeof event.data.image === "string"
+    ? { path: event.data.image, alt: event.data.title }
+    : event.data.image
+      ? {
+          path: event.data.image.path,
+          alt: event.data.image.alt ?? event.data.title,
+        }
+      : undefined;
 ---
 
-<BaseLayout title={event.data.title} description={event.data.description} canonical={url} type="event" eventDate={event.data.date} eventLocation={event.data.location}>
+<BaseLayout title={event.data.title} description={event.data.description} canonical={url} image={eventImage?.path} type="event" eventDate={event.data.date} eventLocation={event.data.location}>
   <PageShell>
     <article class="event">
-      <header class="event-header event-layout__header">
-        <h1>{event.data.title}</h1>
-        <div class="event-meta event-layout__meta">
-          <div><strong>📅 Date:</strong> <time datetime={isoDate(event.data.date)}>{formatDate(event.data.date)}</time></div>
-          {event.data.location && <div><strong>📍 Location:</strong> {event.data.location}</div>}
+      <header class:list={["event-header", "event-layout__header", eventImage && "event-layout__header--with-image"]}>
+        <div class="event-layout__hero-copy">
+          <h1>{event.data.title}</h1>
+          <div class="event-meta event-layout__meta">
+            <div><strong>📅 Date:</strong> <time datetime={isoDate(event.data.date)}>{formatDate(event.data.date)}</time></div>
+            {event.data.location && <div><strong>📍 Location:</strong> {event.data.location}</div>}
+          </div>
+          {event.data.description && <div class="event-description content-note content-note--accent-primary event-layout__description"><p>{event.data.description}</p></div>}
         </div>
-        {event.data.description && <div class="event-description content-note content-note--accent-primary event-layout__description"><p>{event.data.description}</p></div>}
+        {eventImage && (
+          <figure class="event-layout__artwork">
+            <img src={eventImage.path} alt={eventImage.alt} loading="eager" decoding="async" />
+          </figure>
+        )}
       </header>
       <div class="event-content event-layout__content">
         <Content />
@@ -81,8 +97,29 @@ const posterEvent = posterEvents.find((item) => item.eventPath === url);
     margin-bottom: 2rem;
   }
 
+  .event-layout__header--with-image {
+    align-items: start;
+    display: grid;
+    gap: clamp(2rem, 5vw, 4rem);
+    grid-template-columns: minmax(0, 1fr) minmax(22.5rem, 25rem);
+  }
+
   .event-layout__header h1 {
     margin: 0 0 1rem;
+  }
+
+  .event-layout__artwork {
+    justify-self: end;
+    margin: 0;
+    max-width: 25rem;
+    width: 100%;
+  }
+
+  .event-layout__artwork img {
+    display: block;
+    height: auto;
+    max-width: 100%;
+    width: 100%;
   }
 
   .event-layout__meta {
@@ -166,5 +203,16 @@ const posterEvent = posterEvents.find((item) => item.eventPath === url);
 
   .event-share a {
     margin-inline: 0.5rem;
+  }
+
+  @media (max-width: 56rem) {
+    .event-layout__header--with-image {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .event-layout__artwork {
+      justify-self: start;
+      max-width: 25rem;
+    }
   }
 </style>

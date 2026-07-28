@@ -39,6 +39,7 @@ const events = defineCollection({
     date: z.coerce.date(),
     description: z.string().optional(),
     location: z.string().optional(),
+    image: image.optional(),
     permalink: z.string().optional(),
     externalUrl: z.url().optional(),
     canonicalSlug: z.string().optional(),
