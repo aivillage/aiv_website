@@ -8,6 +8,7 @@ import { eventPath, formatDate, isoDate, truncate } from "../utils/site";
 import { posterEvents } from "../data/poster-events";
 import { scheduleRoutesForEvent } from "../data/schedules";
 import { volunteerApplicationUrl } from "../data/site";
+import { normalizeImage, selectEventSocialImage } from "../utils/social-images";
 
 const { event, previous, next, Content } = Astro.props as {
   event: EventEntry;
@@ -19,18 +20,11 @@ const url = eventPath(event);
 const shareUrl = new URL(url, Astro.site ?? "https://aivillage.org").toString();
 const scheduleLinks = scheduleRoutesForEvent(event.id);
 const posterEvent = posterEvents.find((item) => item.eventPath === url);
-const eventImage =
-  typeof event.data.image === "string"
-    ? { path: event.data.image, alt: event.data.title }
-    : event.data.image
-      ? {
-          path: event.data.image.path,
-          alt: event.data.image.alt ?? event.data.title,
-        }
-      : undefined;
+const eventImage = normalizeImage(event.data.image);
+const socialImage = selectEventSocialImage(event.data);
 ---
 
-<BaseLayout title={event.data.title} description={event.data.description} canonical={url} image={eventImage?.path} type="event" eventDate={event.data.date} eventLocation={event.data.location}>
+<BaseLayout title={event.data.title} description={event.data.description} canonical={url} image={socialImage.path} socialImageAlt={socialImage.alt} type="event" eventDate={event.data.date} eventLocation={event.data.location}>
   <PageShell>
     <article class="event">
       <header class:list={["event-header", "event-layout__header", eventImage && "event-layout__header--with-image"]}>
@@ -44,7 +38,7 @@ const eventImage =
         </div>
         {eventImage && (
           <figure class="event-layout__artwork">
-            <img src={eventImage.path} alt={eventImage.alt} loading="eager" decoding="async" />
+            <img src={eventImage.path} alt={eventImage.alt ?? event.data.title} loading="eager" decoding="async" />
           </figure>
         )}
       </header>

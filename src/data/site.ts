@@ -12,3 +12,5 @@ export const site = {
 } as const;
 
 export const volunteerApplicationUrl = "https://forms.gle/sFyr1rVeqKAPXhG4A";
+
+export const defaultSocialImageSource = "/assets/images/aiv_logo.svg";

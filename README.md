@@ -24,7 +24,9 @@ pnpm build
 pnpm lint
 ```
 
-`pnpm build` runs Astro checks, the static build, redirect verification, and internal canonical-link verification.
+`pnpm build` runs Astro/type checks, Markdown heading checks, offline social-image
+generation, the Astro static build, redirect verification, internal-link
+verification, and emitted social-image verification.
 
 ## Adding Content
 

@@ -10,7 +10,7 @@ node_modules/
 .pnpm-store/
 
 /public/assets/images/posters/
-/public/generated/posters/
+/public/generated/
 
 /csv/*
 !/csv/README.md

@@ -7,6 +7,8 @@ const image = z.union([
   z.object({
     path: z.string(),
     alt: z.string().optional(),
+    width: z.number().int().positive().optional(),
+    height: z.number().int().positive().optional(),
   }),
 ]);
 
@@ -22,7 +24,8 @@ const blog = defineCollection({
     description: z.string().optional(),
     excerpt: z.string().optional(),
     image: image.optional(),
-    cover: z.string().optional(),
+    cover: image.optional(),
+    socialImage: image.optional(),
     author_profile: z.boolean().optional(),
     draft: z.boolean().default(false),
     slug: z.string().optional(),
@@ -40,6 +43,7 @@ const events = defineCollection({
     description: z.string().optional(),
     location: z.string().optional(),
     image: image.optional(),
+    socialImage: image.optional(),
     permalink: z.string().optional(),
     externalUrl: z.url().optional(),
     canonicalSlug: z.string().optional(),

@@ -9,7 +9,7 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro check && tsx scripts/check-markdown-headings.ts && astro build && tsx scripts/verify-redirects.ts && tsx scripts/check-internal-links.ts",
+    "build": "astro check && tsx scripts/check-markdown-headings.ts && tsx scripts/og/generate-og-images.ts && astro build && tsx scripts/verify-redirects.ts && tsx scripts/check-internal-links.ts && tsx scripts/check-og-images.ts",
     "preview": "astro preview",
     "check": "astro check",
     "lint": "eslint .",
@@ -17,6 +17,9 @@
     "verify:redirects": "tsx scripts/verify-redirects.ts",
     "check:internal-links": "tsx scripts/check-internal-links.ts",
     "check:contrast": "node scripts/contrast-check.mjs",
+    "generate:og-images": "tsx scripts/og/generate-og-images.ts",
+    "check:og-images": "tsx scripts/check-og-images.ts",
+    "test:og-images": "tsx scripts/og/social-images.test.ts",
     "posters:import": "tsx scripts/posters/import-posters.ts",
     "posters:test": "tsx scripts/posters/slug-stability.test.ts"
   },
@@ -42,7 +45,9 @@
     "eslint": "^10.6.0",
     "eslint-plugin-astro": "^2.1.1",
     "globals": "^17.7.0",
+    "gray-matter": "^4.0.3",
     "prettier": "^3.8.5",
+    "sharp": "0.34.5",
     "tsx": "^4.22.4",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.62.0"
