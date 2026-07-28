@@ -10,5 +10,5 @@ the sanitized Website Publish Queue must never be committed.
 Import the sanitized queue with:
 
 ```bash
-pnpm posters:import "csv/Website Publish Queue.csv"
+pnpm posters:import csv/queue.csv
 ```
