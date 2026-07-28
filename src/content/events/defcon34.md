@@ -1,6 +1,7 @@
 ---
 title: "AI Village @ DEF CON 34"
 date: 2026-08-06
+endDate: 2026-08-09
 description: "AI Village returns to DEF CON 34 in LVCC W603 with competitions, Creator Stage talks, poster presentations, fireside chats, and demos."
 location: "LVCC, Level 1, Room W603, Las Vegas, NV"
 image:

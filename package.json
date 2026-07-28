@@ -21,7 +21,8 @@
     "check:og-images": "tsx scripts/check-og-images.ts",
     "test:og-images": "tsx scripts/og/social-images.test.ts",
     "posters:import": "tsx scripts/posters/import-posters.ts",
-    "posters:test": "tsx scripts/posters/slug-stability.test.ts"
+    "posters:test": "tsx scripts/posters/slug-stability.test.ts",
+    "events:test": "tsx scripts/events/date-range.test.ts"
   },
   "dependencies": {
     "@astrojs/mdx": "^7.0.0",

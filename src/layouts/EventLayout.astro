@@ -4,7 +4,7 @@ import PageShell from "../components/layout/PageShell.astro";
 import EventPosters from "../components/posters/EventPosters.astro";
 import type { AstroComponentFactory } from "astro/runtime/server/index.js";
 import type { EventEntry } from "../utils/site";
-import { eventPath, formatDate, isoDate, truncate } from "../utils/site";
+import { eventPath, formatDateRange, isoDateOnly, truncate } from "../utils/site";
 import { posterEvents } from "../data/poster-events";
 import { scheduleRoutesForEvent } from "../data/schedules";
 import { volunteerApplicationUrl } from "../data/site";
@@ -22,16 +22,34 @@ const scheduleLinks = scheduleRoutesForEvent(event.id);
 const posterEvent = posterEvents.find((item) => item.eventPath === url);
 const eventImage = normalizeImage(event.data.image);
 const socialImage = selectEventSocialImage(event.data);
+const formattedDateRange = formatDateRange(event.data.date, event.data.endDate);
+const isMultiDay =
+  event.data.endDate && isoDateOnly(event.data.endDate) > isoDateOnly(event.data.date);
+const [formattedStartDate, formattedEndDate] = isMultiDay
+  ? formattedDateRange.split("–")
+  : [formattedDateRange, undefined];
 ---
 
-<BaseLayout title={event.data.title} description={event.data.description} canonical={url} image={socialImage.path} socialImageAlt={socialImage.alt} type="event" eventDate={event.data.date} eventLocation={event.data.location}>
+<BaseLayout title={event.data.title} description={event.data.description} canonical={url} image={socialImage.path} socialImageAlt={socialImage.alt} type="event" eventDate={event.data.date} eventEndDate={event.data.endDate} eventLocation={event.data.location}>
   <PageShell>
     <article class="event">
       <header class:list={["event-header", "event-layout__header", eventImage && "event-layout__header--with-image"]}>
         <div class="event-layout__hero-copy">
           <h1>{event.data.title}</h1>
           <div class="event-meta event-layout__meta">
-            <div><strong>📅 Date:</strong> <time datetime={isoDate(event.data.date)}>{formatDate(event.data.date)}</time></div>
+            <div>
+              <strong>📅 {isMultiDay ? "Dates:" : "Date:"}</strong>
+              {" "}
+              {isMultiDay && event.data.endDate ? (
+                <>
+                  <time datetime={isoDateOnly(event.data.date)}>{formattedStartDate}</time>
+                  <span aria-hidden="true">–</span>
+                  <time datetime={isoDateOnly(event.data.endDate)}>{formattedEndDate}</time>
+                </>
+              ) : (
+                <time datetime={isoDateOnly(event.data.date)}>{formattedDateRange}</time>
+              )}
+            </div>
             {event.data.location && <div><strong>📍 Location:</strong> {event.data.location}</div>}
           </div>
           {event.data.description && <div class="event-description content-note content-note--accent-primary event-layout__description"><p>{event.data.description}</p></div>}

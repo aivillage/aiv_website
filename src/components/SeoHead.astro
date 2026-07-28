@@ -4,6 +4,7 @@ import {
   generatedSocialImageDimensions,
   generatedSocialImagePath,
 } from "../utils/social-images";
+import { isoDateOnly } from "../utils/site";
 
 type Props = {
   title?: string;
@@ -15,6 +16,7 @@ type Props = {
   publishedTime?: Date;
   author?: string | string[];
   eventDate?: Date;
+  eventEndDate?: Date;
   eventLocation?: string;
   noindex?: boolean;
 };
@@ -29,6 +31,7 @@ const {
   publishedTime,
   author,
   eventDate,
+  eventEndDate,
   eventLocation,
   noindex = false,
 } = Astro.props;
@@ -74,7 +77,8 @@ const jsonLd =
           "@type": "Event",
           name: title ?? site.title,
           url: canonicalUrl,
-          startDate: eventDate?.toISOString(),
+          startDate: eventDate ? isoDateOnly(eventDate) : undefined,
+          endDate: eventEndDate ? isoDateOnly(eventEndDate) : undefined,
           description,
           location: eventLocation ? { "@type": "Place", name: eventLocation } : undefined,
         }
