@@ -33,49 +33,50 @@ const [formattedStartDate, formattedEndDate] = isMultiDay
 <BaseLayout title={event.data.title} description={event.data.description} canonical={url} image={socialImage.path} socialImageAlt={socialImage.alt} type="event" eventDate={event.data.date} eventEndDate={event.data.endDate} eventLocation={event.data.location}>
   <PageShell>
     <article class="event">
-      <header class:list={["event-header", "event-layout__header", eventImage && "event-layout__header--with-image"]}>
-        <div class="event-layout__hero-copy">
-          <h1>{event.data.title}</h1>
-          <div class="event-meta event-layout__meta">
-            <div>
-              <strong>📅 {isMultiDay ? "Dates:" : "Date:"}</strong>
-              {" "}
-              {isMultiDay && event.data.endDate ? (
-                <>
-                  <time datetime={isoDateOnly(event.data.date)}>{formattedStartDate}</time>
-                  <span aria-hidden="true">–</span>
-                  <time datetime={isoDateOnly(event.data.endDate)}>{formattedEndDate}</time>
-                </>
-              ) : (
-                <time datetime={isoDateOnly(event.data.date)}>{formattedDateRange}</time>
-              )}
-            </div>
-            {event.data.location && <div><strong>📍 Location:</strong> {event.data.location}</div>}
+      <header class="event-header event-layout__header">
+        <h1>{event.data.title}</h1>
+        <div class="event-meta event-layout__meta">
+          <div>
+            <strong>📅 {isMultiDay ? "Dates:" : "Date:"}</strong>
+            {" "}
+            {isMultiDay && event.data.endDate ? (
+              <>
+                <time datetime={isoDateOnly(event.data.date)}>{formattedStartDate}</time>
+                <span aria-hidden="true">–</span>
+                <time datetime={isoDateOnly(event.data.endDate)}>{formattedEndDate}</time>
+              </>
+            ) : (
+              <time datetime={isoDateOnly(event.data.date)}>{formattedDateRange}</time>
+            )}
           </div>
-          {event.data.description && <div class="event-description content-note content-note--accent-primary event-layout__description"><p>{event.data.description}</p></div>}
+          {event.data.location && <div><strong>📍 Location:</strong> {event.data.location}</div>}
         </div>
-        {eventImage && (
-          <figure class="event-layout__artwork">
-            <img
-              src={eventImage.path}
-              alt={eventImage.alt ?? event.data.title}
-              width={eventImage.width}
-              height={eventImage.height}
-              loading="eager"
-              decoding="async"
-            />
-          </figure>
-        )}
+        {event.data.description && <div class="event-description content-note content-note--accent-primary event-layout__description"><p>{event.data.description}</p></div>}
       </header>
+      {eventImage && (
+        <div class="post-cover-wrapper event-layout__cover">
+          <img
+            src={eventImage.path}
+            alt={eventImage.alt ?? event.data.title}
+            width={eventImage.width}
+            height={eventImage.height}
+            class="post-cover"
+            loading="eager"
+            decoding="async"
+          />
+        </div>
+      )}
       <div class="event-content event-layout__content">
         <Content />
       </div>
       {posterEvent && (
-        <EventPosters
-          eventId={posterEvent.id}
-          variant="compact"
-          limit={6}
-        />
+        <div class="event-layout__posters">
+          <EventPosters
+            eventId={posterEvent.id}
+            variant="compact"
+            limit={6}
+          />
+        </div>
       )}
       {scheduleLinks.length > 0 && (
         <section class="card event-layout__schedule">
@@ -113,32 +114,13 @@ const [formattedStartDate, formattedEndDate] = isMultiDay
 
 <style>
   .event-layout__header {
+    margin-inline: auto;
     margin-bottom: 2rem;
-  }
-
-  .event-layout__header--with-image {
-    align-items: start;
-    display: grid;
-    gap: clamp(2rem, 5vw, 4rem);
-    grid-template-columns: minmax(0, 1fr) minmax(22.5rem, 25rem);
+    max-width: var(--aiv-measure-blog);
   }
 
   .event-layout__header h1 {
     margin: 0 0 1rem;
-  }
-
-  .event-layout__artwork {
-    justify-self: end;
-    margin: 0;
-    max-width: 25rem;
-    width: 100%;
-  }
-
-  .event-layout__artwork img {
-    display: block;
-    height: auto;
-    max-width: 100%;
-    width: 100%;
   }
 
   .event-layout__meta {
@@ -162,10 +144,19 @@ const [formattedStartDate, formattedEndDate] = isMultiDay
 
   .event-layout__content {
     line-height: 1.7;
+    margin-inline: auto;
+    max-width: var(--aiv-measure-blog);
+  }
+
+  .event-layout__posters {
+    margin-inline: auto;
+    max-width: var(--aiv-measure-blog);
   }
 
   .event-layout__schedule {
+    margin-inline: auto;
     margin-top: 2rem;
+    max-width: var(--aiv-measure-blog);
   }
 
   .event-layout__schedule h2 {
@@ -174,7 +165,9 @@ const [formattedStartDate, formattedEndDate] = isMultiDay
 
   .event-layout__footer {
     border-top: 1px solid var(--aiv-rule-color);
+    margin-inline: auto;
     margin-top: 3rem;
+    max-width: var(--aiv-measure-blog);
     padding-top: 2rem;
   }
 
@@ -224,14 +217,4 @@ const [formattedStartDate, formattedEndDate] = isMultiDay
     margin-inline: 0.5rem;
   }
 
-  @media (max-width: 56rem) {
-    .event-layout__header--with-image {
-      grid-template-columns: minmax(0, 1fr);
-    }
-
-    .event-layout__artwork {
-      justify-self: start;
-      max-width: 25rem;
-    }
-  }
 </style>
