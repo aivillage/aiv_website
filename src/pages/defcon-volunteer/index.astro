@@ -1,0 +1,343 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageShell from "../../components/layout/PageShell.astro";
+---
+
+<BaseLayout
+  title="DEF CON Volunteer Signup"
+  canonical="/defcon-volunteer/"
+  description="Sign up for AI Village volunteer shifts at DEF CON. Pick at least two shifts that work for your schedule."
+>
+  <PageShell>
+    <article class="post">
+      <header class="post-header">
+        <h1>DEF CON Volunteer Signup</h1>
+      </header>
+      <div class="post-content">
+        <p>
+          Thanks for volunteering with AI Village! Pick at least <strong>two</strong> shifts
+          below that work for your schedule. Shifts that are already full are greyed out.
+          Other volunteers won't see your name or contact info — only AI Village organizers can.
+	  Please email sam@aivillage.org with any questions or concerns about volunteering. Thank you!
+        </p>
+
+        <div id="dv-status" class="dv-status" role="status" aria-live="polite"></div>
+
+        <form id="dv-form" class="dv-form">
+          <div class="dv-field">
+            <label for="dv-name">Name</label>
+            <input type="text" id="dv-name" name="name" autocomplete="name" required />
+          </div>
+          <div class="dv-field">
+            <label for="dv-email">Email</label>
+            <input type="email" id="dv-email" name="email" autocomplete="email" required />
+          </div>
+
+          <div class="dv-shift-table-wrap">
+            <table class="dv-shift-table">
+              <thead>
+                <tr>
+                  <th scope="col">Date</th>
+                  <th scope="col">Time</th>
+                  <th scope="col">Role</th>
+                  <th scope="col">Spots</th>
+                  <th scope="col">Select</th>
+                </tr>
+              </thead>
+              <tbody id="dv-shift-list" aria-live="polite">
+                <tr>
+                  <td colspan="5" class="dv-loading">Loading shifts…</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="dv-submit-row">
+            <span id="dv-selection-count" class="dv-selection-count">0 shifts selected (minimum 2)</span>
+            <button type="submit" id="dv-submit" class="dv-submit" disabled>Sign Up</button>
+          </div>
+        </form>
+      </div>
+    </article>
+  </PageShell>
+</BaseLayout>
+
+<style>
+  .dv-status {
+    margin: 1rem 0;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    display: none;
+  }
+  .dv-status.dv-status--success {
+    display: block;
+    background: rgba(46, 160, 67, 0.15);
+    border: 1px solid rgba(46, 160, 67, 0.4);
+  }
+  .dv-status.dv-status--error {
+    display: block;
+    background: rgba(220, 53, 69, 0.12);
+    border: 1px solid rgba(220, 53, 69, 0.4);
+  }
+
+  .dv-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 720px;
+  }
+
+  .dv-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    max-width: 360px;
+  }
+  .dv-field label {
+    font-weight: 600;
+  }
+  .dv-field input {
+    padding: 0.5rem 0.6rem;
+    border-radius: 6px;
+    border: 1px solid var(--aiv-card-border, #ccc);
+    font-size: 1rem;
+  }
+
+  .dv-shift-table-wrap {
+    margin-top: 1.5rem;
+    overflow-x: auto;
+    border: 1px solid var(--aiv-card-border, #ddd);
+    border-radius: 6px;
+  }
+
+  .dv-shift-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 480px;
+  }
+  .dv-shift-table th,
+  .dv-shift-table td {
+    padding: 0.6rem 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid var(--aiv-card-border, #ddd);
+  }
+  .dv-shift-table thead th {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    opacity: 0.7;
+  }
+  .dv-shift-table tbody tr:last-child td {
+    border-bottom: none;
+  }
+  .dv-shift-table .dv-role {
+    font-weight: 600;
+  }
+  .dv-shift-table .dv-avail {
+    font-size: 0.9rem;
+    opacity: 0.75;
+    white-space: nowrap;
+  }
+  .dv-shift-table .dv-select-cell {
+    text-align: center;
+  }
+
+  .dv-shift-row--full {
+    background: color-mix(in srgb, currentColor 6%, transparent);
+    opacity: 0.5;
+  }
+  .dv-shift-row--full .dv-select-cell {
+    cursor: not-allowed;
+  }
+  .dv-shift-row--full .dv-avail {
+    font-weight: 600;
+    opacity: 1;
+  }
+
+  .dv-submit-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  .dv-selection-count {
+    font-size: 0.95rem;
+    opacity: 0.8;
+  }
+  .dv-submit {
+    padding: 0.6rem 1.4rem;
+    border-radius: 6px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    background: var(--aiv-action-primary, #2563eb);
+    color: #fff;
+  }
+  .dv-submit:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .dv-loading {
+    opacity: 0.7;
+  }
+</style>
+
+<script>
+  // ---- CONFIGURE THIS: your deployed Apps Script /exec URL ----
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx6PSEVinDjGbXpnzbIFeQO1L0WGOHB0Q-bWnU8fYN-QU3ySNbpTDu8WDcRKq7laLFD_A/exec";
+
+  const shiftListEl = document.getElementById("dv-shift-list")!;
+  const statusEl = document.getElementById("dv-status")!;
+  const formEl = document.getElementById("dv-form") as HTMLFormElement;
+  const submitBtn = document.getElementById("dv-submit") as HTMLButtonElement;
+  const countEl = document.getElementById("dv-selection-count")!;
+
+  function formatShiftDate(dateStr: string): string {
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return dateStr;
+    // Format in UTC so the calendar date shown matches the event date
+    // regardless of the viewer's local timezone.
+    return d.toLocaleDateString("en-US", {
+      weekday: "long",
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+      timeZone: "UTC",
+    });
+  }
+
+  function renderShifts(shifts: any[]) {
+    const sorted = [...shifts].sort((a, b) => {
+      const dayDiff = new Date(a.date).getTime() - new Date(b.date).getTime();
+      if (dayDiff !== 0) return dayDiff;
+      if (a.time !== b.time) return a.time.localeCompare(b.time);
+      return a.role.localeCompare(b.role);
+    });
+
+    shiftListEl.innerHTML = "";
+
+    sorted.forEach((shift: any) => {
+      const isFull = shift.available <= 0;
+      const row = document.createElement("tr");
+      row.className = "dv-shift-row" + (isFull ? " dv-shift-row--full" : "");
+      row.innerHTML = `
+        <td>${formatShiftDate(shift.date)}</td>
+        <td>${shift.time}</td>
+        <td class="dv-role">${shift.role}</td>
+        <td class="dv-avail">${isFull ? "Full" : shift.available + " of " + shift.capacity + " open"}</td>
+        <td class="dv-select-cell">
+          <input type="checkbox" name="shift" value="${shift.shiftId}" ${isFull ? "disabled" : ""} aria-label="Select shift: ${shift.role} on ${formatShiftDate(shift.date)} at ${shift.time}" />
+        </td>
+      `;
+      shiftListEl.appendChild(row);
+    });
+
+    updateSelectionCount();
+  }
+
+  function updateSelectionCount() {
+    const checked = formEl.querySelectorAll('input[name="shift"]:checked').length;
+    countEl.textContent = `${checked} shift${checked === 1 ? "" : "s"} selected (minimum 2)`;
+    submitBtn.disabled = checked < 2;
+    if (checked >= 2 && submitBtn.textContent === "Thank you!") {
+      submitBtn.textContent = "Sign Up";
+    }
+  }
+
+  function showStatus(message: string, kind: "success" | "error") {
+    statusEl.textContent = message;
+    statusEl.className = "dv-status dv-status--" + kind;
+  }
+
+  // Apps Script web apps don't send Access-Control-Allow-Origin, so a plain
+  // fetch() gets blocked by CORS. JSONP sidesteps this entirely by loading
+  // the response through a <script> tag (never CORS-checked) instead of an
+  // XHR/fetch call — the server wraps its JSON in the callback name we pass.
+  function jsonp(url: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      const callbackName = "dvCb_" + Math.random().toString(36).slice(2);
+      const script = document.createElement("script");
+
+      const cleanup = () => {
+        delete (window as any)[callbackName];
+        script.remove();
+      };
+
+      (window as any)[callbackName] = (data: any) => {
+        cleanup();
+        resolve(data);
+      };
+
+      script.onerror = () => {
+        cleanup();
+        reject(new Error("Request failed"));
+      };
+
+      const separator = url.includes("?") ? "&" : "?";
+      script.src = url + separator + "callback=" + callbackName;
+      document.body.appendChild(script);
+    });
+  }
+
+  async function loadShifts() {
+    try {
+      const data = await jsonp(SCRIPT_URL);
+      if (!data.success) throw new Error(data.message || "Failed to load shifts.");
+      renderShifts(data.shifts);
+    } catch (err: any) {
+      shiftListEl.innerHTML = `<tr><td colspan="5" class="dv-loading">Couldn't load shifts right now. Please refresh the page.</td></tr>`;
+    }
+  }
+
+  shiftListEl.addEventListener("change", (e) => {
+    const target = e.target as HTMLElement;
+    if (target && (target as HTMLInputElement).name === "shift") {
+      updateSelectionCount();
+    }
+  });
+
+  formEl.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const name = (document.getElementById("dv-name") as HTMLInputElement).value.trim();
+    const email = (document.getElementById("dv-email") as HTMLInputElement).value.trim();
+    const shiftIds = Array.from(
+      formEl.querySelectorAll('input[name="shift"]:checked')
+    ).map((el) => (el as HTMLInputElement).value);
+
+    if (shiftIds.length < 2) {
+      showStatus("Please select at least 2 shifts.", "error");
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Submitting…";
+
+    try {
+      const params = new URLSearchParams({
+        action: "signup",
+        name: name,
+        email: email,
+        shiftIds: shiftIds.join(","),
+      });
+      const data = await jsonp(SCRIPT_URL + "?" + params.toString());
+      if (data.success) {
+        showStatus(data.message, "success");
+        formEl.reset();
+        submitBtn.textContent = "Thank you!";
+        if (data.shifts) renderShifts(data.shifts);
+        else loadShifts();
+      } else {
+        showStatus(data.message || "Something went wrong. Please try again.", "error");
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Sign Up";
+      }
+    } catch (err) {
+      showStatus("Couldn't reach the signup service. Please try again.", "error");
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Sign Up";
+    }
+  });
+
+  loadShifts();
+</script>

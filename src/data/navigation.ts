@@ -28,6 +28,7 @@ export const footerNavSections = [
       { label: "Community", href: "/community/" },
       { label: "Discord", href: "/discord/" },
       { label: "Volunteer Application", href: volunteerApplicationUrl, external: true },
+      { label: "DEF CON Volunteer Signup", href: "/defcon-volunteer/" },
       { label: "Code of Conduct", href: "/about/conduct/" },
     ],
   },
