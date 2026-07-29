@@ -1,0 +1,32 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageShell from "../../components/layout/PageShell.astro";
+import {
+  Content as PlayerPreview,
+} from "../../content-mirrors/halctf/PLAYER-PREVIEW.md";
+---
+
+<BaseLayout
+  title="HalCTF Player Preview"
+  description="Everything competitors need to start planning and building an autonomous agent for HalCTF at AI Village."
+  canonical="/halctf/player-preview/"
+  image="/assets/images/2026-07-24-halctf/HalCTF.png"
+>
+  <PageShell>
+    <article class="post">
+      <nav aria-label="HalCTF resources">
+        <a href="/blog/halctf/">← HalCTF announcement</a>
+      </nav>
+
+      <div class="post-content">
+        <PlayerPreview />
+      </div>
+    </article>
+  </PageShell>
+</BaseLayout>
+
+<style>
+  .post :global(:not(pre) > code) {
+    overflow-wrap: anywhere;
+  }
+</style>
