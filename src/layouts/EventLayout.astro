@@ -50,7 +50,7 @@ const [formattedStartDate, formattedEndDate] = isMultiDay
   : [formattedDateRange, undefined];
 ---
 
-<BaseLayout title={event.data.title} description={event.data.description} canonical={url} image={socialImage.path} socialImageAlt={socialImage.alt} type="event" eventDate={event.data.date} eventEndDate={event.data.endDate} eventLocation={event.data.location}>
+<BaseLayout title={event.data.title} canonical={url} image={socialImage.path} socialImageAlt={socialImage.alt} type="event" eventDate={event.data.date} eventEndDate={event.data.endDate} eventLocation={event.data.location}>
   <PageShell>
     <article class="event">
       <header class="event-header event-layout__header">
@@ -71,7 +71,6 @@ const [formattedStartDate, formattedEndDate] = isMultiDay
           </div>
           {event.data.location && <div><strong>📍 Location:</strong> {event.data.location}</div>}
         </div>
-        {event.data.description && <div class="event-description content-note content-note--accent-primary event-layout__description"><p>{event.data.description}</p></div>}
       </header>
       {eventImage && (
         <div class="post-cover-wrapper event-layout__cover">
