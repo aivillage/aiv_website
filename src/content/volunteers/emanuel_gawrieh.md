@@ -4,7 +4,7 @@ last_name: Gawrieh
 position: Co-Chair, R&D Labs Lead 
 expertise: Disaggregated Acceleration, AI Systems Security, Hardware and Infrastructure Security shenanigams. 
 affiliation: Google
-profile: emanuel_gawrieh.jpg
+profile: emanuel_gawrieh.webp
 bio: true # If you don't want to include a bio, change this to false.
 order: 5
 

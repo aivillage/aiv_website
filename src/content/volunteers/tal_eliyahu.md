@@ -3,7 +3,7 @@ first_name: Tal
 last_name: Eliyahu
 position: Director, Cybersecurity & Technology Innovation 
 affiliation: InnovGuard
-profile: tal_eliyahu.jpg
+profile: tal_eliyahu.webp
 bio: true # If you don't want to include a bio, change this to false.
 order: 7
 

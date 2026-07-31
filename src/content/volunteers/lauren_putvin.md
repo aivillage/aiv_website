@@ -2,7 +2,7 @@
 first_name: Lauren
 last_name: Putvin
 position: Steering Committee Member
-profile: lauren_putvin.jpg
+profile: lauren_putvin.webp
 bio: true # If you don't want to include a bio, change this to false.
 order: 2
 
