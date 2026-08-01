@@ -91,7 +91,7 @@ const headingId = `${event.id}-${variant}-posters-heading`;
           <PosterCard
             poster={poster}
             variant={variant}
-            deferThumbnail={variant === "compact"}
+            deferThumbnail
           />
         ))}
       </ul>
@@ -139,11 +139,11 @@ const headingId = `${event.id}-${variant}-posters-heading`;
     const selected = shuffled.slice(0, limit);
     grid.replaceChildren(...selected);
 
-    selected.forEach((card) => {
+    const pendingThumbnails = selected.flatMap((card) => {
       const image = card.querySelector("[data-poster-thumb-src]");
       const container = image?.closest("[data-poster-thumb]");
       if (!(image instanceof HTMLImageElement) || !(container instanceof HTMLElement)) {
-        return;
+        return [];
       }
 
       const show = () => {
@@ -155,17 +155,52 @@ const headingId = `${event.id}-${variant}-posters-heading`;
         card.classList.add("poster-card--no-thumb");
       };
 
+      // Reserve the thumbnail's aspect-ratio space before it is requested so
+      // the card can be observed without causing layout shift.
+      show();
       image.addEventListener("load", show, { once: true });
       image.addEventListener("error", hide, { once: true });
-      image.loading = "eager";
-      image.src = image.dataset.posterThumbSrc;
+      image.loading = "lazy";
+      image.fetchPriority = "low";
+
+      return [{ card, image, show, hide }];
+    });
+
+    const loadThumbnail = ({ image, show, hide }) => {
+      const source = image.dataset.posterThumbSrc;
+      if (!source) return;
+
+      image.src = source;
       image.removeAttribute("data-poster-thumb-src");
 
       if (image.complete) {
         if (image.naturalWidth === 0) hide();
         else show();
       }
-    });
+    };
+
+    if (!("IntersectionObserver" in window)) {
+      pendingThumbnails.forEach(loadThumbnail);
+      return;
+    }
+
+    const thumbnailByCard = new Map(
+      pendingThumbnails.map((thumbnail) => [thumbnail.card, thumbnail]),
+    );
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+
+          const thumbnail = thumbnailByCard.get(entry.target);
+          if (thumbnail) loadThumbnail(thumbnail);
+          observer.unobserve(entry.target);
+        });
+      },
+      { rootMargin: "400px 0px" },
+    );
+
+    pendingThumbnails.forEach(({ card }) => observer.observe(card));
   });
 </script>
 

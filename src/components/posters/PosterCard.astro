@@ -31,16 +31,24 @@ function formatPosterNumber(value: number): string {
  * complete without one, and the script below removes the thumbnail container
  * if Google's unsupported endpoint fails.
  */
-function thumbnailUrl(driveFileId: string): string {
-  return `https://drive.google.com/thumbnail?id=${encodeURIComponent(driveFileId)}&sz=w1200`;
+function thumbnailUrl(driveFileId: string, width: number): string {
+  return `https://drive.google.com/thumbnail?id=${encodeURIComponent(driveFileId)}&sz=w${width}`;
 }
+
+const thumbnailWidth = isArchive ? 1200 : 800;
+const archiveThumbnailSrcset = isArchive
+  ? [600, 800, 900, 1200]
+      .map((width) => `${thumbnailUrl(poster.driveFileId, width)} ${width}w`)
+      .join(", ")
+  : undefined;
+const archiveThumbnailSizes = "(max-width: 48rem) calc(100vw - 2rem), 35rem";
 ---
 
 <li
   class:list={[
     "poster-card",
     `poster-card--${variant}`,
-    { "poster-card--no-thumb": deferThumbnail },
+    { "poster-card--no-thumb": deferThumbnail && !isArchive },
   ]}
   id={isArchive ? `poster-${poster.slug}` : undefined}
   data-poster-card={isArchive ? true : undefined}
@@ -63,13 +71,16 @@ function thumbnailUrl(driveFileId: string): string {
       href={detailPath}
       aria-label={`View details: ${poster.title}`}
       data-poster-thumb
-      hidden={deferThumbnail}
+      hidden={deferThumbnail && !isArchive}
     >
       <img
-        src={deferThumbnail ? undefined : thumbnailUrl(poster.driveFileId)}
-        data-poster-thumb-src={deferThumbnail ? thumbnailUrl(poster.driveFileId) : undefined}
+        src={deferThumbnail ? undefined : thumbnailUrl(poster.driveFileId, thumbnailWidth)}
+        data-poster-thumb-src={deferThumbnail ? thumbnailUrl(poster.driveFileId, 800) : undefined}
+        data-poster-thumb-srcset={deferThumbnail && isArchive ? archiveThumbnailSrcset : undefined}
+        data-poster-thumb-sizes={deferThumbnail && isArchive ? archiveThumbnailSizes : undefined}
         alt=""
         loading="lazy"
+        fetchpriority={deferThumbnail ? "low" : undefined}
         decoding="async"
         referrerpolicy="no-referrer"
         data-poster-thumb-img
@@ -106,29 +117,93 @@ function thumbnailUrl(driveFileId: string): string {
 </li>
 
 <script>
-  document.querySelectorAll("[data-poster-thumb-img]").forEach((image) => {
-    const hide = () => {
-      const container = image.closest("[data-poster-thumb]");
-      if (container instanceof HTMLElement) {
-        container.hidden = true;
-      }
+  const showPosterThumbnail = (image: Element) => {
+    const container = image.closest("[data-poster-thumb]");
+    if (container instanceof HTMLElement) {
+      container.hidden = false;
+    }
 
-      const card = image.closest(".poster-card");
-      if (card instanceof HTMLElement) {
-        card.classList.add("poster-card--no-thumb");
-      }
-    };
+    const card = image.closest(".poster-card");
+    if (card instanceof HTMLElement) {
+      card.classList.remove("poster-card--no-thumb");
+    }
+  };
+
+  const hidePosterThumbnail = (image: Element) => {
+    const container = image.closest("[data-poster-thumb]");
+    if (container instanceof HTMLElement) {
+      container.hidden = true;
+    }
+
+    const card = image.closest(".poster-card");
+    if (card instanceof HTMLElement) {
+      card.classList.add("poster-card--no-thumb");
+    }
+  };
+
+  document.querySelectorAll("[data-poster-thumb-img]").forEach((image) => {
+    const hide = () => hidePosterThumbnail(image);
 
     image.addEventListener("error", hide);
 
     if (
       image instanceof HTMLImageElement &&
+      image.hasAttribute("src") &&
       image.complete &&
       image.naturalWidth === 0
     ) {
       hide();
     }
   });
+
+  const deferredArchiveThumbnails = Array.from(
+    document.querySelectorAll(".poster-card--archive [data-poster-thumb-src]"),
+  ).filter((image): image is HTMLImageElement => image instanceof HTMLImageElement);
+
+  const loadArchiveThumbnail = (image: HTMLImageElement) => {
+    const source = image.dataset.posterThumbSrc;
+    if (!source) return;
+
+    showPosterThumbnail(image);
+    image.addEventListener("load", () => showPosterThumbnail(image), { once: true });
+    const sourceSet = image.dataset.posterThumbSrcset;
+    const sizes = image.dataset.posterThumbSizes;
+    if (sourceSet) image.srcset = sourceSet;
+    if (sizes) image.sizes = sizes;
+    image.src = source;
+    image.removeAttribute("data-poster-thumb-src");
+    image.removeAttribute("data-poster-thumb-srcset");
+    image.removeAttribute("data-poster-thumb-sizes");
+
+    if (image.complete && image.naturalWidth === 0) {
+      hidePosterThumbnail(image);
+    }
+  };
+
+  if (!("IntersectionObserver" in window)) {
+    deferredArchiveThumbnails.forEach(loadArchiveThumbnail);
+  } else {
+    const thumbnailByCard = new Map<Element, HTMLImageElement>();
+    deferredArchiveThumbnails.forEach((image) => {
+      const card = image.closest(".poster-card--archive");
+      if (card instanceof HTMLElement) thumbnailByCard.set(card, image);
+    });
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+
+          const image = thumbnailByCard.get(entry.target);
+          if (image) loadArchiveThumbnail(image);
+          observer.unobserve(entry.target);
+        });
+      },
+      { rootMargin: "400px 0px" },
+    );
+
+    thumbnailByCard.forEach((_image, card) => observer.observe(card));
+  }
 
 </script>
 
