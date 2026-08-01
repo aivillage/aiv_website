@@ -5,6 +5,7 @@ import { pluginLineNumbers } from "@expressive-code/plugin-line-numbers";
 import { pluginLanguageBadge } from "expressive-code-language-badge";
 import mdx from "@astrojs/mdx";
 import rehypeKatex from "rehype-katex";
+import rehypePosterScheduleLinks from "./src/plugins/rehype-poster-schedule-links.mjs";
 import remarkMath from "remark-math";
 
 export default defineConfig({
@@ -62,7 +63,7 @@ export default defineConfig({
   ],
   markdown: {
     remarkPlugins: [remarkMath],
-    rehypePlugins: [rehypeKatex],
+    rehypePlugins: [rehypeKatex, rehypePosterScheduleLinks],
     syntaxHighlight: {
       excludeLangs: ["mermaid"],
     },
