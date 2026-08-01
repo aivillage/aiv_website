@@ -2111,6 +2111,12 @@ details {
     right: 0;
     width: 100%;
     z-index: 1000;
+    transition: transform 0.22s ease;
+    will-change: transform;
+  }
+
+  .site-header.site-header--hidden {
+    transform: translateY(calc(-100% - 1px));
   }
 
   body {
