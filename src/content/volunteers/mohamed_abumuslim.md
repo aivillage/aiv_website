@@ -3,7 +3,7 @@ first_name: Mohamed
 last_name: AbuMuslim
 position: Steering Committee Member
 expertise: Security Research, Red Teaming, Penetration testing and AI/ML Security. 
-profile: abumuslim.JPG
+profile: mohamed_abumuslim.webp
 bio: true # If you don't want to include a bio, change this to false.
 order: 8
 

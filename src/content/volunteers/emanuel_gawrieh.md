@@ -4,7 +4,7 @@ last_name: Gawrieh
 position: Co-Chair, R&D Labs Lead 
 expertise: Disaggregated Acceleration, AI Systems Security, Hardware and Infrastructure Security shenanigams. 
 affiliation: Google
-profile: egawrieh.jpg
+profile: emanuel_gawrieh.webp
 bio: true # If you don't want to include a bio, change this to false.
 order: 5
 
@@ -14,4 +14,4 @@ Emanuel Gawrieh is a Senior Security Engineer, _et cetera_ at Google, where he s
  
 Emanuel's has over 10 years of experience securing high performance workloads with unique hardware and infrastructure requirements across compliance regimes, and - more recently - has been working with the AI Village to prove out hardware and infrastructure configurations aiming at more efficient infrastructure for model serving, red and purple teaming, and acceleration methods best suited to the context.
 
-Emanuel has a background in public policy. He attended Georgetown University Law Center in Washington, D.C. after studying Philosophy at Baylor University in Waco, Texas. 
+Emanuel has a background in public policy. He attended Georgetown University Law Center in Washington, D.C. after studying Philosophy at Baylor University in Waco, Texas.
