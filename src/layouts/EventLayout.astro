@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
 import PageShell from "../components/layout/PageShell.astro";
+import Button from "../components/ui/Button.astro";
 import EventPosters from "../components/posters/EventPosters.astro";
 import EmbeddedEventPosters from "../components/posters/EmbeddedEventPosters.astro";
 import type { AstroComponentFactory } from "astro/runtime/server/index.js";
@@ -38,6 +39,7 @@ const posterPlacement = resolveEventPosterPlacement({
 });
 const isMdxEvent = event.filePath?.toLowerCase().endsWith(".mdx") ?? false;
 const eventContentComponents = {
+  Button,
   EventPosters: EmbeddedEventPosters,
 };
 const eventImage = normalizeImage(event.data.image);
@@ -172,6 +174,20 @@ const [formattedStartDate, formattedEndDate] = isMultiDay
     line-height: 1.7;
     margin-inline: auto;
     max-width: var(--aiv-measure-blog);
+  }
+
+  .event-layout__content :global(.event-jump-links) {
+    align-items: stretch;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-block: 1.5rem 2rem;
+  }
+
+  @media (max-width: 40rem) {
+    .event-layout__content :global(.event-jump-links) {
+      flex-direction: column;
+    }
   }
 
   .event-layout__posters {
