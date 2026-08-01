@@ -150,6 +150,17 @@ export const posters: Poster[] = [
     driveFileId: "1jqap8e7pTx0smzSUOm6WK3PXif01dEH8",
   },
   {
+    slug: "poisoning-the-soc-prompt-injection-via-ingested-telemetry",
+    event: "defcon-34",
+    title: "Poisoning the SOC: Prompt Injection via Ingested Telemetry",
+    authors: [
+      { name: "John Seymour", affiliation: "Salesforce" },
+    ],
+    abstract: "Security teams are wiring LLM agents into every stage of the SOC, from alert triage to investigation, threat hunting, and autonomous response. Every one of those agents reads logs whose contents are, in large part, written by attackers. An attacker who controls those bytes can steer what the agent concludes, deny it the ability to conclude anything, or turn its own tools against the environment. In practice, that means suppressed detections, decoy investigations, denial of analysis, and attacker-directed tool calls, all delivered through fields the attacker already owns.\n\nWe systematically evaluate what this vector buys an attacker across a real enterprise pipeline. We catalogue the attacker-controlled fields that survive ingestion into a production SIEM, then test whether injected content in each field reaches and steers the agents built on top of it. We report what reliably carries an injection through to an agent, which agents are steerable, and which impacts are realistic versus theoretical. A passerby will leave knowing which everyday log fields double as injection vectors, how far an injection actually travels through a real pipeline before it reaches an agent, and which defenses hold up versus which only look like they do. The takeaway is practical: if you are building agents on top of your SOC, here is where the data-to-instruction boundary breaks and how to defend it.",
+    sourceUrl: "https://drive.google.com/file/d/1qkO71SdsClFCjqfmaP4qdPjwRK6vfdk2/view?usp=drive_link",
+    driveFileId: "1qkO71SdsClFCjqfmaP4qdPjwRK6vfdk2",
+  },
+  {
     slug: "policy-driven-agentic-red-teaming",
     event: "defcon-34",
     title: "Policy driven agentic red teaming",
