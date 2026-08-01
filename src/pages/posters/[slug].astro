@@ -58,7 +58,7 @@ const abstractParagraphs = poster.abstract.split(/\n{2,}/).filter(Boolean);
         <p class="poster-detail__event">
           Presented at <a href={event.eventPath}>{event.label}</a>
         </p>
-        <h1>{poster.title}</h1>
+        <h1 class="poster-detail__title">{poster.title}</h1>
         <ul class="poster-detail__authors" role="list">
           {poster.authors.map((author) => (
             <li>
@@ -84,7 +84,7 @@ const abstractParagraphs = poster.abstract.split(/\n{2,}/).filter(Boolean);
       )}
 
       <section class="poster-detail__abstract" aria-labelledby="abstract-heading">
-        <h2 id="abstract-heading">Abstract</h2>
+        <h2 class="poster-detail__abstract-heading" id="abstract-heading">Abstract</h2>
         {abstractParagraphs.map((paragraph) => <p>{paragraph}</p>)}
       </section>
 
@@ -147,7 +147,10 @@ const abstractParagraphs = poster.abstract.split(/\n{2,}/).filter(Boolean);
     margin: 0 0 0.5rem;
   }
 
-  .poster-detail__header h1 {
+  .poster-detail__title {
+    font-size: clamp(1.75rem, 3vw, 2.75rem);
+    font-weight: 600;
+    line-height: 1.1;
     margin: 0;
   }
 
@@ -203,7 +206,8 @@ const abstractParagraphs = poster.abstract.split(/\n{2,}/).filter(Boolean);
     max-width: var(--aiv-measure-prose);
   }
 
-  .poster-detail__abstract h2 {
+  .poster-detail__abstract-heading {
+    font-size: clamp(1.25rem, 2vw, 1.75rem);
     margin-top: 0;
   }
 
@@ -217,5 +221,25 @@ const abstractParagraphs = poster.abstract.split(/\n{2,}/).filter(Boolean);
     flex-wrap: wrap;
     gap: 1.25rem;
     margin-top: 2rem;
+  }
+
+  @media (max-width: 48rem) {
+    .poster-detail__title {
+      font-size: 1.75rem;
+    }
+
+    .poster-detail__abstract-heading {
+      font-size: 1.5rem;
+    }
+  }
+
+  @media (max-width: 30rem) {
+    .poster-detail__title {
+      font-size: 1.5rem;
+    }
+
+    .poster-detail__abstract-heading {
+      font-size: 1.25rem;
+    }
   }
 </style>
