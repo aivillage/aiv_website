@@ -14,6 +14,8 @@ const here = dirname(fileURLToPath(import.meta.url));
 const repositoryRoot = resolve(here, "../..");
 const eventsDirectory = resolve(repositoryRoot, "src/content/events");
 const defcon34Path = resolve(eventsDirectory, "defcon34.mdx");
+const eventPostersPath = resolve(repositoryRoot, "src/components/posters/EventPosters.astro");
+const posterCardPath = resolve(repositoryRoot, "src/components/posters/PosterCard.astro");
 
 function test(name: string, run: () => void) {
   tests.push({ name, run });
@@ -246,6 +248,25 @@ test("DEF CON 34 is the only MDX event source", () => {
     .filter((file) => file.endsWith(".mdx"))
     .sort();
   assert.deepEqual(mdxFiles, ["defcon34.mdx"]);
+});
+
+test("poster thumbnails remain deferred, low priority, and appropriately sized", () => {
+  const eventPostersSource = readFileSync(eventPostersPath, "utf8");
+  const posterCardSource = readFileSync(posterCardPath, "utf8");
+
+  assert.match(eventPostersSource, /new IntersectionObserver\(/);
+  assert.match(eventPostersSource, /rootMargin: "400px 0px"/);
+  assert.match(eventPostersSource, /image\.loading = "lazy"/);
+  assert.match(eventPostersSource, /image\.fetchPriority = "low"/);
+  assert.doesNotMatch(eventPostersSource, /image\.loading = "eager"/);
+  assert.match(posterCardSource, /const thumbnailWidth = isArchive \? 1200 : 800;/);
+  assert.match(posterCardSource, /\[600, 800, 900, 1200\]/);
+  assert.match(posterCardSource, /data-poster-thumb-srcset=/);
+  assert.match(posterCardSource, /data-poster-thumb-sizes=/);
+  assert.match(posterCardSource, /loading="lazy"/);
+  assert.match(posterCardSource, /fetchpriority=\{deferThumbnail \? "low" : undefined\}/);
+  assert.match(posterCardSource, /\.poster-card--archive \[data-poster-thumb-src\]/);
+  assert.match(posterCardSource, /image\.hasAttribute\("src"\)/);
 });
 
 let failures = 0;

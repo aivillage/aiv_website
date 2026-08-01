@@ -1,5 +1,6 @@
 ---
 import PosterCard from "./PosterCard.astro";
+import Button from "../ui/Button.astro";
 import { posterEvents } from "../../data/poster-events";
 import { posters } from "../../data/posters";
 
@@ -25,7 +26,7 @@ const allPosters = posters
   });
 
 const compactLimit = Math.min(Math.max(limit ?? 6, 0), 6);
-const visiblePosters = variant === "archive" ? allPosters : allPosters.slice(0, compactLimit);
+const renderedPosters = variant === "archive" ? allPosters : allPosters.slice(0, compactLimit);
 const headingId = `${event.id}-${variant}-posters-heading`;
 ---
 
@@ -54,10 +55,24 @@ const headingId = `${event.id}-${variant}-posters-heading`;
         </>
       ) : (
         <>
-          <h2 id={headingId}>Posters</h2>
-          <p class="event-posters__meta">
-            {`${allPosters.length} ${allPosters.length === 1 ? "poster" : "posters"}`}
-          </p>
+          <div class="event-posters__compact-heading">
+            <h2 id={headingId}>
+              <a class="event-posters__compact-title" href={`/posters/#${event.id}`}>
+                Posters
+              </a>
+            </h2>
+
+            <p class="event-posters__compact-intro">
+              A random assortment for this event.
+            </p>
+            <a
+              class="event-posters__compact-count"
+              href={`/posters/#${event.id}`}
+              aria-label={`View all ${allPosters.length} posters`}
+            >
+              {`${renderedPosters.length} of ${allPosters.length} posters`}
+            </a>
+          </div>
         </>
       )}
     </header>
@@ -66,10 +81,29 @@ const headingId = `${event.id}-${variant}-posters-heading`;
         `.main-content .container > section > ul` to `--aiv-measure-prose` (72ch).
         Nesting the poster grid one level deeper keeps the grid full width. */}
     <div class="event-posters__grid-wrap">
-      <ul class="event-posters__grid" role="list">
-        {visiblePosters.map((poster) => <PosterCard poster={poster} variant={variant} />)}
+      <ul
+        class="event-posters__grid"
+        role="list"
+        data-random-poster-grid={variant === "compact" ? true : undefined}
+        data-compact-limit={variant === "compact" ? compactLimit : undefined}
+      >
+        {renderedPosters.map((poster) => (
+          <PosterCard
+            poster={poster}
+            variant={variant}
+            deferThumbnail
+          />
+        ))}
       </ul>
     </div>
+
+    {variant === "compact" && (
+      <template data-random-poster-template>
+        {allPosters.map((poster) => (
+          <PosterCard poster={poster} variant="compact" deferThumbnail />
+        ))}
+      </template>
+    )}
 
     {variant === "archive" ? (
       <p class="event-posters__none" data-poster-group-empty hidden>
@@ -77,11 +111,98 @@ const headingId = `${event.id}-${variant}-posters-heading`;
       </p>
     ) : (
       <p class="event-posters__all">
-        <a href={`/posters/#${event.id}`}>View all posters</a>
+        <Button href={`/posters/#${event.id}`}>View all posters for {event.label}</Button>
       </p>
     )}
   </section>
 )}
+
+<script is:inline>
+  document.querySelectorAll("[data-random-poster-grid]").forEach((grid) => {
+    const template = grid
+      .closest("[data-event-posters]")
+      ?.querySelector("[data-random-poster-template]");
+    if (!(template instanceof HTMLTemplateElement)) return;
+
+    const cards = Array.from(template.content.children).filter(
+      (child) => child instanceof HTMLElement && child.matches(".poster-card--compact"),
+    );
+    const requested = Number.parseInt(grid.getAttribute("data-compact-limit") || "6", 10);
+    const limit = Math.min(Math.max(requested, 0), cards.length);
+    const shuffled = [...cards];
+
+    for (let index = shuffled.length - 1; index > 0; index -= 1) {
+      const swapWith = Math.floor(Math.random() * (index + 1));
+      [shuffled[index], shuffled[swapWith]] = [shuffled[swapWith], shuffled[index]];
+    }
+
+    const selected = shuffled.slice(0, limit);
+    grid.replaceChildren(...selected);
+
+    const pendingThumbnails = selected.flatMap((card) => {
+      const image = card.querySelector("[data-poster-thumb-src]");
+      const container = image?.closest("[data-poster-thumb]");
+      if (!(image instanceof HTMLImageElement) || !(container instanceof HTMLElement)) {
+        return [];
+      }
+
+      const show = () => {
+        container.hidden = false;
+        card.classList.remove("poster-card--no-thumb");
+      };
+      const hide = () => {
+        container.hidden = true;
+        card.classList.add("poster-card--no-thumb");
+      };
+
+      // Reserve the thumbnail's aspect-ratio space before it is requested so
+      // the card can be observed without causing layout shift.
+      show();
+      image.addEventListener("load", show, { once: true });
+      image.addEventListener("error", hide, { once: true });
+      image.loading = "lazy";
+      image.fetchPriority = "low";
+
+      return [{ card, image, show, hide }];
+    });
+
+    const loadThumbnail = ({ image, show, hide }) => {
+      const source = image.dataset.posterThumbSrc;
+      if (!source) return;
+
+      image.src = source;
+      image.removeAttribute("data-poster-thumb-src");
+
+      if (image.complete) {
+        if (image.naturalWidth === 0) hide();
+        else show();
+      }
+    };
+
+    if (!("IntersectionObserver" in window)) {
+      pendingThumbnails.forEach(loadThumbnail);
+      return;
+    }
+
+    const thumbnailByCard = new Map(
+      pendingThumbnails.map((thumbnail) => [thumbnail.card, thumbnail]),
+    );
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+
+          const thumbnail = thumbnailByCard.get(entry.target);
+          if (thumbnail) loadThumbnail(thumbnail);
+          observer.unobserve(entry.target);
+        });
+      },
+      { rootMargin: "400px 0px" },
+    );
+
+    pendingThumbnails.forEach(({ card }) => observer.observe(card));
+  });
+</script>
 
 <style>
   .event-posters {
@@ -89,11 +210,17 @@ const headingId = `${event.id}-${variant}-posters-heading`;
   }
 
   .event-posters--compact {
-    background: var(--aiv-nested-bg);
+    background: linear-gradient(
+      145deg,
+      color-mix(in srgb, var(--aiv-nested-bg) 92%, var(--aiv-action-primary) 8%),
+      var(--aiv-nested-bg)
+    );
     border: 1px solid var(--aiv-nested-border);
+    border-top: 3px solid var(--aiv-action-primary);
     border-radius: 0.75rem;
+    box-shadow: var(--aiv-card-shadow);
     margin-top: 2rem;
-    padding: 1.25rem;
+    padding: clamp(1.1rem, 2vw, 1.5rem);
   }
 
   .event-posters__header {
@@ -107,6 +234,10 @@ const headingId = `${event.id}-${variant}-posters-heading`;
     margin: 0 0 0.25rem;
   }
 
+  .event-posters--compact .event-posters__header {
+    max-width: none;
+  }
+
   .event-posters__anchor {
     color: inherit;
     text-decoration: none;
@@ -115,6 +246,63 @@ const headingId = `${event.id}-${variant}-posters-heading`;
   .event-posters__anchor:hover,
   .event-posters__anchor:focus-visible {
     text-decoration: underline;
+  }
+
+  .event-posters__compact-title {
+    color: var(--aiv-action-primary);
+    text-decoration-thickness: 0.08em;
+    text-underline-offset: 0.18em;
+  }
+
+  .event-posters__compact-title:focus-visible {
+    border-radius: 0.2rem;
+    outline: 3px solid var(--aiv-focus-ring);
+    outline-offset: 3px;
+  }
+
+  .event-posters__compact-heading {
+    align-items: center;
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+  }
+
+  .event-posters__compact-heading h2 {
+    margin: 0;
+  }
+
+  .event-posters__compact-count {
+    background: var(--aiv-bg-raised);
+    border: 1px solid var(--aiv-card-border);
+    border-radius: 999px;
+    color: var(--aiv-text-secondary);
+    flex: none;
+    font-family: var(--aiv-font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin: 0;
+    padding: 0.35rem 0.6rem;
+    text-decoration: none;
+    transition:
+      background-color 150ms ease,
+      border-color 150ms ease,
+      color 150ms ease;
+  }
+
+  .event-posters__compact-count:hover {
+    background: color-mix(in srgb, var(--aiv-action-primary) 10%, var(--aiv-bg-raised));
+    border-color: var(--aiv-action-primary);
+    color: var(--aiv-action-primary);
+  }
+
+  .event-posters__compact-count:focus-visible {
+    outline: 3px solid var(--aiv-focus-ring);
+    outline-offset: 3px;
+  }
+
+  .event-posters__compact-intro {
+    color: var(--aiv-text-secondary);
+    margin: 0.45rem 0 0;
   }
 
   .event-posters__meta {
@@ -131,7 +319,7 @@ const headingId = `${event.id}-${variant}-posters-heading`;
 
   .event-posters__grid {
     display: grid;
-    gap: 1.5rem;
+    gap: 1rem;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     list-style: none;
     margin: 0;
@@ -140,8 +328,13 @@ const headingId = `${event.id}-${variant}-posters-heading`;
   }
 
   .event-posters--compact .event-posters__grid {
-    gap: 1rem;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr));
+    gap: 1.25rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .event-posters--archive .event-posters__grid {
+    align-items: start;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .event-posters__grid :global(li::before) {
@@ -155,8 +348,23 @@ const headingId = `${event.id}-${variant}-posters-heading`;
   }
 
   .event-posters__all {
-    font-family: var(--aiv-font-mono);
-    font-size: 0.875rem;
+    display: flex;
+    justify-content: center;
     margin: 1rem 0 0;
+  }
+
+  @media (max-width: 48rem) {
+    .event-posters--archive .event-posters__grid,
+    .event-posters--compact .event-posters__grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  @media (max-width: 30rem) {
+    .event-posters__compact-heading {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
   }
 </style>

@@ -40,6 +40,15 @@ const HEADER_ALIASES: Record<string, string[]> = {
   posterNumber: ["poster number", "number", "no", "#"],
 };
 
+/** Google Form response-export headers used by the current poster workflow. */
+const FORM_HEADER_PATTERNS: Partial<Record<keyof typeof HEADER_ALIASES, RegExp>> = {
+  publish: /^would you like your poster hosted on our ai village website\?$/,
+  title: /^what is the name of your poster\?$/,
+  authors: /^please provide all the names of the authors, followed by their affiliation and method of contact\./,
+  abstract: /^please provide the abstract that you would like to accompany your poster$/,
+  sourceUrl: /^please provide the poster you wish to display on the ai village website and at defcon34\./,
+};
+
 const REQUIRED = ["publish", "title", "authors", "abstract", "sourceUrl"] as const;
 
 /**
@@ -184,12 +193,42 @@ export function existingSlugsById(dataPath: URL | string = DEFAULT_DATA_PATH): M
   return map;
 }
 
-function resolveHeaders(header: string[]): Record<string, number> {
+function titleKey(value: string): string {
+  return value.normalize("NFKC").replace(/\s+/g, " ").trim().toLowerCase();
+}
+
+function existingSlugsByTitle(
+  dataPath: URL | string = DEFAULT_DATA_PATH,
+): Map<string, string> {
+  const map = new Map<string, string>();
+  try {
+    const source = readFileSync(dataPath, "utf8");
+    const blocks = source.split(/\n {2}\{/);
+    for (const block of blocks) {
+      const slug = /slug:\s*"((?:[^"\\]|\\.)*)"/.exec(block);
+      const title = /title:\s*"((?:[^"\\]|\\.)*)"/.exec(block);
+      if (!slug || !title) continue;
+      map.set(titleKey(JSON.parse(`"${title[1]}"`)), JSON.parse(`"${slug[1]}"`));
+    }
+  } catch {
+    // First run, or the file was deleted: no canonical poster routes existed in the baseline.
+  }
+  return map;
+}
+
+function resolveHeaders(header: string[]): {
+  columns: Record<string, number>;
+  formResponse: boolean;
+} {
   const normalized = header.map((h) => h.trim().toLowerCase());
   const map: Record<string, number> = {};
 
   for (const [canonical, aliases] of Object.entries(HEADER_ALIASES)) {
-    const index = normalized.findIndex((h) => aliases.includes(h));
+    let index = normalized.findIndex((h) => aliases.includes(h));
+    const formPattern = FORM_HEADER_PATTERNS[canonical];
+    if (index === -1 && formPattern) {
+      index = normalized.findIndex((h) => formPattern.test(h));
+    }
     if (index !== -1) map[canonical] = index;
   }
 
@@ -211,15 +250,47 @@ function resolveHeaders(header: string[]): Record<string, number> {
     );
   }
 
-  return map;
+  return {
+    columns: map,
+    formResponse: normalized.some((headerValue) =>
+      FORM_HEADER_PATTERNS.publish?.test(headerValue),
+    ),
+  };
 }
 
 /** "Jane Doe | Example Lab" per line, or comma-separated as a fallback. */
-function parseAuthors(raw: string): { name: string; affiliation?: string }[] {
+function parseAuthors(
+  raw: string,
+  formResponse: boolean,
+): { name: string; affiliation?: string }[] {
   const lines = raw
     .split(/\r?\n/)
     .map((l) => l.trim())
     .filter(Boolean);
+
+  if (formResponse) {
+    const isContact = (value: string): boolean => {
+      const text = value.trim();
+      return (
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(text) ||
+        /(?:https?:\/\/|www\.|linkedin\.com|github\.com)/i.test(text) ||
+        /^\+?[\d ().-]{8,}$/.test(text)
+      );
+    };
+
+    return lines
+      .map((entry) => {
+        const parts = entry
+          .split(",")
+          .map((part) => part.trim())
+          .filter(Boolean);
+        const name = parts.shift();
+        if (!name) return null;
+        const affiliation = parts.filter((part) => !isContact(part)).join(", ");
+        return affiliation ? { name, affiliation } : { name };
+      })
+      .filter((author): author is { name: string; affiliation?: string } => author !== null);
+  }
 
   const source = lines.length > 1 || raw.includes("|") ? lines : raw.split(",");
 
@@ -236,6 +307,8 @@ export type ReadResult = {
   rows: QueueRow[];
   errors: string[];
   skipped: number;
+  /** Opted-in Form responses that do not yet include a poster upload. */
+  incomplete: number;
   /** Existing generated records whose title changed; the existing slug was retained. */
   keptSlugs: string[];
   /**
@@ -253,18 +326,20 @@ export function readQueue(
   options: { allowSlugChange?: boolean; dataPath?: URL | string } = {},
 ): ReadResult {
   const existingSlugs = existingSlugsById(options.dataPath);
+  const existingTitleSlugs = existingSlugsByTitle(options.dataPath);
   const keptSlugs: string[] = [];
   const movedSlugs: string[] = [];
   const table = parseCsv(readFileSync(csvPath, "utf8"));
   if (table.length === 0) throw new QueueError(`${csvPath} is empty.`);
 
-  const col = resolveHeaders(table[0]);
+  const { columns: col, formResponse } = resolveHeaders(table[0]);
   const cell = (row: string[], key: string): string =>
     key in col ? (row[col[key]] ?? "").trim() : "";
 
   const rows: QueueRow[] = [];
   const errors: string[] = [];
   let skipped = 0;
+  let incomplete = 0;
 
   const seenSlug = new Map<string, number>();
   const seenUrl = new Map<string, number>();
@@ -278,10 +353,17 @@ export function readQueue(
       return;
     }
 
-    const title = cell(raw, "title");
+    const rawTitle = cell(raw, "title");
+    const title = formResponse
+      ? rawTitle.normalize("NFKC").replace(/\s+/g, " ").trim()
+      : rawTitle;
     const abstract = cell(raw, "abstract");
     const sourceUrl = cell(raw, "sourceUrl");
-    const authors = parseAuthors(cell(raw, "authors"));
+    if (formResponse && !sourceUrl) {
+      incomplete += 1;
+      return;
+    }
+    const authors = parseAuthors(cell(raw, "authors"), formResponse);
     const fail = (msg: string) => errors.push(`row ${rowNumber}: ${msg}`);
 
     const sourceId = driveFileId(sourceUrl);
@@ -291,7 +373,13 @@ export function readQueue(
 
     const suppliedSlug = cell(raw, "slug");
     const requestedSlug = slugify(suppliedSlug || title);
-    const existingSlug = sourceId ? existingSlugs.get(sourceId) : undefined;
+    // The current generated records began with copied public Drive files,
+    // while the Form export identifies the original uploads. Match by title
+    // only as a migration bridge when that Drive-ID lookup misses. Once the
+    // generated file contains the Form IDs, all later runs use Drive identity.
+    const existingSlug =
+      (sourceId ? existingSlugs.get(sourceId) : undefined) ??
+      (formResponse ? existingTitleSlugs.get(titleKey(title)) : undefined);
 
     // Once a poster exists in generated data, its canonical URL is frozen —
     // including against an edited Slug cell. A column humans can edit is a
@@ -401,5 +489,5 @@ export function readQueue(
     });
   });
 
-  return { rows, errors, skipped, keptSlugs, movedSlugs };
+  return { rows, errors, skipped, incomplete, keptSlugs, movedSlugs };
 }

@@ -5,9 +5,14 @@ import type { Poster } from "../../data/poster-events";
 type Props = {
   poster: Poster;
   variant: "archive" | "compact";
+  deferThumbnail?: boolean;
 };
 
-const { poster, variant } = Astro.props as Props;
+const {
+  poster,
+  variant,
+  deferThumbnail = false,
+} = Astro.props as Props;
 const isArchive = variant === "archive";
 const detailPath = `/posters/${poster.slug}/`;
 
@@ -26,13 +31,25 @@ function formatPosterNumber(value: number): string {
  * complete without one, and the script below removes the thumbnail container
  * if Google's unsupported endpoint fails.
  */
-function thumbnailUrl(driveFileId: string): string {
-  return `https://drive.google.com/thumbnail?id=${encodeURIComponent(driveFileId)}&sz=w1200`;
+function thumbnailUrl(driveFileId: string, width: number): string {
+  return `https://drive.google.com/thumbnail?id=${encodeURIComponent(driveFileId)}&sz=w${width}`;
 }
+
+const thumbnailWidth = isArchive ? 1200 : 800;
+const archiveThumbnailSrcset = isArchive
+  ? [600, 800, 900, 1200]
+      .map((width) => `${thumbnailUrl(poster.driveFileId, width)} ${width}w`)
+      .join(", ")
+  : undefined;
+const archiveThumbnailSizes = "(max-width: 48rem) calc(100vw - 2rem), 35rem";
 ---
 
 <li
-  class:list={["poster-card", `poster-card--${variant}`]}
+  class:list={[
+    "poster-card",
+    `poster-card--${variant}`,
+    { "poster-card--no-thumb": deferThumbnail && !isArchive },
+  ]}
   id={isArchive ? `poster-${poster.slug}` : undefined}
   data-poster-card={isArchive ? true : undefined}
   data-search={
@@ -49,16 +66,26 @@ function thumbnailUrl(driveFileId: string): string {
   }
 >
   {poster.driveFileId && (
-    <div class="poster-card__thumb" data-poster-thumb>
+    <a
+      class="poster-card__thumb"
+      href={detailPath}
+      aria-label={`View details: ${poster.title}`}
+      data-poster-thumb
+      hidden={deferThumbnail && !isArchive}
+    >
       <img
-        src={thumbnailUrl(poster.driveFileId)}
+        src={deferThumbnail ? undefined : thumbnailUrl(poster.driveFileId, thumbnailWidth)}
+        data-poster-thumb-src={deferThumbnail ? thumbnailUrl(poster.driveFileId, 800) : undefined}
+        data-poster-thumb-srcset={deferThumbnail && isArchive ? archiveThumbnailSrcset : undefined}
+        data-poster-thumb-sizes={deferThumbnail && isArchive ? archiveThumbnailSizes : undefined}
         alt=""
         loading="lazy"
+        fetchpriority={deferThumbnail ? "low" : undefined}
         decoding="async"
         referrerpolicy="no-referrer"
         data-poster-thumb-img
       />
-    </div>
+    </a>
   )}
   <div class="poster-card__body">
     {isArchive && poster.posterNumber !== undefined && (
@@ -69,52 +96,115 @@ function thumbnailUrl(driveFileId: string): string {
     </h3>
     <p class="poster-card__authors">{formatAuthors(poster.authors)}</p>
     {isArchive && (
-      <details class="poster-card__abstract">
-        <summary>Abstract</summary>
+      <div class="poster-card__abstract">
+        <span class="poster-card__abstract-heading">Abstract</span>
         <p>{poster.abstract}</p>
-      </details>
+      </div>
     )}
     {isArchive && (
       <div class="poster-card__actions">
         <Button
-          href={poster.sourceUrl}
+          href={detailPath}
           variant="secondary"
           size="sm"
-          target="_blank"
-          ariaLabel={`View poster: ${poster.title}`}
+          ariaLabel={`View details: ${poster.title}`}
         >
-          View poster
+          View details
         </Button>
-        <a class="poster-card__details" href={detailPath}>View details</a>
       </div>
     )}
   </div>
 </li>
 
 <script>
-  document.querySelectorAll("[data-poster-thumb-img]").forEach((image) => {
-    const hide = () => {
-      const container = image.closest("[data-poster-thumb]");
-      if (container instanceof HTMLElement) {
-        container.hidden = true;
-      }
+  const showPosterThumbnail = (image: Element) => {
+    const container = image.closest("[data-poster-thumb]");
+    if (container instanceof HTMLElement) {
+      container.hidden = false;
+    }
 
-      const card = image.closest(".poster-card");
-      if (card instanceof HTMLElement) {
-        card.classList.add("poster-card--no-thumb");
-      }
-    };
+    const card = image.closest(".poster-card");
+    if (card instanceof HTMLElement) {
+      card.classList.remove("poster-card--no-thumb");
+    }
+  };
+
+  const hidePosterThumbnail = (image: Element) => {
+    const container = image.closest("[data-poster-thumb]");
+    if (container instanceof HTMLElement) {
+      container.hidden = true;
+    }
+
+    const card = image.closest(".poster-card");
+    if (card instanceof HTMLElement) {
+      card.classList.add("poster-card--no-thumb");
+    }
+  };
+
+  document.querySelectorAll("[data-poster-thumb-img]").forEach((image) => {
+    const hide = () => hidePosterThumbnail(image);
 
     image.addEventListener("error", hide);
 
     if (
       image instanceof HTMLImageElement &&
+      image.hasAttribute("src") &&
       image.complete &&
       image.naturalWidth === 0
     ) {
       hide();
     }
   });
+
+  const deferredArchiveThumbnails = Array.from(
+    document.querySelectorAll(".poster-card--archive [data-poster-thumb-src]"),
+  ).filter((image): image is HTMLImageElement => image instanceof HTMLImageElement);
+
+  const loadArchiveThumbnail = (image: HTMLImageElement) => {
+    const source = image.dataset.posterThumbSrc;
+    if (!source) return;
+
+    showPosterThumbnail(image);
+    image.addEventListener("load", () => showPosterThumbnail(image), { once: true });
+    const sourceSet = image.dataset.posterThumbSrcset;
+    const sizes = image.dataset.posterThumbSizes;
+    if (sourceSet) image.srcset = sourceSet;
+    if (sizes) image.sizes = sizes;
+    image.src = source;
+    image.removeAttribute("data-poster-thumb-src");
+    image.removeAttribute("data-poster-thumb-srcset");
+    image.removeAttribute("data-poster-thumb-sizes");
+
+    if (image.complete && image.naturalWidth === 0) {
+      hidePosterThumbnail(image);
+    }
+  };
+
+  if (!("IntersectionObserver" in window)) {
+    deferredArchiveThumbnails.forEach(loadArchiveThumbnail);
+  } else {
+    const thumbnailByCard = new Map<Element, HTMLImageElement>();
+    deferredArchiveThumbnails.forEach((image) => {
+      const card = image.closest(".poster-card--archive");
+      if (card instanceof HTMLElement) thumbnailByCard.set(card, image);
+    });
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+
+          const image = thumbnailByCard.get(entry.target);
+          if (image) loadArchiveThumbnail(image);
+          observer.unobserve(entry.target);
+        });
+      },
+      { rootMargin: "400px 0px" },
+    );
+
+    thumbnailByCard.forEach((_image, card) => observer.observe(card));
+  }
+
 </script>
 
 <style>
@@ -141,21 +231,25 @@ function thumbnailUrl(driveFileId: string): string {
   }
 
   .poster-card--compact {
-    display: grid;
-    grid-template-columns: minmax(0, 8rem) minmax(0, 1fr);
+    display: flex;
+    flex-direction: column;
     min-height: 7rem;
+    transition:
+      border-color 150ms ease,
+      box-shadow 150ms ease,
+      transform 150ms ease;
   }
 
-  .poster-card--compact.poster-card--no-thumb {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .poster-card--compact.poster-card--no-thumb .poster-card__body {
-    grid-column: 1 / -1;
+  .poster-card--compact:hover {
+    border-color: var(--aiv-card-hover-border);
+    box-shadow: var(--aiv-card-hover-shadow);
+    transform: translateY(-2px);
   }
 
   .poster-card__thumb {
     background: var(--aiv-nested-bg);
+    display: block;
+    position: relative;
   }
 
   .poster-card__thumb[hidden] {
@@ -163,12 +257,15 @@ function thumbnailUrl(driveFileId: string): string {
   }
 
   .poster-card--archive .poster-card__thumb {
-    aspect-ratio: 16 / 9;
+    aspect-ratio: 3 / 2;
     border-bottom: 1px solid var(--aiv-card-border);
   }
 
   .poster-card--compact .poster-card__thumb {
-    border-right: 1px solid var(--aiv-card-border);
+    aspect-ratio: 2 / 1;
+    border-bottom: 1px solid var(--aiv-card-border);
+    flex: 0 0 auto;
+    overflow: hidden;
   }
 
   .poster-card__thumb img {
@@ -176,6 +273,11 @@ function thumbnailUrl(driveFileId: string): string {
     height: 100%;
     object-fit: contain;
     width: 100%;
+  }
+
+  .poster-card__thumb:focus-visible {
+    outline: 3px solid var(--aiv-focus-ring);
+    outline-offset: -3px;
   }
 
   .poster-card__body {
@@ -190,8 +292,9 @@ function thumbnailUrl(driveFileId: string): string {
   }
 
   .poster-card--compact .poster-card__body {
-    justify-content: center;
-    padding: 0.9rem 1rem;
+    flex: 1;
+    justify-content: flex-start;
+    padding: 1rem 1.1rem 1.1rem;
   }
 
   .poster-card__number {
@@ -212,13 +315,26 @@ function thumbnailUrl(driveFileId: string): string {
   }
 
   .poster-card--compact .poster-card__title {
-    font-size: 0.975rem;
+    font-size: 1rem;
   }
 
   .poster-card--compact .poster-card__title a {
     align-items: center;
     display: inline-flex;
     min-height: 2.75rem;
+    text-decoration-color: color-mix(in srgb, var(--aiv-action-primary) 65%, transparent);
+    text-decoration-thickness: 0.08em;
+    text-underline-offset: 0.2em;
+  }
+
+  .poster-card--compact .poster-card__title a:hover {
+    color: var(--aiv-action-primary);
+  }
+
+  .poster-card--compact .poster-card__title a:focus-visible {
+    border-radius: 0.2rem;
+    outline: 3px solid var(--aiv-focus-ring);
+    outline-offset: 3px;
   }
 
   .poster-card__title a {
@@ -229,6 +345,10 @@ function thumbnailUrl(driveFileId: string): string {
     color: var(--aiv-text-muted);
     font-size: 0.875rem;
     margin: 0;
+  }
+
+  .poster-card--compact .poster-card__authors {
+    line-height: 1.45;
   }
 
   .poster-card__abstract {
@@ -243,30 +363,21 @@ function thumbnailUrl(driveFileId: string): string {
     overflow: visible;
   }
 
-  .poster-card__abstract summary {
-    background: none;
-    border-bottom: 0;
+  .poster-card__abstract-heading {
     color: var(--aiv-text-muted);
-    cursor: pointer;
+    display: block;
     font-family: var(--aiv-font-mono);
     font-size: 0.8125rem;
     font-weight: 500;
-    padding: 0.15rem 0;
-  }
-
-  .poster-card__abstract summary:hover {
-    background: none;
-    color: var(--aiv-text-primary);
-  }
-
-  .poster-card__abstract summary:focus-visible {
-    border-radius: 0.25rem;
-    outline: 2px solid var(--aiv-focus-ring);
-    outline-offset: 2px;
   }
 
   .poster-card__abstract p {
-    margin: 0.5rem 0 0;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+    color: var(--aiv-text-secondary);
+    display: -webkit-box;
+    margin: 0.4rem 0 0;
+    overflow: hidden;
   }
 
   .poster-card__actions {
@@ -277,12 +388,6 @@ function thumbnailUrl(driveFileId: string): string {
     padding-top: 0.9rem;
   }
 
-  .poster-card__details {
-    color: var(--aiv-text-muted);
-    font-family: var(--aiv-font-mono);
-    font-size: 0.8125rem;
-  }
-
   @media (prefers-reduced-motion: no-preference) {
     .poster-card--archive {
       transition:
@@ -291,9 +396,14 @@ function thumbnailUrl(driveFileId: string): string {
     }
   }
 
-  @media (max-width: 34rem) {
+  @media (prefers-reduced-motion: reduce) {
     .poster-card--compact {
-      grid-template-columns: minmax(0, 6rem) minmax(0, 1fr);
+      transition: none;
+    }
+
+    .poster-card--compact:hover {
+      transform: none;
     }
   }
+
 </style>

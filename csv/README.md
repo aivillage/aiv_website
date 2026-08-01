@@ -4,11 +4,12 @@ This directory holds local exports from restricted Google Sheets used by the
 poster publishing workflow.
 
 CSV files may contain submitter contact information. All CSV exports in this
-directory are intentionally ignored by Git. The raw Form response export and
-the sanitized Website Publish Queue must never be committed.
+directory are intentionally ignored by Git and must never be committed. The
+poster importer understands the current Google Form response export directly
+and removes author contact/profile details from generated records.
 
-Import the sanitized queue with:
+Import the current Form response export with:
 
 ```bash
-pnpm posters:import csv/queue.csv
+pnpm posters:import "csv/Poster (Responses) - Form Responses 1.csv"
 ```
