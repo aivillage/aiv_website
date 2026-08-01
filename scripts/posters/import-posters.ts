@@ -1,7 +1,7 @@
 /**
- * Regenerate src/data/posters.ts from the poster publish queue CSV.
+ * Regenerate src/data/posters.ts from a poster CSV export.
  *
- *   pnpm posters:import <queue.csv> [--check]
+ *   pnpm posters:import <poster.csv> [--check]
  *                       [--allow-slug-change] [--allow-permalink-removal]
  *
  * The Google Sheet is the editorial source of truth and this file is generated
@@ -91,8 +91,8 @@ function renderPoster(row: QueueRow): string {
 function render(rows: QueueRow[]): string {
   return `// GENERATED FILE — DO NOT EDIT BY HAND.
 //
-// Regenerate with:  pnpm posters:import <queue.csv>
-// Source of truth:  the Website Publish Queue spreadsheet
+// Regenerate with:  pnpm posters:import <poster.csv>
+// Source of truth:  the restricted poster response export
 //
 // Edits made here will be overwritten on the next import. To change a poster,
 // change the spreadsheet row and re-run the importer.
@@ -115,7 +115,7 @@ function main() {
   // codeql[js/user-controlled-bypass]
   if (!csvPath) {
     console.error(
-      "usage: pnpm posters:import <queue.csv> [--check]\n" +
+      "usage: pnpm posters:import <poster.csv> [--check]\n" +
         "                            [--allow-slug-change] [--allow-permalink-removal]",
     );
     process.exit(2);
@@ -132,7 +132,7 @@ function main() {
     throw error;
   }
 
-  const { rows, errors, skipped, keptSlugs, movedSlugs } = result;
+  const { rows, errors, skipped, incomplete, keptSlugs, movedSlugs } = result;
 
   if (errors.length > 0) {
     console.error(`\n${errors.length} row(s) could not be imported:\n`);
@@ -245,6 +245,9 @@ function main() {
   console.log(`Wrote ${rows.length} poster(s) to ${out ?? "src/data/posters.ts"}`);
   for (const [key, count] of byEvent) console.log(`  ${key}: ${count}`);
   if (skipped > 0) console.log(`Skipped ${skipped} row(s) not marked for site inclusion.`);
+  if (incomplete > 0) {
+    console.log(`Skipped ${incomplete} opted-in Form response(s) without a poster upload.`);
+  }
   console.log(`\nNext: pnpm build && pnpm posters:test`);
 }
 

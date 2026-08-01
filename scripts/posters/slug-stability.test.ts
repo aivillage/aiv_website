@@ -30,6 +30,12 @@ const ABSTRACT =
   "A sufficiently long abstract that comfortably passes the minimum length validation the importer applies to every row.";
 
 type Row = { title: string; slug?: string; id: string; number: number };
+type FormRow = {
+  title: string;
+  authors: string;
+  id?: string;
+  host?: "Yes" | "No";
+};
 
 function csv(rows: Row[]): string {
   const esc = (v: string) => `"${v.replace(/"/g, '""')}"`;
@@ -44,6 +50,31 @@ function csv(rows: Row[]): string {
       esc(ABSTRACT),
       esc(`https://drive.google.com/file/d/${r.id}/view?usp=drive_link`),
     ].join(","),
+  );
+  return [header, ...body].join("\n");
+}
+
+function formCsv(rows: FormRow[]): string {
+  const esc = (value: string) => `"${value.replace(/"/g, '""')}"`;
+  const header = [
+    "Timestamp",
+    "Email Address",
+    "What is the name of your poster?",
+    "Would you like your poster hosted on our AI Village website?",
+    "Please provide all the names of the authors, followed by their affiliation and method of contact. Example: Michelle Hoang, AI Village, linkedin.com/in/example",
+    "Please provide the abstract that you would like to accompany your poster",
+    "Please provide the poster you wish to display on the AI Village website and at DEFCON34. Please limit to PNGs, SVGs, or other image types.",
+  ].map(esc).join(",");
+  const body = rows.map((row) =>
+    [
+      "7/31/2026 12:00:00",
+      "submitter@example.com",
+      row.title,
+      row.host ?? "Yes",
+      row.authors,
+      ABSTRACT,
+      row.id ? `https://drive.google.com/open?id=${row.id}` : "",
+    ].map(esc).join(","),
   );
   return [header, ...body].join("\n");
 }
@@ -66,6 +97,26 @@ function run(rows: Row[], flags: string[] = []): { ok: boolean; output: string }
       encoding: "utf8",
       stdio: ["ignore", "pipe", "pipe"],
     });
+    return { ok: true, output };
+  } catch (error) {
+    const e = error as { stdout?: string; stderr?: string };
+    return { ok: false, output: `${e.stdout ?? ""}${e.stderr ?? ""}` };
+  }
+}
+
+function runForm(
+  rows: FormRow[],
+  dataPath: string,
+  flags: string[] = [],
+): { ok: boolean; output: string } {
+  const path = join(tmp, "form-responses.csv");
+  writeFileSync(path, formCsv(rows));
+  try {
+    const output = execFileSync(
+      "npx",
+      ["tsx", IMPORTER, path, "--out", dataPath, ...flags],
+      { encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] },
+    );
     return { ok: true, output };
   } catch (error) {
     const e = error as { stdout?: string; stderr?: string };
@@ -105,7 +156,7 @@ try {
   );
   check(
     "missing CSV operand prints usage",
-    missingOperand.stderr.includes("usage: pnpm posters:import <queue.csv>"),
+    missingOperand.stderr.includes("usage: pnpm posters:import <poster.csv>"),
     missingOperand.stderr.trim(),
   );
   check(
@@ -185,6 +236,81 @@ try {
   const allowed = run([A], ["--allow-permalink-removal"]);
   check("removal succeeds with --allow-permalink-removal", allowed.ok);
   check("only the remaining poster survives", slugs().length === 1, slugs().join(", "));
+
+  console.log("\nGoogle Form response input\n");
+
+  const formData = join(tmp, "form-posters.ts");
+  writeFileSync(
+    formData,
+    `import type { Poster } from "./poster-events";\n\nexport const posters: Poster[] = [];\n`,
+  );
+  const formRun = runForm(
+    [
+      {
+        title: "  Direct  Form\u00a0Import  ",
+        authors:
+          "Alice Example, Example Lab, alice@example.com\nBob Example, Research @ Example, linkedin.com/in/bob",
+        id: "1FORM",
+      },
+      {
+        title: "Waiting for upload",
+        authors: "Casey Example, Example Lab, casey@example.com",
+      },
+      {
+        title: "Not hosted",
+        authors: "Dana Example, Example Lab, dana@example.com",
+        id: "1NO",
+        host: "No",
+      },
+    ],
+    formData,
+  );
+  const formOutput = readFileSync(formData, "utf8");
+  check("actual Google Form response headers import directly", formRun.ok, formRun.output);
+  check("Form title whitespace is normalized", formOutput.includes('title: "Direct Form Import"'));
+  check("Form author names and affiliations are retained", formOutput.includes(
+    '{ name: "Bob Example", affiliation: "Research @ Example" }',
+  ));
+  check("Form author contact details are removed", !/@example\.com|linkedin\.com/.test(formOutput));
+  check("opted-in response without an upload is skipped", !formOutput.includes("Waiting for upload"));
+  check("non-hosted Form response is skipped", !formOutput.includes("Not hosted"));
+  check(
+    "incomplete Form response is reported",
+    formRun.output.includes("Skipped 1 opted-in Form response(s) without a poster upload."),
+    formRun.output,
+  );
+
+  const migrationData = join(tmp, "form-migration.ts");
+  writeFileSync(
+    migrationData,
+    `export const posters = [{\n` +
+      `  slug: "existing-canonical-route",\n` +
+      `  event: "defcon-34",\n` +
+      `  title: "Same Poster Title",\n` +
+      `  authors: [{ name: "Alice Example", affiliation: "Example Lab" }],\n` +
+      `  abstract: ${JSON.stringify(ABSTRACT)},\n` +
+      `  sourceUrl: "https://drive.google.com/file/d/1PUBLIC/view?usp=drive_link",\n` +
+      `  driveFileId: "1PUBLIC",\n` +
+      `}];\n`,
+  );
+  const migration = runForm(
+    [{
+      title: "Same Poster Title",
+      authors: "Alice Example, Example Lab, alice@example.com",
+      id: "1ORIGINAL",
+    }],
+    migrationData,
+  );
+  const migrationOutput = readFileSync(migrationData, "utf8");
+  check("Form-ID migration run succeeds", migration.ok, migration.output);
+  check(
+    "existing canonical slug survives the public-copy to Form-ID transition",
+    migrationOutput.includes('slug: "existing-canonical-route"'),
+  );
+  check(
+    "Form upload becomes the stored Drive identity",
+    migrationOutput.includes('driveFileId: "1ORIGINAL"'),
+  );
 } finally {
   rmSync(tmp, { recursive: true, force: true });
 }
