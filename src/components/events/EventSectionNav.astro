@@ -11,7 +11,7 @@ const { current } = Astro.props as Props;
 const sections: Array<{ id: SectionId; href: string; label: string }> = [
   { id: "details", href: "#event-details", label: "Event Details" },
   { id: "posters", href: "#poster-session", label: "Posters" },
-  { id: "schedule", href: "#schedule", label: "Full Schedule" },
+  { id: "schedule", href: "#schedule", label: "Schedule" },
   {
     id: "poster-times",
     href: "#poster-presentation-schedule",
@@ -21,7 +21,6 @@ const sections: Array<{ id: SectionId; href: string; label: string }> = [
 ---
 
 <nav class="event-section-nav" aria-label="Event section navigation">
-  <p class="event-section-nav__label">Event navigation</p>
   <div class="event-section-nav__links">
     {sections.map((section) => (
       <Button
@@ -38,9 +37,8 @@ const sections: Array<{ id: SectionId; href: string; label: string }> = [
 
 <style>
   .event-section-nav {
-    border-top: 1px solid var(--aiv-rule-color);
-    margin-block: 2.5rem 3rem;
-    padding-top: 1.25rem;
+    border-bottom: 1px solid var(--aiv-rule-color);
+    padding-bottom: 1.25rem;
   }
 
   .event-section-nav__label {
