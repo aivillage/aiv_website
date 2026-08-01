@@ -7,6 +7,7 @@ type Props = {
   target?: "_blank" | "_self" | "_parent" | "_top";
   rel?: string;
   ariaLabel?: string;
+  ariaCurrent?: "page" | "step" | "location" | "date" | "time" | "true";
   disabled?: boolean;
   class?: string;
 };
@@ -19,6 +20,7 @@ const {
   target,
   rel,
   ariaLabel,
+  ariaCurrent,
   disabled = false,
   class: className,
 } = Astro.props as Props;
@@ -28,7 +30,7 @@ const classes = ["aiv-button", `aiv-button--${variant}`, `aiv-button--${size}`, 
 
 {
   href ? (
-    <a class:list={classes} href={disabled ? undefined : href} target={target} rel={resolvedRel} aria-label={ariaLabel} aria-disabled={disabled ? "true" : undefined} tabindex={disabled ? -1 : undefined}>
+    <a class:list={classes} href={disabled ? undefined : href} target={target} rel={resolvedRel} aria-label={ariaLabel} aria-current={ariaCurrent} aria-disabled={disabled ? "true" : undefined} tabindex={disabled ? -1 : undefined}>
       <slot />
     </a>
   ) : (
