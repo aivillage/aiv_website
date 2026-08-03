@@ -5,7 +5,7 @@ author:
   - Sven Cattell
 date: 2026-08-03 00:00:00 +0000
 category: "announcments"
-description: "Announcing the AI Village keynote panel at DEFCON 34:**“The Defender’s Dilemma: Releasing Dual-Use AI Models as Capabilities Climb”**" 
+description: "Announcing the AI Village keynote panel at DEFCON 34: “The Defender’s Dilemma: Releasing Dual-Use AI Models as Capabilities Climb”" 
 slug: defcon34
 ---
 
