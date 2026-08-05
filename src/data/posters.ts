@@ -239,18 +239,6 @@ export const posters: Poster[] = [
     driveFileId: "1eJ6HA2u2pq0-csk7eAYmAjhPo1ynngC1",
   },
   {
-    slug: "silence-with-receipts",
-    event: "defcon-34",
-    title: "Silence, with Receipts.",
-    authors: [
-      { name: "Matthew Nardizzi (author)", affiliation: "Vortex Black" },
-      { name: "James Derella (presenter)", affiliation: "Vortex Black" },
-    ],
-    abstract: "Your AI is already acting — reading, sending, deploying — faster than any team can watch. Tex (Sovereign Security Engine) is autonomous security for that world: it handles what your AI is doing so people don't have to. Every action routed through Tex is judged before it runs — permit, hold, or forbid — with no default-permit path. And Tex knows when the AI needs a human: anything it can't certify lands on a hold carrying the one fact a person must supply — or the reason no fact will — and only a named human seal clears it. Everything else stays silent.\n\nIn a 24-day continuous synthetic fleet run (20 agents, July 5–29, 2026), Tex ruled 1,116,689 decisions on its own: 77.3% permitted, 21.1% forbidden, and 1.6% held for a human — all a human would ever see. Every verdict seals to a hash-chained receipt, and the human's answer becomes a second receipt on the same chain: testimony, not telemetry. The published bundle re-verifies offline from a fresh clone of the public repo — a 12-attack tamper matrix and 34 independent checks anyone can run. Change one byte, or re-sign with your own key, and it fails. Design, not hope.\n\nCoverage is a deployment property: these results cover actions routed through Tex. Don't trust the abstract — clone the repo and try to forge a receipt.",
-    sourceUrl: "https://drive.google.com/open?id=1UcN0BQ87PQC20cMMs3n9KS3FIIRgcUKB",
-    driveFileId: "1UcN0BQ87PQC20cMMs3n9KS3FIIRgcUKB",
-  },
-  {
     slug: "the-anatomy-of-a-chinese-knowledge-distillation-campaign",
     event: "defcon-34",
     title: "The Anatomy of a Chinese Knowledge Distillation Campaign",
