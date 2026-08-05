@@ -3,7 +3,6 @@ import { volunteerApplicationUrl } from "./site";
 export const primaryNav = [
   { label: "Events", href: "/events/" },
   { label: "Blog", href: "/blog/" },
-  { label: "GRT", href: "/grt/" },
   { label: "Learn", href: "/learn/" },
   { label: "Community", href: "/community/" },
   { label: "About", href: "/about/" },
@@ -15,7 +14,6 @@ export const footerNavSections = [
   {
     title: "Programs",
     links: [
-      { label: "Generative Red Team", href: "/grt/" },
       { label: "Learn / Workshops", href: "/learn/" },
       { label: "Events", href: "/events/" },
       { label: "Poster Archive", href: "/posters/" },
