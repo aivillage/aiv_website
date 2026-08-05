@@ -76,6 +76,7 @@ const sponsors = defineCollection({
       name: z.string(),
       status: z.enum(["current", "past"]),
       logo: z.string().optional(),
+      logoBackground: z.enum(["light", "dark"]).default("light"),
       url: z.url().optional(),
       tier: z.string().optional(),
       description: z.union([z.string(), z.boolean()]).optional(),

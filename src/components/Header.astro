@@ -54,8 +54,89 @@ function isActive(url: string) {
 <script is:inline>
   const menu = document.getElementById("nav-menu");
   const menuToggle = document.getElementById("menu-toggle");
+  const siteHeader = document.querySelector(".site-header");
   const mobileNavigation = window.matchMedia("(max-width: 900px)");
   let previousBodyOverflow = "";
+  let lastScrollPosition = Math.max(window.scrollY, 0);
+  let upwardScrollDistance = 0;
+  let scrollFramePending = false;
+  let anchorJumpActive = false;
+  let anchorJumpTimer;
+
+  function menuIsOpen() {
+    return menuToggle instanceof HTMLButtonElement &&
+      menuToggle.getAttribute("aria-expanded") === "true";
+  }
+
+  function setHeaderHidden(hidden) {
+    if (!(siteHeader instanceof HTMLElement)) return;
+    const shouldHide = hidden && mobileNavigation.matches && !menuIsOpen();
+    siteHeader.classList.toggle("site-header--hidden", shouldHide);
+  }
+
+  function finishAnchorJump() {
+    anchorJumpActive = false;
+    lastScrollPosition = Math.max(window.scrollY, 0);
+    upwardScrollDistance = 0;
+    if (anchorJumpTimer) window.clearTimeout(anchorJumpTimer);
+  }
+
+  function beginAnchorJump() {
+    if (!mobileNavigation.matches) return;
+    anchorJumpActive = true;
+    setHeaderHidden(true);
+    upwardScrollDistance = 0;
+    if (anchorJumpTimer) window.clearTimeout(anchorJumpTimer);
+    anchorJumpTimer = window.setTimeout(finishAnchorJump, 1200);
+  }
+
+  function updateHeaderForScroll() {
+    scrollFramePending = false;
+    const currentScrollPosition = Math.max(window.scrollY, 0);
+    const delta = currentScrollPosition - lastScrollPosition;
+
+    if (!mobileNavigation.matches) {
+      setHeaderHidden(false);
+    } else if (anchorJumpActive) {
+      setHeaderHidden(true);
+      upwardScrollDistance = 0;
+    } else if (currentScrollPosition <= 16) {
+      setHeaderHidden(false);
+      upwardScrollDistance = 0;
+    } else if (delta > 1) {
+      upwardScrollDistance = 0;
+      if (currentScrollPosition > 72) setHeaderHidden(true);
+    } else if (delta < -1) {
+      upwardScrollDistance += Math.abs(delta);
+      if (upwardScrollDistance >= 20) setHeaderHidden(false);
+    }
+
+    lastScrollPosition = currentScrollPosition;
+  }
+
+  window.addEventListener("scroll", () => {
+    if (scrollFramePending) return;
+    scrollFramePending = true;
+    window.requestAnimationFrame(updateHeaderForScroll);
+  }, { passive: true });
+
+  document.addEventListener("click", (event) => {
+    const target = event.target;
+    const link = target instanceof Element ? target.closest('a[href^="#"]') : null;
+    const href = link?.getAttribute("href");
+    if (!href || href === "#") return;
+
+    const destination = document.getElementById(decodeURIComponent(href.slice(1)));
+    if (destination) beginAnchorJump();
+  });
+
+  window.addEventListener("scrollend", () => {
+    if (anchorJumpActive) finishAnchorJump();
+  });
+
+  if (siteHeader instanceof HTMLElement) {
+    siteHeader.addEventListener("focusin", () => setHeaderHidden(false));
+  }
 
   function setMenuOpen(open, options = {}) {
     if (!(menuToggle instanceof HTMLButtonElement) || !(menu instanceof HTMLElement)) return;
@@ -65,6 +146,7 @@ function isActive(url: string) {
     menuToggle.setAttribute("aria-expanded", open ? "true" : "false");
 
     if (open) {
+      setHeaderHidden(false);
       previousBodyOverflow = document.body.style.overflow;
       document.body.style.overflow = "hidden";
     } else {
@@ -92,7 +174,12 @@ function isActive(url: string) {
     });
 
     mobileNavigation.addEventListener("change", (event) => {
-      if (!event.matches) setMenuOpen(false);
+      finishAnchorJump();
+      lastScrollPosition = Math.max(window.scrollY, 0);
+      if (!event.matches) {
+        setMenuOpen(false);
+        setHeaderHidden(false);
+      }
     });
   }
 

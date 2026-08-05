@@ -217,7 +217,7 @@ const programs = [
             <h2>Supported by organizations helping keep AI security education open.</h2>
             <div class="home-sponsor-logos" aria-label="Current AI Village sponsors">
               {currentSponsors.map((sponsor) => (
-                <a class="home-sponsor-logo" href={sponsor.data.url} target="_blank" rel="noopener noreferrer">
+                <a class:list={["home-sponsor-logo", `home-sponsor-logo--${sponsor.data.logoBackground}`]} href={sponsor.data.url} target="_blank" rel="noopener noreferrer">
                   <img src={`/assets/images/logos/${sponsor.data.logo}`} alt={`${sponsor.data.name} logo`} />
                 </a>
               ))}
@@ -421,13 +421,23 @@ const programs = [
 
   .home-sponsor-logo {
     align-items: center;
-    background: var(--aiv-bg-surface);
     border: 1px solid var(--aiv-card-border);
     border-radius: 6px;
     display: flex;
     justify-content: center;
     min-height: 5rem;
     padding: 1rem;
+  }
+
+  /* Fixed logo-box backgrounds so each logo stays readable regardless of
+     the selected site theme. */
+  .home-sponsor-logo--light {
+    background: #fff;
+  }
+
+  .home-sponsor-logo--dark {
+    background: #14161c;
+    border-color: rgba(255, 255, 255, 0.14);
   }
 
   .home-sponsor-logo:focus-visible {
