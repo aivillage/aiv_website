@@ -1,7 +1,7 @@
 ---
-name: Reality Defender
+name: Google
 status: current
-logo: RD_Logo.svg
-url: https://www.realitydefender.com/
+logo: Google_color.png
+url: https://www.google.com/
 description: false # If you don't want to include a bio, change this to false.
 ---
