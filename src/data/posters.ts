@@ -22,6 +22,28 @@ export const posters: Poster[] = [
     driveFileId: "1ms39W56OgrB0K3zuxXkSiba4Pwpr86v6",
   },
   {
+    slug: "ai-agents-escape-their-task-horizon",
+    event: "defcon-34",
+    title: "AI agents escape their task horizon",
+    authors: [
+      { name: "Emile Delcourt", affiliation: "OWASP ASI" },
+    ],
+    abstract: "Frontier Agents (based on OpenAI, Google and Anthropic LLMs) show some propensity to escape their task’s horizon, by exchanging state with past or future instances of themselves, unprompted, to carry forward context and partial contributions towards their goal. Later agents “gain” from the content left by the earlier agent, achieving some continuity, and breaking independence of tasks (in evaluation or production)",
+    sourceUrl: "https://drive.google.com/file/d/1FFh8L6_cuE7KRDZ8i-YwmiwHqdMq1dNU/view?usp=drive_link",
+    driveFileId: "1FFh8L6_cuE7KRDZ8i-YwmiwHqdMq1dNU",
+  },
+  {
+    slug: "attackers-dont-need-shells-they-need-prompts-this-is-how-we-hunt-them",
+    event: "defcon-34",
+    title: "Attackers Don't Need Shells, They Need Prompts: This Is How We Hunt Them",
+    authors: [
+      { name: "Raz Tel-Vered", affiliation: "Zenity" },
+    ],
+    abstract: "Threat hunting was built around network traffic, process execution, authentication events, and endpoint activity, but in AI systems the most important signals are embedded in language: for example, prompts, tool calls, retrieval data, and model responses. Traditional techniques such as exact match rules, signatures, behavioral filters, and one off LLM analysis either miss semantically equivalent attacks or become too costly to apply at scale. We present Intent based Threat Hunting, a practical method for overcoming the language barrier and effectively hunting threats against AI agents.",
+    sourceUrl: "https://drive.google.com/file/d/11kec4Qr0aJXkyI8o1MD-Ra6IZ4Bvr7FS/view?usp=drive_link",
+    driveFileId: "11kec4Qr0aJXkyI8o1MD-Ra6IZ4Bvr7FS",
+  },
+  {
     slug: "beyond-ctfs-engineering-ai-agents-for-real-world-web-pentesting",
     event: "defcon-34",
     title: "Beyond CTFs: Engineering AI Agents for Real-World Web Pentesting",
@@ -189,6 +211,46 @@ export const posters: Poster[] = [
     driveFileId: "10W_HshKMlk-CAM8FRCnTEW8cLpFmsGLA",
   },
   {
+    slug: "reference-grafting-in-a2a-cross-principal-task-data-exfiltration-via",
+    event: "defcon-34",
+    title: "Reference Grafting in A2A: Cross-Principal Task-Data Exfiltration via referenceTaskIds",
+    authors: [
+      { name: "Shay Sakazi", affiliation: "AI Village" },
+      { name: "Sunders Bruskin", affiliation: "AI Village" },
+      { name: "Emil Gelman", affiliation: "AI Village" },
+    ],
+    abstract: "In Agent2Agent (A2A), one AI agent asks another to do work. Reference Grafting steals a victim's private task data from that exchange. The victim's agent correctly refuses to hand over the data — but it does hand over the task's ID, which looks like harmless coordination metadata. The attacker sends that ID back to the server in the referenceTaskIds field. The server checks ownership when a task is requested directly (denied) but not when it's referenced (allowed), so it loads the victim's task and returns the contents.",
+    sourceUrl: "https://drive.google.com/file/d/1sF_O_aYgR85bMDRSeZFZoxv74zV-wfKV/view?usp=drive_link",
+    driveFileId: "1sF_O_aYgR85bMDRSeZFZoxv74zV-wfKV",
+  },
+  {
+    slug: "securing-cross-enterprise-ai-agents",
+    event: "defcon-34",
+    title: "Securing Cross-Enterprise AI Agents",
+    authors: [
+      { name: "Sri Aradhyula", affiliation: "Cisco" },
+      { name: "Sarah Evans", affiliation: "Dell Technologies" },
+      { name: "Shankar Garikapati", affiliation: "Lyft" },
+      { name: "Amritha Lal", affiliation: "AWS" },
+      { name: "Manish Singh", affiliation: "Datum" },
+    ],
+    abstract: "As enterprises adopt autonomous AI agents, they need a way to preserve human accountability while allowing agents to act across organizational boundaries. This research presents a secure reference architecture for cross-enterprise AI agent delegation that separates who initiated an action from who executed it. The architecture propagates human and agent identity, validates delegated authority, enforces policy at each trust boundary, and records auditable evidence of agent actions. Using emerging and established standards such as RFC 8693, ID-JAG, W3C Verifiable Credentials, OPA, OpenTelemetry, and AGNTCY, the work outlines a practical Phase 1 proof of concept for delegated authorization, identity propagation, and cross-domain trust. The result is a foundation for more secure, governable, and interoperable enterprise AI agent ecosystems.",
+    sourceUrl: "https://drive.google.com/file/d/1eJ6HA2u2pq0-csk7eAYmAjhPo1ynngC1/view?usp=drive_link",
+    driveFileId: "1eJ6HA2u2pq0-csk7eAYmAjhPo1ynngC1",
+  },
+  {
+    slug: "silence-with-receipts",
+    event: "defcon-34",
+    title: "Silence, with Receipts.",
+    authors: [
+      { name: "Matthew Nardizzi (author)", affiliation: "Vortex Black" },
+      { name: "James Derella (presenter)", affiliation: "Vortex Black" },
+    ],
+    abstract: "Your AI is already acting — reading, sending, deploying — faster than any team can watch. Tex (Sovereign Security Engine) is autonomous security for that world: it handles what your AI is doing so people don't have to. Every action routed through Tex is judged before it runs — permit, hold, or forbid — with no default-permit path. And Tex knows when the AI needs a human: anything it can't certify lands on a hold carrying the one fact a person must supply — or the reason no fact will — and only a named human seal clears it. Everything else stays silent.\n\nIn a 24-day continuous synthetic fleet run (20 agents, July 5–29, 2026), Tex ruled 1,116,689 decisions on its own: 77.3% permitted, 21.1% forbidden, and 1.6% held for a human — all a human would ever see. Every verdict seals to a hash-chained receipt, and the human's answer becomes a second receipt on the same chain: testimony, not telemetry. The published bundle re-verifies offline from a fresh clone of the public repo — a 12-attack tamper matrix and 34 independent checks anyone can run. Change one byte, or re-sign with your own key, and it fails. Design, not hope.\n\nCoverage is a deployment property: these results cover actions routed through Tex. Don't trust the abstract — clone the repo and try to forge a receipt.",
+    sourceUrl: "https://drive.google.com/open?id=1UcN0BQ87PQC20cMMs3n9KS3FIIRgcUKB",
+    driveFileId: "1UcN0BQ87PQC20cMMs3n9KS3FIIRgcUKB",
+  },
+  {
     slug: "the-anatomy-of-a-chinese-knowledge-distillation-campaign",
     event: "defcon-34",
     title: "The Anatomy of a Chinese Knowledge Distillation Campaign",
@@ -222,5 +284,16 @@ export const posters: Poster[] = [
     abstract: "Agentic AI systems and automated ML pipelines increasingly rely on third-party model artifacts from public hubs, loading them through framework APIs such as torch.load() and AutoModel.from_pretrained(). These systems may select, evaluate, fine-tune, or deploy models without human review before execution. Attackers embed payloads in these artifacts that trigger during deserialization or inference, spawning processes, opening network connections, or exfiltrating host data. Platform scanners use static denylists and miss attacks that avoid denylisted functions, exploit unsupported loading paths, or abuse legitimate framework APIs. To detect such malware, we present ModelShield, the first runtime behavioral detection system that attributes system-level behavior to specific model operations. ModelShield combines application-level instrumentation of framework APIs with eBPF-based syscall tracing, preserving attribution across threads and child processes to separate model-triggered activity from environment noise. Attributed syscall sequences are classified using 193 behavior patterns mapped to MITRE ATT&CK techniques. We evaluated ModelShield on 145,000 models from Hugging Face, ModelScope, and Kaggle across 17 ML frameworks and 36 formats. On Hugging Face, it detected 41 malicious models, including a live reverse shell downloaded 108 times without platform-scanner detection before disclosure, and a payload performing host reconnaissance and outbound exfiltration; all detections were manually confirmed. It detected all 29 evasion variants spanning function substitution, loading-path obfuscation, and TensorFlow API abuse, outperforming static scanners. Analysis completes in a median of 12.3 seconds per model, making ModelShield practical for hub-scale screening. This poster demonstrates that detecting malicious models requires observing what they do, not just inspecting what they contain.",
     sourceUrl: "https://drive.google.com/file/d/1T1qQi24n2Mbem5jVxkdvCUEh5zgVo6i3/view?usp=drive_link",
     driveFileId: "1T1qQi24n2Mbem5jVxkdvCUEh5zgVo6i3",
+  },
+  {
+    slug: "the-weight-of-evidence-how-an-agentic-soc-analyst-earns-your-trust",
+    event: "defcon-34",
+    title: "The Weight of Evidence: How an Agentic SOC Analyst Earns Your Trust",
+    authors: [
+      { name: "Sophena Wilson", affiliation: "Microsoft" },
+    ],
+    abstract: "AI agents are moving into the SOC, where they read alerts, gather context and increasingly help decide what to close and what to escalate. Triage has always been an evidence discipline: a verdict is only ever as sound as the material beneath it. Agents inherit that dependency and add a new weakness, they cannot reliably distinguish evidence they are meant to read from instructions they are being told to follow. The SOC is an attractive place to exploit that, because so much of an agent's evidence is attacker-authored by design.\nThis work builds a representative triage agent, defines a four-part tamper taxonomy for machine-read evidence, and alters exactly one artefact per trial. One attacker-controlled field can move an autonomous verdict,  and the reasoning stays coherent, so the failure reads exactly like good work. Silent closures, not noisy escalations, are the failure worth instrumenting first.",
+    sourceUrl: "https://drive.google.com/file/d/1lCCJzB3P0bZhj4WMEi2nkunPgwxDVdGW/view?usp=drive_link",
+    driveFileId: "1lCCJzB3P0bZhj4WMEi2nkunPgwxDVdGW",
   },
 ];
