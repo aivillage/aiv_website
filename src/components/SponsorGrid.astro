@@ -21,15 +21,16 @@ const { sponsors, linkMode = "external", compact = false } = Astro.props as {
     ) : (
       <span>{sponsor.data.name}</span>
     );
+    const boxClass = ["sponsor-grid__logo-box", `sponsor-grid__logo-box--${sponsor.data.logoBackground}`];
 
     return (
       <div class="card sponsor-grid__card">
         {href ? (
-          <a class="sponsor-grid__logo-box" href={href} target={target} rel={rel}>
+          <a class:list={boxClass} href={href} target={target} rel={rel}>
             {logoContent}
           </a>
         ) : (
-          <div class="sponsor-grid__logo-box">
+          <div class:list={boxClass}>
             {logoContent}
           </div>
         )}
@@ -67,7 +68,6 @@ const { sponsors, linkMode = "external", compact = false } = Astro.props as {
 
   .sponsor-grid__logo-box {
     align-items: center;
-    background: #fff;
     border: 2px solid var(--aiv-card-border);
     border-radius: 10%;
     display: flex;
@@ -75,6 +75,18 @@ const { sponsors, linkMode = "external", compact = false } = Astro.props as {
     justify-content: center;
     padding: 20px;
     width: 240px;
+  }
+
+  /* Logo box background is fixed to keep the logo readable regardless of
+     the selected site theme — light-artwork logos sit on a dark box and
+     dark-artwork logos sit on a light box. */
+  .sponsor-grid__logo-box--light {
+    background: #fff;
+  }
+
+  .sponsor-grid__logo-box--dark {
+    background: #14161c;
+    border-color: rgba(255, 255, 255, 0.14);
   }
 
   .sponsor-grid--compact .sponsor-grid__logo-box {

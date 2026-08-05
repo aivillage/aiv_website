@@ -18,7 +18,11 @@ const hasBody = Boolean(sponsor.body?.trim());
   <PageShell>
   <article class="post">
     <header class="post-header">
-      {sponsor.data.logo && <img class="sponsor-detail-logo" src={`/assets/images/logos/${sponsor.data.logo}`} alt={`${sponsor.data.name} logo`} />}
+      {sponsor.data.logo && (
+        <span class:list={["sponsor-detail-logo-box", `sponsor-detail-logo-box--${sponsor.data.logoBackground}`]}>
+          <img class="sponsor-detail-logo" src={`/assets/images/logos/${sponsor.data.logo}`} alt={`${sponsor.data.name} logo`} />
+        </span>
+      )}
       <h1>{sponsor.data.name}</h1>
       {sponsor.data.url && <p><a href={sponsor.data.url} target="_blank" rel="noopener noreferrer">{sponsor.data.url}</a></p>}
     </header>
@@ -31,7 +35,27 @@ const hasBody = Boolean(sponsor.body?.trim());
 </BaseLayout>
 
 <style>
+  .sponsor-detail-logo-box {
+    align-items: center;
+    border: 1px solid var(--aiv-card-border);
+    border-radius: 8px;
+    display: inline-flex;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  /* Fixed logo-box background so the logo stays readable in any theme. */
+  .sponsor-detail-logo-box--light {
+    background: #fff;
+  }
+
+  .sponsor-detail-logo-box--dark {
+    background: #14161c;
+    border-color: rgba(255, 255, 255, 0.14);
+  }
+
   .sponsor-detail-logo {
+    display: block;
     max-height: 120px;
     max-width: 260px;
     object-fit: contain;
