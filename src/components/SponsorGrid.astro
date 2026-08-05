@@ -58,8 +58,9 @@ const { sponsors, linkMode = "external", compact = false } = Astro.props as {
 
   .sponsor-grid__card {
     align-items: center;
-    display: grid;
-    justify-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
 
   .sponsor-grid--compact .sponsor-grid__card {
