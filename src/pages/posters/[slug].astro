@@ -71,7 +71,7 @@ const abstractParagraphs = poster.abstract.split(/\n{2,}/).filter(Boolean);
         </ul>
       </header>
 
-      {poster.driveFileId && (
+      {poster.posterAvailability === "hosted" ? (
         <div class="poster-detail__thumb" data-poster-thumb>
           <img
             src={thumbnailUrl(poster.driveFileId)}
@@ -81,6 +81,10 @@ const abstractParagraphs = poster.abstract.split(/\n{2,}/).filter(Boolean);
             data-poster-thumb-img
           />
         </div>
+      ) : (
+        <div class="poster-detail__thumb poster-detail__thumb--unavailable">
+          <p>Poster not available online</p>
+        </div>
       )}
 
       <section class="poster-detail__abstract" aria-labelledby="abstract-heading">
@@ -89,14 +93,16 @@ const abstractParagraphs = poster.abstract.split(/\n{2,}/).filter(Boolean);
       </section>
 
       <div class="poster-detail__actions">
-        <Button
-          href={poster.sourceUrl}
-          variant="secondary"
-          target="_blank"
-          ariaLabel={`View poster: ${poster.title}`}
-        >
-          View poster
-        </Button>
+        {poster.posterAvailability === "hosted" && (
+          <Button
+            href={poster.sourceUrl}
+            variant="secondary"
+            target="_blank"
+            ariaLabel={`View poster: ${poster.title}`}
+          >
+            View poster
+          </Button>
+        )}
         <a href={`/posters/#${event.id}`}>View all {event.label} posters</a>
       </div>
     </article>
@@ -200,6 +206,21 @@ const abstractParagraphs = poster.abstract.split(/\n{2,}/).filter(Boolean);
     height: 100%;
     object-fit: contain;
     width: 100%;
+  }
+
+  .poster-detail__thumb--unavailable {
+    align-items: center;
+    color: var(--aiv-text-secondary);
+    display: flex;
+    font-family: var(--aiv-font-mono);
+    font-size: 0.875rem;
+    justify-content: center;
+    padding: 1.25rem;
+    text-align: center;
+  }
+
+  .poster-detail__thumb--unavailable p {
+    margin: 0;
   }
 
   .poster-detail__abstract {

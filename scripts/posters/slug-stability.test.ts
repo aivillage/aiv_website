@@ -18,7 +18,13 @@
  */
 
 import { execFileSync, spawnSync } from "node:child_process";
-import { existsSync, mkdtempSync, writeFileSync, readFileSync, rmSync } from "node:fs";
+import {
+  existsSync,
+  mkdtempSync,
+  writeFileSync,
+  readFileSync,
+  rmSync,
+} from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve, join } from "node:path";
 import { tmpdir } from "node:os";
@@ -29,20 +35,29 @@ const IMPORTER = resolve(HERE, "import-posters.ts");
 const ABSTRACT =
   "A sufficiently long abstract that comfortably passes the minimum length validation the importer applies to every row.";
 
-type Row = { title: string; slug?: string; id: string; number: number };
+type Row = {
+  title: string;
+  slug?: string;
+  id: string;
+  number: number;
+  publish?: string;
+};
 type FormRow = {
   title: string;
   authors: string;
   id?: string;
-  host?: "Yes" | "No";
+  host?: string;
+  timestamp?: string;
+  posterUrl?: string;
 };
 
 function csv(rows: Row[]): string {
   const esc = (v: string) => `"${v.replace(/"/g, '""')}"`;
-  const header = "Publish,Poster Number,Slug,Title,Authors,Abstract,Poster Link";
+  const header =
+    "Publish,Poster Number,Slug,Title,Authors,Abstract,Poster Link";
   const body = rows.map((r) =>
     [
-      "YES",
+      r.publish ?? "YES",
       String(r.number),
       esc(r.slug ?? ""),
       esc(r.title),
@@ -64,17 +79,22 @@ function formCsv(rows: FormRow[]): string {
     "Please provide all the names of the authors, followed by their affiliation and method of contact. Example: Michelle Hoang, AI Village, linkedin.com/in/example",
     "Please provide the abstract that you would like to accompany your poster",
     "Please provide the poster you wish to display on the AI Village website and at DEFCON34. Please limit to PNGs, SVGs, or other image types.",
-  ].map(esc).join(",");
-  const body = rows.map((row) =>
+  ]
+    .map(esc)
+    .join(",");
+  const body = rows.map((row, index) =>
     [
-      "7/31/2026 12:00:00",
+      row.timestamp ?? `7/31/2026 12:00:${String(index).padStart(2, "0")}`,
       "submitter@example.com",
       row.title,
       row.host ?? "Yes",
       row.authors,
       ABSTRACT,
-      row.id ? `https://drive.google.com/open?id=${row.id}` : "",
-    ].map(esc).join(","),
+      row.posterUrl ??
+        (row.id ? `https://drive.google.com/open?id=${row.id}` : ""),
+    ]
+      .map(esc)
+      .join(","),
   );
   return [header, ...body].join("\n");
 }
@@ -85,18 +105,28 @@ const tmp = mkdtempSync(join(tmpdir(), "poster-test-"));
 // flag. src/data/posters.ts is never touched, so an interrupted run cannot
 // strand fixtures in the working tree.
 const DATA = join(tmp, "posters.ts");
-writeFileSync(DATA, `import type { Poster } from "./poster-events";\n\nexport const posters: Poster[] = [];\n`);
+writeFileSync(
+  DATA,
+  `import type { Poster } from "./poster-events";\n\nexport const posters: Poster[] = [];\n`,
+);
 
 let failures = 0;
 
-function run(rows: Row[], flags: string[] = []): { ok: boolean; output: string } {
+function run(
+  rows: Row[],
+  flags: string[] = [],
+): { ok: boolean; output: string } {
   const path = join(tmp, "queue.csv");
   writeFileSync(path, csv(rows));
   try {
-    const output = execFileSync("npx", ["tsx", IMPORTER, path, "--out", DATA, ...flags], {
-      encoding: "utf8",
-      stdio: ["ignore", "pipe", "pipe"],
-    });
+    const output = execFileSync(
+      "npx",
+      ["tsx", IMPORTER, path, "--out", DATA, ...flags],
+      {
+        encoding: "utf8",
+        stdio: ["ignore", "pipe", "pipe"],
+      },
+    );
     return { ok: true, output };
   } catch (error) {
     const e = error as { stdout?: string; stderr?: string };
@@ -111,21 +141,21 @@ function runForm(
 ): { ok: boolean; output: string } {
   const path = join(tmp, "form-responses.csv");
   writeFileSync(path, formCsv(rows));
-  try {
-    const output = execFileSync(
-      "npx",
-      ["tsx", IMPORTER, path, "--out", dataPath, ...flags],
-      { encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] },
-    );
-    return { ok: true, output };
-  } catch (error) {
-    const e = error as { stdout?: string; stderr?: string };
-    return { ok: false, output: `${e.stdout ?? ""}${e.stderr ?? ""}` };
-  }
+  const result = spawnSync(
+    "npx",
+    ["tsx", IMPORTER, path, "--out", dataPath, ...flags],
+    { encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] },
+  );
+  return {
+    ok: result.status === 0,
+    output: `${result.stdout ?? ""}${result.stderr ?? ""}`,
+  };
 }
 
 function slugs(): string[] {
-  return [...readFileSync(DATA, "utf8").matchAll(/slug: "([^"]*)"/g)].map((m) => m[1]);
+  return [...readFileSync(DATA, "utf8").matchAll(/slug: "([^"]*)"/g)].map(
+    (m) => m[1],
+  );
 }
 
 function check(name: string, condition: boolean, detail = "") {
@@ -164,15 +194,61 @@ try {
     !existsSync(missingOperandOutput),
   );
 
+  const genericData = join(tmp, "generic-posters.ts");
+  const genericCsv = join(tmp, "generic-queue.csv");
+  writeFileSync(
+    genericData,
+    `import type { Poster } from "./poster-events";\n\nexport const posters: Poster[] = [];\n`,
+  );
+  writeFileSync(
+    genericCsv,
+    csv([
+      { title: "Published Generic Row", id: "1GENERICYES", number: 1 },
+      {
+        title: "Excluded Generic Row",
+        id: "1GENERICNO",
+        number: 2,
+        publish: "NO",
+      },
+    ]),
+  );
+  const genericRun = spawnSync(
+    "npx",
+    ["tsx", IMPORTER, genericCsv, "--out", genericData],
+    { encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] },
+  );
+  const genericOutput = readFileSync(genericData, "utf8");
+  check(
+    "generic Publish queue imports successfully",
+    genericRun.status === 0,
+    genericRun.stderr,
+  );
+  check(
+    "generic Publish = YES row remains included",
+    genericOutput.includes("Published Generic Row"),
+  );
+  check(
+    "generic Publish = NO row remains excluded",
+    !genericOutput.includes("Excluded Generic Row"),
+  );
+
   // Generate two baseline poster records.
-  const A = { title: "Poisoned Mandates in Agent Instruction Sets", id: "1AAA", number: 1 };
+  const A = {
+    title: "Poisoned Mandates in Agent Instruction Sets",
+    id: "1AAA",
+    number: 1,
+  };
   const B = { title: "Agent to Agent Worm Propagation", id: "1BBB", number: 2 };
   run([A, B]);
   const [aSlug, bSlug] = slugs();
 
   // 1. Title edited, Slug blank -> existing canonical URL retained.
   run([{ ...A, title: "Poisoned Mandates" }, B]);
-  check("title edit does not move an existing canonical poster URL", slugs()[0] === aSlug, slugs()[0]);
+  check(
+    "title edit does not move an existing canonical poster URL",
+    slugs()[0] === aSlug,
+    slugs()[0],
+  );
 
   // 2. Link re-copied in a different URL form -> same identity, same canonical URL.
   const path = join(tmp, "variant.csv");
@@ -184,11 +260,17 @@ try {
     ),
   );
   try {
-    execFileSync("npx", ["tsx", IMPORTER, path, "--out", DATA], { stdio: "ignore" });
+    execFileSync("npx", ["tsx", IMPORTER, path, "--out", DATA], {
+      stdio: "ignore",
+    });
   } catch {
     // fall through; the assertion below reports the real problem
   }
-  check("re-copied link keeps the same canonical poster URL", slugs()[0] === aSlug, slugs()[0]);
+  check(
+    "re-copied link keeps the same canonical poster URL",
+    slugs()[0] === aSlug,
+    slugs()[0],
+  );
 
   // 3. Explicit Slug edit without the flag -> rejected, nothing written.
   const blocked = run([{ ...A, slug: "poisoned-mandates" }, B]);
@@ -205,7 +287,11 @@ try {
     ["--allow-slug-change"],
   );
   const after = slugs();
-  check("flagged run moves the poster whose Slug was edited", after[0] === "poisoned-mandates", after[0]);
+  check(
+    "flagged run moves the poster whose Slug was edited",
+    after[0] === "poisoned-mandates",
+    after[0],
+  );
   check(
     "flagged run does NOT reslug an unrelated retitled poster",
     after[1] === bSlug,
@@ -235,7 +321,11 @@ try {
   // 6. The same removal succeeds once explicitly authorised.
   const allowed = run([A], ["--allow-permalink-removal"]);
   check("removal succeeds with --allow-permalink-removal", allowed.ok);
-  check("only the remaining poster survives", slugs().length === 1, slugs().join(", "));
+  check(
+    "only the remaining poster survives",
+    slugs().length === 1,
+    slugs().join(", "),
+  );
 
   console.log("\nGoogle Form response input\n");
 
@@ -266,18 +356,194 @@ try {
     formData,
   );
   const formOutput = readFileSync(formData, "utf8");
-  check("actual Google Form response headers import directly", formRun.ok, formRun.output);
-  check("Form title whitespace is normalized", formOutput.includes('title: "Direct Form Import"'));
-  check("Form author names and affiliations are retained", formOutput.includes(
-    '{ name: "Bob Example", affiliation: "Research @ Example" }',
-  ));
-  check("Form author contact details are removed", !/@example\.com|linkedin\.com/.test(formOutput));
-  check("opted-in response without an upload is skipped", !formOutput.includes("Waiting for upload"));
-  check("non-hosted Form response is skipped", !formOutput.includes("Not hosted"));
   check(
-    "incomplete Form response is reported",
-    formRun.output.includes("Skipped 1 opted-in Form response(s) without a poster upload."),
+    "actual Google Form response headers import directly",
+    formRun.ok,
     formRun.output,
+  );
+  check(
+    "Form title whitespace is normalized",
+    formOutput.includes('title: "Direct Form Import"'),
+  );
+  check(
+    "Form author names and affiliations are retained",
+    formOutput.includes(
+      '{ name: "Bob Example", affiliation: "Research @ Example" }',
+    ),
+  );
+  check(
+    "Form author contact details are removed",
+    !/@example\.com|linkedin\.com/.test(formOutput),
+  );
+  check(
+    "opted-in response without an upload is listed",
+    formOutput.includes("Waiting for upload"),
+  );
+  check(
+    "non-hosted Form response is listed",
+    formOutput.includes("Not hosted"),
+  );
+  check(
+    "hosted response is marked hosted",
+    formOutput.includes('posterAvailability: "hosted"'),
+  );
+  check(
+    "missing upload is marked missing",
+    formOutput.includes('posterAvailability: "missing"'),
+  );
+  check(
+    "declined response is marked declined",
+    formOutput.includes('posterAvailability: "declined"'),
+  );
+  check(
+    "declined response does not expose its upload",
+    !formOutput.includes("1NO"),
+  );
+  check(
+    "metadata-only responses omit poster file fields",
+    (formOutput.match(/sourceUrl:/g) ?? []).length === 1 &&
+      (formOutput.match(/driveFileId:/g) ?? []).length === 1,
+    formOutput,
+  );
+  check(
+    "missing Form upload is reported as a warning",
+    formRun.output.includes(
+      "row 3: hosting was requested, but no poster file was uploaded",
+    ),
+    formRun.output,
+  );
+  check(
+    "missing Form upload does not fail the import",
+    formRun.ok,
+    formRun.output,
+  );
+
+  const availabilityData = join(tmp, "availability-posters.ts");
+  writeFileSync(
+    availabilityData,
+    `import type { Poster } from "./poster-events";\n\nexport const posters: Poster[] = [];\n`,
+  );
+  const stableTimestamp = "7/31/2026 13:00:00";
+  const missingFirst = runForm(
+    [
+      {
+        title: "Poster Awaiting Its File",
+        authors: "Casey Example, Example Lab, casey@example.com",
+        timestamp: stableTimestamp,
+      },
+    ],
+    availabilityData,
+  );
+  const initialAvailabilityOutput = readFileSync(availabilityData, "utf8");
+  const initialAvailabilitySlug = /slug: "([^"]+)"/.exec(
+    initialAvailabilityOutput,
+  )?.[1];
+  check(
+    "metadata-only baseline imports successfully",
+    missingFirst.ok,
+    missingFirst.output,
+  );
+  check(
+    "metadata-only baseline has an opaque Form identity",
+    /submissionId: "form-[a-f0-9]{20}"/.test(initialAvailabilityOutput),
+  );
+
+  const hostedLater = runForm(
+    [
+      {
+        title: "Poster Title Corrected After Upload",
+        authors: "Casey Example, Example Lab, casey@example.com",
+        timestamp: stableTimestamp,
+        id: "1LATER",
+      },
+    ],
+    availabilityData,
+  );
+  const hostedLaterOutput = readFileSync(availabilityData, "utf8");
+  check(
+    "later poster upload imports successfully",
+    hostedLater.ok,
+    hostedLater.output,
+  );
+  check(
+    "later upload and title correction retain the metadata-only canonical slug",
+    hostedLaterOutput.includes(`slug: "${initialAvailabilitySlug}"`),
+    hostedLaterOutput,
+  );
+  check(
+    "later upload changes availability to hosted",
+    hostedLaterOutput.includes('posterAvailability: "hosted"'),
+  );
+
+  const declinedLater = runForm(
+    [
+      {
+        title: "Poster Title Corrected Again",
+        authors: "Casey Example, Example Lab, casey@example.com",
+        timestamp: stableTimestamp,
+        host: "No",
+        posterUrl: "https://example.com/private-poster.png",
+      },
+    ],
+    availabilityData,
+  );
+  const declinedLaterOutput = readFileSync(availabilityData, "utf8");
+  check(
+    "consent change to declined imports successfully",
+    declinedLater.ok,
+    declinedLater.output,
+  );
+  check(
+    "consent change retains the canonical slug",
+    declinedLaterOutput.includes(`slug: "${initialAvailabilitySlug}"`),
+    declinedLaterOutput,
+  );
+  check(
+    "declined response ignores even an invalid supplied poster URL",
+    !declinedLaterOutput.includes("example.com/private-poster.png"),
+  );
+
+  const invalidUrlData = join(tmp, "invalid-url-posters.ts");
+  writeFileSync(invalidUrlData, `export const posters = [];\n`);
+  const invalidUrl = runForm(
+    [
+      {
+        title: "Invalid Hosted Poster URL",
+        authors: "Jamie Example, Example Lab, jamie@example.com",
+        posterUrl: "https://example.com/poster.png",
+      },
+    ],
+    invalidUrlData,
+  );
+  check(
+    "invalid opted-in poster URL remains an error",
+    !invalidUrl.ok,
+    invalidUrl.output,
+  );
+
+  const duplicateTimestampData = join(tmp, "duplicate-timestamp-posters.ts");
+  writeFileSync(duplicateTimestampData, `export const posters = [];\n`);
+  const duplicateTimestamp = runForm(
+    [
+      {
+        title: "First Timestamp Collision",
+        authors: "Avery Example, Example Lab",
+        id: "1TIMEA",
+        timestamp: stableTimestamp,
+      },
+      {
+        title: "Second Timestamp Collision",
+        authors: "Blair Example, Example Lab",
+        id: "1TIMEB",
+        timestamp: stableTimestamp,
+      },
+    ],
+    duplicateTimestampData,
+  );
+  check(
+    "duplicate Form timestamps fail safely",
+    !duplicateTimestamp.ok,
+    duplicateTimestamp.output,
   );
 
   const migrationData = join(tmp, "form-migration.ts");
@@ -294,11 +560,13 @@ try {
       `}];\n`,
   );
   const migration = runForm(
-    [{
-      title: "Same Poster Title",
-      authors: "Alice Example, Example Lab, alice@example.com",
-      id: "1ORIGINAL",
-    }],
+    [
+      {
+        title: "Same Poster Title",
+        authors: "Alice Example, Example Lab, alice@example.com",
+        id: "1ORIGINAL",
+      },
+    ],
     migrationData,
   );
   const migrationOutput = readFileSync(migrationData, "utf8");
@@ -316,6 +584,8 @@ try {
 }
 
 console.log(
-  failures === 0 ? "\nAll canonical poster URL tests passed.\n" : `\n${failures} test(s) failed.\n`,
+  failures === 0
+    ? "\nAll canonical poster URL tests passed.\n"
+    : `\n${failures} test(s) failed.\n`,
 );
 process.exit(failures === 0 ? 0 : 1);

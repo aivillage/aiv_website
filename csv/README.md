@@ -8,6 +8,11 @@ directory are intentionally ignored by Git and must never be committed. The
 poster importer understands the current Google Form response export directly
 and removes author contact/profile details from generated records.
 
+Every complete Form response is listed in the poster archive. The hosting answer
+controls only whether the uploaded poster file is displayed: `No` responses are
+metadata-only, and a `Yes` response without an upload is imported with a warning
+as metadata-only until its file arrives.
+
 Import the current Form response export with:
 
 ```bash

@@ -36,7 +36,7 @@ function thumbnailUrl(driveFileId: string, width: number): string {
 }
 
 const thumbnailWidth = isArchive ? 1200 : 800;
-const archiveThumbnailSrcset = isArchive
+const archiveThumbnailSrcset = isArchive && poster.posterAvailability === "hosted"
   ? [600, 800, 900, 1200]
       .map((width) => `${thumbnailUrl(poster.driveFileId, width)} ${width}w`)
       .join(", ")
@@ -48,7 +48,10 @@ const archiveThumbnailSizes = "(max-width: 48rem) calc(100vw - 2rem), 35rem";
   class:list={[
     "poster-card",
     `poster-card--${variant}`,
-    { "poster-card--no-thumb": deferThumbnail && !isArchive },
+    {
+      "poster-card--no-thumb":
+        poster.posterAvailability === "hosted" && deferThumbnail && !isArchive,
+    },
   ]}
   id={isArchive ? `poster-${poster.slug}` : undefined}
   data-poster-card={isArchive ? true : undefined}
@@ -65,7 +68,7 @@ const archiveThumbnailSizes = "(max-width: 48rem) calc(100vw - 2rem), 35rem";
       : undefined
   }
 >
-  {poster.driveFileId && (
+  {poster.posterAvailability === "hosted" ? (
     <a
       class="poster-card__thumb"
       href={detailPath}
@@ -86,6 +89,10 @@ const archiveThumbnailSizes = "(max-width: 48rem) calc(100vw - 2rem), 35rem";
         data-poster-thumb-img
       />
     </a>
+  ) : (
+    <div class="poster-card__thumb poster-card__thumb--unavailable">
+      <span>Poster not available online</span>
+    </div>
   )}
   <div class="poster-card__body">
     {isArchive && poster.posterNumber !== undefined && (
@@ -273,6 +280,17 @@ const archiveThumbnailSizes = "(max-width: 48rem) calc(100vw - 2rem), 35rem";
     height: 100%;
     object-fit: contain;
     width: 100%;
+  }
+
+  .poster-card__thumb--unavailable {
+    align-items: center;
+    color: var(--aiv-text-muted);
+    display: flex;
+    font-family: var(--aiv-font-mono);
+    font-size: 0.875rem;
+    justify-content: center;
+    padding: 1.25rem;
+    text-align: center;
   }
 
   .poster-card__thumb:focus-visible {
