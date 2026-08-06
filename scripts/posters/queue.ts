@@ -6,11 +6,12 @@
  * canonical poster URL is checked here rather than left to review.
  */
 
+import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { parseCsv } from "./csv.ts";
 import { posterEvents } from "../../src/data/poster-events.ts";
 
-export type QueueRow = {
+type QueueRowBase = {
   /** 1-based row number in the CSV, for error messages. */
   rowNumber: number;
   event: string;
@@ -19,47 +20,75 @@ export type QueueRow = {
   authors: { name: string; affiliation?: string }[];
   abstract: string;
   keywords: string[];
-  sourceUrl: string;
-  /** Extracted from sourceUrl. Identity key, and the thumbnail source. */
-  driveFileId: string;
+  /** Opaque stable identity for direct Google Form imports. */
+  submissionId?: string;
   posterNumber?: number;
 };
+
+export type QueueRow = QueueRowBase &
+  (
+    | {
+        posterAvailability: "hosted";
+        sourceUrl: string;
+        /** Extracted from sourceUrl, and used as the thumbnail source. */
+        driveFileId: string;
+      }
+    | {
+        posterAvailability: "declined" | "missing";
+        sourceUrl?: never;
+        driveFileId?: never;
+      }
+  );
 
 /**
  * Accepted header spellings, lowercased. Add aliases here rather than forcing
  * organizers to rename spreadsheet columns.
  */
 const HEADER_ALIASES: Record<string, string[]> = {
+  timestamp: ["timestamp", "submitted at", "submission time"],
   publish: ["publish", "publish?", "publish to site", "live"],
   slug: ["slug", "url slug"],
   title: ["title", "poster title"],
   authors: ["authors", "author", "author names", "authors (one per line)"],
   abstract: ["abstract", "summary", "description"],
   keywords: ["keywords", "tags", "topics"],
-  sourceUrl: ["poster link", "drive link", "poster url", "link", "file link", "source url"],
+  sourceUrl: [
+    "poster link",
+    "drive link",
+    "poster url",
+    "link",
+    "file link",
+    "source url",
+  ],
   posterNumber: ["poster number", "number", "no", "#"],
 };
 
 /** Google Form response-export headers used by the current poster workflow. */
-const FORM_HEADER_PATTERNS: Partial<Record<keyof typeof HEADER_ALIASES, RegExp>> = {
+const FORM_HEADER_PATTERNS: Partial<
+  Record<keyof typeof HEADER_ALIASES, RegExp>
+> = {
+  timestamp: /^timestamp$/,
   publish: /^would you like your poster hosted on our ai village website\?$/,
   title: /^what is the name of your poster\?$/,
-  authors: /^please provide all the names of the authors, followed by their affiliation and method of contact\./,
-  abstract: /^please provide the abstract that you would like to accompany your poster$/,
-  sourceUrl: /^please provide the poster you wish to display on the ai village website and at defcon34\./,
+  authors:
+    /^please provide all the names of the authors, followed by their affiliation and method of contact\./,
+  abstract:
+    /^please provide the abstract that you would like to accompany your poster$/,
+  sourceUrl:
+    /^please provide the poster you wish to display on the ai village website and at defcon34\./,
 };
 
-const REQUIRED = ["publish", "title", "authors", "abstract", "sourceUrl"] as const;
+const REQUIRED = [
+  "publish",
+  "title",
+  "authors",
+  "abstract",
+  "sourceUrl",
+] as const;
 
-/**
- * `Publish` is the only thing that decides what appears on the site.
- *
- * It is deliberately not a workflow status. The importer regenerates the whole
- * data file, so whatever it selects *is* the site — and keying off a changing
- * workflow status could delete a poster on the next run. Site inclusion intent
- * and workflow state are different things.
- */
+/** Generic publish queues still use this as their site-inclusion switch. */
 const TRUTHY = new Set(["yes", "y", "true", "1", "x", "checked"]);
+const FALSY = new Set(["no", "n", "false", "0", "unchecked"]);
 
 /**
  * This importer is hardcoded to one event, deliberately.
@@ -139,7 +168,9 @@ export function slugify(value: string): string {
   // permanent identifier.
   const truncated = normalized.slice(0, 72);
   const boundary = truncated.lastIndexOf("-");
-  return boundary >= 32 ? truncated.slice(0, boundary) : truncated.replace(/-+$/g, "");
+  return boundary >= 32
+    ? truncated.slice(0, boundary)
+    : truncated.replace(/-+$/g, "");
 }
 
 /**
@@ -153,7 +184,10 @@ export function slugify(value: string): string {
 export function driveFileId(value: string): string | null {
   try {
     const url = new URL(value);
-    const path = /\/(?:file|document|presentation|spreadsheets)\/d\/([^/]+)/.exec(url.pathname);
+    const path =
+      /\/(?:file|document|presentation|spreadsheets)\/d\/([^/]+)/.exec(
+        url.pathname,
+      );
     if (path) return path[1];
     return url.searchParams.get("id");
   } catch {
@@ -173,9 +207,14 @@ export function driveFileId(value: string): string | null {
  * This is not the incremental-merge logic rejected elsewhere: record *content*
  * is still fully regenerated every run. Only the identifier is sticky.
  */
-export const DEFAULT_DATA_PATH = new URL("../../src/data/posters.ts", import.meta.url);
+export const DEFAULT_DATA_PATH = new URL(
+  "../../src/data/posters.ts",
+  import.meta.url,
+);
 
-export function existingSlugsById(dataPath: URL | string = DEFAULT_DATA_PATH): Map<string, string> {
+export function existingSlugsByDriveId(
+  dataPath: URL | string = DEFAULT_DATA_PATH,
+): Map<string, string> {
   const map = new Map<string, string>();
   try {
     const source = readFileSync(dataPath, "utf8");
@@ -193,6 +232,44 @@ export function existingSlugsById(dataPath: URL | string = DEFAULT_DATA_PATH): M
   return map;
 }
 
+function existingSlugsBySubmissionId(
+  dataPath: URL | string = DEFAULT_DATA_PATH,
+): Map<string, string> {
+  const map = new Map<string, string>();
+  try {
+    const source = readFileSync(dataPath, "utf8");
+    const blocks = source.split(/\n {2}\{/);
+    for (const block of blocks) {
+      const slug = /slug:\s*"((?:[^"\\]|\\.)*)"/.exec(block);
+      const submissionId = /submissionId:\s*"((?:[^"\\]|\\.)*)"/.exec(block);
+      if (!slug || !submissionId) continue;
+      map.set(JSON.parse(`"${submissionId[1]}"`), JSON.parse(`"${slug[1]}"`));
+    }
+  } catch {
+    // First run, or the file was deleted: no canonical poster routes existed in the baseline.
+  }
+  return map;
+}
+
+export function existingPosterSlugs(
+  dataPath: URL | string = DEFAULT_DATA_PATH,
+): Set<string> {
+  const slugs = new Set<string>();
+  try {
+    const source = readFileSync(dataPath, "utf8");
+    for (const match of source.matchAll(/\n\s+slug:\s*"((?:[^"\\]|\\.)*)"/g)) {
+      slugs.add(JSON.parse(`"${match[1]}"`));
+    }
+  } catch {
+    // First run, or the file was deleted: no canonical poster routes existed in the baseline.
+  }
+  return slugs;
+}
+
+function formSubmissionId(timestamp: string): string {
+  return `form-${createHash("sha256").update(timestamp.trim()).digest("hex").slice(0, 20)}`;
+}
+
 function titleKey(value: string): string {
   return value.normalize("NFKC").replace(/\s+/g, " ").trim().toLowerCase();
 }
@@ -208,7 +285,10 @@ function existingSlugsByTitle(
       const slug = /slug:\s*"((?:[^"\\]|\\.)*)"/.exec(block);
       const title = /title:\s*"((?:[^"\\]|\\.)*)"/.exec(block);
       if (!slug || !title) continue;
-      map.set(titleKey(JSON.parse(`"${title[1]}"`)), JSON.parse(`"${slug[1]}"`));
+      map.set(
+        titleKey(JSON.parse(`"${title[1]}"`)),
+        JSON.parse(`"${slug[1]}"`),
+      );
     }
   } catch {
     // First run, or the file was deleted: no canonical poster routes existed in the baseline.
@@ -232,7 +312,11 @@ function resolveHeaders(header: string[]): {
     if (index !== -1) map[canonical] = index;
   }
 
-  const missing = REQUIRED.filter((key) => !(key in map));
+  const formResponse = normalized.some((headerValue) =>
+    FORM_HEADER_PATTERNS.publish?.test(headerValue),
+  );
+  const required = formResponse ? [...REQUIRED, "timestamp"] : [...REQUIRED];
+  const missing = required.filter((key) => !(key in map));
   if (missing.length > 0) {
     throw new QueueError(
       [
@@ -252,9 +336,7 @@ function resolveHeaders(header: string[]): {
 
   return {
     columns: map,
-    formResponse: normalized.some((headerValue) =>
-      FORM_HEADER_PATTERNS.publish?.test(headerValue),
-    ),
+    formResponse,
   };
 }
 
@@ -289,7 +371,10 @@ function parseAuthors(
         const affiliation = parts.filter((part) => !isContact(part)).join(", ");
         return affiliation ? { name, affiliation } : { name };
       })
-      .filter((author): author is { name: string; affiliation?: string } => author !== null);
+      .filter(
+        (author): author is { name: string; affiliation?: string } =>
+          author !== null,
+      );
   }
 
   const source = lines.length > 1 || raw.includes("|") ? lines : raw.split(",");
@@ -306,9 +391,9 @@ function parseAuthors(
 export type ReadResult = {
   rows: QueueRow[];
   errors: string[];
+  /** Non-fatal workflow issues, such as an opted-in response awaiting its file. */
+  warnings: string[];
   skipped: number;
-  /** Opted-in Form responses that do not yet include a poster upload. */
-  incomplete: number;
   /** Existing generated records whose title changed; the existing slug was retained. */
   keptSlugs: string[];
   /**
@@ -325,7 +410,8 @@ export function readQueue(
   csvPath: string,
   options: { allowSlugChange?: boolean; dataPath?: URL | string } = {},
 ): ReadResult {
-  const existingSlugs = existingSlugsById(options.dataPath);
+  const existingDriveSlugs = existingSlugsByDriveId(options.dataPath);
+  const existingSubmissionSlugs = existingSlugsBySubmissionId(options.dataPath);
   const existingTitleSlugs = existingSlugsByTitle(options.dataPath);
   const keptSlugs: string[] = [];
   const movedSlugs: string[] = [];
@@ -338,19 +424,36 @@ export function readQueue(
 
   const rows: QueueRow[] = [];
   const errors: string[] = [];
+  const warnings: string[] = [];
   let skipped = 0;
-  let incomplete = 0;
 
   const seenSlug = new Map<string, number>();
   const seenUrl = new Map<string, number>();
   const seenTitle = new Map<string, number>();
   const seenPosterNumber = new Map<string, number>();
+  const seenSubmissionId = new Map<string, number>();
 
   table.slice(1).forEach((raw, index) => {
     const rowNumber = index + 2; // header is row 1
-    if (!TRUTHY.has(cell(raw, "publish").toLowerCase())) {
+    const consent = cell(raw, "publish").toLowerCase();
+    if (!formResponse && !TRUTHY.has(consent)) {
       skipped += 1;
       return;
+    }
+
+    const fail = (msg: string) => errors.push(`row ${rowNumber}: ${msg}`);
+    let posterAvailability: QueueRow["posterAvailability"];
+    if (formResponse) {
+      if (TRUTHY.has(consent)) posterAvailability = "hosted";
+      else if (FALSY.has(consent)) posterAvailability = "declined";
+      else {
+        fail(
+          `hosting response ${JSON.stringify(cell(raw, "publish"))} is not a recognized Yes or No value`,
+        );
+        return;
+      }
+    } else {
+      posterAvailability = "hosted";
     }
 
     const rawTitle = cell(raw, "title");
@@ -359,15 +462,33 @@ export function readQueue(
       : rawTitle;
     const abstract = cell(raw, "abstract");
     const sourceUrl = cell(raw, "sourceUrl");
-    if (formResponse && !sourceUrl) {
-      incomplete += 1;
-      return;
+    if (formResponse && posterAvailability === "hosted" && !sourceUrl) {
+      posterAvailability = "missing";
+      warnings.push(
+        `row ${rowNumber}: hosting was requested, but no poster file was uploaded`,
+      );
     }
     const authors = parseAuthors(cell(raw, "authors"), formResponse);
-    const fail = (msg: string) => errors.push(`row ${rowNumber}: ${msg}`);
 
-    const sourceId = driveFileId(sourceUrl);
-    if (sourceUrl && !sourceId) {
+    const timestamp = formResponse ? cell(raw, "timestamp") : "";
+    let submissionId: string | undefined;
+    if (formResponse) {
+      if (!timestamp) {
+        fail("Form response timestamp is empty");
+      } else {
+        submissionId = formSubmissionId(timestamp);
+        const first = seenSubmissionId.get(submissionId);
+        if (first !== undefined) {
+          fail(`duplicate Form response timestamp — also on row ${first}`);
+        } else {
+          seenSubmissionId.set(submissionId, rowNumber);
+        }
+      }
+    }
+
+    const hostedSourceUrl = posterAvailability === "hosted" ? sourceUrl : "";
+    const sourceId = hostedSourceUrl ? driveFileId(hostedSourceUrl) : null;
+    if (hostedSourceUrl && !sourceId) {
       fail("could not extract a Google Drive file ID from Poster Link");
     }
 
@@ -378,7 +499,8 @@ export function readQueue(
     // only as a migration bridge when that Drive-ID lookup misses. Once the
     // generated file contains the Form IDs, all later runs use Drive identity.
     const existingSlug =
-      (sourceId ? existingSlugs.get(sourceId) : undefined) ??
+      (submissionId ? existingSubmissionSlugs.get(submissionId) : undefined) ??
+      (sourceId ? existingDriveSlugs.get(sourceId) : undefined) ??
       (formResponse ? existingTitleSlugs.get(titleKey(title)) : undefined);
 
     // Once a poster exists in generated data, its canonical URL is frozen —
@@ -391,7 +513,8 @@ export function readQueue(
     // become a licence to reslug every title-corrected poster in the same run.
     let slug = requestedSlug;
     if (existingSlug) {
-      const explicitChange = Boolean(suppliedSlug) && requestedSlug !== existingSlug;
+      const explicitChange =
+        Boolean(suppliedSlug) && requestedSlug !== existingSlug;
 
       if (explicitChange && options.allowSlugChange) {
         slug = requestedSlug;
@@ -421,18 +544,30 @@ export function readQueue(
     // is the only machine-readable description of the work that exists.
     if (!abstract) {
       fail("abstract is empty");
-    } else if (PLACEHOLDER_ABSTRACTS.includes(abstract.toLowerCase().replace(/\.$/, ""))) {
-      fail(`abstract is a placeholder (${JSON.stringify(abstract)}) — needs real text`);
+    } else if (
+      PLACEHOLDER_ABSTRACTS.includes(abstract.toLowerCase().replace(/\.$/, ""))
+    ) {
+      fail(
+        `abstract is a placeholder (${JSON.stringify(abstract)}) — needs real text`,
+      );
     } else if (abstract.length < 40) {
       fail(`abstract is only ${abstract.length} characters — needs real text`);
     }
 
-    if (!sourceUrl) {
+    if (posterAvailability === "hosted" && !hostedSourceUrl) {
       fail("poster link is empty");
-    } else if (!/^https:\/\/(drive|docs)\.google\.com\//.test(sourceUrl)) {
-      fail(`poster link is not a Google Drive URL: ${sourceUrl}`);
-    } else if (/\/file\/d\/[^/]+\/?$/.test(sourceUrl)) {
-      fail("poster link looks hand-built — paste the full URL from Drive's Copy link");
+    } else if (
+      posterAvailability === "hosted" &&
+      !/^https:\/\/(drive|docs)\.google\.com\//.test(hostedSourceUrl)
+    ) {
+      fail(`poster link is not a Google Drive URL: ${hostedSourceUrl}`);
+    } else if (
+      posterAvailability === "hosted" &&
+      /\/file\/d\/[^/]+\/?$/.test(hostedSourceUrl)
+    ) {
+      fail(
+        "poster link looks hand-built — paste the full URL from Drive's Copy link",
+      );
     }
 
     if (!slug) fail("could not derive a slug from the title");
@@ -442,15 +577,17 @@ export function readQueue(
       );
     }
 
-
     const dupe = (map: Map<string, number>, key: string, label: string) => {
       if (!key) return;
       const first = map.get(key);
-      if (first !== undefined) fail(`duplicate ${label} — also on row ${first}`);
+      if (first !== undefined)
+        fail(`duplicate ${label} — also on row ${first}`);
       else map.set(key, rowNumber);
     };
     dupe(seenSlug, slug, "slug");
-    dupe(seenUrl, sourceId ?? sourceUrl, "Drive file");
+    if (posterAvailability === "hosted") {
+      dupe(seenUrl, sourceId ?? hostedSourceUrl, "Drive file");
+    }
     dupe(seenTitle, title.toLowerCase(), "title");
 
     const numberRaw = cell(raw, "posterNumber");
@@ -459,20 +596,24 @@ export function readQueue(
       if (!/^[1-9]\d{0,2}$/.test(numberRaw)) {
         // Rejects 0, 00, 001 as well as "P-2" — a leading zero means someone
         // is formatting in the sheet, and the page already renders P-01.
-        fail(`poster number ${JSON.stringify(numberRaw)} must be an integer from 1 to 999`);
+        fail(
+          `poster number ${JSON.stringify(numberRaw)} must be an integer from 1 to 999`,
+        );
       } else {
         posterNumber = Number(numberRaw);
         const key = `${EVENT_ID}:${posterNumber}`;
         const first = seenPosterNumber.get(key);
         if (first !== undefined) {
-          fail(`duplicate poster number ${posterNumber} for ${EVENT_ID} — also on row ${first}`);
+          fail(
+            `duplicate poster number ${posterNumber} for ${EVENT_ID} — also on row ${first}`,
+          );
         } else {
           seenPosterNumber.set(key, rowNumber);
         }
       }
     }
 
-    rows.push({
+    const common = {
       rowNumber,
       event: EVENT_ID,
       slug,
@@ -483,11 +624,21 @@ export function readQueue(
         .split(/[,;\n]/)
         .map((k) => k.trim())
         .filter(Boolean),
-      sourceUrl,
-      driveFileId: sourceId ?? "",
+      submissionId,
       posterNumber,
-    });
+    };
+
+    if (posterAvailability === "hosted") {
+      rows.push({
+        ...common,
+        posterAvailability,
+        sourceUrl: hostedSourceUrl,
+        driveFileId: sourceId ?? "",
+      });
+    } else {
+      rows.push({ ...common, posterAvailability });
+    }
   });
 
-  return { rows, errors, skipped, incomplete, keptSlugs, movedSlugs };
+  return { rows, errors, warnings, skipped, keptSlugs, movedSlugs };
 }

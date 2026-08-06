@@ -58,7 +58,7 @@ function eventIdForFile(file) {
   )?.id;
 }
 
-function matchPostersToSchedule(entries, eventPosters, filePath) {
+function matchPostersToSchedule(entries, eventPosters) {
   const candidates = entries.flatMap((entry, entryIndex) =>
     eventPosters.map((poster, posterIndex) => ({
       entryIndex,
@@ -94,13 +94,10 @@ function matchPostersToSchedule(entries, eventPosters, filePath) {
     matchedPosters.add(candidate.posterIndex);
   }
 
-  const unmatchedPosters = eventPosters.filter((_, index) => !matchedPosters.has(index));
-  if (unmatchedPosters.length > 0) {
-    throw new Error(
-      `Poster schedule in ${filePath || "an event file"} could not confidently match ` +
-        `these published posters: ${unmatchedPosters.map((poster) => poster.title).join("; ")}`,
-    );
-  }
+  // Schedule links are progressive enhancement. The Form response title may
+  // differ from the final schedule title, and a valid archive entry may not
+  // have a schedule slot at all. Only confident matches are linked; unmatched
+  // posters remain fully available through the archive and event poster grid.
 }
 
 export default function rehypePosterScheduleLinks() {
@@ -136,6 +133,6 @@ export default function rehypePosterScheduleLinks() {
     const eventPosters = eventId
       ? posters.filter((poster) => poster.event === eventId)
       : posters;
-    matchPostersToSchedule(entries, eventPosters, file.path || file.history?.[0]);
+    matchPostersToSchedule(entries, eventPosters);
   };
 }

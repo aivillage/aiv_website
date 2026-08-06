@@ -20,11 +20,10 @@ import { resolve } from "node:path";
 import {
   readQueue,
   QueueError,
-  existingSlugsById,
+  existingPosterSlugs,
   DEFAULT_DATA_PATH,
   type QueueRow,
 } from "./queue.ts";
-
 
 function parseArgs(argv: string[]) {
   const positional: string[] = [];
@@ -51,7 +50,13 @@ function parseArgs(argv: string[]) {
     }
   }
 
-  return { csvPath: positional[0], check, allowSlugChange, allowPermalinkRemoval, out };
+  return {
+    csvPath: positional[0],
+    check,
+    allowSlugChange,
+    allowPermalinkRemoval,
+    out,
+  };
 }
 
 function ts(value: string): string {
@@ -71,7 +76,11 @@ function renderPoster(row: QueueRow): string {
     `  {`,
     `    slug: ${ts(row.slug)},`,
     `    event: ${ts(row.event)},`,
-    row.posterNumber !== undefined ? `    posterNumber: ${row.posterNumber},` : null,
+    row.submissionId ? `    submissionId: ${ts(row.submissionId)},` : null,
+    `    posterAvailability: ${ts(row.posterAvailability)},`,
+    row.posterNumber !== undefined
+      ? `    posterNumber: ${row.posterNumber},`
+      : null,
     `    title: ${ts(row.title)},`,
     `    authors: [`,
     authors,
@@ -80,8 +89,12 @@ function renderPoster(row: QueueRow): string {
     row.keywords.length > 0
       ? `    keywords: [${row.keywords.map(ts).join(", ")}],`
       : null,
-    `    sourceUrl: ${ts(row.sourceUrl)},`,
-    `    driveFileId: ${ts(row.driveFileId)},`,
+    row.posterAvailability === "hosted"
+      ? `    sourceUrl: ${ts(row.sourceUrl)},`
+      : null,
+    row.posterAvailability === "hosted"
+      ? `    driveFileId: ${ts(row.driveFileId)},`
+      : null,
     `  },`,
   ];
 
@@ -132,7 +145,7 @@ function main() {
     throw error;
   }
 
-  const { rows, errors, skipped, incomplete, keptSlugs, movedSlugs } = result;
+  const { rows, errors, warnings, skipped, keptSlugs, movedSlugs } = result;
 
   if (errors.length > 0) {
     console.error(`\n${errors.length} row(s) could not be imported:\n`);
@@ -147,6 +160,12 @@ function main() {
         `Set Publish = YES for at least one row. Nothing was written.`,
     );
     process.exit(1);
+  }
+
+  if (warnings.length > 0) {
+    console.warn(`\n${warnings.length} poster import warning(s):\n`);
+    for (const warning of warnings) console.warn(`  ${warning}`);
+    console.warn("");
   }
 
   // Deterministic order: poster number when present, then title. Keeps diffs
@@ -171,16 +190,20 @@ function main() {
   // Note this compares SLUGS, not Drive IDs: a re-uploaded file that keeps its
   // title derives the same slug, the canonical route and archive anchor still
   // resolve, and nothing is reported. Only a removed URL trips this.
-  const before = new Set(existingSlugsById(OUT_PATH).values());
+  const before = existingPosterSlugs(OUT_PATH);
   const after = new Set(rows.map((row) => row.slug));
   const moved = new Set(movedSlugs);
-  const dropped = [...before].filter((slug) => !after.has(slug) && !moved.has(slug));
+  const dropped = [...before].filter(
+    (slug) => !after.has(slug) && !moved.has(slug),
+  );
 
   // Fail closed, and before --check, so neither a normal run nor a drift check
   // can quietly proceed past a removed URL. A warning here would be exactly the
   // "documented rule nobody reads" this pipeline keeps trying to avoid.
   if (dropped.length > 0 && !allowPermalinkRemoval) {
-    console.error(`\nRefusing to remove ${dropped.length} existing canonical poster URL(s):`);
+    console.error(
+      `\nRefusing to remove ${dropped.length} existing canonical poster URL(s):`,
+    );
     for (const slug of dropped) console.error(`  /posters/${slug}/`);
     console.error(
       `\nIf this removal is intentional, re-run with --allow-permalink-removal.\n` +
@@ -203,14 +226,30 @@ function main() {
       );
       process.exit(1);
     }
-    console.log(`posters.ts is up to date (${rows.length} posters).`);
+    const hosted = rows.filter(
+      (row) => row.posterAvailability === "hosted",
+    ).length;
+    const declined = rows.filter(
+      (row) => row.posterAvailability === "declined",
+    ).length;
+    const missing = rows.filter(
+      (row) => row.posterAvailability === "missing",
+    ).length;
+    console.log(
+      `posters.ts is up to date (${rows.length} posters: ` +
+        `${hosted} hosted, ${declined} declined, ${missing} missing file).`,
+    );
     return;
   }
 
   if (movedSlugs.length > 0) {
-    console.warn(`\n${movedSlugs.length} canonical poster URL(s) changed by --allow-slug-change:`);
+    console.warn(
+      `\n${movedSlugs.length} canonical poster URL(s) changed by --allow-slug-change:`,
+    );
     for (const slug of movedSlugs) {
-      console.warn(`  /posters/${slug}/ will no longer resolve after this import`);
+      console.warn(
+        `  /posters/${slug}/ will no longer resolve after this import`,
+      );
     }
   }
 
@@ -236,18 +275,33 @@ function main() {
       `\nKept ${keptSlugs.length} existing canonical poster URL(s) despite title changes:`,
     );
     for (const line of keptSlugs) console.log(`  ${line}`);
-    console.log(`Set the Slug column and pass --allow-slug-change to move one deliberately.`);
+    console.log(
+      `Set the Slug column and pass --allow-slug-change to move one deliberately.`,
+    );
   }
 
   const byEvent = new Map<string, number>();
-  for (const row of rows) byEvent.set(row.event, (byEvent.get(row.event) ?? 0) + 1);
+  for (const row of rows)
+    byEvent.set(row.event, (byEvent.get(row.event) ?? 0) + 1);
+  const hosted = rows.filter(
+    (row) => row.posterAvailability === "hosted",
+  ).length;
+  const declined = rows.filter(
+    (row) => row.posterAvailability === "declined",
+  ).length;
+  const missing = rows.filter(
+    (row) => row.posterAvailability === "missing",
+  ).length;
 
-  console.log(`Wrote ${rows.length} poster(s) to ${out ?? "src/data/posters.ts"}`);
+  console.log(
+    `Wrote ${rows.length} poster(s) to ${out ?? "src/data/posters.ts"}`,
+  );
   for (const [key, count] of byEvent) console.log(`  ${key}: ${count}`);
-  if (skipped > 0) console.log(`Skipped ${skipped} row(s) not marked for site inclusion.`);
-  if (incomplete > 0) {
-    console.log(`Skipped ${incomplete} opted-in Form response(s) without a poster upload.`);
-  }
+  console.log(`  hosted: ${hosted}`);
+  console.log(`  declined hosting: ${declined}`);
+  console.log(`  missing poster file: ${missing}`);
+  if (skipped > 0)
+    console.log(`Skipped ${skipped} row(s) not marked for site inclusion.`);
   console.log(`\nNext: pnpm build && pnpm posters:test`);
 }
 

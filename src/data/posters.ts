@@ -12,6 +12,8 @@ export const posters: Poster[] = [
   {
     slug: "agent-to-agent-worm-propagation-in-mcp-based-ai-systems",
     event: "defcon-34",
+    submissionId: "form-00f42e1155e81d7af971",
+    posterAvailability: "hosted",
     title: "Agent-to-Agent Worm Propagation in MCP-Based AI Systems",
     authors: [
       { name: "Utku Yildirim", affiliation: "Cobalt.io & Hoffmann Cybersecurity" },
@@ -24,6 +26,8 @@ export const posters: Poster[] = [
   {
     slug: "ai-agents-escape-their-task-horizon",
     event: "defcon-34",
+    submissionId: "form-06e328ab67fcac16d6eb",
+    posterAvailability: "hosted",
     title: "AI agents escape their task horizon",
     authors: [
       { name: "Emile Delcourt", affiliation: "OWASP ASI" },
@@ -33,8 +37,21 @@ export const posters: Poster[] = [
     driveFileId: "1FFh8L6_cuE7KRDZ8i-YwmiwHqdMq1dNU",
   },
   {
+    slug: "arad-donenfeld",
+    event: "defcon-34",
+    submissionId: "form-a90a7aae9507b10d43d9",
+    posterAvailability: "declined",
+    title: "Arad Donenfeld",
+    authors: [
+      { name: "Arad Donenfeld", affiliation: "SafeBreach" },
+    ],
+    abstract: "With the use of AI agents catching wind across the offensive security space, we decided to focus specifically on malware. While most discussions focus on targeting AI, using it to generate malicious payloads at runtime, or “vibe coding” it, we went a step further: we built a system where AI is the sole participant in the malware creation process itself.\nTo understand what works best, we evaluated multiple large language models and prompting techniques, comparing their ability to generate functional code, evade detection, and operate effectively. We then designed a workflow that maximizes generation quality, scalability, and randomization while addressing the practical challenges of autonomous malware development. The resulting framework is capable of producing large numbers of unique samples while reducing reliance on static signatures.\nFinally, we compare our findings with emerging examples of AI-assisted malware observed in the wild and discuss what these developments mean for both offensive security and defensive research. Our goal is to better understand the capabilities and limitations of AI-driven malware generation and to explore how defenders can prepare for these threats.",
+  },
+  {
     slug: "attackers-dont-need-shells-they-need-prompts-this-is-how-we-hunt-them",
     event: "defcon-34",
+    submissionId: "form-87fa10bac11732ce6037",
+    posterAvailability: "hosted",
     title: "Attackers Don't Need Shells, They Need Prompts: This Is How We Hunt Them",
     authors: [
       { name: "Raz Tel-Vered", affiliation: "Zenity" },
@@ -46,6 +63,8 @@ export const posters: Poster[] = [
   {
     slug: "beyond-ctfs-engineering-ai-agents-for-real-world-web-pentesting",
     event: "defcon-34",
+    submissionId: "form-3e7e71b7a488452114c1",
+    posterAvailability: "hosted",
     title: "Beyond CTFs: Engineering AI Agents for Real-World Web Pentesting",
     authors: [
       { name: "Dhruva Goyal", affiliation: "BugBase" },
@@ -58,6 +77,8 @@ export const posters: Poster[] = [
   {
     slug: "block-means-yes-extracting-protected-agent-data-through-a-guards-own",
     event: "defcon-34",
+    submissionId: "form-e69bab26dec28fb8b048",
+    posterAvailability: "hosted",
     title: "Block Means Yes: Extracting Protected Agent Data Through a Guard’s Own Refusal Signal",
     authors: [
       { name: "Larry Suto" },
@@ -69,6 +90,8 @@ export const posters: Poster[] = [
   {
     slug: "confused-deputies-in-slack-exploiting-agentic-ai-in-production",
     event: "defcon-34",
+    submissionId: "form-ad247e4b1b5c59b52083",
+    posterAvailability: "hosted",
     title: "Confused Deputies in Slack: Exploiting Agentic AI in Production Environments",
     authors: [
       { name: "Rodney Beede", affiliation: "Life360" },
@@ -80,6 +103,8 @@ export const posters: Poster[] = [
   {
     slug: "detecting-unauthorized-tool-calls-using-ollama-and-splunk",
     event: "defcon-34",
+    submissionId: "form-6638fdc4f23a22962824",
+    posterAvailability: "hosted",
     title: "Detecting unauthorized tool calls using Ollama and Splunk",
     authors: [
       { name: "Anshumaan Mishra", affiliation: "Independent Researcher" },
@@ -91,6 +116,8 @@ export const posters: Poster[] = [
   {
     slug: "dont-block-bifurcate",
     event: "defcon-34",
+    submissionId: "form-a4ad600f4248ca91deb2",
+    posterAvailability: "hosted",
     title: "Don't Block — Bifurcate",
     authors: [
       { name: "Kastriot Fetahaj", affiliation: "Kosova Cyber Team" },
@@ -102,8 +129,22 @@ export const posters: Poster[] = [
     driveFileId: "1wHDobyEBiGq5CXzaTYVeGGrpLcuFqMtI",
   },
   {
+    slug: "engineering-autonomous-security-agents-for-defense-at-scale",
+    event: "defcon-34",
+    submissionId: "form-2d22fd62f2db913b4e1c",
+    posterAvailability: "declined",
+    title: "Engineering Autonomous Security Agents for Defense at Scale",
+    authors: [
+      { name: "Dominik Swierad", affiliation: "Google" },
+      { name: "Olga Shulman", affiliation: "Google" },
+    ],
+    abstract: "In this talk we move past the AI agent hype by sharing Google’s battle-tested engineering blueprint for deploying autonomous security agents to defend a global enterprise. It explores the technical realities of this transition, including evaluating non-deterministic AI behavior, choosing between agent architectures, and integrating autonomous entities into high-stakes threat detection workflows.",
+  },
+  {
     slug: "for-prompt-injection-press-1-hacking-ai-voice-agents",
     event: "defcon-34",
+    submissionId: "form-47a5427f3460f9446d1a",
+    posterAvailability: "hosted",
     title: "For Prompt Injection, Press 1: Hacking AI Voice Agents",
     authors: [
       { name: "Willie Zhang", affiliation: "ProCircular" },
@@ -115,6 +156,8 @@ export const posters: Poster[] = [
   {
     slug: "from-recon-to-full-system-prompt-exfiltration",
     event: "defcon-34",
+    submissionId: "form-39df5863d294dada3013",
+    posterAvailability: "hosted",
     title: "From Recon to Full System Prompt Exfiltration: A 5-Stage Attack Chain Against a Production LLM Chatbot",
     authors: [
       { name: "Veli Oguzcan Akdag", affiliation: "Bilishim Cyber Security & AI" },
@@ -124,8 +167,22 @@ export const posters: Poster[] = [
     driveFileId: "1j2yHo4PyMi2nkj-efo7ACXvhyqY2JcAy",
   },
   {
+    slug: "googles-ai-vulnerability-reward-program-ai-vrp",
+    event: "defcon-34",
+    submissionId: "form-9955f4fa66a0774a1070",
+    posterAvailability: "declined",
+    title: "Google's AI Vulnerability Reward Program (AI VRP)",
+    authors: [
+      { name: "John Kotheimer", affiliation: "Google" },
+      { name: "Daniel Di Bartolo", affiliation: "Google, @danieldibartolo (Twitter)" },
+    ],
+    abstract: "Google operates the AI Vulnerability Reward Program (AI VRP), a bug bounty program focused on security vulnerabilities and specific abuse risks in Google's generative AI products. These include sensitive data exfiltration and rogue actions impacting user security caused by indirect prompt injection in AI products. The AI VRP provides security benefits to Google's users by providing a venue for responsible disclosure of security bugs and enables Google's security teams to understand emerging risks and attack patterns affecting AI. In establishing this program, we have also learned how best to structure it to provide actionable information to product teams while also maintaining a healthy researcher community.",
+  },
+  {
     slug: "ill-just-call-you-agent-to-agent-privilege-boundary-failures-in-ci-cd",
     event: "defcon-34",
+    submissionId: "form-ce7884ad319d18032ec7",
+    posterAvailability: "hosted",
     title: "I'll just call you — Agent-to-Agent Privilege Boundary Failures in CI/CD Agents",
     authors: [
       { name: "Dan Lisichkin", affiliation: "Pillar Security" },
@@ -137,6 +194,8 @@ export const posters: Poster[] = [
   {
     slug: "improving-ai-red-teaming-by-systematizing-red-teaming-reports",
     event: "defcon-34",
+    submissionId: "form-9af479f9facf526c0266",
+    posterAvailability: "hosted",
     title: "Improving AI Red-Teaming by Systematizing Red-Teaming Reports",
     authors: [
       { name: "Jessica Ji", affiliation: "CSET" },
@@ -149,6 +208,8 @@ export const posters: Poster[] = [
   {
     slug: "malicious-context-propagation-weaponizing-the-extensibility-of-ai",
     event: "defcon-34",
+    submissionId: "form-12806d89c77b56ef50b5",
+    posterAvailability: "hosted",
     title: "Malicious Context Propagation: Weaponizing the Extensibility of AI Coding Assistants",
     authors: [
       { name: "Roshan Piyush", affiliation: "Harness of Security Research @ Harness" },
@@ -159,8 +220,28 @@ export const posters: Poster[] = [
     driveFileId: "1PH9IM3GjineCMvTk6SdgI-frDZmVOolJ",
   },
   {
+    slug: "midojo-red-team-any-agent-in-any-environment",
+    event: "defcon-34",
+    submissionId: "form-0563b2ce65f62118dff3",
+    posterAvailability: "hosted",
+    title: "MiDojo: Red-Team Any Agent in Any Environment",
+    authors: [
+      { name: "Sai Chandra Pandraju", affiliation: "Red Hat" },
+      { name: "Diego Maniloff", affiliation: "Red Hat" },
+      { name: "Muneeza Azmat", affiliation: "Red Hat" },
+      { name: "Stuart Battersby", affiliation: "Red Hat" },
+      { name: "Henrique Nunes", affiliation: "Red Hat" },
+      { name: "Alessandro Beltramo", affiliation: "Red Hat" },
+    ],
+    abstract: "Tool-using AI agents are vulnerable to prompt injection: adversarial instructions delivered through their inputs or hidden in the data they read while doing legitimate work. Resisting these attacks is a system-level property — it depends on the LLM, its tools, and their data environment as a unit — yet most red-teaming systems are based on simulations that rarely reflect the agent's actual deployment.\n\nWe present MiDojo, a framework that red-teams agents right where they run. MiDojo follows a man-in-the-middle design: it interposes fake tools and environment artifacts between the agent and the real world. Payloads are spliced into normal tool outputs so the agent encounters attacks as a side effect of ordinary work — the way real prompt injections land. The interception is swiss-cheese: each fake tool can forward to its real counterpart, intercept and inject, or both — you control what the agent touches for real and what is staged. Pluggable environment backends — from in-memory state to sandboxed containers — supply runtime observations, and verification providers consume this evidence to grade attacks that leave no trace in the agent's reply.\n\nMiDojo lets you battle-test your agent at every level of attacker access: a malicious prompt (input-level), a compromised data source (data-level), or a hijacked tool response (tool-level) — mirroring the black-, gray-, and white-box progression from traditional penetration testing.\n\nBenchmarks draw from an attack library aligned to the OWASP Agentic Security Initiative Top 10 or from custom corpora. Each evaluation pairs one legitimate task with one adversarial objective and grades utility (task completion) and security (predicate assertions over behavior and state).\n\nMiDojo supports a variety of agent protocols, enabling red-teaming across frameworks without modifying the agent under test.",
+    sourceUrl: "https://drive.google.com/file/d/1eF9v0lqa_rwG25hQyWXzggNA8gUwucRt/view?usp=drive_link",
+    driveFileId: "1eF9v0lqa_rwG25hQyWXzggNA8gUwucRt",
+  },
+  {
     slug: "poisoned-mandates",
     event: "defcon-34",
+    submissionId: "form-15bdad65ba5c924d9c16",
+    posterAvailability: "hosted",
     title: "Poisoned Mandates: Stealing Agency from Agentic Commerce",
     authors: [
       { name: "Saish Bhorpe", affiliation: "Repello AI" },
@@ -174,6 +255,8 @@ export const posters: Poster[] = [
   {
     slug: "poisoning-the-soc-prompt-injection-via-ingested-telemetry",
     event: "defcon-34",
+    submissionId: "form-df232e2463033310b12f",
+    posterAvailability: "hosted",
     title: "Poisoning the SOC: Prompt Injection via Ingested Telemetry",
     authors: [
       { name: "John Seymour", affiliation: "Salesforce" },
@@ -185,6 +268,8 @@ export const posters: Poster[] = [
   {
     slug: "policy-driven-agentic-red-teaming",
     event: "defcon-34",
+    submissionId: "form-5e155029502898a4d946",
+    posterAvailability: "hosted",
     title: "Policy driven agentic red teaming",
     authors: [
       { name: "Muneeza Azmat", affiliation: "Red Hat" },
@@ -201,6 +286,8 @@ export const posters: Poster[] = [
   {
     slug: "prompt-injection-testing-at-scale",
     event: "defcon-34",
+    submissionId: "form-a336b288f4157f83a61d",
+    posterAvailability: "hosted",
     title: "Prompt Injection Testing at Scale",
     authors: [
       { name: "Gabriele Randi", affiliation: "Google" },
@@ -213,6 +300,8 @@ export const posters: Poster[] = [
   {
     slug: "reference-grafting-in-a2a-cross-principal-task-data-exfiltration-via",
     event: "defcon-34",
+    submissionId: "form-dd66350639bf21b63287",
+    posterAvailability: "hosted",
     title: "Reference Grafting in A2A: Cross-Principal Task-Data Exfiltration via referenceTaskIds",
     authors: [
       { name: "Shay Sakazi", affiliation: "AI Village" },
@@ -226,6 +315,8 @@ export const posters: Poster[] = [
   {
     slug: "securing-cross-enterprise-ai-agents",
     event: "defcon-34",
+    submissionId: "form-3c2bde8122997542e1ca",
+    posterAvailability: "hosted",
     title: "Securing Cross-Enterprise AI Agents",
     authors: [
       { name: "Sri Aradhyula", affiliation: "Cisco" },
@@ -239,8 +330,46 @@ export const posters: Poster[] = [
     driveFileId: "1eJ6HA2u2pq0-csk7eAYmAjhPo1ynngC1",
   },
   {
+    slug: "silence-with-receipts",
+    event: "defcon-34",
+    submissionId: "form-6bf4fee307a3ce7bd6a9",
+    posterAvailability: "missing",
+    title: "Silence, with Receipts.",
+    authors: [
+      { name: "Matthew Nardizzi (author)", affiliation: "Vortex Black" },
+      { name: "James Derella (presenter)", affiliation: "Vortex Black" },
+    ],
+    abstract: "Your AI is already acting — reading, sending, deploying — faster than any team can watch. Tex (Sovereign Security Engine) is autonomous security for that world: it handles what your AI is doing so people don't have to. Every action routed through Tex is judged before it runs — permit, hold, or forbid — with no default-permit path. And Tex knows when the AI needs a human: anything it can't certify lands on a hold carrying the one fact a person must supply — or the reason no fact will — and only a named human seal clears it. Everything else stays silent.\n\nIn a 24-day continuous synthetic fleet run (20 agents, July 5–29, 2026), Tex ruled 1,116,689 decisions on its own: 77.3% permitted, 21.1% forbidden, and 1.6% held for a human — all a human would ever see. Every verdict seals to a hash-chained receipt, and the human's answer becomes a second receipt on the same chain: testimony, not telemetry. The published bundle re-verifies offline from a fresh clone of the public repo — a 12-attack tamper matrix and 34 independent checks anyone can run. Change one byte, or re-sign with your own key, and it fails. Design, not hope.\n\nCoverage is a deployment property: these results cover actions routed through Tex. Don't trust the abstract — clone the repo and try to forge a receipt.",
+  },
+  {
+    slug: "stop-pressing-1-do-students-verify-before-they-approve-a-pilot-study-of",
+    event: "defcon-34",
+    submissionId: "form-45f14c6e72ef95904260",
+    posterAvailability: "missing",
+    title: "Stop Pressing 1: Do Students Verify Before They Approve? A Pilot Study of Comprehension Gates in Human Oversight of AI Agents",
+    authors: [
+      { name: "Rita Sabri", affiliation: "DCPS" },
+    ],
+    abstract: "Human-in-the-loop approval is a common mitigation in agentic security and one of the least measured. Agent frameworks terminate consequential actions: tool calls, commits, sends, installs with a confirmation prompt and assume the human will verify. In practice, approval and verification diverge: operators can habituate to confirmation dialogs, similar to warning fatigue in traditional security UX, and repeated low-cost approvals reduce verification effort over time. The result is a security boundary guarded by reflex rather than verification. Oversight fidelity is measured as the difference between predicted and executed behavior and ground truth, not the agent’s self-description. In the study, we compare passive confirmation, independent prediction gates, and agent-generated verification prompts and test whether verification prompts themselves become attack surfaces when generated by compromised agents. Seeded misbehaviors include hidden parameter changes, action substitution, omitted side effects, misleading summaries, and dependency substitution attacks. We track how often operators catch seeded misbehaviors versus how often they flag clean requests. \nA live, scripted demo is deployed now. Our pilot uses high school computer science classrooms in a controlled environment for studying oversight behavior under repeated approval tasks. The poster demonstrates where confirmation-based oversight succeeds, where it breaks, and how to measure the difference.",
+  },
+  {
+    slug: "stop-pressing-1-measuring-human-rubber-stamping-in-agent-oversight",
+    event: "defcon-34",
+    submissionId: "form-8af9ca6d1dbec28f4b58",
+    posterAvailability: "hosted",
+    title: "Stop Pressing 1: Measuring Human Rubber-Stamping in Agent Oversight",
+    authors: [
+      { name: "Rita Sabri" },
+    ],
+    abstract: "Human-in-the-loop approval is a common mitigation in agentic security and one of the least measured. Agent frameworks terminate consequential actions: tool calls, commits, sends, installs with a confirmation prompt and assume the human will verify. In practice, approval and verification diverge: operators can habituate to confirmation dialogs, similar to warning fatigue in traditional security UX, and repeated low-cost approvals reduce verification effort over time. The result is a security boundary guarded by reflex rather than verification — one that can fail to stop prompt-injected tool misuse, hidden side effects, or action substitution. \nThis poster presents a threat model (approval ≠ verification), a measurement framework for oversight quality, and an open-source harness that enables reproducible agent misbehavior. Before approving, the operator types a plain-language prediction of the agent’s intended action. Oversight fidelity is measured as the difference between predicted and executed behavior and ground truth, not the agent’s self-description. We compare passive confirmation, independent prediction gates, and agent-generated verification prompts and test whether verification prompts themselves become attack surfaces when generated by compromised agents. Seeded misbehaviors include hidden parameter changes, action substitution, omitted side effects, misleading summaries, and dependency substitution attacks. We track how often operators catch seeded misbehaviors versus how often they flag clean requests.",
+    sourceUrl: "https://drive.google.com/file/d/1WwfRy7h2HukCZ_HA-oUYpcHNkqBVmK0i/view?usp=drive_link",
+    driveFileId: "1WwfRy7h2HukCZ_HA-oUYpcHNkqBVmK0i",
+  },
+  {
     slug: "the-anatomy-of-a-chinese-knowledge-distillation-campaign",
     event: "defcon-34",
+    submissionId: "form-536f956bac1a52c530df",
+    posterAvailability: "hosted",
     title: "The Anatomy of a Chinese Knowledge Distillation Campaign",
     authors: [
       { name: "Colin Shea-Blymyer", affiliation: "CSET" },
@@ -253,6 +382,8 @@ export const posters: Poster[] = [
   {
     slug: "the-collapse-of-the-skill-barrier",
     event: "defcon-34",
+    submissionId: "form-da920df53fa0165c69bd",
+    posterAvailability: "hosted",
     title: "The Collapse of the Skill Barrier: Building Autonomous CTF Tools Through Pure Intent",
     authors: [
       { name: "David Kuznicki", affiliation: "Puzzled Hackers" },
@@ -264,6 +395,8 @@ export const posters: Poster[] = [
   {
     slug: "the-model-is-the-malware-runtime-behavioral-detection-of-malicious-ml",
     event: "defcon-34",
+    submissionId: "form-bcb657eba8b2abe719b6",
+    posterAvailability: "hosted",
     title: "The Model Is the Malware: Runtime Behavioral Detection of Malicious ML Artifacts",
     authors: [
       { name: "Hala Ali", affiliation: "Virginia Commonwealth University" },
@@ -276,6 +409,8 @@ export const posters: Poster[] = [
   {
     slug: "the-weight-of-evidence-how-an-agentic-soc-analyst-earns-your-trust",
     event: "defcon-34",
+    submissionId: "form-222e957c925af9a7c167",
+    posterAvailability: "hosted",
     title: "The Weight of Evidence: How an Agentic SOC Analyst Earns Your Trust",
     authors: [
       { name: "Sophena Wilson", affiliation: "Microsoft" },
