@@ -1,5 +1,8 @@
 # Manually maintained Cloudflare Pages redirects.
 
+# Poster downloads
+/posters/halctf-hidden-agent-channels-mapping-adversarial-networks/ https://drive.usercontent.google.com/download?id=1b9IsoU9CBedfvtRAVHBVmBvy8IcAutYb&export=download&confirm=t 302
+
 # Top-level page redirects
 /conduct/ /about/conduct/ 301
 /leadership_team/ /about/ 301
