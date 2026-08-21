@@ -6,7 +6,7 @@ profile: henry_hu.webp
 expertise: AI Threat Modeling, Security Compliance
 affiliation: Auriga Security, Inc. / CEO & Founder, OWASP Taiwan Chapter / Chapter Leader
 bio: true
-order: 12
+order: 11
 ---
 Henry Hu is a cybersecurity leader and currently serves as Chapter Chair of the OWASP Taiwan Chapter. He also represents Taiwan in the Cloud Security Alliance and The Honeynet Project, serves on the Board of the Taiwan Digital Security Alliance, and is Deputy Secretary-General of the Cybersecurity Alliance, helping connect Taiwan’s cybersecurity ecosystem with the international community.
 

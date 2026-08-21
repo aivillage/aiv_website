@@ -6,7 +6,7 @@ profile: bill_stout.webp
 expertise: AI/ML Security, GenAI Red Teaming
 affiliation: AI Alliance, CoSAI TSC
 bio: true
-order: 6
+order: 3
 
 ---
 

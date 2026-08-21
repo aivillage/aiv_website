@@ -6,7 +6,7 @@ profile: sam_mosley.webp
 expertise: Embedded Systems, Cloud Architecture, GeoAI
 affiliation: CodeBloom
 bio: true
-order: 11
+order: 9
 ---
 
 Sam Mosley is an engineer whose work sits at the intersection of security, systems design, and applied AI. They are currently a cyberspace research developer, working on advanced research and development for national security applications. Over their career, they've built risk-modeling frameworks that treat complex systems as networks to quantify security exposure, architected multi-agent AI systems to automate technical workflows, led cloud migrations of legacy infrastructure, and designed embedded hardware and firmware for custom electronics. That range gives them a systems-level view of how security, infrastructure, and AI actually interact in practice.

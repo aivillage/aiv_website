@@ -5,7 +5,7 @@ position: Steering Committee Member
 expertise: Security Research, Red Teaming, Penetration testing and AI/ML Security. 
 profile: mohamed_abumuslim.webp
 bio: true # If you don't want to include a bio, change this to false.
-order: 8
+order: 7
 
 ---
 
