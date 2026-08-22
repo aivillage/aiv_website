@@ -20,4 +20,4 @@ Our current plan is to share something new from DEF CON 34 each week as we publi
 
 Want to get involved with AI Village? Visit our [Community page](https://aivillage.org/community/) to join the community, contribute, and stay connected.
 
-We also designed HalCTF and AI Village Plays Pokémon to travel beyond DEF CON. If you're organizing a conference or event and would like to bring one of them, or AI Village more broadly, to your event, contact us at [team@aivillage.org](mailto:team@aivillage.org).
+We also designed HalCTF and AI Village Plays Pokémon to travel beyond DEF CON. If you're organizing a conference or event and would like to bring one of them, or AI Village more broadly, to your event, contact us at [info@aivillage.org](mailto:info@aivillage.org).
