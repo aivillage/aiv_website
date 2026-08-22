@@ -5,7 +5,7 @@ author:
 date: 2026-08-22 00:00:00 +0000
 category: "announcements"
 description: "DEFCON34 Keynote Talk is now available on YouTube" 
-slug: defcon34
+slug: defcon34-posters-bruce-schneier
 ---
 
 Thanks again to who came and participated in the AI Village at DEFCON34! We had a fantastic time and with over 30 poster presentations, several dozen talks, two workshops, and two contests, there was a lot to see and do. If you missed the event, or want to relive the experience, we have good news: we're working to put as much of the content online as possible.  DEFCON is handling the video production and posting of the main stage and creator stage talks, and we are working to get the poster presentations, workshops, and contests online as well.
