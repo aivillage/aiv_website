@@ -2,6 +2,7 @@
 title: "Bruce Schneier's DEF CON 34 Fireside Chat is now available!"
 author:
   - Nick Ashworth
+  - Joshua Hansen
 date: 2026-08-22 00:00:00 +0000
 category: "announcements"
 description: "Watch our conversation with Bruce Schneier on AI and cybersecurity, and explore more from AI Village at DEF CON 34."
