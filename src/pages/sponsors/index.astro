@@ -1,79 +1,446 @@
 ---
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import PageShell from "../../components/layout/PageShell.astro";
+import Section from "../../components/layout/Section.astro";
+import Button from "../../components/ui/Button.astro";
+import Card from "../../components/ui/Card.astro";
+import SectionHeading from "../../components/ui/SectionHeading.astro";
+import CTASection from "../../components/content/CTASection.astro";
 import SponsorGrid from "../../components/SponsorGrid.astro";
 import { getCurrentSponsors, getPastSponsors } from "../../utils/site";
 
 const sponsors = await getCollection("sponsors");
 const currentSponsors = getCurrentSponsors(sponsors);
 const pastSponsors = getPastSponsors(sponsors);
+const sponsorContactHref = "/discord/";
+
+const whySponsorCards = [
+  {
+    title: "Reach a technical community",
+    body: "Support a community of hackers, researchers, builders, and security practitioners working directly with AI systems.",
+  },
+  {
+    title: "Fund hands-on learning",
+    body: "Help keep workshops, labs, and practical learning material available to people building AI security skills.",
+  },
+  {
+    title: "Support responsible testing",
+    body: "Back public-interest work around red-team practice, adversarial thinking, and real-world AI system evaluation.",
+  },
+  {
+    title: "Sustain community infrastructure",
+    body: "Help cover the operational work behind events, resources, volunteer coordination, and community programming.",
+  },
+];
+
+const supportCards = [
+  {
+    title: "Events and workshops",
+    body: "Community events, conference programming, workshops, and practical sessions where people learn by doing.",
+    href: "/events/",
+    ctaLabel: "See events",
+  },
+  {
+    title: "Open resources and labs",
+    body: "Learning material, labs, and public resources for people building AI security judgment and technical skill.",
+    href: "/learn/",
+    ctaLabel: "Browse resources",
+  },
+  {
+    title: "Generative Red Team activity",
+    body: "Public red-team practice focused on understanding real AI system failure modes and responsible evaluation.",
+    href: "/grt/",
+    ctaLabel: "About GRT",
+  },
+  {
+    title: "Volunteer and community operations",
+    body: "The coordination, tooling, and community infrastructure behind AI Village programs and events.",
+    href: "/community/",
+    ctaLabel: "Get involved",
+  },
+];
+
+const sponsorshipPathCards = [
+  {
+    title: "Annual Mission Sponsorship",
+    body: "Year-round support for AI Village education, events, research, and community infrastructure.",
+  },
+  {
+    title: "Event Sponsorship",
+    body: "Support DEF CON programming, workshops, meetups, and other AI Village events.",
+  },
+  {
+    title: "Program Underwriting",
+    body: "Support specific public-interest work such as GRT, labs, open resources, or community access.",
+  },
+  {
+    title: "In-kind Support",
+    body: "Contribute useful hardware, cloud credits, venue support, food, equipment, or logistics.",
+  },
+];
+
+const sponsorshipProcess = [
+  "Start a sponsorship conversation.",
+  "AI Village reviews mission fit and potential conflicts.",
+  "The team aligns on sponsorship lane, timing, and expectations.",
+  "Sponsorship terms are documented before payment.",
+  "Recognition and fulfillment are tracked through completion.",
+];
 ---
 
 <BaseLayout title="Sponsors" canonical="/sponsors/" description="Why and how to sponsor AI Village, plus current and past sponsors.">
-  <PageShell>
-  <h1>Sponsors</h1>
-  <p>
-    AI Village acknowledges organizations that currently support, or have previously supported, the community's AI security education and research mission.
-  </p>
-
-  <section class="mt-2" aria-labelledby="become-a-sponsor">
-    <h2 id="become-a-sponsor">Sponsor AI Village</h2>
-    <p>
-      AI Village runs as a community effort. Sponsorship covers the cost of the programs the community relies on and keeps them open to everyone. If your organization works on AI, security, or privacy, sponsoring is a direct way to support that mission and reach the people building and breaking these systems.
-    </p>
-
-    <h3>What your sponsorship supports</h3>
-    <p>Sponsor funding goes toward the work AI Village is known for, including:</p>
-    <ul>
-      <li>The <a href="/grt/">Generative Red Team</a> and other hands-on AI security challenges.</li>
-      <li>Hands-on <a href="/learn/">workshops</a> and learning material.</li>
-      <li>AI Village <a href="/events/">events</a> at DEF CON and other conferences.</li>
-      <li>Ongoing <a href="/research/">research</a> and community programming.</li>
-    </ul>
-
-    <h3>What sponsors receive</h3>
-    <p>
-      Current sponsors are recognized across the site: featured on the AI Village homepage and listed here on the Sponsors page, each with a dedicated sponsor page describing the organization. Sponsors are acknowledged as part of the community that makes this work possible.
-    </p>
-
-    <div class="card sponsor-contact-card">
-      <h3 class="mt-0">Become a Sponsor</h3>
-      <p>
-        Sponsorship levels and details are arranged directly with the organizing team. To start a conversation, reach out on Discord or through the AI Village GitHub organization, and the team will follow up with current options.
-      </p>
-      <p class="mb-0">
-        <a class="btn" href="/discord/">Reach the team on Discord</a>
-      </p>
+  <Section class="sponsors-hero" tone="canvas" padding="xl">
+    <div class="sponsors-hero__inner">
+      <div class="sponsors-hero__copy">
+        <p class="sponsors-eyebrow">Sponsorship</p>
+        <h1>Support AI Village</h1>
+        <p class="sponsors-hero__body">
+          Sponsorship helps AI Village run public-interest AI security education, hands-on workshops, red-team exercises, events, open resources, and community infrastructure.
+        </p>
+        <div class="sponsors-actions" aria-label="Sponsor page primary actions">
+          <Button href={sponsorContactHref}>Start a Conversation on Discord</Button>
+          <Button href="#sponsors" variant="secondary">See Sponsors</Button>
+        </div>
+      </div>
+      <Card class="sponsors-hero__panel" tone="nested" padding="lg" as="section">
+        <h2>What sponsorship makes possible</h2>
+        <p>
+          AI Village is built around hands-on AI security education, public red-team practice, and open resources for the wider community.
+        </p>
+        <ul>
+          <li>Workshops and labs</li>
+          <li>Events and community programming</li>
+          <li>Red-team exercises and public resources</li>
+        </ul>
+      </Card>
     </div>
-  </section>
+  </Section>
 
-  <section class="sponsor-section" aria-labelledby="current-sponsors">
-    <h2 id="current-sponsors">Current Sponsors</h2>
-    {currentSponsors.length > 0 ? (
-      <SponsorGrid sponsors={currentSponsors} linkMode="external" />
-    ) : (
-      <p>Current sponsor information is being finalized.</p>
-    )}
-  </section>
+  <Section tone="surface" padding="xl">
+    <div class="sponsors-section-stack">
+      <SectionHeading
+        eyebrow="Why sponsor"
+        title="Support the people testing and teaching AI security in public."
+        description="AI Village connects sponsors with a technical community focused on practical AI security education, responsible testing, and open resources."
+      />
+      <div class="sponsors-card-grid sponsors-card-grid--two">
+        {whySponsorCards.map((card) => (
+          <Card>
+            <h3>{card.title}</h3>
+            <p>{card.body}</p>
+          </Card>
+        ))}
+      </div>
+    </div>
+  </Section>
 
-  <section aria-labelledby="past-sponsors">
-    <h2 id="past-sponsors">Past Sponsors</h2>
-    {pastSponsors.length > 0 ? (
-      <SponsorGrid sponsors={pastSponsors} linkMode="external" />
-    ) : (
-      <p>Past sponsor information is being finalized.</p>
-    )}
-  </section>
-  </PageShell>
+  <Section padding="xl">
+    <div class="sponsors-section-stack">
+      <SectionHeading
+        eyebrow="What sponsorship supports"
+        title="Funding goes toward the work AI Village is known for."
+        description="Sponsor support helps keep AI Village programs, events, and open resources available to the community."
+      />
+      <div class="sponsors-card-grid sponsors-card-grid--four">
+        {supportCards.map((card) => (
+          <Card href={card.href}>
+            <h3>{card.title}</h3>
+            <p>{card.body}</p>
+            <span class="sponsors-card-link">{card.ctaLabel}</span>
+          </Card>
+        ))}
+      </div>
+    </div>
+  </Section>
+
+  <Section tone="surface" padding="xl">
+    <div class="sponsors-section-stack">
+      <SectionHeading
+        eyebrow="Sponsor conversations"
+        title="Sponsorship paths"
+        description="AI Village supports sponsorship conversations around annual mission support, event support, program underwriting, and useful in-kind contributions."
+      />
+      <div class="sponsors-card-grid sponsors-card-grid--four">
+        {sponsorshipPathCards.map((card) => (
+          <Card>
+            <h3>{card.title}</h3>
+            <p>{card.body}</p>
+          </Card>
+        ))}
+      </div>
+    </div>
+  </Section>
+
+  <Section tone="panel" padding="lg">
+    <Card class="sponsors-independence" tone="nested" padding="lg" as="section">
+      <p class="sponsors-eyebrow">Governance and independence</p>
+      <h2>Sponsor support does not control the work.</h2>
+      <p>
+        Sponsorship is recognition of support, not endorsement. Sponsors do not receive control over AI Village research, red-team outcomes, challenge design, judging, speaker selection, editorial decisions, publications, attendee data, or community governance.
+      </p>
+      <p>
+        Project-specific collaborations must be separately scoped and reviewed, and do not change these sponsorship boundaries.
+      </p>
+      <div class="sponsors-boundary-list">
+        <h3>What sponsorship does not buy</h3>
+        <ul>
+          <li>No paid speaking slots.</li>
+          <li>No control over research, challenges, judging, or publications.</li>
+          <li>No product endorsement or certification.</li>
+          <li>No non-consensual attendee list sharing.</li>
+          <li>No preferential community governance access.</li>
+        </ul>
+      </div>
+    </Card>
+  </Section>
+
+  <Section padding="xl">
+    <div class="sponsors-section-stack">
+      <SectionHeading
+        eyebrow="Process"
+        title="How sponsorship works"
+        description="The sponsorship process is simple and transparent so expectations are clear before support begins."
+      />
+      <ol class="sponsors-process-list">
+        {sponsorshipProcess.map((item) => <li>{item}</li>)}
+      </ol>
+    </div>
+  </Section>
+
+  <Section id="sponsors" tone="surface" padding="xl">
+    <div class="sponsors-section-stack">
+      <SectionHeading
+        eyebrow="Sponsors"
+        title="Current and past AI Village sponsors."
+        description="Current sponsors are recognized across the site and listed on the Sponsors page. Past sponsors remain acknowledged here for historical transparency."
+      />
+
+      <section class="sponsors-list-section" aria-labelledby="current-sponsors">
+        <div class="sponsors-list-section__header">
+          <h2 id="current-sponsors">Current Sponsors</h2>
+          <p>Current sponsor recognition appears here when organizations are actively supporting AI Village programs and community infrastructure.</p>
+        </div>
+        {currentSponsors.length > 0 ? (
+          <SponsorGrid sponsors={currentSponsors} linkMode="detail" />
+        ) : (
+          <Card class="sponsors-empty-state" tone="nested" padding="lg" as="div">
+            <p>
+              AI Village is currently seeking sponsors. Interested organizations can start a conversation with the team on Discord.
+            </p>
+            <Button href={sponsorContactHref}>Start a Conversation on Discord</Button>
+          </Card>
+        )}
+      </section>
+
+      <section class="sponsors-list-section" aria-labelledby="past-sponsors">
+        <div class="sponsors-list-section__header">
+          <h2 id="past-sponsors">Past Sponsors</h2>
+          <p>Organizations previously acknowledged for supporting AI Village work.</p>
+        </div>
+        {pastSponsors.length > 0 ? (
+          <div class:list={["sponsors-grid-frame", { "sponsors-grid-frame--sparse": pastSponsors.length < 3 }]}>
+            <SponsorGrid sponsors={pastSponsors} linkMode="detail" compact={pastSponsors.length < 3} />
+          </div>
+        ) : (
+          <p>No past sponsors are listed yet.</p>
+        )}
+      </section>
+    </div>
+  </Section>
+
+  <CTASection
+    eyebrow="Sponsor AI Village"
+    title="Ready to support AI Village?"
+    description="Reach out to the team on Discord to discuss how your organization can support public-interest AI security education."
+    primaryHref={sponsorContactHref}
+    primaryLabel="Talk with the Team on Discord"
+    secondaryHref="/community/"
+    secondaryLabel="Join the Community"
+    tone="panel"
+  />
 </BaseLayout>
 
 <style>
-  .sponsor-contact-card {
+  .sponsors-hero__inner {
+    align-items: center;
+    display: grid;
+    gap: clamp(2rem, 5vw, 4rem);
+    grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+  }
+
+  .sponsors-hero__copy {
+    max-width: 760px;
+  }
+
+  .sponsors-eyebrow {
+    color: var(--aiv-action-secondary);
+    font-family: var(--aiv-font-mono);
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    margin: 0 0 0.5rem;
+    text-transform: uppercase;
+  }
+
+  .sponsors-hero h1 {
+    margin: 0;
+  }
+
+  .sponsors-hero__body {
+    color: var(--aiv-text-secondary);
+    font-size: clamp(1.05rem, 1.8vw, 1.25rem);
+    margin: 1rem 0 0;
+    max-width: 70ch;
+  }
+
+  .sponsors-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
     margin-top: 1.5rem;
   }
 
-  .sponsor-section {
-    margin-top: 2.5rem;
+  .sponsors-hero__panel h2 {
+    font-size: clamp(1.25rem, 2vw, 1.65rem);
+  }
+
+  .sponsors-hero__panel ul {
+    color: var(--aiv-text-secondary);
+    margin-bottom: 0;
+  }
+
+  .sponsors-section-stack {
+    display: grid;
+    gap: 2rem;
+  }
+
+  .sponsors-card-grid {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .sponsors-card-grid--two {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .sponsors-card-grid--four {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .sponsors-card-link {
+    color: var(--aiv-action-primary);
+    display: inline-block;
+    font-family: var(--aiv-font-mono);
+    font-weight: 700;
+    margin-top: 0.75rem;
+  }
+
+  .sponsors-independence {
+    max-width: 920px;
+  }
+
+  .sponsors-independence h2 {
+    margin: 0;
+  }
+
+  .sponsors-independence p {
+    color: var(--aiv-text-secondary);
+    font-size: 1.05rem;
+  }
+
+  .sponsors-boundary-list {
+    border-top: 1px solid var(--aiv-nested-border);
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+  }
+
+  .sponsors-boundary-list h3 {
+    margin-bottom: 0.75rem;
+  }
+
+  .sponsors-boundary-list ul {
+    margin-bottom: 0;
+  }
+
+  .sponsors-process-list {
+    counter-reset: sponsor-process;
+    display: grid;
+    gap: 0.75rem;
+    list-style: none;
+    margin: 0;
+    max-width: 900px;
+    padding: 0;
+  }
+
+  .sponsors-process-list li {
+    background: var(--aiv-card-bg);
+    border: 1px solid var(--aiv-card-border);
+    border-radius: 8px;
+    counter-increment: sponsor-process;
+    display: grid;
+    gap: 0.75rem;
+    grid-template-columns: auto 1fr;
+    padding: 1rem;
+  }
+
+  .sponsors-process-list li::before {
+    color: var(--aiv-action-secondary);
+    content: counter(sponsor-process) ".";
+    font-family: var(--aiv-font-mono);
+    font-weight: 700;
+  }
+
+  .sponsors-list-section {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .sponsors-list-section + .sponsors-list-section {
+    border-top: 1px solid var(--aiv-rule-color);
+    padding-top: 2rem;
+  }
+
+  .sponsors-list-section__header {
+    max-width: 760px;
+  }
+
+  .sponsors-list-section__header h2 {
+    margin: 0;
+  }
+
+  .sponsors-list-section__header p {
+    color: var(--aiv-text-muted);
+    margin: 0.5rem 0 0;
+  }
+
+  .sponsors-empty-state {
+    align-items: flex-start;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 760px;
+  }
+
+  .sponsors-grid-frame--sparse {
+    max-width: 360px;
+  }
+
+  @media (max-width: 1180px) {
+    .sponsors-card-grid--four {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 820px) {
+    .sponsors-hero__inner,
+    .sponsors-card-grid--two,
+    .sponsors-card-grid--four {
+      grid-template-columns: 1fr;
+    }
+
+    .sponsors-actions {
+      align-items: stretch;
+      flex-direction: column;
+    }
   }
 </style>
