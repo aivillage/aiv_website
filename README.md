@@ -32,6 +32,38 @@ verification.
 regression suites. GitHub Actions runs the same validation surface for every
 pull request and every push to `master`.
 
+## Development Environments
+
+### Nix and direnv
+
+The committed flake provides the same Node.js and pnpm major versions used by
+the repository:
+
+```sh
+nix develop
+pnpm install --frozen-lockfile
+pnpm dev
+```
+
+If direnv is installed, `direnv allow` activates the flake automatically when
+entering the repository.
+
+### Docker
+
+The development container runs Astro on container port 4321 and maps it to the
+same host port the former Jekyll environment used:
+
+```sh
+docker compose up --build
+```
+
+Open [http://localhost:4000](http://localhost:4000). Set `AIV_SITE_PORT` to use
+a different host port, for example `AIV_SITE_PORT=4321 docker compose up
+--build`.
+
+The Compose service bind-mounts the repository for live Astro updates and keeps
+container dependencies in a named volume. Stop it with `docker compose down`.
+
 ## Adding Content
 
 ### Blog Posts

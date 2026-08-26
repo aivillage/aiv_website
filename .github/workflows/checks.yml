@@ -37,6 +37,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Build development container
+        run: docker build --target development .
+
       - name: Build
         run: pnpm build
 

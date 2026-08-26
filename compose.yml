@@ -1,0 +1,18 @@
+services:
+  site:
+    build:
+      context: .
+      target: development
+    init: true
+    ports:
+      - "${AIV_SITE_PORT:-4000}:4321"
+    volumes:
+      - .:/site
+      - node_modules:/site/node_modules
+    command:
+      - sh
+      - -c
+      - pnpm install --frozen-lockfile && pnpm dev --host 0.0.0.0
+
+volumes:
+  node_modules:
