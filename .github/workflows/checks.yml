@@ -45,3 +45,6 @@ jobs:
 
       - name: Check contrast
         run: pnpm run check:contrast
+
+      - name: Run regression tests
+        run: pnpm test

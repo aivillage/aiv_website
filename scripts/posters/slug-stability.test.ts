@@ -32,6 +32,10 @@ import { tmpdir } from "node:os";
 const HERE = dirname(fileURLToPath(import.meta.url));
 const IMPORTER = resolve(HERE, "import-posters.ts");
 
+function importerArgs(...args: string[]) {
+  return ["--import", "tsx", IMPORTER, ...args];
+}
+
 const ABSTRACT =
   "A sufficiently long abstract that comfortably passes the minimum length validation the importer applies to every row.";
 
@@ -120,8 +124,8 @@ function run(
   writeFileSync(path, csv(rows));
   try {
     const output = execFileSync(
-      "npx",
-      ["tsx", IMPORTER, path, "--out", DATA, ...flags],
+      process.execPath,
+      importerArgs(path, "--out", DATA, ...flags),
       {
         encoding: "utf8",
         stdio: ["ignore", "pipe", "pipe"],
@@ -142,8 +146,8 @@ function runForm(
   const path = join(tmp, "form-responses.csv");
   writeFileSync(path, formCsv(rows));
   const result = spawnSync(
-    "npx",
-    ["tsx", IMPORTER, path, "--out", dataPath, ...flags],
+    process.execPath,
+    importerArgs(path, "--out", dataPath, ...flags),
     { encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] },
   );
   return {
@@ -172,8 +176,8 @@ try {
 
   const missingOperandOutput = join(tmp, "missing-operand.ts");
   const missingOperand = spawnSync(
-    "npx",
-    ["tsx", IMPORTER, "--out", missingOperandOutput],
+    process.execPath,
+    importerArgs("--out", missingOperandOutput),
     {
       encoding: "utf8",
       stdio: ["ignore", "pipe", "pipe"],
@@ -213,8 +217,8 @@ try {
     ]),
   );
   const genericRun = spawnSync(
-    "npx",
-    ["tsx", IMPORTER, genericCsv, "--out", genericData],
+    process.execPath,
+    importerArgs(genericCsv, "--out", genericData),
     { encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] },
   );
   const genericOutput = readFileSync(genericData, "utf8");
@@ -260,7 +264,7 @@ try {
     ),
   );
   try {
-    execFileSync("npx", ["tsx", IMPORTER, path, "--out", DATA], {
+    execFileSync(process.execPath, importerArgs(path, "--out", DATA), {
       stdio: "ignore",
     });
   } catch {

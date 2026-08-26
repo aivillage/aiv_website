@@ -20,13 +20,17 @@ pnpm preview
 Before pushing or opening a PR, run:
 
 ```sh
-pnpm build
-pnpm lint
+pnpm validate
 ```
 
-`pnpm build` runs Astro/type checks, Markdown heading checks, offline social-image
-generation, the Astro static build, redirect verification, internal-link
-verification, and emitted social-image verification.
+`pnpm build` runs Astro/type checks, content-identity and Markdown heading
+checks, offline social-image generation, the Astro static build, redirect
+verification, internal-link verification, and emitted social-image
+verification.
+
+`pnpm validate` runs the production build plus lint, contrast checks, and all
+regression suites. GitHub Actions runs the same validation surface for every
+pull request and every push to `master`.
 
 ## Adding Content
 
