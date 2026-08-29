@@ -1,12 +1,9 @@
 ---
-layout: post
 title: Gradient Attacks
 author: Sven Cattell
 date: 2018-06-12
 category: "adversarial ml"
 canonicalSlug: optimization-fgsm
-legacyUrls:
-  - /adversarial%20ml/2018/06/12/optimization-fgsm.html
 
 ---
 

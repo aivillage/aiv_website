@@ -4,7 +4,9 @@ import PostLayout from "../../../layouts/PostLayout.astro";
 import { canonicalPostSlug, sortPosts } from "../../../utils/site";
 
 export async function getStaticPaths() {
-  const posts = sortPosts(await getCollection("blog", ({ data }) => !data.draft));
+  const posts = sortPosts(
+    await getCollection("blog", ({ data }) => !data.draft),
+  );
   const seen = new Map<string, string>();
 
   return await Promise.all(
@@ -12,7 +14,9 @@ export async function getStaticPaths() {
       const slug = canonicalPostSlug(post);
       const existing = seen.get(slug);
       if (existing) {
-        throw new Error(`Blog slug collision for "${slug}": ${existing} and ${post.id}`);
+        throw new Error(
+          `Blog slug collision for "${slug}": ${existing} and ${post.id}`,
+        );
       }
       seen.set(slug, post.id);
       const { Content } = await render(post);

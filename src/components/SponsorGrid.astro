@@ -4,7 +4,11 @@ import { sponsorPath } from "../utils/site";
 
 type LinkMode = "external" | "detail" | "none";
 
-const { sponsors, linkMode = "external", compact = false } = Astro.props as {
+const {
+  sponsors,
+  linkMode = "external",
+  compact = false,
+} = Astro.props as {
   sponsors: SponsorEntry[];
   linkMode?: LinkMode;
   compact?: boolean;
@@ -12,34 +16,53 @@ const { sponsors, linkMode = "external", compact = false } = Astro.props as {
 ---
 
 <div class:list={["sponsor-grid", { "sponsor-grid--compact": compact }]}>
-  {sponsors.map((sponsor) => {
-    const href = linkMode === "detail" ? sponsorPath(sponsor) : linkMode === "external" ? sponsor.data.url : undefined;
-    const target = linkMode === "external" && href ? "_blank" : undefined;
-    const rel = linkMode === "external" && href ? "noopener noreferrer" : undefined;
-    const logoContent = sponsor.data.logo ? (
-      <img class="sponsor-grid__logo" src={`/assets/images/logos/${sponsor.data.logo}`} alt={`${sponsor.data.name} logo`} />
-    ) : (
-      <span>{sponsor.data.name}</span>
-    );
-    const boxClass = ["sponsor-grid__logo-box", `sponsor-grid__logo-box--${sponsor.data.logoBackground}`];
+  {
+    sponsors.map((sponsor) => {
+      const href =
+        linkMode === "detail"
+          ? sponsorPath(sponsor)
+          : linkMode === "external"
+            ? sponsor.data.url
+            : undefined;
+      const target = linkMode === "external" && href ? "_blank" : undefined;
+      const rel =
+        linkMode === "external" && href ? "noopener noreferrer" : undefined;
+      const logoContent = sponsor.data.logo ? (
+        <img
+          class="sponsor-grid__logo"
+          src={`/assets/images/logos/${sponsor.data.logo}`}
+          alt={`${sponsor.data.name} logo`}
+        />
+      ) : (
+        <span>{sponsor.data.name}</span>
+      );
+      const boxClass = [
+        "sponsor-grid__logo-box",
+        `sponsor-grid__logo-box--${sponsor.data.logoBackground}`,
+      ];
 
-    return (
-      <div class="card sponsor-grid__card">
-        {href ? (
-          <a class:list={boxClass} href={href} target={target} rel={rel}>
-            {logoContent}
-          </a>
-        ) : (
-          <div class:list={boxClass}>
-            {logoContent}
-          </div>
-        )}
-        <h3 class="sponsor-grid__name">
-          {href ? <a href={href} target={target} rel={rel}>{sponsor.data.name}</a> : sponsor.data.name}
-        </h3>
-      </div>
-    );
-  })}
+      return (
+        <div class="card sponsor-grid__card">
+          {href ? (
+            <a class:list={boxClass} href={href} target={target} rel={rel}>
+              {logoContent}
+            </a>
+          ) : (
+            <div class:list={boxClass}>{logoContent}</div>
+          )}
+          <h3 class="sponsor-grid__name">
+            {href ? (
+              <a href={href} target={target} rel={rel}>
+                {sponsor.data.name}
+              </a>
+            ) : (
+              sponsor.data.name
+            )}
+          </h3>
+        </div>
+      );
+    })
+  }
 </div>
 
 <style>

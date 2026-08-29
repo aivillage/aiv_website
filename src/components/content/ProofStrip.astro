@@ -14,18 +14,27 @@ type Props = {
 const { items = [], mobileHeading, class: className } = Astro.props as Props;
 ---
 
-<div class:list={["aiv-proof-strip", className]} data-mobile-heading={mobileHeading}>
-  {items.length > 0 ? (
-    items.map((item) => (
-      <div class="aiv-proof-strip__item">
-        {item.value && <strong class="aiv-proof-strip__value">{item.value}</strong>}
-        <span class="aiv-proof-strip__label">{item.label}</span>
-        {item.detail && <span class="aiv-proof-strip__detail">{item.detail}</span>}
-      </div>
-    ))
-  ) : (
-    <slot />
-  )}
+<div
+  class:list={["aiv-proof-strip", className]}
+  data-mobile-heading={mobileHeading}
+>
+  {
+    items.length > 0 ? (
+      items.map((item) => (
+        <div class="aiv-proof-strip__item">
+          {item.value && (
+            <strong class="aiv-proof-strip__value">{item.value}</strong>
+          )}
+          <span class="aiv-proof-strip__label">{item.label}</span>
+          {item.detail && (
+            <span class="aiv-proof-strip__detail">{item.detail}</span>
+          )}
+        </div>
+      ))
+    ) : (
+      <slot />
+    )
+  }
 </div>
 
 <style>

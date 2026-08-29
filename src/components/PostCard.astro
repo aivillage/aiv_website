@@ -3,7 +3,10 @@ import type { BlogEntry } from "../utils/site";
 import { canonicalPostPath, excerptFromBody, formatDate } from "../utils/site";
 
 const { post } = Astro.props as { post: BlogEntry };
-const excerpt = post.data.description ?? post.data.excerpt ?? excerptFromBody(post.body ?? "", 30);
+const excerpt =
+  post.data.description ??
+  post.data.excerpt ??
+  excerptFromBody(post.body ?? "", 30);
 ---
 
 <article class="post-item">
@@ -11,10 +14,27 @@ const excerpt = post.data.description ?? post.data.excerpt ?? excerptFromBody(po
     <a href={canonicalPostPath(post)}>{post.data.title}</a>
   </h2>
   <div class="post-meta">
-    {post.data.author && <span class="post-card__author">{Array.isArray(post.data.author) ? post.data.author.join(", ") : post.data.author}</span>}
+    {
+      post.data.author && (
+        <span class="post-card__author">
+          {Array.isArray(post.data.author)
+            ? post.data.author.join(", ")
+            : post.data.author}
+        </span>
+      )
+    }
     {post.data.author && post.data.date && " • "}
-    <time datetime={post.data.date.toISOString()}>{formatDate(post.data.date)}</time>
-    {post.data.category && <> • <span class="post-card__category">#{post.data.category}</span></>}
+    <time datetime={post.data.date.toISOString()}
+      >{formatDate(post.data.date)}</time
+    >
+    {
+      post.data.category && (
+        <>
+          {" "}
+          • <span class="post-card__category">#{post.data.category}</span>
+        </>
+      )
+    }
   </div>
   <div class="post-excerpt">{excerpt}</div>
   <div class="post-card__action">

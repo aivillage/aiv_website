@@ -29,7 +29,9 @@ function titleSimilarity(left, right) {
 
   const leftTokens = new Set(left.split(" "));
   const rightTokens = new Set(right.split(" "));
-  const shared = [...leftTokens].filter((token) => rightTokens.has(token)).length;
+  const shared = [...leftTokens].filter((token) =>
+    rightTokens.has(token),
+  ).length;
   return (2 * shared) / (leftTokens.size + rightTokens.size);
 }
 
@@ -63,7 +65,10 @@ function matchPostersToSchedule(entries, eventPosters) {
     eventPosters.map((poster, posterIndex) => ({
       entryIndex,
       posterIndex,
-      similarity: titleSimilarity(normalizeTitle(entry.title), normalizeTitle(poster.title)),
+      similarity: titleSimilarity(
+        normalizeTitle(entry.title),
+        normalizeTitle(poster.title),
+      ),
     })),
   );
   candidates.sort((left, right) => right.similarity - left.similarity);
@@ -122,7 +127,11 @@ export default function rehypePosterScheduleLinks() {
         }
       }
 
-      if (inPosterSchedule && node.type === "element" && node.tagName === "table") {
+      if (
+        inPosterSchedule &&
+        node.type === "element" &&
+        node.tagName === "table"
+      ) {
         collectPosterTitles(node, entries);
       }
     }

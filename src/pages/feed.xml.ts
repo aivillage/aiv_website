@@ -4,7 +4,9 @@ import { site } from "../data/site";
 import { canonicalPostPath, excerptFromBody, sortPosts } from "../utils/site";
 
 export async function GET() {
-  const posts = sortPosts(await getCollection("blog", ({ data }) => !data.draft));
+  const posts = sortPosts(
+    await getCollection("blog", ({ data }) => !data.draft),
+  );
 
   return rss({
     title: site.title,
@@ -13,7 +15,8 @@ export async function GET() {
     items: posts.map((post) => ({
       title: post.data.title,
       pubDate: post.data.date,
-      description: post.data.description ?? excerptFromBody(post.body ?? "", 30),
+      description:
+        post.data.description ?? excerptFromBody(post.body ?? "", 30),
       link: canonicalPostPath(post),
     })),
   });

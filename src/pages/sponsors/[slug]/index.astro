@@ -6,7 +6,10 @@ import { sponsorPath, slugify } from "../../../utils/site";
 
 export async function getStaticPaths() {
   const sponsors = await getCollection("sponsors");
-  return sponsors.map((sponsor) => ({ params: { slug: slugify(sponsor.data.name || sponsor.id) }, props: { sponsor } }));
+  return sponsors.map((sponsor) => ({
+    params: { slug: slugify(sponsor.data.name || sponsor.id) },
+    props: { sponsor },
+  }));
 }
 
 const { sponsor } = Astro.props;
@@ -14,23 +17,50 @@ const { Content } = await render(sponsor);
 const hasBody = Boolean(sponsor.body?.trim());
 ---
 
-<BaseLayout title={sponsor.data.name} canonical={sponsorPath(sponsor)} description={`${sponsor.data.name} sponsor page for AI Village.`}>
+<BaseLayout
+  title={sponsor.data.name}
+  canonical={sponsorPath(sponsor)}
+  description={`${sponsor.data.name} sponsor page for AI Village.`}
+>
   <PageShell>
-  <article class="post">
-    <header class="post-header">
-      {sponsor.data.logo && (
-        <span class:list={["sponsor-detail-logo-box", `sponsor-detail-logo-box--${sponsor.data.logoBackground}`]}>
-          <img class="sponsor-detail-logo" src={`/assets/images/logos/${sponsor.data.logo}`} alt={`${sponsor.data.name} logo`} />
-        </span>
-      )}
-      <h1>{sponsor.data.name}</h1>
-      {sponsor.data.url && <p><a href={sponsor.data.url} target="_blank" rel="noopener noreferrer">{sponsor.data.url}</a></p>}
-    </header>
-    <div class="post-content">
-      {hasBody && <Content />}
-      <p><a href="/sponsors/">Back to sponsors</a></p>
-    </div>
-  </article>
+    <article class="post">
+      <header class="post-header">
+        {
+          sponsor.data.logo && (
+            <span
+              class:list={[
+                "sponsor-detail-logo-box",
+                `sponsor-detail-logo-box--${sponsor.data.logoBackground}`,
+              ]}
+            >
+              <img
+                class="sponsor-detail-logo"
+                src={`/assets/images/logos/${sponsor.data.logo}`}
+                alt={`${sponsor.data.name} logo`}
+              />
+            </span>
+          )
+        }
+        <h1>{sponsor.data.name}</h1>
+        {
+          sponsor.data.url && (
+            <p>
+              <a
+                href={sponsor.data.url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {sponsor.data.url}
+              </a>
+            </p>
+          )
+        }
+      </header>
+      <div class="post-content">
+        {hasBody && <Content />}
+        <p><a href="/sponsors/">Back to sponsors</a></p>
+      </div>
+    </article>
   </PageShell>
 </BaseLayout>
 

@@ -9,10 +9,20 @@ type Props = {
   class?: string;
 };
 
-const { title, description, meta, href, class: className } = Astro.props as Props;
+const {
+  title,
+  description,
+  meta,
+  href,
+  class: className,
+} = Astro.props as Props;
 ---
 
-<Card class:list={["aiv-activity-card", className]} as="article" interactive={Boolean(href)}>
+<Card
+  class:list={["aiv-activity-card", className]}
+  as="article"
+  interactive={Boolean(href)}
+>
   <div class="aiv-activity-card__body">
     {meta && <p class="aiv-activity-card__meta">{meta}</p>}
     <h3 class="aiv-activity-card__title">

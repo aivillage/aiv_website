@@ -62,7 +62,7 @@ file looks like this:
 ```yaml
 ---
 title: "Post title"
-date: 2026-08-26
+date: YYYY-MM-DD
 author:
   - Author Name
 category: "research"

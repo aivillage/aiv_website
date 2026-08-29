@@ -62,7 +62,8 @@ export function extractSocialImageMetadata(html: string): SocialMetadata {
     const content = attrs.get("content");
     if (!key || content === undefined) continue;
 
-    if (key === "og:image" || key === "twitter:image") metadata.images.push(content);
+    if (key === "og:image" || key === "twitter:image")
+      metadata.images.push(content);
     if (key === "og:image:alt") metadata.ogImageAlts.push(content);
     if (key === "og:image:width") metadata.ogImageWidths.push(content);
     if (key === "og:image:height") metadata.ogImageHeights.push(content);
@@ -74,15 +75,25 @@ export function extractSocialImageMetadata(html: string): SocialMetadata {
 
 async function assertGeneratedJpeg(file: string, publicPath: string) {
   const bytes = await readFile(file);
-  if (bytes.length < 3 || bytes[0] !== 0xff || bytes[1] !== 0xd8 || bytes[2] !== 0xff) {
-    throw new Error(`Generated social image is not genuine JPEG data: ${publicPath}`);
+  if (
+    bytes.length < 3 ||
+    bytes[0] !== 0xff ||
+    bytes[1] !== 0xd8 ||
+    bytes[2] !== 0xff
+  ) {
+    throw new Error(
+      `Generated social image is not genuine JPEG data: ${publicPath}`,
+    );
   }
 
   const metadata = await sharp(bytes).metadata();
   if (metadata.format !== "jpeg") {
     throw new Error(`Generated social image is not a JPEG: ${publicPath}`);
   }
-  if (metadata.width !== SOCIAL_IMAGE_WIDTH || metadata.height !== SOCIAL_IMAGE_HEIGHT) {
+  if (
+    metadata.width !== SOCIAL_IMAGE_WIDTH ||
+    metadata.height !== SOCIAL_IMAGE_HEIGHT
+  ) {
     throw new Error(
       `Generated social image has ${metadata.width}x${metadata.height}, expected 1200x630: ${publicPath}`,
     );
@@ -101,11 +112,18 @@ export async function checkOgImages({
   let checkedReferences = 0;
   let externalReferences = 0;
 
-  for (const htmlFile of (await filesUnder(resolvedDistDir)).filter((file) => file.endsWith(".html"))) {
-    const metadata = extractSocialImageMetadata(await readFile(htmlFile, "utf8"));
+  for (const htmlFile of (await filesUnder(resolvedDistDir)).filter((file) =>
+    file.endsWith(".html"),
+  )) {
+    const metadata = extractSocialImageMetadata(
+      await readFile(htmlFile, "utf8"),
+    );
     for (const reference of metadata.images) {
       const parsed = new URL(reference, siteUrl);
-      if (/^https?:\/\//i.test(reference) && parsed.origin !== productionOrigin) {
+      if (
+        /^https?:\/\//i.test(reference) &&
+        parsed.origin !== productionOrigin
+      ) {
         externalReferences += 1;
         continue;
       }
@@ -137,12 +155,16 @@ export async function checkOgImages({
 
     for (const expected of expectedGeneratedPaths) {
       if (!emittedGeneratedPaths.has(expected)) {
-        throw new Error(`Selected local social source has no emitted generated derivative: ${expected}`);
+        throw new Error(
+          `Selected local social source has no emitted generated derivative: ${expected}`,
+        );
       }
     }
     for (const emitted of emittedGeneratedPaths) {
       if (!expectedGeneratedPaths.has(emitted)) {
-        throw new Error(`Emitted generated social image was not selected by content/default rules: ${emitted}`);
+        throw new Error(
+          `Emitted generated social image was not selected by content/default rules: ${emitted}`,
+        );
       }
     }
   }

@@ -3,7 +3,6 @@ title: "AI Village @ Other 2024 Cons"
 date: 2024-05-09
 description: "Other 2024 cons we've been at, including RSA, BSides, and CypherCon."
 location: "Multiple locations"
-layout: post
 ---
 
 * CactusCon February 16-17

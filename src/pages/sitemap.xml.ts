@@ -1,7 +1,13 @@
 import { getCollection } from "astro:content";
 import { site } from "../data/site";
 import { posters } from "../data/posters";
-import { canonicalPostPath, eventPath, schedulePath, sortEventsAscending, sponsorPath } from "../utils/site";
+import {
+  canonicalPostPath,
+  eventPath,
+  schedulePath,
+  sortEventsAscending,
+  sponsorPath,
+} from "../utils/site";
 
 const staticAssets = [
   "/assets/AIVDC31/AIVDC31.pdf",
@@ -29,36 +35,44 @@ function loc(path: string) {
 
 export async function GET() {
   const events = sortEventsAscending(await getCollection("events"));
-  const posts = [...(await getCollection("blog", ({ data }) => !data.draft))].sort((a, b) => a.data.date.getTime() - b.data.date.getTime());
+  const posts = [
+    ...(await getCollection("blog", ({ data }) => !data.draft)),
+  ].sort((a, b) => a.data.date.getTime() - b.data.date.getTime());
   const sponsors = (await getCollection("sponsors")).filter(
-    (sponsor) => sponsor.data.status === "current" || sponsor.data.status === "past",
+    (sponsor) =>
+      sponsor.data.status === "current" || sponsor.data.status === "past",
   );
   const schedules = await getCollection("schedules");
 
-  const urls = Array.from(new Set([
-    "/",
-    "/events/",
-    ...events.map(eventPath),
-    ...schedules.map(schedulePath),
-    "/blog/",
-    ...posts.map(canonicalPostPath),
-    "/about/",
-    "/about/conduct/",
-    "/community/",
-    "/discord/",
-    "/defcon31/",
-    "/grt/",
-    "/hacker-journal-club/",
-    "/learn/",
-    "/posters/",
-    ...posters.map((poster) => `/posters/${poster.slug}/`),
-    "/research/",
-    "/sponsors/",
-    ...sponsors.map(sponsorPath),
-    ...staticAssets,
-  ]));
+  const urls = Array.from(
+    new Set([
+      "/",
+      "/events/",
+      ...events.map(eventPath),
+      ...schedules.map(schedulePath),
+      "/blog/",
+      ...posts.map(canonicalPostPath),
+      "/about/",
+      "/about/conduct/",
+      "/community/",
+      "/discord/",
+      "/defcon31/",
+      "/grt/",
+      "/hacker-journal-club/",
+      "/learn/",
+      "/posters/",
+      ...posters.map((poster) => `/posters/${poster.slug}/`),
+      "/research/",
+      "/sponsors/",
+      ...sponsors.map(sponsorPath),
+      ...staticAssets,
+    ]),
+  );
 
-  return new Response(`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map(loc).join("\n")}\n</urlset>\n`, {
-    headers: { "Content-Type": "application/xml; charset=utf-8" },
-  });
+  return new Response(
+    `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map(loc).join("\n")}\n</urlset>\n`,
+    {
+      headers: { "Content-Type": "application/xml; charset=utf-8" },
+    },
+  );
 }

@@ -23,7 +23,8 @@ const total = posters.filter((poster) =>
       <p class="posters-intro__eyebrow">AI Village</p>
       <h1>Poster Archive</h1>
       <p class="posters-intro__lede">
-        Research poster titles, authors, abstracts, and available poster files from AI Village events.
+        Research poster titles, authors, abstracts, and available poster files
+        from AI Village events.
       </p>
     </header>
 
@@ -51,7 +52,8 @@ const total = posters.filter((poster) =>
     {
       total === 0 ? (
         <p class="posters-empty">
-          Accepted DEF CON 34 posters will be published here as final materials arrive.
+          Accepted DEF CON 34 posters will be published here as final materials
+          arrive.
         </p>
       ) : (
         eventsWithPosters.map((event) => (
@@ -62,9 +64,10 @@ const total = posters.filter((poster) =>
 
     <aside class="posters-note">
       <p>
-        Available poster files are hosted on Google Drive and open in a new tab. Some entries list
-        the research metadata without an online poster. Copyright remains with the authors. If a
-        link is broken, or you are an author who would like an entry corrected or removed, please
+        Available poster files are hosted on Google Drive and open in a new tab.
+        Some entries list the research metadata without an online poster.
+        Copyright remains with the authors. If a link is broken, or you are an
+        author who would like an entry corrected or removed, please
         <a href="/community/">get in touch</a>.
       </p>
     </aside>
@@ -96,7 +99,9 @@ const total = posters.filter((poster) =>
       }
 
       for (const group of groups) {
-        const visible = group.querySelectorAll("[data-poster-card]:not([hidden])").length;
+        const visible = group.querySelectorAll(
+          "[data-poster-card]:not([hidden])",
+        ).length;
         const empty = group.querySelector("[data-poster-group-empty]");
         if (empty) empty.hidden = visible !== 0;
       }

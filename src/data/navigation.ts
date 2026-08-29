@@ -25,8 +25,11 @@ export const footerNavSections = [
     links: [
       { label: "Community", href: "/community/" },
       { label: "Discord", href: "/discord/" },
-      { label: "Volunteer Application", href: volunteerApplicationUrl, external: true },
-      { label: "DEF CON Volunteer Signup", href: "/defcon-volunteer/" },
+      {
+        label: "Volunteer Application",
+        href: volunteerApplicationUrl,
+        external: true,
+      },
       { label: "Code of Conduct", href: "/about/conduct/" },
     ],
   },
@@ -43,15 +46,16 @@ export const footerNavSections = [
     title: "Utility",
     links: [
       { label: "RSS", href: "/feed.xml" },
-      { label: "LinkedIn", href: "https://www.linkedin.com/company/aivillage", external: true },
-      { label: "X/Twitter", href: "https://twitter.com/aivillage_dc", external: true },
+      {
+        label: "LinkedIn",
+        href: "https://www.linkedin.com/company/aivillage",
+        external: true,
+      },
+      {
+        label: "X/Twitter",
+        href: "https://twitter.com/aivillage_dc",
+        external: true,
+      },
     ],
   },
-] as const;
-
-export const socialLinks = [
-  { label: "GitHub", href: "https://github.com/aivillage" },
-  { label: "LinkedIn", href: "https://www.linkedin.com/company/aivillage" },
-  { label: "X/Twitter", href: "https://twitter.com/aivillage_dc" },
-  { label: "Discord", href: "/discord/" },
 ] as const;

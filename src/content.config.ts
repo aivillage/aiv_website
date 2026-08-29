@@ -14,30 +14,35 @@ const image = z.union([
 ]);
 
 const blog = defineCollection({
-  loader: glob({ pattern: "**/*.{md,mdx,markdown}", base: "./src/content/blog" }),
-  schema: z.object({
-    title: z.string(),
-    date: z.coerce.date(),
-    author: z.union([z.string(), z.array(z.string())]).default("AI Village"),
-    category: z.string().optional(),
-    categories: z.union([z.string(), z.array(z.string())]).optional(),
-    tags: z.array(z.string()).default([]),
-    description: z.string().optional(),
-    excerpt: z.string().optional(),
-    image: image.optional(),
-    cover: image.optional(),
-    socialImage: image.optional(),
-    author_profile: z.boolean().optional(),
-    draft: z.boolean().default(false),
-    slug: z.string().optional(),
-    canonicalSlug: z.string().optional(),
-    legacySlug: z.string().optional(),
-    legacyUrls: z.array(z.string()).default([]),
+  loader: glob({
+    pattern: "**/*.{md,mdx,markdown}",
+    base: "./src/content/blog",
   }),
+  schema: z
+    .object({
+      title: z.string(),
+      date: z.coerce.date(),
+      author: z.union([z.string(), z.array(z.string())]).default("AI Village"),
+      category: z.string().optional(),
+      categories: z.union([z.string(), z.array(z.string())]).optional(),
+      tags: z.array(z.string()).default([]),
+      description: z.string().optional(),
+      excerpt: z.string().optional(),
+      image: image.optional(),
+      cover: image.optional(),
+      socialImage: image.optional(),
+      draft: z.boolean().default(false),
+      slug: z.string().optional(),
+      canonicalSlug: z.string().optional(),
+    })
+    .strict(),
 });
 
 const events = defineCollection({
-  loader: glob({ pattern: "**/*.{md,mdx,markdown}", base: "./src/content/events" }),
+  loader: glob({
+    pattern: "**/*.{md,mdx,markdown}",
+    base: "./src/content/events",
+  }),
   schema: z
     .object({
       title: z.string(),
@@ -47,30 +52,37 @@ const events = defineCollection({
       location: z.string().optional(),
       image: image.optional(),
       socialImage: image.optional(),
-      permalink: z.string().optional(),
       externalUrl: z.url().optional(),
       canonicalSlug: z.string().optional(),
-      legacyUrls: z.array(z.string()).default([]),
     })
+    .strict()
     .superRefine(validateEventDateRange),
 });
 
 const volunteers = defineCollection({
-  loader: glob({ pattern: "**/*.{md,mdx,markdown}", base: "./src/content/volunteers" }),
-  schema: z.object({
-    first_name: z.string(),
-    last_name: z.string(),
-    position: z.string().optional(),
-    expertise: z.string().optional(),
-    affiliation: z.string().optional(),
-    profile: z.string().optional(),
-    bio: z.union([z.boolean(), z.string()]).default(false),
-    order: z.number().default(999),
+  loader: glob({
+    pattern: "**/*.{md,mdx,markdown}",
+    base: "./src/content/volunteers",
   }),
+  schema: z
+    .object({
+      first_name: z.string(),
+      last_name: z.string(),
+      position: z.string().optional(),
+      expertise: z.string().optional(),
+      affiliation: z.string().optional(),
+      profile: z.string().optional(),
+      bio: z.union([z.boolean(), z.string()]).default(false),
+      order: z.number().default(999),
+    })
+    .strict(),
 });
 
 const sponsors = defineCollection({
-  loader: glob({ pattern: "**/*.{md,mdx,markdown}", base: "./src/content/sponsors" }),
+  loader: glob({
+    pattern: "**/*.{md,mdx,markdown}",
+    base: "./src/content/sponsors",
+  }),
   schema: z
     .object({
       name: z.string(),
@@ -79,8 +91,9 @@ const sponsors = defineCollection({
       logoBackground: z.enum(["light", "dark"]).default("light"),
       url: z.url().optional(),
       tier: z.string().optional(),
-      description: z.union([z.string(), z.boolean()]).optional(),
+      description: z.string().optional(),
     })
+    .strict()
     .superRefine((data, ctx) => {
       if (data.status !== "current") return;
 
@@ -104,12 +117,12 @@ const sponsors = defineCollection({
 
 const schedules = defineCollection({
   loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/schedules" }),
-  schema: z.object({
-    title: z.string(),
-    date: z.coerce.date().optional(),
-    category: z.string().optional(),
-    permalink: z.string().optional(),
-  }),
+  schema: z
+    .object({
+      title: z.string(),
+      date: z.coerce.date().optional(),
+    })
+    .strict(),
 });
 
 export const collections = { blog, events, volunteers, sponsors, schedules };

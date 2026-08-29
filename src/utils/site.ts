@@ -123,8 +123,10 @@ export function isEventUpcomingOrOngoing(
   return isoDateOnly(effectiveEventEndDate(event)) >= isoDateOnly(now);
 }
 
-export function stripDatePrefix(id: string) {
-  return id.replace(/\.(md|mdx|markdown)$/i, "").replace(/^\d{4}-\d{2}-\d{2}-/, "");
+function stripDatePrefix(id: string) {
+  return id
+    .replace(/\.(md|mdx|markdown)$/i, "")
+    .replace(/^\d{4}-\d{2}-\d{2}-/, "");
 }
 
 export function slugify(value: string) {
@@ -138,7 +140,11 @@ export function slugify(value: string) {
 }
 
 export function canonicalPostSlug(post: BlogEntry) {
-  const raw = post.data.slug ?? post.data.canonicalSlug ?? stripDatePrefix(post.id) ?? post.data.title;
+  const raw =
+    post.data.slug ??
+    post.data.canonicalSlug ??
+    stripDatePrefix(post.id) ??
+    post.data.title;
   return slugify(raw);
 }
 
@@ -175,11 +181,15 @@ function sortSponsorsByName(sponsors: SponsorEntry[]) {
 }
 
 export function getCurrentSponsors(sponsors: SponsorEntry[]) {
-  return sortSponsorsByName(sponsors.filter((sponsor) => sponsor.data.status === "current"));
+  return sortSponsorsByName(
+    sponsors.filter((sponsor) => sponsor.data.status === "current"),
+  );
 }
 
 export function getPastSponsors(sponsors: SponsorEntry[]) {
-  return sortSponsorsByName(sponsors.filter((sponsor) => sponsor.data.status === "past"));
+  return sortSponsorsByName(
+    sponsors.filter((sponsor) => sponsor.data.status === "past"),
+  );
 }
 
 export function schedulePath(schedule: ScheduleEntry) {

@@ -20,8 +20,12 @@ const futureEvents = sortEventsAscending(
 const pastEvents = sortEventsDescending(
   events.filter((event) => !isEventUpcomingOrOngoing(event, now)),
 );
-const futureByYear = [...groupByYear(futureEvents)].sort(([a], [b]) => a.localeCompare(b));
-const pastByYear = [...groupByYear(pastEvents)].sort(([a], [b]) => b.localeCompare(a));
+const futureByYear = [...groupByYear(futureEvents)].sort(([a], [b]) =>
+  a.localeCompare(b),
+);
+const pastByYear = [...groupByYear(pastEvents)].sort(([a], [b]) =>
+  b.localeCompare(a),
+);
 ---
 
 <BaseLayout
@@ -30,43 +34,73 @@ const pastByYear = [...groupByYear(pastEvents)].sort(([a], [b]) => b.localeCompa
   description="Upcoming and past AI Village events, DEF CON village archives, schedules, talks, workshops, and volunteer information."
 >
   <PageShell>
-  <section class="content events-page">
-    <h1>Events</h1>
-    <p>
-      If you would like to volunteer at an event
-      <a href={volunteerApplicationUrl} target="_blank" rel="noopener noreferrer">
-        submit a general volunteer application here.
-      </a>
-    </p>
-    <br />
-    <section class="future-events">
-      <h2 class="event__subtitle">Upcoming Events</h2>
-      {futureEvents.length > 0 ? futureByYear.map(([year, yearEvents]) => (
-        <details class="year-section" open>
-          <summary class="year-heading">{year}</summary>
-          <div class="events-container"><div class="events-list">{yearEvents.map((event) => <EventCard event={event} />)}</div></div>
-        </details>
-      )) : <p>No upcoming events at this time.</p>}
+    <section class="content events-page">
+      <h1>Events</h1>
+      <p>
+        If you would like to volunteer at an event
+        <a
+          href={volunteerApplicationUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          submit a general volunteer application here.
+        </a>
+      </p>
+      <br />
+      <section class="future-events">
+        <h2 class="event__subtitle">Upcoming Events</h2>
+        {
+          futureEvents.length > 0 ? (
+            futureByYear.map(([year, yearEvents]) => (
+              <details class="year-section" open>
+                <summary class="year-heading">{year}</summary>
+                <div class="events-container">
+                  <div class="events-list">
+                    {yearEvents.map((event) => (
+                      <EventCard event={event} />
+                    ))}
+                  </div>
+                </div>
+              </details>
+            ))
+          ) : (
+            <p>No upcoming events at this time.</p>
+          )
+        }
+      </section>
+      <br />
+      <section class="past-events">
+        <h2 class="event__subtitle">Past Events</h2>
+        {
+          pastByYear.map(([year, yearEvents]) => (
+            <details class="year-section" open>
+              <summary class="year-heading">{year}</summary>
+              <div class="events-container">
+                <div class="events-list">
+                  {yearEvents.map((event) => (
+                    <EventCard event={event} />
+                  ))}
+                </div>
+              </div>
+            </details>
+          ))
+        }
+      </section>
+      <br />
+      <section class="schedule-archive">
+        <h2 class="event__subtitle">Schedules and Talks</h2>
+        <div class="card">
+          <ul>
+            {
+              scheduleRoutes.map((schedule) => (
+                <li>
+                  <a href={schedule.path}>{schedule.label}</a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </section>
     </section>
-    <br />
-    <section class="past-events">
-      <h2 class="event__subtitle">Past Events</h2>
-      {pastByYear.map(([year, yearEvents]) => (
-        <details class="year-section" open>
-          <summary class="year-heading">{year}</summary>
-          <div class="events-container"><div class="events-list">{yearEvents.map((event) => <EventCard event={event} />)}</div></div>
-        </details>
-      ))}
-    </section>
-    <br />
-    <section class="schedule-archive">
-      <h2 class="event__subtitle">Schedules and Talks</h2>
-      <div class="card">
-        <ul>
-          {scheduleRoutes.map((schedule) => <li><a href={schedule.path}>{schedule.label}</a></li>)}
-        </ul>
-      </div>
-    </section>
-  </section>
   </PageShell>
 </BaseLayout>

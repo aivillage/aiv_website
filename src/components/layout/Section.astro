@@ -9,9 +9,31 @@ type Props = {
   class?: string;
 };
 
-const { tone = "canvas", width = "wide", padding = "lg", id, class: className } = Astro.props;
+const {
+  tone = "canvas",
+  width = "wide",
+  padding = "lg",
+  id,
+  class: className,
+} = Astro.props;
 ---
 
-<section id={id} class:list={["aiv-section", `aiv-section--tone-${tone}`, `aiv-section--padding-${padding}`, className]}>
-  {width === "full" ? <slot /> : <Container width={width}><slot /></Container>}
+<section
+  id={id}
+  class:list={[
+    "aiv-section",
+    `aiv-section--tone-${tone}`,
+    `aiv-section--padding-${padding}`,
+    className,
+  ]}
+>
+  {
+    width === "full" ? (
+      <slot />
+    ) : (
+      <Container width={width}>
+        <slot />
+      </Container>
+    )
+  }
 </section>

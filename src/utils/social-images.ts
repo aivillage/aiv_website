@@ -5,7 +5,7 @@ import { defaultSocialImageSource } from "../data/site";
 export const GENERATED_SOCIAL_IMAGE_WIDTH = 1200;
 export const GENERATED_SOCIAL_IMAGE_HEIGHT = 630;
 
-export type ImageObject = {
+type ImageObject = {
   path: string;
   alt?: string;
   width?: number;
@@ -32,7 +32,9 @@ type EventSocialImageData = {
   image?: ImageValue;
 };
 
-export function normalizeImage(value: ImageValue | undefined): NormalizedImage | undefined {
+export function normalizeImage(
+  value: ImageValue | undefined,
+): NormalizedImage | undefined {
   if (!value) return undefined;
 
   if (typeof value === "string") {
@@ -52,12 +54,20 @@ export function normalizeImage(value: ImageValue | undefined): NormalizedImage |
   };
 }
 
-export function selectBlogSocialImage(data: BlogSocialImageData): NormalizedImage {
-  return normalizeImage(data.socialImage ?? data.cover ?? data.image ?? defaultSocialImageSource)!;
+export function selectBlogSocialImage(
+  data: BlogSocialImageData,
+): NormalizedImage {
+  return normalizeImage(
+    data.socialImage ?? data.cover ?? data.image ?? defaultSocialImageSource,
+  )!;
 }
 
-export function selectEventSocialImage(data: EventSocialImageData): NormalizedImage {
-  return normalizeImage(data.socialImage ?? data.image ?? defaultSocialImageSource)!;
+export function selectEventSocialImage(
+  data: EventSocialImageData,
+): NormalizedImage {
+  return normalizeImage(
+    data.socialImage ?? data.image ?? defaultSocialImageSource,
+  )!;
 }
 
 export function isExternalHttpImage(source: string) {
@@ -74,7 +84,9 @@ export function generatedSocialImageDimensions(source: string) {
 
 export function normalizeLocalImagePath(source: string) {
   if (isExternalHttpImage(source)) {
-    throw new Error(`Expected a local image path, received external URL: ${source}`);
+    throw new Error(
+      `Expected a local image path, received external URL: ${source}`,
+    );
   }
 
   const pathOnly = source.replaceAll("\\", "/").split(/[?#]/, 1)[0];
@@ -121,7 +133,10 @@ export function generatedSocialImagePath(source: string) {
   // The source-path hash intentionally keeps this URL stable when source
   // contents are replaced in place. Social platforms may keep serving a
   // cached preview, so their refresh tools can be required after replacement.
-  const pathHash = createHash("sha256").update(normalized).digest("hex").slice(0, 10);
+  const pathHash = createHash("sha256")
+    .update(normalized)
+    .digest("hex")
+    .slice(0, 10);
   return `/generated/og/${flattened}-${pathHash}.jpg`;
 }
 

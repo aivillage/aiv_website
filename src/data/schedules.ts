@@ -47,11 +47,16 @@ for (const route of scheduleRoutes) {
 
 // Astro normalizes some collection ids on case-insensitive filesystems; keep
 // aliases explicit so schedule routing does not depend on substring matching.
-const defcon32TalksRoute = scheduleRoutes.find((route) => route.id === "2024_Talks");
-if (defcon32TalksRoute) scheduleRouteAliases.set("2024-talks", defcon32TalksRoute);
+const defcon32TalksRoute = scheduleRoutes.find(
+  (route) => route.id === "2024_Talks",
+);
+if (defcon32TalksRoute)
+  scheduleRouteAliases.set("2024-talks", defcon32TalksRoute);
 
 export function scheduleRouteForId(id: string) {
-  return scheduleRouteAliases.get(id) ?? scheduleRouteAliases.get(id.toLowerCase());
+  return (
+    scheduleRouteAliases.get(id) ?? scheduleRouteAliases.get(id.toLowerCase())
+  );
 }
 
 export function scheduleRoutesForEvent(eventId: string) {

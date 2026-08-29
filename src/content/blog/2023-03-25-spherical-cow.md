@@ -1,12 +1,9 @@
 ---
-layout: post
 title: The Spherical Cow of ML Security
 author: Sven Cattell
 date: 2023-03-25
 category: "adversarial ml"
 canonicalSlug: spherical-cow
-legacyUrls:
-  - /adversarial%20ml/2023/03/25/spherical-cow.html
 
 ---
 

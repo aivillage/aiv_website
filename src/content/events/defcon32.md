@@ -3,7 +3,6 @@ title: "AI Village @ DEF CON 32"
 date: 2024-08-08
 description: "Join AI Village at DEF CON 32 for demos, talks, and the Generative Red Team 2 challenge."
 location: "Las Vegas, NV"
-layout: post
 ---
 
 DEF CON 32 is between August 8-12.

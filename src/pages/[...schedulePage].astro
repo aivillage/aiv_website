@@ -7,11 +7,16 @@ import { schedulePath, type ScheduleEntry } from "../utils/site";
 export async function getStaticPaths() {
   const schedules = await getCollection("schedules");
 
-  return [
-    ...schedules
-      .filter((schedule) => !schedulePath(schedule).endsWith(".html"))
-      .map((schedule) => ({ params: { legacyPage: schedulePath(schedule).replace(/^\//, "").replace(/\/$/, "") }, props: { entry: schedule } })),
-  ];
+  return schedules
+    .filter((schedule) => !schedulePath(schedule).endsWith(".html"))
+    .map((schedule) => ({
+      params: {
+        schedulePage: schedulePath(schedule)
+          .replace(/^\//, "")
+          .replace(/\/$/, ""),
+      },
+      props: { entry: schedule },
+    }));
 }
 
 const { entry } = Astro.props as { entry: ScheduleEntry };
@@ -22,9 +27,9 @@ const canonical = schedulePath(entry);
 
 <BaseLayout title={title} canonical={canonical}>
   <PageShell>
-  <article class="post">
-    <header class="post-header"><h1>{title}</h1></header>
-    <div class="post-content"><Content /></div>
-  </article>
+    <article class="post">
+      <header class="post-header"><h1>{title}</h1></header>
+      <div class="post-content"><Content /></div>
+    </article>
   </PageShell>
 </BaseLayout>

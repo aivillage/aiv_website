@@ -1,13 +1,9 @@
 ---
-layout: post
 title: Generative Red Team Recap
 author: Sven Cattell
 date: 2023-10-12
 category: "defcon 31"
-toc: true
 canonicalSlug: generative-recap
-legacyUrls:
-  - /defcon%2031/2023/10/12/generative-recap.html
 
 ---
 

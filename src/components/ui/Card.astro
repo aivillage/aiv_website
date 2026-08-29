@@ -8,9 +8,22 @@ type Props = {
   class?: string;
 };
 
-const { as = "article", href, tone = "surface", padding = "md", interactive = Boolean(href), class: className } = Astro.props as Props;
+const {
+  as = "article",
+  href,
+  tone = "surface",
+  padding = "md",
+  interactive = Boolean(href),
+  class: className,
+} = Astro.props as Props;
 const Tag = as;
-const classes = ["aiv-card", `aiv-card--tone-${tone}`, `aiv-card--padding-${padding}`, { "aiv-card--interactive": interactive }, className];
+const classes = [
+  "aiv-card",
+  `aiv-card--tone-${tone}`,
+  `aiv-card--padding-${padding}`,
+  { "aiv-card--interactive": interactive },
+  className,
+];
 ---
 
 {

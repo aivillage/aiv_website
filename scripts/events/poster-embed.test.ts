@@ -14,8 +14,14 @@ const here = dirname(fileURLToPath(import.meta.url));
 const repositoryRoot = resolve(here, "../..");
 const eventsDirectory = resolve(repositoryRoot, "src/content/events");
 const defcon34Path = resolve(eventsDirectory, "defcon34.mdx");
-const eventPostersPath = resolve(repositoryRoot, "src/components/posters/EventPosters.astro");
-const posterCardPath = resolve(repositoryRoot, "src/components/posters/PosterCard.astro");
+const eventPostersPath = resolve(
+  repositoryRoot,
+  "src/components/posters/EventPosters.astro",
+);
+const posterCardPath = resolve(
+  repositoryRoot,
+  "src/components/posters/PosterCard.astro",
+);
 
 function test(name: string, run: () => void) {
   tests.push({ name, run });
@@ -48,10 +54,7 @@ test("no component plus poster event resolves to fallback", () => {
 });
 
 test("no component plus no poster event resolves to none", () => {
-  assert.equal(
-    placement("Article body", { hasPosterEvent: false }),
-    "none",
-  );
+  assert.equal(placement("Article body", { hasPosterEvent: false }), "none");
 });
 
 test("one component in MDX plus poster event resolves to inline", () => {
@@ -92,24 +95,15 @@ test("two valid components are rejected", () => {
 });
 
 test("component inside a triple-backtick fence is ignored", () => {
-  assert.equal(
-    placement("```mdx\n<EventPosters />\n```"),
-    "fallback",
-  );
+  assert.equal(placement("```mdx\n<EventPosters />\n```"), "fallback");
 });
 
 test("component inside a longer backtick fence is ignored", () => {
-  assert.equal(
-    placement("````mdx\n<EventPosters />\n````"),
-    "fallback",
-  );
+  assert.equal(placement("````mdx\n<EventPosters />\n````"), "fallback");
 });
 
 test("component inside a tilde fence is ignored", () => {
-  assert.equal(
-    placement("~~~mdx\n<EventPosters />\n~~~"),
-    "fallback",
-  );
+  assert.equal(placement("~~~mdx\n<EventPosters />\n~~~"), "fallback");
 });
 
 test("inline-code mention is ignored", () => {
@@ -237,7 +231,6 @@ test("DEF CON 34 source extension and canonical slug remain stable", () => {
       title: "AI Village @ DEF CON 34",
       date: new Date("2026-08-06T00:00:00.000Z"),
       endDate: new Date("2026-08-09T00:00:00.000Z"),
-      legacyUrls: [],
     },
   } as EventEntry;
   assert.equal(canonicalEventSlug(event), "defcon-34");
@@ -259,14 +252,24 @@ test("poster thumbnails remain deferred, low priority, and appropriately sized",
   assert.match(eventPostersSource, /image\.loading = "lazy"/);
   assert.match(eventPostersSource, /image\.fetchPriority = "low"/);
   assert.doesNotMatch(eventPostersSource, /image\.loading = "eager"/);
-  assert.match(posterCardSource, /const thumbnailWidth = isArchive \? 1200 : 800;/);
+  assert.match(
+    posterCardSource,
+    /const thumbnailWidth = isArchive \? 1200 : 800;/,
+  );
   assert.match(posterCardSource, /\[600, 800, 900, 1200\]/);
   assert.match(posterCardSource, /data-poster-thumb-srcset=/);
   assert.match(posterCardSource, /data-poster-thumb-sizes=/);
   assert.match(posterCardSource, /loading="lazy"/);
-  assert.match(posterCardSource, /fetchpriority=\{deferThumbnail \? "low" : undefined\}/);
-  assert.match(posterCardSource, /\.poster-card--archive \[data-poster-thumb-src\]/);
-  assert.match(posterCardSource, /image\.hasAttribute\("src"\)/);
+  assert.match(
+    posterCardSource,
+    /fetchpriority=\{deferThumbnail \? "low" : undefined\}/,
+  );
+  assert.match(
+    eventPostersSource,
+    /\.poster-card--archive \[data-poster-thumb-src\]/,
+  );
+  assert.match(eventPostersSource, /image\.hasAttribute\("src"\)/);
+  assert.doesNotMatch(posterCardSource, /<script/);
 });
 
 let failures = 0;

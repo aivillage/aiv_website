@@ -1,13 +1,10 @@
 ---
 
-layout: post
 title: Threat Modeling LLM Applications
 author: Gavin Klondike
 date: 2023-06-06
 category: "large language models"
 canonicalSlug: threat-modeling-llm
-legacyUrls:
-  - /large%20language%20models/2023/06/06/threat-modeling-llm.html
 
 ---
 

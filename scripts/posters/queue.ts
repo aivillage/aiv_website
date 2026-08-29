@@ -103,7 +103,7 @@ const FALSY = new Set(["no", "n", "false", "0", "unchecked"]);
  * or one global queue carrying every event's posters — and should be made
  * then, not faked now.
  */
-export const EVENT_ID = "defcon-34";
+const EVENT_ID = "defcon-34";
 
 const KNOWN_EVENTS = new Set(posterEvents.map((event) => event.id));
 
@@ -136,7 +136,7 @@ const RESERVED_IDS = new Set([
 ]);
 
 /** Must match the anchor built in src/pages/posters/index.astro. */
-export function anchorId(slug: string): string {
+function anchorId(slug: string): string {
   return `poster-${slug}`;
 }
 
@@ -152,7 +152,7 @@ const PLACEHOLDER_ABSTRACTS = [
 
 export class QueueError extends Error {}
 
-export function slugify(value: string): string {
+function slugify(value: string): string {
   const normalized = value
     .normalize("NFKD")
     .replace(/[\u0300-\u036F]/g, "")
@@ -181,7 +181,7 @@ export function slugify(value: string): string {
  * Identity must key on the ID, not the URL text, or re-copying a link silently
  * creates a new identity and defeats duplicate detection.
  */
-export function driveFileId(value: string): string | null {
+function driveFileId(value: string): string | null {
   try {
     const url = new URL(value);
     const path =
@@ -212,7 +212,7 @@ export const DEFAULT_DATA_PATH = new URL(
   import.meta.url,
 );
 
-export function existingSlugsByDriveId(
+function existingSlugsByDriveId(
   dataPath: URL | string = DEFAULT_DATA_PATH,
 ): Map<string, string> {
   const map = new Map<string, string>();

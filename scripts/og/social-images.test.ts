@@ -23,7 +23,10 @@ import {
 } from "./image-generation";
 
 const tests: Array<{ name: string; run: () => Promise<void> | void }> = [];
-const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
+const repositoryRoot = path.resolve(
+  path.dirname(fileURLToPath(import.meta.url)),
+  "../..",
+);
 
 function test(name: string, run: () => Promise<void> | void) {
   tests.push({ name, run });
@@ -75,12 +78,21 @@ test("flatten-similar paths remain collision resistant", () => {
 });
 
 test("local path normalization handles separators and repeated slashes", () => {
-  assert.equal(normalizeLocalImagePath("\\assets\\\\images///card.png"), "/assets/images/card.png");
+  assert.equal(
+    normalizeLocalImagePath("\\assets\\\\images///card.png"),
+    "/assets/images/card.png",
+  );
 });
 
 test("path traversal is rejected", () => {
-  assert.throws(() => normalizeLocalImagePath("/../../outside.png"), /traversal/);
-  assert.throws(() => normalizeLocalImagePath("/assets/%2e%2e/outside.png"), /traversal/);
+  assert.throws(
+    () => normalizeLocalImagePath("/../../outside.png"),
+    /traversal/,
+  );
+  assert.throws(
+    () => normalizeLocalImagePath("/assets/%2e%2e/outside.png"),
+    /traversal/,
+  );
 });
 
 test("blog social source precedence is socialImage, cover, image, default", () => {
@@ -92,17 +104,27 @@ test("blog social source precedence is socialImage, cover, image, default", () =
     }).path,
     "/social.png",
   );
-  assert.equal(selectBlogSocialImage({ cover: "/cover.png", image: "/image.png" }).path, "/cover.png");
-  assert.equal(selectBlogSocialImage({ image: "/image.png" }).path, "/image.png");
+  assert.equal(
+    selectBlogSocialImage({ cover: "/cover.png", image: "/image.png" }).path,
+    "/cover.png",
+  );
+  assert.equal(
+    selectBlogSocialImage({ image: "/image.png" }).path,
+    "/image.png",
+  );
   assert.equal(selectBlogSocialImage({}).path, defaultSocialImageSource);
 });
 
 test("event social source precedence is socialImage, image, default", () => {
   assert.equal(
-    selectEventSocialImage({ socialImage: "/social.png", image: "/image.png" }).path,
+    selectEventSocialImage({ socialImage: "/social.png", image: "/image.png" })
+      .path,
     "/social.png",
   );
-  assert.equal(selectEventSocialImage({ image: "/image.png" }).path, "/image.png");
+  assert.equal(
+    selectEventSocialImage({ image: "/image.png" }).path,
+    "/image.png",
+  );
   assert.equal(selectEventSocialImage({}).path, defaultSocialImageSource);
 });
 
@@ -184,7 +206,10 @@ test("local generated sources receive fixed Open Graph dimensions", () => {
 });
 
 test("external sources receive no fixed Open Graph dimensions", () => {
-  assert.equal(generatedSocialImageDimensions("https://external.example/card.png"), undefined);
+  assert.equal(
+    generatedSocialImageDimensions("https://external.example/card.png"),
+    undefined,
+  );
 });
 
 test("portrait raster is contained without cropping", async () => {
@@ -201,13 +226,24 @@ test("portrait raster is contained without cropping", async () => {
         raw[offset + 2] = y >= 570 ? 240 : 0;
       }
     }
-    await sharp(raw, { raw: { width: 300, height: 600, channels: 3 } }).png().toFile(source);
-    await generateSocialImage({ sourceFile: source, outputFile: output, warn: () => undefined });
-    const { data, info } = await sharp(output).raw().toBuffer({ resolveWithObject: true });
+    await sharp(raw, { raw: { width: 300, height: 600, channels: 3 } })
+      .png()
+      .toFile(source);
+    await generateSocialImage({
+      sourceFile: source,
+      outputFile: output,
+      warn: () => undefined,
+    });
+    const { data, info } = await sharp(output)
+      .raw()
+      .toBuffer({ resolveWithObject: true });
     const topOffset = (8 * info.width + 600) * info.channels;
     const bottomOffset = ((info.height - 9) * info.width + 600) * info.channels;
     assert.ok(data[topOffset] > 180, "top marker should remain visible");
-    assert.ok(data[bottomOffset + 2] > 180, "bottom marker should remain visible");
+    assert.ok(
+      data[bottomOffset + 2] > 180,
+      "bottom marker should remain visible",
+    );
   } finally {
     await rm(root, { recursive: true, force: true });
   }
@@ -219,11 +255,20 @@ test("small raster is upscaled to 1200x630", async () => {
     const source = path.join(root, "small.png");
     const output = path.join(root, "small.jpg");
     await sharp({
-      create: { width: 100, height: 50, channels: 3, background: { r: 20, g: 160, b: 60 } },
+      create: {
+        width: 100,
+        height: 50,
+        channels: 3,
+        background: { r: 20, g: 160, b: 60 },
+      },
     })
       .png()
       .toFile(source);
-    await generateSocialImage({ sourceFile: source, outputFile: output, warn: () => undefined });
+    await generateSocialImage({
+      sourceFile: source,
+      outputFile: output,
+      warn: () => undefined,
+    });
     const metadata = await imageMetadata(output);
     assert.equal(metadata.width, SOCIAL_IMAGE_WIDTH);
     assert.equal(metadata.height, SOCIAL_IMAGE_HEIGHT);
@@ -239,7 +284,12 @@ test("raster enlargement above 2.5x warns and succeeds", async () => {
     const output = path.join(root, "tiny.jpg");
     const warnings: string[] = [];
     await sharp({
-      create: { width: 100, height: 50, channels: 3, background: { r: 255, g: 255, b: 255 } },
+      create: {
+        width: 100,
+        height: 50,
+        channels: 3,
+        background: { r: 255, g: 255, b: 255 },
+      },
     })
       .png()
       .toFile(source);
@@ -263,11 +313,19 @@ test("exact 1200x630 JPEG is copied byte-for-byte", async () => {
     const source = path.join(root, "exact.jpg");
     const output = path.join(root, "copied.jpg");
     await sharp({
-      create: { width: 1200, height: 630, channels: 3, background: { r: 10, g: 20, b: 30 } },
+      create: {
+        width: 1200,
+        height: 630,
+        channels: 3,
+        background: { r: 10, g: 20, b: 30 },
+      },
     })
       .jpeg()
       .toFile(source);
-    const result = await generateSocialImage({ sourceFile: source, outputFile: output });
+    const result = await generateSocialImage({
+      sourceFile: source,
+      outputFile: output,
+    });
     assert.equal(result.copied, true);
     assert.deepEqual(await readFile(output), await readFile(source));
   } finally {
@@ -281,11 +339,19 @@ test("exact 1200x630 PNG is converted to JPEG", async () => {
     const source = path.join(root, "exact.png");
     const output = path.join(root, "converted.jpg");
     await sharp({
-      create: { width: 1200, height: 630, channels: 3, background: { r: 10, g: 20, b: 30 } },
+      create: {
+        width: 1200,
+        height: 630,
+        channels: 3,
+        background: { r: 10, g: 20, b: 30 },
+      },
     })
       .png()
       .toFile(source);
-    const result = await generateSocialImage({ sourceFile: source, outputFile: output });
+    const result = await generateSocialImage({
+      sourceFile: source,
+      outputFile: output,
+    });
     assert.equal(result.copied, false);
     assert.equal((await imageMetadata(output)).format, "jpeg");
   } finally {
@@ -313,10 +379,16 @@ test("SVG generates a 1200x630 JPEG with complete viewBox and no raster warning"
     assert.equal(metadata.width, SOCIAL_IMAGE_WIDTH);
     assert.equal(metadata.height, SOCIAL_IMAGE_HEIGHT);
     assert.deepEqual(warnings, []);
-    const { data, info } = await sharp(output).raw().toBuffer({ resolveWithObject: true });
+    const { data, info } = await sharp(output)
+      .raw()
+      .toBuffer({ resolveWithObject: true });
     const topMarker = (24 * info.width + 600) * info.channels;
-    const bottomMarker = ((info.height - 25) * info.width + 600) * info.channels;
-    assert.ok(data[topMarker] > data[topMarker + 2], "top viewBox marker should remain visible");
+    const bottomMarker =
+      ((info.height - 25) * info.width + 600) * info.channels;
+    assert.ok(
+      data[topMarker] > data[topMarker + 2],
+      "top viewBox marker should remain visible",
+    );
     assert.ok(
       data[bottomMarker + 2] > data[bottomMarker],
       "bottom viewBox marker should remain visible",
@@ -335,7 +407,10 @@ test("transparent SVG surroundings use white", async () => {
       source,
       '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="30" fill="black"/></svg>',
     );
-    const result = await generateSocialImage({ sourceFile: source, outputFile: output });
+    const result = await generateSocialImage({
+      sourceFile: source,
+      outputFile: output,
+    });
     assert.deepEqual(result.background, { r: 255, g: 255, b: 255 });
   } finally {
     await rm(root, { recursive: true, force: true });
@@ -348,7 +423,12 @@ test("transparent raster corners use white", async () => {
     const source = path.join(root, "transparent.png");
     const output = path.join(root, "transparent.jpg");
     await sharp({
-      create: { width: 100, height: 100, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } },
+      create: {
+        width: 100,
+        height: 100,
+        channels: 4,
+        background: { r: 0, g: 0, b: 0, alpha: 0 },
+      },
     })
       .png()
       .toFile(source);
@@ -369,11 +449,19 @@ test("agreeing opaque raster corners use their average color", async () => {
     const source = path.join(root, "agree.png");
     const output = path.join(root, "agree.jpg");
     await sharp({
-      create: { width: 400, height: 400, channels: 3, background: { r: 14, g: 28, b: 42 } },
+      create: {
+        width: 400,
+        height: 400,
+        channels: 3,
+        background: { r: 14, g: 28, b: 42 },
+      },
     })
       .png()
       .toFile(source);
-    const result = await generateSocialImage({ sourceFile: source, outputFile: output });
+    const result = await generateSocialImage({
+      sourceFile: source,
+      outputFile: output,
+    });
     assert.deepEqual(result.background, { r: 14, g: 28, b: 42 });
   } finally {
     await rm(root, { recursive: true, force: true });
@@ -385,13 +473,9 @@ test("disagreeing opaque raster corners use black", async () => {
   try {
     const source = path.join(root, "disagree.png");
     const output = path.join(root, "disagree.jpg");
-    await sharp(
-      Buffer.from([
-        255, 0, 0, 0, 255, 0,
-        0, 0, 255, 255, 255, 255,
-      ]),
-      { raw: { width: 2, height: 2, channels: 3 } },
-    )
+    await sharp(Buffer.from([255, 0, 0, 0, 255, 0, 0, 0, 255, 255, 255, 255]), {
+      raw: { width: 2, height: 2, channels: 3 },
+    })
       .png()
       .toFile(source);
     const result = await generateSocialImage({
@@ -417,7 +501,10 @@ test("missing local source fails generation and external sources are not fetched
       path.join(root, "src/content/blog/external.md"),
       "---\ntitle: External\ndate: 2026-01-01\ncover: https://cdn.example.com/card.png\n---\n",
     );
-    await expectRejects(() => generateOgImages(root), /Missing local social-image source/);
+    await expectRejects(
+      () => generateOgImages(root),
+      /Missing local social-image source/,
+    );
   } finally {
     await rm(root, { recursive: true, force: true });
   }
@@ -541,9 +628,13 @@ test("generator coverage matches emitted selected sources", async () => {
     );
     await generateOgImages(root);
     await mkdir(path.join(root, "dist"), { recursive: true });
-    await cp(path.join(root, "public/generated"), path.join(root, "dist/generated"), {
-      recursive: true,
-    });
+    await cp(
+      path.join(root, "public/generated"),
+      path.join(root, "dist/generated"),
+      {
+        recursive: true,
+      },
+    );
     const references = [
       generatedSocialImagePath(defaultSocialImageSource),
       generatedSocialImagePath("/assets/images/cover.png"),
@@ -562,13 +653,19 @@ test("generator coverage matches emitted selected sources", async () => {
       repositoryRoot: root,
       distDir: path.join(root, "dist"),
     });
-    assert.deepEqual(new Set(result.emittedGeneratedPaths), new Set(references));
+    assert.deepEqual(
+      new Set(result.emittedGeneratedPaths),
+      new Set(references),
+    );
 
     await writeFile(
       path.join(root, "dist/index.html"),
       references
         .slice(0, 2)
-        .map((reference) => `<meta property="og:image" content="${site.url}${reference}">`)
+        .map(
+          (reference) =>
+            `<meta property="og:image" content="${site.url}${reference}">`,
+        )
         .join(""),
     );
     await expectRejects(

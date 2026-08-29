@@ -1,13 +1,9 @@
 ---
-layout: post
 title: The Use of AI/ML in Offensive Security Operations
 author: Omar Santos
 date: 2022-08-08
 category: "defcon 30"
-toc: true
 canonicalSlug: aiv-rtv-panel
-legacyUrls:
-  - /defcon%2030/2022/08/08/aiv-rtv-panel.html
 
 ---
 

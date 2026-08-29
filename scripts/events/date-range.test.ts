@@ -25,7 +25,6 @@ function event(date: string, endDate?: string): Pick<EventEntry, "data"> {
       title: "Test event",
       date: utcDate(date),
       endDate: endDate ? utcDate(endDate) : undefined,
-      legacyUrls: [],
     },
   } as Pick<EventEntry, "data">;
 }

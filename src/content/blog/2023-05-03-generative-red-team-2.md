@@ -1,5 +1,4 @@
 ---
-layout: post
 title: AI Village Announcing Generative Red Team 2 at DEF CON 32
 author:
   - AI Village
@@ -7,8 +6,6 @@ author:
 date: 2024-06-10
 category: "generative red team"
 canonicalSlug: generative-red-team-2
-legacyUrls:
-  - /generative%20red%20team/2024/06/10/generative-red-team-2.html
 
 ---
 
