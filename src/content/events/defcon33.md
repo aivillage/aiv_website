@@ -3,7 +3,6 @@ title: "AI Village @ DEF CON 33"
 date: 2025-08-07
 description: "Join AI Village at DEF CON 33 for Deepfake Karaoke and GRT-3."
 location: "Las Vegas, NV"
-layout: post
 ---
 
 DEF CON 33 is between August 7-10.

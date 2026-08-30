@@ -1,13 +1,9 @@
 ---
-layout: post
 title: DEFCON 30 Sunday Schedule
 author: AI Village
 date: 2022-06-20
 category: "defcon 30"
-toc: true
 canonicalSlug: defcon30-sunday
-legacyUrls:
-  - /defcon%2030/2022/06/20/defcon30-sunday.html
 
 ---
 

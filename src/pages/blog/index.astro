@@ -14,34 +14,52 @@ const posts = sortPosts(await getCollection("blog", ({ data }) => !data.draft));
   description="AI Village blog posts on AI security research, adversarial machine learning, generative red teaming, workshops, and community updates."
 >
   <PageShell>
-  <section class="blog-index">
-    <h1>Blog</h1>
-    <div class="page-intro">
-      <p>
-        Research insights, event recaps, and perspectives on AI security from our community.
-      </p>
-    </div>
-    <hr />
-    <div class="post-list">
-      {posts.map((post) => <PostCard post={post} />)}
-    </div>
-    {posts.length === 0 && <div class="card card--center"><h3 class="text-muted">No blog posts yet</h3><p class="text-muted">Check back soon for updates from the AI Village community!</p></div>}
-    <hr />
-    <div class="blog-contribute">
-      <h4>📝 Want to Contribute?</h4>
-      <p>We welcome guest posts from the community! Topics we're interested in:</p>
-      <ul>
-        <li>AI security research and findings</li>
-        <li>Tool releases and tutorials</li>
-        <li>Event recaps and conference reports</li>
-        <li>Opinion pieces on AI ethics and policy</li>
-        <li>Technical deep dives and case studies</li>
-      </ul>
-      <p>
-        <a href="https://github.com/aivillage/aiv_website" target="_blank" rel="noopener noreferrer">Submit a pull request →</a>
-        or reach out on Discord to discuss your ideas.
-      </p>
-    </div>
-  </section>
+    <section class="blog-index">
+      <h1>Blog</h1>
+      <div class="page-intro">
+        <p>
+          Research insights, event recaps, and perspectives on AI security from
+          our community.
+        </p>
+      </div>
+      <hr />
+      <div class="post-list">
+        {posts.map((post) => <PostCard post={post} />)}
+      </div>
+      {
+        posts.length === 0 && (
+          <div class="card card--center">
+            <>
+              <h3 class="text-muted">No blog posts yet</h3>
+              <p class="text-muted">
+                Check back soon for updates from the AI Village community!
+              </p>
+            </>
+          </div>
+        )
+      }
+      <hr />
+      <div class="blog-contribute">
+        <h4>📝 Want to Contribute?</h4>
+        <p>
+          We welcome guest posts from the community! Topics we're interested in:
+        </p>
+        <ul>
+          <li>AI security research and findings</li>
+          <li>Tool releases and tutorials</li>
+          <li>Event recaps and conference reports</li>
+          <li>Opinion pieces on AI ethics and policy</li>
+          <li>Technical deep dives and case studies</li>
+        </ul>
+        <p>
+          <a
+            href="https://github.com/aivillage/aiv_website"
+            target="_blank"
+            rel="noopener noreferrer">Submit a pull request →</a
+          >
+          or reach out on Discord to discuss your ideas.
+        </p>
+      </div>
+    </section>
   </PageShell>
 </BaseLayout>

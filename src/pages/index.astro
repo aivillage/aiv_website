@@ -15,6 +15,7 @@ import {
   excerptFromBody,
   formatShortDate,
   getCurrentSponsors,
+  isEventUpcomingOrOngoing,
   sortEventsAscending,
   sortEventsDescending,
   sortPosts,
@@ -24,7 +25,9 @@ const events = await getCollection("events");
 const posts = sortPosts(await getCollection("blog", ({ data }) => !data.draft));
 const currentSponsors = getCurrentSponsors(await getCollection("sponsors"));
 const now = new Date();
-const upcomingEvent = sortEventsAscending(events.filter((event) => event.data.date.getTime() >= now.getTime()))[0];
+const upcomingEvent = sortEventsAscending(
+  events.filter((event) => isEventUpcomingOrOngoing(event, now)),
+)[0];
 const latestEvent = sortEventsDescending(events)[0];
 const featuredEvent = upcomingEvent ?? latestEvent;
 const latestPost = posts[0];
@@ -42,19 +45,23 @@ const proofItems = [
 const workCards = [
   {
     title: "Red-team AI systems",
-    description: "Run and learn from practical exercises that expose how AI systems fail, where defenses help, and what responsible testing looks like.",
+    description:
+      "Run and learn from practical exercises that expose how AI systems fail, where defenses help, and what responsible testing looks like.",
   },
   {
     title: "Teach AI security",
-    description: "Publish workshops, labs, and learning material for people moving from curiosity to hands-on AI security practice.",
+    description:
+      "Publish workshops, labs, and learning material for people moving from curiosity to hands-on AI security practice.",
   },
   {
     title: "Host community events",
-    description: "Bring hackers, builders, researchers, and policy-minded practitioners together at DEF CON and other community events.",
+    description:
+      "Bring hackers, builders, researchers, and policy-minded practitioners together at DEF CON and other community events.",
   },
   {
     title: "Publish field notes and resources",
-    description: "Share technical writing, recaps, and open resources from the people doing the work.",
+    description:
+      "Share technical writing, recaps, and open resources from the people doing the work.",
   },
 ];
 
@@ -62,25 +69,29 @@ const programs = [
   {
     title: "Generative Red Team",
     href: "/grt/",
-    description: "A public red-team program focused on understanding and exercising real AI system failure modes.",
+    description:
+      "A public red-team program focused on understanding and exercising real AI system failure modes.",
     ctaLabel: "Explore GRT",
   },
   {
     title: "Workshops & Labs",
     href: "/learn/",
-    description: "Hands-on learning material for AI security, adversarial thinking, and practical experimentation.",
+    description:
+      "Hands-on learning material for AI security, adversarial thinking, and practical experimentation.",
     ctaLabel: "Start learning",
   },
   {
     title: "Events & Challenges",
     href: "/events/",
-    description: "Find upcoming events, DEF CON activity, schedules, recaps, and community challenges.",
+    description:
+      "Find upcoming events, DEF CON activity, schedules, recaps, and community challenges.",
     ctaLabel: "View events",
   },
   {
     title: "Research & Field Notes",
     href: "/research/",
-    description: "Technical writing, event recaps, and practical AI security observations.",
+    description:
+      "Technical writing, event recaps, and practical AI security observations.",
     ctaLabel: "Read field notes",
   },
 ];
@@ -97,36 +108,51 @@ const programs = [
         <p class="home-hero__eyebrow">Public-interest AI security</p>
         <h1>AI security, tested in public.</h1>
         <p class="home-hero__body">
-          AI Village brings hackers, researchers, engineers, and policymakers together through hands-on AI security education, red-team exercises, workshops, events, and open resources.
+          AI Village brings hackers, researchers, engineers, and policymakers
+          together through hands-on AI security education, red-team exercises,
+          workshops, events, and open resources.
         </p>
         <div class="home-hero__actions" aria-label="Homepage primary actions">
           <Button href="#programs" variant="secondary">Explore Programs</Button>
           <Button href="/learn/" variant="secondary">Start Learning</Button>
-          <Button href="/sponsors/" variant="secondary">Sponsor AI Village</Button>
+          <Button href="/sponsors/" variant="secondary"
+            >Sponsor AI Village</Button
+          >
         </div>
       </div>
 
       <div class="home-hero-panels">
-        {/* TEMP: HalCTF promo — remove after DEF CON 34. Tracked in #83. */}
-        <Card as="section" class="home-hero-panel" tone="nested" padding="lg">
-          <p class="home-hero-panel__eyebrow">New &middot; DEF CON 34</p>
-          <h2>HalCTF: Autonomous Agent CTF</h2>
-          <p class="home-hero-panel__meta">Teams up to 5 &middot; Models hosted</p>
-          <p>Design and deploy an AI agent that exploits sandboxed targets and captures flags on its own. Bring your code, not your GPUs.</p>
-          <Button href="/blog/halctf/" size="sm">Read the announcement</Button>
-        </Card>
-        {featuredEvent && (
-          <Card as="section" class="home-hero-panel" tone="nested" padding="lg">
-            <p class="home-hero-panel__eyebrow">{upcomingEvent ? "Upcoming event" : "Recent event"}</p>
-            <h2>{featuredEvent.data.title}</h2>
-            <p class="home-hero-panel__meta">
-              {formatShortDate(featuredEvent.data.date)}
-              {featuredEvent.data.location && <> · {featuredEvent.data.location}</>}
-            </p>
-            {featuredEvent.data.description && <p>{featuredEvent.data.description}</p>}
-            <Button href={eventPath(featuredEvent)} variant="secondary" size="sm">View event</Button>
-          </Card>
-        )}
+        {
+          featuredEvent && (
+            <Card
+              as="section"
+              class="home-hero-panel"
+              tone="nested"
+              padding="lg"
+            >
+              <p class="home-hero-panel__eyebrow">
+                {upcomingEvent ? "Upcoming event" : "Recent event"}
+              </p>
+              <h2>{featuredEvent.data.title}</h2>
+              <p class="home-hero-panel__meta">
+                {formatShortDate(featuredEvent.data.date)}
+                {featuredEvent.data.location && (
+                  <> · {featuredEvent.data.location}</>
+                )}
+              </p>
+              {featuredEvent.data.description && (
+                <p>{featuredEvent.data.description}</p>
+              )}
+              <Button
+                href={eventPath(featuredEvent)}
+                variant="secondary"
+                size="sm"
+              >
+                View event
+              </Button>
+            </Card>
+          )
+        }
       </div>
     </div>
     <div class="home-hero-proof">
@@ -142,12 +168,14 @@ const programs = [
         description="AI Village connects education, experimentation, and community practice so people can understand, test, and secure AI systems."
       />
       <div class="home-card-grid home-card-grid--two">
-        {workCards.map((item) => (
-          <Card as="article" class="home-work-card">
-            <h3>{item.title}</h3>
-            <p>{item.description}</p>
-          </Card>
-        ))}
+        {
+          workCards.map((item) => (
+            <Card as="article" class="home-work-card">
+              <h3>{item.title}</h3>
+              <p>{item.description}</p>
+            </Card>
+          ))
+        }
       </div>
     </div>
   </Section>
@@ -160,9 +188,16 @@ const programs = [
         description="Explore the major paths into AI Village: red teaming, workshops, events, and technical work."
       />
       <div class="home-card-grid home-card-grid--programs">
-        {programs.map((program) => (
-          <ProgramCard title={program.title} href={program.href} description={program.description} ctaLabel={program.ctaLabel} />
-        ))}
+        {
+          programs.map((program) => (
+            <ProgramCard
+              title={program.title}
+              href={program.href}
+              description={program.description}
+              ctaLabel={program.ctaLabel}
+            />
+          ))
+        }
       </div>
     </div>
   </Section>
@@ -175,36 +210,54 @@ const programs = [
         description="Recent events, posts, and resources from the AI Village community."
       />
       <div class="home-card-grid home-card-grid--activity">
-        {featuredEvent && (
-          <ActivityCard
-            title={featuredEvent.data.title}
-            meta={`${upcomingEvent ? "Upcoming event" : "Recent event"} · ${formatShortDate(featuredEvent.data.date)}`}
-            description={featuredEvent.data.description}
-          >
-            {featuredEvent.data.location && <p class="home-activity-detail">{featuredEvent.data.location}</p>}
-            <Button href={eventPath(featuredEvent)} variant="ghost" size="sm">View Event</Button>
-          </ActivityCard>
-        )}
-        {(latestPost || additionalPost) && (
-          <div class="home-activity-posts">
-            {latestPost && (
-              <ResourceCard
-                title={latestPost.data.title}
-                href={canonicalPostPath(latestPost)}
-                meta={`Latest post · ${formatShortDate(latestPost.data.date)}`}
-                description={latestPost.data.description ?? latestPost.data.excerpt ?? excerptFromBody(latestPost.body ?? "", 22)}
-              />
-            )}
-            {additionalPost && (
-              <ResourceCard
-                title={additionalPost.data.title}
-                href={canonicalPostPath(additionalPost)}
-                meta={`Recent post · ${formatShortDate(additionalPost.data.date)}`}
-                description={additionalPost.data.description ?? additionalPost.data.excerpt ?? excerptFromBody(additionalPost.body ?? "", 22)}
-              />
-            )}
-          </div>
-        )}
+        {
+          featuredEvent && (
+            <ActivityCard
+              title={featuredEvent.data.title}
+              meta={`${upcomingEvent ? "Upcoming event" : "Recent event"} · ${formatShortDate(featuredEvent.data.date)}`}
+              description={featuredEvent.data.description}
+            >
+              {featuredEvent.data.location && (
+                <p class="home-activity-detail">
+                  {featuredEvent.data.location}
+                </p>
+              )}
+              <Button href={eventPath(featuredEvent)} variant="ghost" size="sm">
+                View Event
+              </Button>
+            </ActivityCard>
+          )
+        }
+        {
+          (latestPost || additionalPost) && (
+            <div class="home-activity-posts">
+              {latestPost && (
+                <ResourceCard
+                  title={latestPost.data.title}
+                  href={canonicalPostPath(latestPost)}
+                  meta={`Latest post · ${formatShortDate(latestPost.data.date)}`}
+                  description={
+                    latestPost.data.description ??
+                    latestPost.data.excerpt ??
+                    excerptFromBody(latestPost.body ?? "", 22)
+                  }
+                />
+              )}
+              {additionalPost && (
+                <ResourceCard
+                  title={additionalPost.data.title}
+                  href={canonicalPostPath(additionalPost)}
+                  meta={`Recent post · ${formatShortDate(additionalPost.data.date)}`}
+                  description={
+                    additionalPost.data.description ??
+                    additionalPost.data.excerpt ??
+                    excerptFromBody(additionalPost.body ?? "", 22)
+                  }
+                />
+              )}
+            </div>
+          )
+        }
       </div>
     </div>
   </Section>
@@ -212,29 +265,56 @@ const programs = [
   <Section tone="panel" width="wide" padding="xl">
     <div class="home-cta-grid">
       <Card as="section" class="home-cta-card" tone="nested" padding="lg">
-        {currentSponsors.length > 0 ? (
-          <>
-            <h2>Supported by organizations helping keep AI security education open.</h2>
-            <div class="home-sponsor-logos" aria-label="Current AI Village sponsors">
-              {currentSponsors.map((sponsor) => (
-                <a class:list={["home-sponsor-logo", `home-sponsor-logo--${sponsor.data.logoBackground}`]} href={sponsor.data.url} target="_blank" rel="noopener noreferrer">
-                  <img src={`/assets/images/logos/${sponsor.data.logo}`} alt={`${sponsor.data.name} logo`} />
-                </a>
-              ))}
-            </div>
-            <Button href="/sponsors/" variant="secondary">Sponsor AI Village</Button>
-          </>
-        ) : (
-          <>
-            <h2>Help keep public-interest AI security education open.</h2>
-            <p>Sponsorship helps AI Village run workshops, events, open resources, and community infrastructure.</p>
-            <Button href="/sponsors/">Sponsor AI Village</Button>
-          </>
-        )}
+        {
+          currentSponsors.length > 0 ? (
+            <>
+              <h2>
+                Supported by organizations helping keep AI security education
+                open.
+              </h2>
+              <div
+                class="home-sponsor-logos"
+                aria-label="Current AI Village sponsors"
+              >
+                {currentSponsors.map((sponsor) => (
+                  <a
+                    class:list={[
+                      "home-sponsor-logo",
+                      `home-sponsor-logo--${sponsor.data.logoBackground}`,
+                    ]}
+                    href={sponsor.data.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <img
+                      src={`/assets/images/logos/${sponsor.data.logo}`}
+                      alt={`${sponsor.data.name} logo`}
+                    />
+                  </a>
+                ))}
+              </div>
+              <Button href="/sponsors/" variant="secondary">
+                Sponsor AI Village
+              </Button>
+            </>
+          ) : (
+            <>
+              <h2>Help keep public-interest AI security education open.</h2>
+              <p>
+                Sponsorship helps AI Village run workshops, events, open
+                resources, and community infrastructure.
+              </p>
+              <Button href="/sponsors/">Sponsor AI Village</Button>
+            </>
+          )
+        }
       </Card>
       <Card as="section" class="home-cta-card" tone="nested" padding="lg">
         <h2>Join the AI Village community.</h2>
-        <p>Connect with people learning, testing, building, and securing AI systems in public.</p>
+        <p>
+          Connect with people learning, testing, building, and securing AI
+          systems in public.
+        </p>
         <div class="home-cta-card__actions">
           <Button href="/community/">Join the Community</Button>
           <Button href="/discord/" variant="secondary">Discord</Button>
@@ -255,8 +335,15 @@ const programs = [
 
   .home-hero__content::before {
     background-image:
-      linear-gradient(color-mix(in srgb, var(--aiv-action-primary) 56%, transparent) 1px, transparent 1px),
-      linear-gradient(90deg, color-mix(in srgb, var(--aiv-action-primary) 56%, transparent) 1px, transparent 1px);
+      linear-gradient(
+        color-mix(in srgb, var(--aiv-action-primary) 56%, transparent) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        90deg,
+        color-mix(in srgb, var(--aiv-action-primary) 56%, transparent) 1px,
+        transparent 1px
+      );
     background-size: 32px 32px;
     content: "";
     inset: 0;

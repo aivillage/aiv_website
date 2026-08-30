@@ -22,16 +22,18 @@ const sections: Array<{ id: SectionId; href: string; label: string }> = [
 
 <nav class="event-section-nav" aria-label="Event section navigation">
   <div class="event-section-nav__links">
-    {sections.map((section) => (
-      <Button
-        href={section.href}
-        variant={section.id === current ? "primary" : "secondary"}
-        size="sm"
-        ariaCurrent={section.id === current ? "location" : undefined}
-      >
-        {section.label}
-      </Button>
-    ))}
+    {
+      sections.map((section) => (
+        <Button
+          href={section.href}
+          variant={section.id === current ? "primary" : "secondary"}
+          size="sm"
+          ariaCurrent={section.id === current ? "location" : undefined}
+        >
+          {section.label}
+        </Button>
+      ))
+    }
   </div>
 </nav>
 

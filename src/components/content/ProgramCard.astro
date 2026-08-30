@@ -11,7 +11,14 @@ type Props = {
   class?: string;
 };
 
-const { title, description, href, eyebrow, ctaLabel = "Learn more", class: className } = Astro.props as Props;
+const {
+  title,
+  description,
+  href,
+  eyebrow,
+  ctaLabel = "Learn more",
+  class: className,
+} = Astro.props as Props;
 ---
 
 <Card class:list={["aiv-program-card", className]} as="article">
@@ -19,7 +26,15 @@ const { title, description, href, eyebrow, ctaLabel = "Learn more", class: class
   <h3 class="aiv-program-card__title">{title}</h3>
   {description && <p class="aiv-program-card__description">{description}</p>}
   <slot />
-  {href && <div class="aiv-program-card__action"><Button href={href} variant="ghost" size="sm">{ctaLabel}</Button></div>}
+  {
+    href && (
+      <div class="aiv-program-card__action">
+        <Button href={href} variant="ghost" size="sm">
+          {ctaLabel}
+        </Button>
+      </div>
+    )
+  }
 </Card>
 
 <style>

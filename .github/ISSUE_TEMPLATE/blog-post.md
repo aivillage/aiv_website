@@ -1,42 +1,76 @@
 ---
-name: Blog Post
-about: Initial template for a blogpost
-title: "[BLOG]"
-labels: ''
-assignees: ''
-
+name: Blog post
+about: Propose or draft an AI Village blog post
+title: "[BLOG] "
+labels: ""
+assignees: ""
 ---
 
-Summary writer: 
-Paper title: 
-Author(s): 
-Link:
+## Publication metadata
 
-# Overview: 
+- Title:
+- Author(s):
+- Category:
+- Preferred slug (optional):
+- Source or paper link (if applicable):
+- Target publication date (optional):
 
-[2-3 sentences of what the paper is about]
+## Summary
 
-[Sample: The predominance of feminized voice assistants points to AI’s tendency to naturalise gender divisions. This paper draws on the science fiction narratives of Her and Tomorrow’s Eve to offer a critical understanding of how femininity serves as a means of domesticating AI all the while reproducing gender relations.]
+Describe the post and why it belongs on the AI Village site in two or three
+sentences.
 
-# Introduction
+## Draft
 
-[100-200 words]
-[Capture attention: Use news, anecdotes, pop culture, controversy, or a question]
-[Answer the following so if readers get nothing else, they still take something away: 
-What is this research about? (e.g. research question, thesis, etc.)
-What did the researchers do? (e.g. methods)
-What did the researchers find?]
+Paste the proposed article here, or link to a draft that collaborators can
+access.
 
-# Body (summary)
+Use second-level headings (`##`) for major sections. Astro renders the title
+from front matter as the page's only top-level heading, so the article body
+must not contain a `#` heading.
 
-[500-750 words]
-[Use headings & subheadings to make it digestible]
-[Use plain english wherever possible, jargon when necessary]
-[Define new terms or link out to definitions elsewhere]
-[See example of great summary if stuck]
+For research summaries, the following outline is a useful starting point:
 
-# Between the lines
+### Overview
 
-[100-200 words]
-[Your opinion]
-[Discuss why the findings matter, what gaps you see in the research, & questions/directions those gaps prompt for further research]
+Summarize the paper, project, or topic and its central claim.
+
+### Introduction
+
+Explain the question, approach, and key finding in plain language.
+
+### Body
+
+Develop the analysis with descriptive headings and links to primary sources.
+
+### Between the lines
+
+Explain why the findings matter, the gaps that remain, and useful next
+questions.
+
+## Assets and accessibility
+
+- [ ] Images or diagrams are attached or linked.
+- [ ] Each image has proposed alternative text.
+- [ ] Any social-card image is identified.
+
+## Astro implementation notes
+
+Accepted posts live in `src/content/blog/` as Markdown or MDX. A minimal source
+file looks like this:
+
+```yaml
+---
+title: "Post title"
+date: YYYY-MM-DD
+author:
+  - Author Name
+category: "research"
+description: "A concise description for listings and social previews."
+slug: "post-slug"
+---
+```
+
+Do not add Jekyll fields such as `layout`, create `_posts` files, or fabricate
+legacy redirects for a new post. Before opening the implementation PR, run
+`pnpm validate`.

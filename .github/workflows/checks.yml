@@ -24,7 +24,7 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 11.1.2
+          version: 11.24.0
           run_install: false
 
       - name: Setup Node
@@ -37,11 +37,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build
-        run: pnpm build
+      - name: Audit dependencies
+        run: pnpm run audit:dependencies
 
-      - name: Lint
-        run: pnpm lint
+      - name: Build development container
+        run: docker build --target development .
 
-      - name: Check contrast
-        run: pnpm run check:contrast
+      - name: Validate
+        run: pnpm validate

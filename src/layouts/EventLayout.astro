@@ -6,7 +6,12 @@ import EventPosters from "../components/posters/EventPosters.astro";
 import EmbeddedEventPosters from "../components/posters/EmbeddedEventPosters.astro";
 import type { AstroComponentFactory } from "astro/runtime/server/index.js";
 import type { EventEntry } from "../utils/site";
-import { eventPath, formatDateRange, isoDateOnly, truncate } from "../utils/site";
+import {
+  eventPath,
+  formatDateRange,
+  isoDateOnly,
+  truncate,
+} from "../utils/site";
 import { posterEvents } from "../data/poster-events";
 import { posters } from "../data/posters";
 import { scheduleRoutesForEvent } from "../data/schedules";
@@ -46,13 +51,23 @@ const eventImage = normalizeImage(event.data.image);
 const socialImage = selectEventSocialImage(event.data);
 const formattedDateRange = formatDateRange(event.data.date, event.data.endDate);
 const isMultiDay =
-  event.data.endDate && isoDateOnly(event.data.endDate) > isoDateOnly(event.data.date);
+  event.data.endDate &&
+  isoDateOnly(event.data.endDate) > isoDateOnly(event.data.date);
 const [formattedStartDate, formattedEndDate] = isMultiDay
   ? formattedDateRange.split("–")
   : [formattedDateRange, undefined];
 ---
 
-<BaseLayout title={event.data.title} canonical={url} image={socialImage.path} socialImageAlt={socialImage.alt} type="event" eventDate={event.data.date} eventEndDate={event.data.endDate} eventLocation={event.data.location}>
+<BaseLayout
+  title={event.data.title}
+  canonical={url}
+  image={socialImage.path}
+  socialImageAlt={socialImage.alt}
+  type="event"
+  eventDate={event.data.date}
+  eventEndDate={event.data.endDate}
+  eventLocation={event.data.location}
+>
   <PageShell>
     <article class="event">
       <header class="event-header event-layout__header">
@@ -61,78 +76,122 @@ const [formattedStartDate, formattedEndDate] = isMultiDay
           <div>
             <strong>📅 {isMultiDay ? "Dates:" : "Date:"}</strong>
             {" "}
-            {isMultiDay && event.data.endDate ? (
-              <>
-                <time datetime={isoDateOnly(event.data.date)}>{formattedStartDate}</time>
-                <span aria-hidden="true">–</span>
-                <time datetime={isoDateOnly(event.data.endDate)}>{formattedEndDate}</time>
-              </>
-            ) : (
-              <time datetime={isoDateOnly(event.data.date)}>{formattedDateRange}</time>
-            )}
+            {
+              isMultiDay && event.data.endDate ? (
+                <>
+                  <time datetime={isoDateOnly(event.data.date)}>
+                    {formattedStartDate}
+                  </time>
+                  <span aria-hidden="true">–</span>
+                  <time datetime={isoDateOnly(event.data.endDate)}>
+                    {formattedEndDate}
+                  </time>
+                </>
+              ) : (
+                <time datetime={isoDateOnly(event.data.date)}>
+                  {formattedDateRange}
+                </time>
+              )
+            }
           </div>
-          {event.data.location && <div><strong>📍 Location:</strong> {event.data.location}</div>}
+          {
+            event.data.location && (
+              <div>
+                <strong>📍 Location:</strong> {event.data.location}
+              </div>
+            )
+          }
         </div>
       </header>
-      {eventImage && (
-        <div class="post-cover-wrapper event-layout__cover">
-          <img
-            src={eventImage.path}
-            alt={eventImage.alt ?? event.data.title}
-            width={eventImage.width}
-            height={eventImage.height}
-            class="post-cover"
-            loading="eager"
-            decoding="async"
-          />
-        </div>
-      )}
+      {
+        eventImage && (
+          <div class="post-cover-wrapper event-layout__cover">
+            <img
+              src={eventImage.path}
+              alt={eventImage.alt ?? event.data.title}
+              width={eventImage.width}
+              height={eventImage.height}
+              class="post-cover"
+              loading="eager"
+              decoding="async"
+            />
+          </div>
+        )
+      }
       <div class="event-content event-layout__content" id="event-details">
-        {isMdxEvent ? (
-          <Content components={eventContentComponents} />
-        ) : (
-          <Content />
-        )}
+        {
+          isMdxEvent ? (
+            <Content components={eventContentComponents} />
+          ) : (
+            <Content />
+          )
+        }
       </div>
-      {posterPlacement === "fallback" && hasEventPosters && posterEvent && (
-        <div
-          class="event-layout__posters"
-          data-event-posters-placement="fallback"
-        >
-          <EventPosters
-            eventId={posterEvent.id}
-            variant="compact"
-            limit={6}
-          />
-        </div>
-      )}
-      {scheduleLinks.length > 0 && (
-        <section class="card event-layout__schedule">
-          <h2>Schedules and Talks</h2>
-          <ul>
-            {scheduleLinks.map((link) => <li><a href={link.path}>{link.label}</a></li>)}
-          </ul>
-        </section>
-      )}
+      {
+        posterPlacement === "fallback" && hasEventPosters && posterEvent && (
+          <div
+            class="event-layout__posters"
+            data-event-posters-placement="fallback"
+          >
+            <EventPosters
+              eventId={posterEvent.id}
+              variant="compact"
+              limit={6}
+            />
+          </div>
+        )
+      }
+      {
+        scheduleLinks.length > 0 && (
+          <section class="card event-layout__schedule">
+            <h2>Schedules and Talks</h2>
+            <ul>
+              {scheduleLinks.map((link) => (
+                <li>
+                  <a href={link.path}>{link.label}</a>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )
+      }
       <footer class="event-footer event-layout__footer">
         <div class="card card--center event-layout__cta">
           <p>🎪 Interested in attending or presenting at AI Village events?</p>
           <div class="event-layout__cta-links">
             <a href="/discord/">Join our Discord</a>
             <span aria-hidden="true">•</span>
-            <a href={volunteerApplicationUrl} target="_blank" rel="noopener noreferrer">Volunteer Application</a>
+            <a
+              href={volunteerApplicationUrl}
+              target="_blank"
+              rel="noopener noreferrer">Volunteer Application</a
+            >
             <span aria-hidden="true">•</span>
             <a href="/events/">All Events</a>
           </div>
         </div>
         <div class="event-layout__footer-row">
           <div class="event-navigation">
-            {previous && <a href={eventPath(previous)}>← {truncate(previous.data.title, 30)}</a>}
+            {
+              previous && (
+                <a href={eventPath(previous)}>
+                  ← {truncate(previous.data.title, 30)}
+                </a>
+              )
+            }
             {previous && next && <span aria-hidden="true">|</span>}
-            {next && <a href={eventPath(next)}>{truncate(next.data.title, 30)} →</a>}
+            {
+              next && (
+                <a href={eventPath(next)}>{truncate(next.data.title, 30)} →</a>
+              )
+            }
           </div>
           <div class="event-share">
-            <a href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(event.data.title)}&via=aivillage_dc`} target="_blank" rel="noopener noreferrer">Share Event</a>
+            <a
+              href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(event.data.title)}&via=aivillage_dc`}
+              target="_blank"
+              rel="noopener noreferrer">Share Event</a
+            >
           </div>
         </div>
       </footer>
@@ -245,5 +304,4 @@ const [formattedStartDate, formattedEndDate] = isMultiDay
   .event-share a {
     margin-inline: 0.5rem;
   }
-
 </style>

@@ -1,12 +1,9 @@
 ---
-layout: post
 title: Prompt Detective at SXSW!
 author: Sven Cattell
 date: 2023-03-08
 category: "AI Security"
 canonicalSlug: prompt-detective-announcement
-legacyUrls:
-  - /ai%20security/2023/03/07/prompt-detective-announcement.html
 
 ---
 

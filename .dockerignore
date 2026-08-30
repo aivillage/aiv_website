@@ -1,0 +1,13 @@
+.astro
+.claude
+.direnv
+.env
+.env.*
+.git
+.github
+.pnpm-store
+dist
+node_modules
+public/generated
+csv/*.csv
+**/.DS_Store

@@ -3,7 +3,13 @@ import BaseLayout from "./BaseLayout.astro";
 import PageShell from "../components/layout/PageShell.astro";
 import type { AstroComponentFactory } from "astro/runtime/server/index.js";
 import type { BlogEntry } from "../utils/site";
-import { canonicalPostPath, excerptFromBody, formatDate, isoDate, truncate } from "../utils/site";
+import {
+  canonicalPostPath,
+  excerptFromBody,
+  formatDate,
+  isoDate,
+  truncate,
+} from "../utils/site";
 import { normalizeImage, selectBlogSocialImage } from "../utils/social-images";
 const { post, previous, next, Content } = Astro.props as {
   post: BlogEntry;
@@ -12,13 +18,28 @@ const { post, previous, next, Content } = Astro.props as {
   Content: AstroComponentFactory;
 };
 const url = canonicalPostPath(post);
-const author = Array.isArray(post.data.author) ? post.data.author.join(", ") : post.data.author;
+const author = Array.isArray(post.data.author)
+  ? post.data.author.join(", ")
+  : post.data.author;
 const shareUrl = new URL(url, Astro.site ?? "https://aivillage.org").toString();
-const description = post.data.description ?? post.data.excerpt ?? excerptFromBody(post.body ?? "", 30);
+const description =
+  post.data.description ??
+  post.data.excerpt ??
+  excerptFromBody(post.body ?? "", 30);
 const visibleCover = normalizeImage(post.data.cover);
 const socialImage = selectBlogSocialImage(post.data);
 ---
-<BaseLayout title={post.data.title} description={description} canonical={url} image={socialImage.path} socialImageAlt={socialImage.alt} type="article" publishedTime={post.data.date} author={post.data.author}>
+
+<BaseLayout
+  title={post.data.title}
+  description={description}
+  canonical={url}
+  image={socialImage.path}
+  socialImageAlt={socialImage.alt}
+  type="article"
+  publishedTime={post.data.date}
+  author={post.data.author}
+>
   <PageShell>
     <article class="post">
       <header class="post-header">
@@ -26,35 +47,83 @@ const socialImage = selectBlogSocialImage(post.data);
         <div class="post-meta">
           {author && <span class="post-author">By {author}</span>}
           {author && post.data.date && " • "}
-          <time datetime={isoDate(post.data.date)}>{formatDate(post.data.date)}</time>
-          {post.data.category && <> • <span class="post-category">#{post.data.category}</span></>}
+          <time datetime={isoDate(post.data.date)}
+            >{formatDate(post.data.date)}</time
+          >
+          {
+            post.data.category && (
+              <>
+                {" "}
+                • <span class="post-category">#{post.data.category}</span>
+              </>
+            )
+          }
         </div>
-        {post.data.description && <div class="post-description"><p>{post.data.description}</p></div>}
+        {
+          post.data.description && (
+            <div class="post-description">
+              <p>{post.data.description}</p>
+            </div>
+          )
+        }
       </header>
-      {visibleCover && <div class="post-cover-wrapper"><img src={visibleCover.path} alt={post.data.title} class="post-cover" /></div>}
+      {
+        visibleCover && (
+          <div class="post-cover-wrapper">
+            <img
+              src={visibleCover.path}
+              alt={post.data.title}
+              class="post-cover"
+            />
+          </div>
+        )
+      }
       <div class="post-content">
         <Content />
       </div>
       <footer class="post-footer">
         <div class="post-footer-content">
           <div class="post-navigation">
-            {previous && <a href={canonicalPostPath(previous)} class="nav-link prev-link">← {truncate(previous.data.title, 30)}</a>}
+            {
+              previous && (
+                <a
+                  href={canonicalPostPath(previous)}
+                  class="nav-link prev-link"
+                >
+                  ← {truncate(previous.data.title, 30)}
+                </a>
+              )
+            }
             {previous && next && <span class="nav-separator">|</span>}
-            {next && <a href={canonicalPostPath(next)} class="nav-link next-link">{truncate(next.data.title, 30)} →</a>}
+            {
+              next && (
+                <a href={canonicalPostPath(next)} class="nav-link next-link">
+                  {truncate(next.data.title, 30)} →
+                </a>
+              )
+            }
           </div>
           <div class="post-share">
-            <a href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(post.data.title)}&via=aivillage_dc`} target="_blank" rel="noopener noreferrer" class="share-link">Share on Twitter</a>
+            <a
+              href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(post.data.title)}&via=aivillage_dc`}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="share-link">Share on Twitter</a
+            >
           </div>
         </div>
         <div class="post-contribute">
           <p>
             📝 <strong>Want to contribute?</strong>
-            <a href="https://github.com/aivillage/aiv_website" target="_blank" rel="noopener noreferrer">Submit a pull request</a>
+            <a
+              href="https://github.com/aivillage/aiv_website"
+              target="_blank"
+              rel="noopener noreferrer">Submit a pull request</a
+            >
             or join our <a href="/discord/">Discord</a> to discuss ideas.
           </p>
         </div>
       </footer>
     </article>
-
   </PageShell>
 </BaseLayout>

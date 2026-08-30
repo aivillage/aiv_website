@@ -7,12 +7,17 @@ const globalStylesPath = resolve(__dirname, "../src/styles/global.scss");
 const source = readFileSync(globalStylesPath, "utf8");
 
 const themeBlocks = {
-  dark: extractBlock(":root,\nhtml[data-theme=\"dark\"],\nhtml[data-theme=\"auto\"]"),
-  light: extractBlock("html[data-theme=\"light\"]"),
+  dark: extractBlock(
+    ':root,\nhtml[data-theme="dark"],\nhtml[data-theme="auto"]',
+  ),
+  light: extractBlock('html[data-theme="light"]'),
 };
 
 const themes = Object.fromEntries(
-  Object.entries(themeBlocks).map(([theme, block]) => [theme, parseHexTokens(block)])
+  Object.entries(themeBlocks).map(([theme, block]) => [
+    theme,
+    parseHexTokens(block),
+  ]),
 );
 
 const textChecks = [
@@ -24,7 +29,11 @@ const textChecks = [
   ["action text on card", "--aiv-action-primary", "--aiv-card-bg"],
   ["brand text on canvas", "--aiv-brand-primary", "--aiv-bg-canvas"],
   ["brand text on card", "--aiv-brand-primary", "--aiv-card-bg"],
-  ["discord text on discord bg", "--aiv-brand-discord-text", "--aiv-brand-discord-bg"],
+  [
+    "discord text on discord bg",
+    "--aiv-brand-discord-text",
+    "--aiv-brand-discord-bg",
+  ],
 ];
 
 const boundaryChecks = [
@@ -81,7 +90,9 @@ printRows(rows);
 
 const failures = rows.filter((row) => !row.pass);
 if (failures.length > 0) {
-  console.error(`\nContrast check failed: ${failures.length} pair(s) below threshold.`);
+  console.error(
+    `\nContrast check failed: ${failures.length} pair(s) below threshold.`,
+  );
   process.exit(1);
 }
 
@@ -174,15 +185,26 @@ function printRows(allRows) {
   ];
 
   const widths = columns.map(([label, getter]) => {
-    const values = allRows.map((row) => String(typeof getter === "function" ? getter(row) : row[getter]));
+    const values = allRows.map((row) =>
+      String(typeof getter === "function" ? getter(row) : row[getter]),
+    );
     return Math.max(label.length, ...values.map((value) => value.length));
   });
 
-  const render = (values) => values.map((value, index) => String(value).padEnd(widths[index])).join("  ");
+  const render = (values) =>
+    values
+      .map((value, index) => String(value).padEnd(widths[index]))
+      .join("  ");
   console.log(render(columns.map(([label]) => label)));
   console.log(render(widths.map((width) => "-".repeat(width))));
 
   for (const row of allRows) {
-    console.log(render(columns.map(([, getter]) => (typeof getter === "function" ? getter(row) : row[getter]))));
+    console.log(
+      render(
+        columns.map(([, getter]) =>
+          typeof getter === "function" ? getter(row) : row[getter],
+        ),
+      ),
+    );
   }
 }

@@ -1,6 +1,7 @@
 ---
 first_name: Mohamed
 last_name: AbuMuslim
+slug: mohamed-abumuslim
 position: Steering Committee Member
 expertise: Security Research, Red Teaming, Penetration testing and AI/ML Security. 
 profile: mohamed_abumuslim.webp
@@ -14,5 +15,4 @@ Mohamed AbuMuslim is a security researcher and offensive security engineer focus
 His work combines offensive security operations with research and development, with a strong emphasis on uncovering novel attack paths, improving security validation practices, and strengthening product security maturity. He has led and delivered assessments across traditional and emerging technology stacks, covering penetration testing, adversary emulation, purple teaming, static and dynamic analysis, and AI security evaluation.
 
 Mohamed is also a speaker, educator, and community leader who regularly contributes to the security industry through conference talks, workshops, research, and public technical content. He is a Steering Committee member at AI Village, an organizer of BSides Albuquerque, a board member at OWASP Cairo, and an active contributor to practitioner education through social platforms and YouTube.
-
 

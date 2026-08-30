@@ -3,7 +3,6 @@ title: "AI Village @ DEF CON 30"
 date: 2022-08-11
 description: "Join AI Village at DEF CON 30 for ML Evasion and AI Art."
 location: "Las Vegas, NV"
-layout: post
 ---
 
 
@@ -19,7 +18,6 @@ The ML Evasion competition is back! Hyrum Anderson, Eugene Neelou, and Zoltan Ba
 We will have a booth for generative art, come make your own [DALL-E style](https://openai.com/dall-e-2/) art. We're devoting Saturday afternoon to art! If you want to show your art, please get in touch on the discord!
 
 ![hack-the-planet](/assets/images/f1b118ae-c726-11ec-b495-0242ac140002_0000.png)
-![nintendo](/assets/images/949d47d6-c727-11ec-ba54-0242ac140002_0000.png)
 
 <table border="1" bordercolor="020202" style="background-color:FFFFCC" width="100%" cellpadding="3" cellspacing="3">
 

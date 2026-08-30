@@ -1,18 +1,15 @@
 ---
-layout: post
 title: "Meta AI Agent Account Takeover: The Risk of Missing Authorization in Agentic Workflows"
 date: 2026-06-05
 author: Mohamed AbuMuslim
 categories:
   - agentic-workflows
   - agent-security
-legacySlug: "meta-ai-agent-account-takeover-the-risk-of-missing-authorization-in-agentic-workflows"
 description: "How missing authorization in AI agent tool-calling workflows can turn normal support actions into account takeover paths."
 image:
   path: /assets/images/2026-06-05-Meta-AI-Agent-Account-Takeover/3df9f9e4-ee6d-4e4b-b79e-4be2f4d9de7e.jpg
   alt: "AI agent authorization and account takeover research"
 cover: /assets/images/2026-06-05-Meta-AI-Agent-Account-Takeover/3df9f9e4-ee6d-4e4b-b79e-4be2f4d9de7e.jpg
-media_subpath: /assets/images/2026-06-05-Meta-AI-Agent-Account-Takeover/
 ---
 
 ## Introduction

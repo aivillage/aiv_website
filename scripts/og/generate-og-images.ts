@@ -14,7 +14,10 @@ export async function generateOgImages(repositoryRoot = process.cwd()) {
   const publicDir = path.join(repositoryRoot, "public");
   const outputDir = path.join(publicDir, "generated/og");
   const records = await collectContentSocialImageSources(repositoryRoot);
-  const sources = new Set([defaultSocialImageSource, ...records.map((record) => record.image.path)]);
+  const sources = new Set([
+    defaultSocialImageSource,
+    ...records.map((record) => record.image.path),
+  ]);
 
   await rm(outputDir, { recursive: true, force: true });
   await mkdir(outputDir, { recursive: true });
@@ -43,7 +46,9 @@ export async function generateOgImages(repositoryRoot = process.cwd()) {
     generated += 1;
   }
 
-  console.log(`Generated ${generated} social image(s); skipped ${external} external source(s).`);
+  console.log(
+    `Generated ${generated} social image(s); skipped ${external} external source(s).`,
+  );
   return { generated, external, records };
 }
 

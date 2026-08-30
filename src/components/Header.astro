@@ -14,20 +14,44 @@ function isActive(url: string) {
     <div class="header-content">
       <a class="site-title" href="/">{site.title}</a>
       <nav class="nav-menu" id="nav-menu">
-        {primaryNav.map((item) => {
-          const active = isActive(item.href);
-          return <a href={item.href} class:list={[{ active }]} aria-current={active ? "page" : undefined}>{item.label}</a>;
-        })}
+        {
+          primaryNav.map((item) => {
+            const active = isActive(item.href);
+            return (
+              <a
+                href={item.href}
+                class:list={[{ active }]}
+                aria-current={active ? "page" : undefined}
+              >
+                {item.label}
+              </a>
+            );
+          })
+        }
         <a
-          class:list={["nav-sponsor-cta", { active: isActive(sponsorCta.href) }]}
+          class:list={[
+            "nav-sponsor-cta",
+            { active: isActive(sponsorCta.href) },
+          ]}
           href={sponsorCta.href}
           aria-current={isActive(sponsorCta.href) ? "page" : undefined}
         >
           {sponsorCta.label}
         </a>
       </nav>
-      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch color mode" title="Switch color mode">
-        <svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+      <button
+        id="theme-toggle"
+        class="theme-toggle"
+        type="button"
+        aria-label="Switch color mode"
+        title="Switch color mode"
+      >
+        <svg
+          class="theme-icon theme-icon-sun"
+          aria-hidden="true"
+          viewBox="0 0 24 24"
+          focusable="false"
+        >
           <circle cx="12" cy="12" r="4"></circle>
           <path d="M12 2v2"></path>
           <path d="M12 20v2"></path>
@@ -38,11 +62,23 @@ function isActive(url: string) {
           <path d="m6.34 17.66-1.41 1.41"></path>
           <path d="m19.07 4.93-1.41 1.41"></path>
         </svg>
-        <svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24" focusable="false">
-          <path d="M20.99 12.66A8.99 8.99 0 1 1 11.34 3.01a7 7 0 1 0 9.65 9.65Z"></path>
+        <svg
+          class="theme-icon theme-icon-moon"
+          aria-hidden="true"
+          viewBox="0 0 24 24"
+          focusable="false"
+        >
+          <path d="M20.99 12.66A8.99 8.99 0 1 1 11.34 3.01a7 7 0 1 0 9.65 9.65Z"
+          ></path>
         </svg>
       </button>
-      <button id="menu-toggle" class="hamburger" aria-label="Toggle menu" aria-controls="nav-menu" aria-expanded="false">
+      <button
+        id="menu-toggle"
+        class="hamburger"
+        aria-label="Toggle menu"
+        aria-controls="nav-menu"
+        aria-expanded="false"
+      >
         <span></span>
         <span></span>
         <span></span>
@@ -64,8 +100,10 @@ function isActive(url: string) {
   let anchorJumpTimer;
 
   function menuIsOpen() {
-    return menuToggle instanceof HTMLButtonElement &&
-      menuToggle.getAttribute("aria-expanded") === "true";
+    return (
+      menuToggle instanceof HTMLButtonElement &&
+      menuToggle.getAttribute("aria-expanded") === "true"
+    );
   }
 
   function setHeaderHidden(hidden) {
@@ -114,19 +152,26 @@ function isActive(url: string) {
     lastScrollPosition = currentScrollPosition;
   }
 
-  window.addEventListener("scroll", () => {
-    if (scrollFramePending) return;
-    scrollFramePending = true;
-    window.requestAnimationFrame(updateHeaderForScroll);
-  }, { passive: true });
+  window.addEventListener(
+    "scroll",
+    () => {
+      if (scrollFramePending) return;
+      scrollFramePending = true;
+      window.requestAnimationFrame(updateHeaderForScroll);
+    },
+    { passive: true },
+  );
 
   document.addEventListener("click", (event) => {
     const target = event.target;
-    const link = target instanceof Element ? target.closest('a[href^="#"]') : null;
+    const link =
+      target instanceof Element ? target.closest('a[href^="#"]') : null;
     const href = link?.getAttribute("href");
     if (!href || href === "#") return;
 
-    const destination = document.getElementById(decodeURIComponent(href.slice(1)));
+    const destination = document.getElementById(
+      decodeURIComponent(href.slice(1)),
+    );
     if (destination) beginAnchorJump();
   });
 
@@ -139,7 +184,11 @@ function isActive(url: string) {
   }
 
   function setMenuOpen(open, options = {}) {
-    if (!(menuToggle instanceof HTMLButtonElement) || !(menu instanceof HTMLElement)) return;
+    if (
+      !(menuToggle instanceof HTMLButtonElement) ||
+      !(menu instanceof HTMLElement)
+    )
+      return;
 
     menuToggle.classList.toggle("active", open);
     menu.classList.toggle("active", open);
@@ -168,7 +217,10 @@ function isActive(url: string) {
     });
 
     document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape" && menuToggle.getAttribute("aria-expanded") === "true") {
+      if (
+        event.key === "Escape" &&
+        menuToggle.getAttribute("aria-expanded") === "true"
+      ) {
         setMenuOpen(false, { restoreFocus: true });
       }
     });

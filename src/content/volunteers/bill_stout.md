@@ -1,6 +1,7 @@
 ---
 first_name: Bill
 last_name: Stout
+slug: bill-stout
 position: Steering Committee Member
 profile: bill_stout.webp
 expertise: AI/ML Security, GenAI Red Teaming

@@ -11,7 +11,7 @@ Static Astro site for [aivillage.org](https://aivillage.org).
 
 ```sh
 corepack enable
-pnpm install
+pnpm install --frozen-lockfile
 pnpm dev
 pnpm build
 pnpm preview
@@ -20,13 +20,50 @@ pnpm preview
 Before pushing or opening a PR, run:
 
 ```sh
-pnpm build
-pnpm lint
+pnpm validate
 ```
 
-`pnpm build` runs Astro/type checks, Markdown heading checks, offline social-image
-generation, the Astro static build, redirect verification, internal-link
-verification, and emitted social-image verification.
+`pnpm build` runs Astro/type checks, content-identity and Markdown heading
+checks, offline social-image generation, the Astro static build, redirect
+verification, internal-link verification, and emitted social-image
+verification.
+
+`pnpm validate` runs the production build plus lint, formatting, contrast
+checks, and all regression suites. GitHub Actions runs that validation surface,
+audits dependencies, and builds the development container for every pull
+request and every push to `master`.
+
+## Development Environments
+
+### Nix and direnv
+
+The committed flake provides the same Node.js and pnpm major versions used by
+the repository on x86-64 Linux, ARM64 Linux, and Apple Silicon macOS:
+
+```sh
+nix develop
+pnpm install --frozen-lockfile
+pnpm dev
+```
+
+If direnv is installed, `direnv allow` activates the flake automatically when
+entering the repository.
+
+### Docker
+
+The development container runs Astro on container port 4321 and maps it to host
+port 4000 by default:
+
+```sh
+docker compose up --build
+```
+
+Open [http://localhost:4000](http://localhost:4000). Set `AIV_SITE_PORT` to use
+a different host port, for example `AIV_SITE_PORT=4321 docker compose up
+--build`.
+
+The Compose service bind-mounts the repository for live Astro updates and keeps
+container dependencies in a named volume. Stop it with `docker compose down`.
 
 ## Adding Content
 
@@ -52,17 +89,26 @@ Schedule and talk pages are mapped in `src/data/schedules.ts` and rendered from 
 
 ### Volunteers
 
-Add volunteer profiles to `src/content/volunteers/` with `first_name`, `last_name`, optional role fields, an explicit `order`, and optional `profile` image filename from `public/assets/images/profiles/`.
+Add volunteer profiles to `src/content/volunteers/` with `first_name`,
+`last_name`, a required stable `slug`, optional role fields, an explicit
+`order`, and an optional `profile` image filename from
+`public/assets/images/profiles/`. Person links use `/about/#<slug>`; keep an
+existing slug unchanged when correcting or updating a display name.
 
 ### Sponsors
 
-Add sponsors to `src/content/sponsors/` with `name`, required `status` (`current` or `past`), and optional `logo`, `url`, `tier`, and `description`. Current sponsors appear on the homepage and `/sponsors/`; past sponsors appear in the past sponsors section. Each sponsor also gets a detail page at `/sponsors/<slug>/`.
+Add sponsors to `src/content/sponsors/` with `name`, required `status` (`current`
+or `past`), and optional `logo`, `url`, and `tier`. Current sponsors appear on
+the homepage and `/sponsors/`; past sponsors appear in the past sponsors
+section. Each sponsor also gets a detail page at `/sponsors/<slug>/`.
 
 ### Workshops
 
 The `/learn/` page links to the public [AI Village workshops repository](https://github.com/aivillage/workshops). Keep workshop claims limited to that repository's README files and top-level workshop documentation.
 
-Content schemas validate front matter at build time. Missing required fields fail the build with a clear error.
+Content schemas strictly validate front matter at build time. Missing required
+fields, misspelled keys, and obsolete Jekyll metadata fail the build with a
+clear error.
 
 ## Redirects
 
@@ -83,6 +129,7 @@ Useful local checks:
 ```sh
 pnpm run verify:redirects
 pnpm run check:internal-links
+pnpm run audit:dependencies
 ```
 
 ## Deployment
@@ -101,12 +148,5 @@ Configure deployment through the Cloudflare dashboard or Git integration:
 
 No GitHub Pages workflow is used because strict server-side 301 redirects require host-level redirect support.
 
-## Custom Domain
-
-`public/CNAME` remains in the repository with:
-
-```txt
-aivillage.org
-```
-
-The active custom domain and DNS configuration are managed in Cloudflare Pages/DNS.
+The active custom domain and DNS configuration are managed in Cloudflare
+Pages/DNS; GitHub Pages files such as `CNAME` and `.nojekyll` are not used.

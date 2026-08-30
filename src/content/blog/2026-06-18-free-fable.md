@@ -1,5 +1,4 @@
 ---
-layout: post
 title: "On Fable and Export Controls"
 date: 2026-06-18
 author: Nick Ashworth

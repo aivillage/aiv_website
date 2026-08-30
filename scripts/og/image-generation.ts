@@ -8,11 +8,11 @@ import {
 
 export const SOCIAL_IMAGE_WIDTH = GENERATED_SOCIAL_IMAGE_WIDTH;
 export const SOCIAL_IMAGE_HEIGHT = GENERATED_SOCIAL_IMAGE_HEIGHT;
-export const SOCIAL_IMAGE_QUALITY = 86;
-export const RASTER_ENLARGEMENT_WARNING_THRESHOLD = 2.5;
-export const CORNER_COLOR_TOLERANCE = 12;
+const SOCIAL_IMAGE_QUALITY = 86;
+const RASTER_ENLARGEMENT_WARNING_THRESHOLD = 2.5;
+const CORNER_COLOR_TOLERANCE = 12;
 
-export type Rgb = {
+type Rgb = {
   r: number;
   g: number;
   b: number;
@@ -35,8 +35,14 @@ export type GeneratedSocialImageResult = {
 const WHITE: Rgb = { r: 255, g: 255, b: 255 };
 const BLACK: Rgb = { r: 0, g: 0, b: 0 };
 
-async function sampledCornerBackground(sourceFile: string, isSvg: boolean): Promise<Rgb> {
-  const { data, info } = await sharp(sourceFile, isSvg ? { density: 72 } : undefined)
+async function sampledCornerBackground(
+  sourceFile: string,
+  isSvg: boolean,
+): Promise<Rgb> {
+  const { data, info } = await sharp(
+    sourceFile,
+    isSvg ? { density: 72 } : undefined,
+  )
     .ensureAlpha()
     .raw()
     .toBuffer({ resolveWithObject: true });
@@ -62,14 +68,21 @@ async function sampledCornerBackground(sourceFile: string, isSvg: boolean): Prom
     corners.map((corner) => corner.b),
   ];
   const agree = channelsByName.every(
-    (values) => Math.max(...values) - Math.min(...values) <= CORNER_COLOR_TOLERANCE,
+    (values) =>
+      Math.max(...values) - Math.min(...values) <= CORNER_COLOR_TOLERANCE,
   );
   if (!agree) return BLACK;
 
   return {
-    r: Math.round(corners.reduce((sum, corner) => sum + corner.r, 0) / corners.length),
-    g: Math.round(corners.reduce((sum, corner) => sum + corner.g, 0) / corners.length),
-    b: Math.round(corners.reduce((sum, corner) => sum + corner.b, 0) / corners.length),
+    r: Math.round(
+      corners.reduce((sum, corner) => sum + corner.r, 0) / corners.length,
+    ),
+    g: Math.round(
+      corners.reduce((sum, corner) => sum + corner.g, 0) / corners.length,
+    ),
+    b: Math.round(
+      corners.reduce((sum, corner) => sum + corner.b, 0) / corners.length,
+    ),
   };
 }
 
@@ -80,7 +93,9 @@ export async function generateSocialImage({
   warn = console.warn,
 }: GenerateSocialImageOptions): Promise<GeneratedSocialImageResult> {
   const metadata = await sharp(sourceFile).metadata();
-  const isSvg = metadata.format === "svg" || path.extname(sourceFile).toLowerCase() === ".svg";
+  const isSvg =
+    metadata.format === "svg" ||
+    path.extname(sourceFile).toLowerCase() === ".svg";
 
   if (!metadata.width || !metadata.height) {
     throw new Error(`Unable to determine image dimensions: ${sourceLabel}`);
@@ -105,7 +120,10 @@ export async function generateSocialImage({
   const background = await sampledCornerBackground(sourceFile, isSvg);
   const enlargementFactor = isSvg
     ? 1
-    : Math.min(SOCIAL_IMAGE_WIDTH / metadata.width, SOCIAL_IMAGE_HEIGHT / metadata.height);
+    : Math.min(
+        SOCIAL_IMAGE_WIDTH / metadata.width,
+        SOCIAL_IMAGE_HEIGHT / metadata.height,
+      );
   const warning =
     !isSvg && enlargementFactor > RASTER_ENLARGEMENT_WARNING_THRESHOLD
       ? `Warning: ${sourceLabel} requires ${enlargementFactor.toFixed(2)}x raster enlargement for a 1200x630 social image.`

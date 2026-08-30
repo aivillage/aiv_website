@@ -4,6 +4,7 @@ import expressiveCode from "astro-expressive-code";
 import { pluginLineNumbers } from "@expressive-code/plugin-line-numbers";
 import { pluginLanguageBadge } from "expressive-code-language-badge";
 import mdx from "@astrojs/mdx";
+import { unified } from "@astrojs/markdown-remark";
 import rehypeKatex from "rehype-katex";
 import rehypePosterScheduleLinks from "./src/plugins/rehype-poster-schedule-links.mjs";
 import remarkMath from "remark-math";
@@ -62,8 +63,10 @@ export default defineConfig({
     mdx(),
   ],
   markdown: {
-    remarkPlugins: [remarkMath],
-    rehypePlugins: [rehypeKatex, rehypePosterScheduleLinks],
+    processor: unified({
+      remarkPlugins: [remarkMath],
+      rehypePlugins: [rehypeKatex, rehypePosterScheduleLinks],
+    }),
     syntaxHighlight: {
       excludeLangs: ["mermaid"],
     },

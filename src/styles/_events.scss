@@ -85,7 +85,7 @@
 }
 
 /* Rotate arrow when open */
-.events-page details[open]>.year-heading::before {
+.events-page details[open] > .year-heading::before {
   transform: translateY(-50%) rotate(90deg);
 }
 
@@ -97,7 +97,7 @@
 }
 
 /* Expand when open */
-details[open]>.events-container {
+details[open] > .events-container {
   max-height: 2000px;
   transition: max-height 0.5s ease;
 }

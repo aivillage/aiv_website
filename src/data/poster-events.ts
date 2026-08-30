@@ -5,7 +5,7 @@
 // Keeping them separate means regenerating posters never clobbers the prose
 // written here.
 
-export type PosterAuthor = {
+type PosterAuthor = {
   name: string;
   affiliation?: string;
 };

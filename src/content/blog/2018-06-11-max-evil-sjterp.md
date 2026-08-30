@@ -1,15 +1,9 @@
 ---
-toc: true
-toc_sticky: true
-layout: post
 title: Max evil MLsec, why should you care?
 author: Sara-Jayne Terp
-authorUrl: https://twitter.com/bodaceacat
 date: 2018-06-11
 category: ethics
 canonicalSlug: max-evil-sjterp
-legacyUrls:
-  - /ethics/2018/06/11/max-evil-sjterp.html
 
 ---
 

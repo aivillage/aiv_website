@@ -2,7 +2,11 @@ import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join, relative } from "node:path";
 
 const root = process.cwd();
-const contentRoots = [join(root, "src/content/blog"), join(root, "src/content/events")];
+const contentRoots = [
+  join(root, "src/content/blog"),
+  join(root, "src/content/events"),
+  join(root, "src/content/schedules"),
+];
 const failures: string[] = [];
 
 function walk(dir: string, out: string[] = []) {
@@ -39,7 +43,9 @@ for (const file of contentRoots.flatMap((dir) => walk(dir))) {
 }
 
 if (failures.length) {
-  console.error("Blog and event Markdown bodies must not use top-level # headings. Layouts own the page h1.");
+  console.error(
+    "Blog, event, and schedule Markdown bodies must not use top-level # headings. Layouts own the page h1.",
+  );
   console.error(failures.join("\n"));
   process.exit(1);
 }

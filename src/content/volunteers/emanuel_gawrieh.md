@@ -1,6 +1,7 @@
 ---
 first_name: Emanuel
 last_name: Gawrieh
+slug: emanuel-gawrieh
 position: Co-Chair, R&D Labs Lead 
 expertise: Disaggregated Acceleration, AI Systems Security, Hardware and Infrastructure Security shenanigams. 
 affiliation: Google

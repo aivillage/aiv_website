@@ -1,9 +1,6 @@
 ---
-layout: posts
 title: AI Village @ DEF CON China 1
 date: 2018-05-01 09:00:00 +0900
-category: events
-permalink: /events/DEFCON-China-1/
 
 ---
 
@@ -17,7 +14,7 @@ permalink: /events/DEFCON-China-1/
  1700 | Village Exhibits                                                                             | -
 
 ---
-# Abstracts
+## Abstracts
 
 ### StuxNNet: Practical Live Memory Attacks on Machine Learning Systems
 [slides](/public/material/cn18-norwitz/slides.pdf), [video 1](/public/material/cn18-norwitz/pdf_naieve.mp4), [video 2](/public/material/cn18-norwitz/pdf_trojan.mp4)

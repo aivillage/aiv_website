@@ -9,70 +9,181 @@ import PageShell from "../../components/layout/PageShell.astro";
   description="Join the AI Village Discord community for AI security research discussion, events, journal clubs, roles, and community support."
 >
   <PageShell>
-  <h1>Discord Community</h1>
-  <div class="discord-hero">
-    <h2>Join the AI Village Discord</h2>
-    <p>Connect with researchers, hackers, and AI security enthusiasts from around the world.</p>
-    <div class="discord-hero__actions">
-      <a class="discord-button" href="https://discord.com/invite/rDhxjWa69" target="_blank" rel="noopener noreferrer">🎮 Join Discord Server</a>
+    <h1>Discord Community</h1>
+    <div class="discord-hero">
+      <h2>Join the AI Village Discord</h2>
+      <p>
+        Connect with researchers, hackers, and AI security enthusiasts from
+        around the world.
+      </p>
+      <div class="discord-hero__actions">
+        <a
+          class="discord-button"
+          href="https://discord.com/invite/rDhxjWa69"
+          target="_blank"
+          rel="noopener noreferrer">🎮 Join Discord Server</a
+        >
+      </div>
     </div>
-  </div>
-  <hr />
-  <h2>🚀 Getting Started</h2>
-  <div class="card card--accent-primary">
-    <h3 class="text-accent mt-0">📝 First Steps</h3>
-    <ol class="discord-steps">
-      <li><strong>Join the server</strong> using the link above</li>
-      <li><strong>Introduce yourself</strong> in the <code>#start-here</code> channel</li>
-      <li><strong>Get the "Villager" role</strong> from a community member</li>
-      <li><strong>Explore channels</strong> and find your interests</li>
-      <li><strong>Participate</strong> in discussions and events</li>
-    </ol>
-    <div class="content-note">
-      <p class="mb-0"><strong>⚠️ Important:</strong> When you first join, you'll only have access to <code>#start-here</code>. Drop a note introducing yourself, and someone will give you the "Villager" role for full access!</p>
+    <hr />
+    <h2>🚀 Getting Started</h2>
+    <div class="card card--accent-primary">
+      <h3 class="text-accent mt-0">📝 First Steps</h3>
+      <ol class="discord-steps">
+        <li><strong>Join the server</strong> using the link above</li>
+        <li>
+          <strong>Introduce yourself</strong> in the <code>#start-here</code> channel
+        </li>
+        <li>
+          <strong>Get the "Villager" role</strong> from a community member
+        </li>
+        <li><strong>Explore channels</strong> and find your interests</li>
+        <li><strong>Participate</strong> in discussions and events</li>
+      </ol>
+      <div class="content-note">
+        <p class="mb-0">
+          <strong>⚠️ Important:</strong> When you first join, you'll only have access
+          to <code>#start-here</code>. Drop a note introducing yourself, and
+          someone will give you the "Villager" role for full access!
+        </p>
+      </div>
     </div>
-  </div>
-  <hr />
-  <h2>📋 Community Guidelines</h2>
-  <div class="responsive-grid responsive-grid--wide">
-    <div class="card"><h4 class="text-risk mt-0">🚫 Basic Rules</h4><ul class="discord-list"><li>Stay on topic in specialized channels</li><li>No NSFW content permitted</li><li>No illegal behavior or solicitation</li><li>No spamming or channel disruption</li><li>Follow the AI Village <a href="/about/conduct/">Code of Conduct</a></li></ul></div>
-    <div class="card"><h4 class="text-warning mt-0">💬 Communication</h4><ul class="discord-list"><li>Use threads for long discussions</li><li>Take off-topic conversations to #general</li><li>Be respectful and constructive</li><li>Help newcomers get oriented</li><li>Share knowledge and resources</li></ul></div>
-  </div>
-  <hr />
-  <h2>🏆 Community Roles</h2>
-  <div class="role-hierarchy my-2">
-    <div class="role-card discord-role-card discord-role-card--muted"><h4>👤 Villager</h4><p>Basic member role with access to most channels. Granted after introduction in #start-here.</p></div>
-    <div class="role-card discord-role-card discord-role-card--field"><h4>⭐ ElderVillager</h4><p>Active community members who have contributed talks, workshops, or sustained participation. Can invite new members and promote to Villager role.</p></div>
-    <div class="role-card discord-role-card discord-role-card--warning"><h4>🛡️ Officer</h4><p>Community leaders who have organized substantial events or content. Have moderation powers and can help establish new initiatives.</p></div>
-    <div class="role-card discord-role-card discord-role-card--risk"><h4>👑 Board</h4><p>AI Village board members with full moderation powers. Contact for harassment issues or code of conduct violations.</p></div>
-  </div>
-  <hr />
-  <h2>🎯 Popular Channels</h2>
-  <div class="responsive-grid responsive-grid--wide">
-    {["#general:General discussion and off-topic conversations", "#research:AI security research discussions and paper reviews", "#events:Announcements and discussions about upcoming events", "#tools-and-code:Sharing tools, code, and technical resources", "#job-board:AI security job postings and career discussions", "#ctf-discussion:CTF announcements, team formation, and writeups"].map((item) => {
-      const [name, text] = item.split(":");
-      return <div class="card"><h4 class="mt-0">{name}</h4><p>{text}</p></div>;
-    })}
-  </div>
-  <hr />
-  <h2>📅 Regular Events</h2>
-  <div class="events-grid my-2">
-    <div class="card card--center"><h4 class="text-warning mt-0">📚 Hacker Journal Club</h4><p class="text-muted text-mono">Wednesdays at 5 PM PST / 8 PM EST</p><p>Discuss academic papers with industry perspective, covering everything from ML security to policy.</p></div>
-    <div class="card card--center"><h4 class="text-warning mt-0">🔒 Privacy & Ethics Journal Club</h4><p class="text-muted text-mono">Tuesdays at 5 PM PST / 8 PM EST</p><p>Interdisciplinary analysis of AI systems from theoretical and practical perspectives.</p></div>
-  </div>
-  <div class="card card--accent-primary">
-    <h4 class="text-accent mt-0">📅 Event Updates</h4>
-    <p>Use the events archive for upcoming AI Village appearances and past schedules.</p>
-    <p class="mb-0"><a class="text-accent text-strong" href="/events/">View AI Village events</a></p>
-  </div>
-  <hr />
-  <h2>❓ Need Help?</h2>
-  <div class="card card--accent-risk">
-    <h4 class="text-risk mt-0">🆘 Support & Issues</h4>
-    <p>If you experience harassment or have concerns about community behavior:</p>
-    <ul><li><strong>Contact Officers or Board members</strong> directly via DM</li><li><strong>Use the server reporting system</strong> for serious issues</li><li><strong>Remember:</strong> We have zero tolerance for harassment</li></ul>
-    <p class="mb-0">Our community is dedicated to providing a safe and welcoming environment for everyone.</p>
-  </div>
+    <hr />
+    <h2>📋 Community Guidelines</h2>
+    <div class="responsive-grid responsive-grid--wide">
+      <div class="card">
+        <h4 class="text-risk mt-0">🚫 Basic Rules</h4><ul class="discord-list">
+          <li>Stay on topic in specialized channels</li><li>
+            No NSFW content permitted
+          </li><li>No illegal behavior or solicitation</li><li>
+            No spamming or channel disruption
+          </li><li>
+            Follow the AI Village <a href="/about/conduct/">Code of Conduct</a>
+          </li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4 class="text-warning mt-0">💬 Communication</h4><ul
+          class="discord-list"
+        >
+          <li>Use threads for long discussions</li><li>
+            Take off-topic conversations to #general
+          </li><li>Be respectful and constructive</li><li>
+            Help newcomers get oriented
+          </li><li>Share knowledge and resources</li>
+        </ul>
+      </div>
+    </div>
+    <hr />
+    <h2>🏆 Community Roles</h2>
+    <div class="role-hierarchy my-2">
+      <div class="role-card discord-role-card discord-role-card--muted">
+        <h4>👤 Villager</h4><p>
+          Basic member role with access to most channels. Granted after
+          introduction in #start-here.
+        </p>
+      </div>
+      <div class="role-card discord-role-card discord-role-card--field">
+        <h4>⭐ ElderVillager</h4><p>
+          Active community members who have contributed talks, workshops, or
+          sustained participation. Can invite new members and promote to
+          Villager role.
+        </p>
+      </div>
+      <div class="role-card discord-role-card discord-role-card--warning">
+        <h4>🛡️ Officer</h4><p>
+          Community leaders who have organized substantial events or content.
+          Have moderation powers and can help establish new initiatives.
+        </p>
+      </div>
+      <div class="role-card discord-role-card discord-role-card--risk">
+        <h4>👑 Board</h4><p>
+          AI Village board members with full moderation powers. Contact for
+          harassment issues or code of conduct violations.
+        </p>
+      </div>
+    </div>
+    <hr />
+    <h2>🎯 Popular Channels</h2>
+    <div class="responsive-grid responsive-grid--wide">
+      {
+        [
+          "#general:General discussion and off-topic conversations",
+          "#research:AI security research discussions and paper reviews",
+          "#events:Announcements and discussions about upcoming events",
+          "#tools-and-code:Sharing tools, code, and technical resources",
+          "#job-board:AI security job postings and career discussions",
+          "#ctf-discussion:CTF announcements, team formation, and writeups",
+        ].map((item) => {
+          const [name, text] = item.split(":");
+          return (
+            <div class="card">
+              <>
+                <h4 class="mt-0">{name}</h4>
+                <p>{text}</p>
+              </>
+            </div>
+          );
+        })
+      }
+    </div>
+    <hr />
+    <h2>📅 Regular Events</h2>
+    <div class="events-grid my-2">
+      <div class="card card--center">
+        <h4 class="text-warning mt-0">📚 Hacker Journal Club</h4><p
+          class="text-muted text-mono"
+        >
+          Wednesdays at 5 PM PST / 8 PM EST
+        </p><p>
+          Discuss academic papers with industry perspective, covering everything
+          from ML security to policy.
+        </p>
+      </div>
+      <div class="card card--center">
+        <h4 class="text-warning mt-0">🔒 Privacy & Ethics Journal Club</h4><p
+          class="text-muted text-mono"
+        >
+          Tuesdays at 5 PM PST / 8 PM EST
+        </p><p>
+          Interdisciplinary analysis of AI systems from theoretical and
+          practical perspectives.
+        </p>
+      </div>
+    </div>
+    <div class="card card--accent-primary">
+      <h4 class="text-accent mt-0">📅 Event Updates</h4>
+      <p>
+        Use the events archive for upcoming AI Village appearances and past
+        schedules.
+      </p>
+      <p class="mb-0">
+        <a class="text-accent text-strong" href="/events/"
+          >View AI Village events</a
+        >
+      </p>
+    </div>
+    <hr />
+    <h2>❓ Need Help?</h2>
+    <div class="card card--accent-risk">
+      <h4 class="text-risk mt-0">🆘 Support & Issues</h4>
+      <p>
+        If you experience harassment or have concerns about community behavior:
+      </p>
+      <ul>
+        <li>
+          <strong>Contact Officers or Board members</strong> directly via DM
+        </li><li>
+          <strong>Use the server reporting system</strong> for serious issues
+        </li><li>
+          <strong>Remember:</strong> We have zero tolerance for harassment
+        </li>
+      </ul>
+      <p class="mb-0">
+        Our community is dedicated to providing a safe and welcoming environment
+        for everyone.
+      </p>
+    </div>
   </PageShell>
 </BaseLayout>
 

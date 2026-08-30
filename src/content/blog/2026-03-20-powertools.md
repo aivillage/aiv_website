@@ -1,13 +1,9 @@
 ---
-layout: post
 title: Agents Are Powertools
 author: Sven Cattell
 date: 2026-03-19
 category: "rsac"
-toc: true
 canonicalSlug: powertools
-legacyUrls:
-  - /rsac/2026/03/19/powertools.html
 
 ---
 

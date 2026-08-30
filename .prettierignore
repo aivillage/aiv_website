@@ -1,0 +1,12 @@
+dist/
+node_modules/
+.astro/
+.claude/
+.direnv/
+.pnpm-store/
+public/
+src/content/
+src/content-mirrors/
+pnpm-lock.yaml
+flake.lock
+csv/

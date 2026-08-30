@@ -22,12 +22,10 @@ if (!posterEvent) {
 const hasPosters = posters.some((poster) => poster.event === posterEvent.id);
 ---
 
-{hasPosters && (
-  <div data-event-posters-placement="inline">
-    <EventPosters
-      eventId={posterEvent.id}
-      variant="compact"
-      limit={6}
-    />
-  </div>
-)}
+{
+  hasPosters && (
+    <div data-event-posters-placement="inline">
+      <EventPosters eventId={posterEvent.id} variant="compact" limit={6} />
+    </div>
+  )
+}

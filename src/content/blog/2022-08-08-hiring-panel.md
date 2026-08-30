@@ -1,13 +1,9 @@
 ---
-layout: post
 title: AI and Hiring Tech Panel
 author: Rachel See
 date: 2022-08-08
 category: "defcon 30"
-toc: true
 canonicalSlug: hiring-panel
-legacyUrls:
-  - /defcon%2030/2022/08/08/hiring-panel.html
 
 ---
 
