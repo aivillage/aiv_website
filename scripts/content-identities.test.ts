@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { validateContentIdentities } from "./check-content-identities";
+import { validateContentIdentities } from "./content-identities";
 
 const root = mkdtempSync(join(tmpdir(), "aiv-content-identities-"));
 const volunteers = join(root, "src/content/volunteers");
