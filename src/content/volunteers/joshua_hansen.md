@@ -1,6 +1,7 @@
 ---
 first_name: Joshua
 last_name: Hansen
+slug: joshua-hansen
 position: Steering Committee Member
 profile: joshua_hansen.webp
 expertise: AI Infrastructure, Agentic Systems, Secure Architecture, Observability

@@ -7,6 +7,8 @@ export type VolunteerEntry = CollectionEntry<"volunteers">;
 export type SponsorEntry = CollectionEntry<"sponsors">;
 export type ScheduleEntry = CollectionEntry<"schedules">;
 
+export const VOLUNTEER_SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+
 const dateTime = new Intl.DateTimeFormat("en-US", {
   month: "long",
   day: "numeric",

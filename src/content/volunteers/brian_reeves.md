@@ -1,6 +1,7 @@
 ---
 first_name: Brian
 last_name: Reeves
+slug: brian-reeves
 position: Steering Committee Member
 expertise: AI Systems Security, Security Engineering and Architecture
 affiliation: Google

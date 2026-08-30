@@ -1,7 +1,7 @@
 import { defineCollection } from "astro:content";
 import { glob } from "astro/loaders";
 import { z } from "astro/zod";
-import { validateEventDateRange } from "./utils/site";
+import { validateEventDateRange, VOLUNTEER_SLUG_PATTERN } from "./utils/site";
 
 const image = z.union([
   z.string(),
@@ -12,6 +12,13 @@ const image = z.union([
     height: z.number().int().positive().optional(),
   }),
 ]);
+
+const anchorSlug = z
+  .string()
+  .regex(
+    VOLUNTEER_SLUG_PATTERN,
+    "Slug must contain only lowercase letters, numbers, and single hyphens.",
+  );
 
 const blog = defineCollection({
   loader: glob({
@@ -68,6 +75,7 @@ const volunteers = defineCollection({
     .object({
       first_name: z.string(),
       last_name: z.string(),
+      slug: anchorSlug,
       position: z.string().optional(),
       expertise: z.string().optional(),
       affiliation: z.string().optional(),

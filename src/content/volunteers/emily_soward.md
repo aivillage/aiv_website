@@ -1,6 +1,7 @@
 ---
 first_name: Emily
 last_name: Soward
+slug: emily-soward
 position: Steering Committee Member
 profile: emily_soward.webp
 expertise: AI Risk Management and Governance, Research & Threat Intelligence, AI and Regulatory Compliance & Policy

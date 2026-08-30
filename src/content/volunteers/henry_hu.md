@@ -1,6 +1,7 @@
 ---
 first_name: Henry
 last_name: Hu
+slug: henry-hu
 position: Steering Committee Member
 profile: henry_hu.webp
 expertise: AI Threat Modeling, Security Compliance

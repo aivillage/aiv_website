@@ -89,7 +89,11 @@ Schedule and talk pages are mapped in `src/data/schedules.ts` and rendered from 
 
 ### Volunteers
 
-Add volunteer profiles to `src/content/volunteers/` with `first_name`, `last_name`, optional role fields, an explicit `order`, and optional `profile` image filename from `public/assets/images/profiles/`.
+Add volunteer profiles to `src/content/volunteers/` with `first_name`,
+`last_name`, a required stable `slug`, optional role fields, an explicit
+`order`, and an optional `profile` image filename from
+`public/assets/images/profiles/`. Person links use `/about/#<slug>`; keep an
+existing slug unchanged when correcting or updating a display name.
 
 ### Sponsors
 

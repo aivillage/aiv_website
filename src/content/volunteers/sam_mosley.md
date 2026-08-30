@@ -1,6 +1,7 @@
 ---
 first_name: Sam
 last_name: Mosley
+slug: sam-mosley
 position: Steering Committee Member | Volunteer Coordinator
 profile: sam_mosley.webp
 expertise: Embedded Systems, Cloud Architecture, GeoAI

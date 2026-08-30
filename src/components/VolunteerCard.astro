@@ -8,9 +8,10 @@ const { volunteer, Content } = Astro.props as {
 };
 const initials = `${volunteer.data.first_name.slice(0, 1)}${volunteer.data.last_name.slice(0, 1)}`;
 const fullName = `${volunteer.data.first_name} ${volunteer.data.last_name}`;
+const anchorId = volunteer.data.slug;
 ---
 
-<div class="team-member volunteer-card">
+<div class="team-member volunteer-card" id={anchorId}>
   <div class="member-photo volunteer-card__photo">
     {
       volunteer.data.profile ? (
@@ -27,7 +28,12 @@ const fullName = `${volunteer.data.first_name} ${volunteer.data.last_name}`;
     }
   </div>
   <div class="member-info volunteer-card__info">
-    <h3>{fullName}</h3>
+    <h3>
+      <a class="volunteer-card__name-link" href={`#${anchorId}`}>
+        <span>{fullName}</span>
+        <span class="volunteer-card__permalink" aria-hidden="true">#</span>
+      </a>
+    </h3>
     {
       volunteer.data.position && (
         <div class="volunteer-card__position">
@@ -69,6 +75,15 @@ const fullName = `${volunteer.data.first_name} ${volunteer.data.last_name}`;
     display: flex;
     gap: 1.5rem;
     padding: 1.5rem;
+    scroll-margin-top: 6rem;
+    transition:
+      border-color 150ms ease,
+      box-shadow 150ms ease;
+  }
+
+  .volunteer-card:target {
+    border-color: var(--aiv-action-primary);
+    box-shadow: var(--aiv-card-hover-shadow);
   }
 
   .volunteer-card__photo {
@@ -105,8 +120,36 @@ const fullName = `${volunteer.data.first_name} ${volunteer.data.last_name}`;
   }
 
   .volunteer-card__info h3 {
-    color: var(--aiv-text-primary);
     margin: 0 0 0.5rem;
+  }
+
+  .volunteer-card__name-link {
+    align-items: baseline;
+    color: var(--aiv-text-primary);
+    display: inline-flex;
+    text-decoration: none;
+  }
+
+  .volunteer-card__name-link:hover {
+    color: var(--aiv-action-primary);
+  }
+
+  .volunteer-card__name-link:focus-visible {
+    border-radius: 0.2rem;
+    outline: 3px solid var(--aiv-focus-ring);
+    outline-offset: 3px;
+  }
+
+  .volunteer-card__permalink {
+    color: var(--aiv-action-primary);
+    margin-left: 0.4rem;
+    opacity: 0;
+    transition: opacity 150ms ease;
+  }
+
+  .volunteer-card__name-link:hover .volunteer-card__permalink,
+  .volunteer-card__name-link:focus-visible .volunteer-card__permalink {
+    opacity: 1;
   }
 
   .volunteer-card__position {
@@ -126,5 +169,12 @@ const fullName = `${volunteer.data.first_name} ${volunteer.data.last_name}`;
     color: var(--aiv-text-secondary);
     line-height: 1.6;
     margin-top: 1rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .volunteer-card,
+    .volunteer-card__permalink {
+      transition: none;
+    }
   }
 </style>
