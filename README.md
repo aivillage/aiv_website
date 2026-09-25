@@ -132,6 +132,13 @@ pnpm run check:internal-links
 pnpm run audit:dependencies
 ```
 
+## Kiosk
+
+Open `/kiosk/` on the display. The slideshow starts automatically. Edit
+`src/data/kiosk.ts` to add, remove, or reorder slides; poster entries use slugs
+from hosted records in `src/data/posters.ts`. Right Arrow or Space advances,
+Left Arrow goes back, and P pauses or resumes.
+
 ## Deployment
 
 Cloudflare Pages is the production target.

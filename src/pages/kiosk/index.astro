@@ -1,0 +1,223 @@
+---
+import { kioskSlides } from "../../data/kiosk";
+import { posters } from "../../data/posters";
+
+const posterBySlug = new Map(posters.map((poster) => [poster.slug, poster]));
+const slides = kioskSlides.map((slide) => {
+  if (slide.type === "brand")
+    return { ...slide, duration: slide.duration ?? 9000 };
+  const poster = posterBySlug.get(slide.posterSlug);
+  if (!poster || poster.posterAvailability !== "hosted") {
+    throw new Error(`Kiosk poster must be hosted: ${slide.posterSlug}`);
+  }
+  return {
+    ...slide,
+    duration: slide.duration ?? 22000,
+    url: `https://drive.google.com/thumbnail?id=${encodeURIComponent(poster.driveFileId)}&sz=w2400`,
+    title: poster.title,
+  };
+});
+
+if (!slides.length || slides[0].type !== "brand") {
+  throw new Error("Kiosk playlist must start with a brand slide");
+}
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AI Village Kiosk</title>
+    <meta name="description" content="AI Village research poster slideshow" />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        overflow: hidden;
+      }
+      body {
+        background: #080d19;
+        color: #fff;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+      main {
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+        height: 100dvh;
+        overflow: hidden;
+      }
+      .slide {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        opacity: 0;
+        visibility: hidden;
+        transition:
+          opacity 500ms ease,
+          visibility 500ms ease;
+      }
+      .slide.active {
+        opacity: 1;
+        visibility: visible;
+        z-index: 1;
+      }
+      .brand {
+        background: radial-gradient(circle at center, #172945 0%, #080d19 72%);
+        text-align: center;
+        padding: 4vmin;
+      }
+      .brand-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: clamp(1rem, 3vh, 3rem);
+        max-height: 100%;
+      }
+      .brand h1 {
+        font-size: clamp(2.5rem, 6vw, 7rem);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin: 0;
+      }
+      .brand img {
+        display: block;
+        width: min(58vw, 66vh, 680px);
+        max-height: 58vh;
+        object-fit: contain;
+        filter: invert(1);
+      }
+      .brand p {
+        font-size: clamp(1.25rem, 2.4vw, 3rem);
+        letter-spacing: 0.12em;
+        margin: 0;
+      }
+      .poster {
+        padding: clamp(8px, 1.5vmin, 28px);
+      }
+      .poster img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .slide {
+          transition: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main aria-label="AI Village kiosk slideshow">
+      {
+        slides.map((slide, index) => (
+          <section
+            class:list={["slide", slide.type, { active: index === 0 }]}
+            data-duration={slide.duration}
+            data-src={slide.type === "poster" ? slide.url : undefined}
+            aria-hidden={index === 0 ? "false" : "true"}
+          >
+            {slide.type === "brand" ? (
+              <div class="brand-content">
+                <h1>AI Village</h1>
+                <img src="/assets/images/aiv_logo.svg" alt="" />
+                <p>aivillage.org</p>
+              </div>
+            ) : (
+              <img alt={slide.title} />
+            )}
+          </section>
+        ))
+      }
+    </main>
+    <script>
+      const slides = Array.from(
+        document.querySelectorAll<HTMLElement>(".slide"),
+      );
+      const imageState = new Map<string, "loading" | "ready" | "failed">();
+      let current = 0;
+      let paused = false;
+      let timer: number | undefined;
+
+      function preload(url: string): void {
+        imageState.set(url, "loading");
+        const image = new Image();
+        image.onload = () => imageState.set(url, "ready");
+        image.onerror = () => imageState.set(url, "failed");
+        image.src = url;
+      }
+
+      for (const slide of slides) {
+        if (slide.dataset.src && !imageState.has(slide.dataset.src))
+          preload(slide.dataset.src);
+      }
+
+      function schedule(): void {
+        window.clearTimeout(timer);
+        if (!paused) {
+          timer = window.setTimeout(
+            () => advance(1),
+            Number(slides[current].dataset.duration),
+          );
+        }
+      }
+
+      function advance(direction: number): void {
+        // Search at most one full lap. A brand slide always remains available.
+        for (let step = 1; step <= slides.length; step++) {
+          const next =
+            (current + direction * step + slides.length * step) % slides.length;
+          const candidate = slides[next];
+          const url = candidate.dataset.src;
+          if (url && imageState.get(url) !== "ready") {
+            if (imageState.get(url) === "failed") preload(url);
+            continue;
+          }
+          slides[current].classList.remove("active");
+          slides[current].setAttribute("aria-hidden", "true");
+          if (url) {
+            const image = candidate.querySelector("img");
+            if (image) {
+              image.onerror = () => {
+                imageState.set(url, "failed");
+                if (current === next) advance(1);
+              };
+              image.src = url;
+            }
+          }
+          candidate.classList.add("active");
+          candidate.setAttribute("aria-hidden", "false");
+          current = next;
+          schedule();
+          return;
+        }
+        schedule();
+      }
+
+      document.addEventListener("keydown", (event) => {
+        if (
+          event.key === "ArrowRight" ||
+          event.key === " " ||
+          event.key === "ArrowLeft"
+        ) {
+          event.preventDefault();
+          advance(event.key === "ArrowLeft" ? -1 : 1);
+        } else if (event.key.toLowerCase() === "p") {
+          paused = !paused;
+          schedule();
+        }
+      });
+
+      schedule();
+    </script>
+  </body>
+</html>
