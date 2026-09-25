@@ -15,6 +15,7 @@ const slides = kioskSlides.map((slide) => {
     duration: slide.duration ?? 22000,
     url: `https://drive.google.com/thumbnail?id=${encodeURIComponent(poster.driveFileId)}&sz=w2400`,
     title: poster.title,
+    abstract: poster.abstract,
   };
 });
 
@@ -101,13 +102,38 @@ if (!slides.length || slides[0].type !== "brand") {
         margin: 0;
       }
       .poster {
+        grid-template-columns: minmax(0, 62fr) minmax(0, 38fr);
+        gap: 2vmin;
         padding: clamp(8px, 1.5vmin, 28px);
       }
-      .poster img {
+      .poster-art {
+        min-width: 0;
+        min-height: 0;
+        height: 100%;
+      }
+      .poster-art img {
         display: block;
         width: 100%;
         height: 100%;
         object-fit: contain;
+      }
+      .poster-copy {
+        align-self: center;
+        max-height: 100%;
+        overflow: hidden;
+        padding-right: 1vmin;
+      }
+      .poster-copy h2 {
+        font-size: max(20px, 1.6vw);
+        line-height: 1.15;
+        margin: 0 0 1.2em;
+      }
+      .poster-copy p {
+        color: #dce8fb;
+        font-size: max(13px, 1.05vw);
+        line-height: 1.4;
+        margin: 0;
+        white-space: pre-line;
       }
       @media (prefers-reduced-motion: reduce) {
         .slide {
@@ -133,7 +159,15 @@ if (!slides.length || slides[0].type !== "brand") {
                 <p>aivillage.org</p>
               </div>
             ) : (
-              <img alt={slide.title} />
+              <>
+                <div class="poster-art">
+                  <img alt={slide.title} />
+                </div>
+                <div class="poster-copy">
+                  <h2>{slide.title}</h2>
+                  <p>{slide.abstract}</p>
+                </div>
+              </>
             )}
           </section>
         ))
