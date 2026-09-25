@@ -54,7 +54,7 @@
     "eslint": "^10.9.1",
     "eslint-plugin-astro": "^2.1.1",
     "globals": "^17.7.0",
-    "js-yaml": "4.3.1",
+    "js-yaml": "4.3.2",
     "prettier": "^3.8.5",
     "prettier-plugin-astro": "0.14.1",
     "sharp": "0.35.4",
