@@ -32,16 +32,48 @@ export const kioskSlides: KioskSlide[] = [
     posterSlug: "ai-agents-escape-their-task-horizon",
   },
   {
+    type: "embed",
+    id: "llm-embeddings",
+    title: "LLM Embeddings",
+    url: "https://llm-embeddings.lab.aivillage.org/",
+    duration: 27000,
+    requiresWorkshops: true,
+  },
+  {
     type: "poster",
     id: "threat-hunting",
     posterSlug:
       "attackers-dont-need-shells-they-need-prompts-this-is-how-we-hunt-them",
   },
+  {
+    type: "embed",
+    id: "email-indirect",
+    title: "Email Indirect Prompt Injection",
+    url: "https://email-indirect.lab.aivillage.org/",
+    duration: 27000,
+    requiresWorkshops: true,
+  },
   { type: "brand", id: "interlude" },
+  {
+    type: "embed",
+    id: "rag-poisoning",
+    title: "RAG Poisoning",
+    url: "https://rag-poisoning.lab.aivillage.org/",
+    duration: 27000,
+    requiresWorkshops: true,
+  },
   {
     type: "poster",
     id: "web-pentesting",
     posterSlug:
       "beyond-ctfs-engineering-ai-agents-for-real-world-web-pentesting",
+  },
+  {
+    type: "embed",
+    id: "prompt-extraction",
+    title: "Prompt Extraction",
+    url: "https://prompt-extraction.lab.aivillage.org/",
+    duration: 27000,
+    requiresWorkshops: true,
   },
 ];
