@@ -58,4 +58,12 @@ export const kioskSlides: KioskSlide[] = [
     duration: 27000,
     requiresWorkshops: true,
   },
+  {
+    type: "embed",
+    id: "model-lab",
+    title: "Model Lab",
+    url: "https://model-lab.lab.aivillage.local/?presentation=spatial&demo=1",
+    duration: 165000,
+    requiresWorkshops: true,
+  },
 ];
