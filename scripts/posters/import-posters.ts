@@ -17,6 +17,7 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { resolve } from "node:path";
+import { format } from "prettier";
 import {
   readQueue,
   QueueError,
@@ -118,7 +119,7 @@ ${rows.map(renderPoster).join("\n")}
 `;
 }
 
-function main() {
+async function main() {
   const { csvPath, check, allowSlugChange, allowPermalinkRemoval, out } =
     parseArgs(process.argv.slice(2));
   const OUT_PATH = out ? resolve(out) : fileURLToPath(DEFAULT_DATA_PATH);
@@ -215,7 +216,7 @@ function main() {
     process.exit(1);
   }
 
-  const output = render(rows);
+  const output = await format(render(rows), { filepath: OUT_PATH });
 
   if (check) {
     const existing = readFileSync(OUT_PATH, "utf8");
@@ -305,4 +306,4 @@ function main() {
   console.log(`\nNext: pnpm build && pnpm posters:test`);
 }
 
-main();
+await main();

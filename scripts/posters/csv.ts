@@ -68,5 +68,6 @@ export function parseCsv(input: string): string[][] {
     rows.push(row);
   }
 
-  return rows.filter((r) => r.some((cell) => cell.trim() !== ""));
+  // Keep blank records so callers can report the original CSV row number.
+  return rows;
 }

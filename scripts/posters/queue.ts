@@ -435,6 +435,10 @@ export function readQueue(
 
   table.slice(1).forEach((raw, index) => {
     const rowNumber = index + 2; // header is row 1
+    if (raw.every((value) => value.trim() === "")) {
+      skipped += 1;
+      return;
+    }
     const consent = cell(raw, "publish").toLowerCase();
     if (!formResponse && !TRUTHY.has(consent)) {
       skipped += 1;

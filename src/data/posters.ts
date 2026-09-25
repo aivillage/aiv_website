@@ -29,6 +29,21 @@ export const posters: Poster[] = [
     driveFileId: "1ms39W56OgrB0K3zuxXkSiba4Pwpr86v6",
   },
   {
+    slug: "agentlens-counterfactual-replay-for-real-world-agent-behavior",
+    event: "defcon-34",
+    submissionId: "form-81279535c5b96584a6d9",
+    posterAvailability: "declined",
+    title: "AgentLens: Counterfactual Replay for Real-World Agent Behavior",
+    authors: [
+      { name: "Vincent Abruzzo", affiliation: "MATS" },
+      { name: "Greg Kocher", affiliation: "MATS" },
+      { name: "Arthur Conmy", affiliation: "MATS" },
+      { name: "Neel Nanda", affiliation: "MATS" },
+    ],
+    abstract:
+      "AgentLens is a reproducible experimental harness for studying real-world agent use at the level of the full trajectory. It captures native transcripts, normalized action traces, tool arguments, observations, API requests, file diffs, subagent links, and replay metadata, then supports counterfactual replaying: restoring an agent run at a chosen point, changing one factor, rerunning the agent, and comparing the resulting trajectory against the original.\n\nWe use AgentLens to study two safety-relevant phenomena. First, in ongoing work on memory laundering, we test whether repeated read-write cycles over persistent memory can transform tentative observations into stronger later claims as caveats and source context decay. Second, we evaluate direct scope violation in cybersecurity-style tasks where no valid high-severity vulnerability exists and agents are explicitly restricted to allowed files and routes. Across model and prompt conditions, we find that framing strongly affects whether agents cross boundaries. Maximum-pressure and CTF-style prompts can increase direct scope violations, while refusal to fabricate or exceed scope remains distinct from refusing cybersecurity work.\n\nThese studies show why agent evaluation must track intermediate state and actions, not only outputs. Counterfactual replaying makes it possible to isolate which prompt, memory, tool, or environmental change caused a behavioral shift. AgentLens therefore provides infrastructure for more precise audits of agent behavior, enabling researchers to compare models, harnesses, and interventions under controlled, reproducible conditions.",
+  },
+  {
     slug: "ai-agents-escape-their-task-horizon",
     event: "defcon-34",
     submissionId: "form-06e328ab67fcac16d6eb",
@@ -94,6 +109,20 @@ export const posters: Poster[] = [
     sourceUrl:
       "https://drive.google.com/file/d/1JK4inE6TIbhQr3KUWvL5vn3gGgOHje_E/view?usp=drive_link",
     driveFileId: "1JK4inE6TIbhQr3KUWvL5vn3gGgOHje_E",
+  },
+  {
+    slug: "compiling-expertise-turning-tribal-knowledge-into-auditable-local-agents",
+    event: "defcon-34",
+    submissionId: "form-d79e7e80c195fd82cfb6",
+    posterAvailability: "hosted",
+    title:
+      "Compiling Expertise, Turning tribal knowledge into auditable local agents",
+    authors: [{ name: "Nathan Whitaker", affiliation: "Solventum" }],
+    abstract:
+      "You've seen the talks. Someone wires a model into a loop, feeds it a domain in a\nsystem prompt, and demos an agent that triages your findings. It works on stage.\nMonths later it's handing out confident, unauditable answers nobody can trace, and\nit drifts when the model updates.\n\nThe model was never the hard part. The hard part is the step we stopped doing:\nturning what your experts know into something a machine runs the same way every\ntime. We prompt when we should \"compile\".\n\nThis poster presents a five-stage method for compiling tacit expertise into a\nconstrained local agent: deterministic rules and math for what compiles, the model\nfor the irreducible residue, tools and schemas to constrain even that — and a\nclosed loop so corrections turn back into rules.\n\nThe method is proven in production: SAST triage on a local LLM, clearing 67% of\nthe noise from 3,993 mined expert decisions before a model ever runs. The findings\nare SAST. The method isn't.",
+    sourceUrl:
+      "https://drive.google.com/file/d/1M7zYfwOMAh6kQgq8_DBi0_67-YKgfcJE/view?usp=drive_link",
+    driveFileId: "1M7zYfwOMAh6kQgq8_DBi0_67-YKgfcJE",
   },
   {
     slug: "confused-deputies-in-slack-exploiting-agentic-ai-in-production",
@@ -276,6 +305,20 @@ export const posters: Poster[] = [
     driveFileId: "1eF9v0lqa_rwG25hQyWXzggNA8gUwucRt",
   },
   {
+    slug: "poison-in-poison-out-cdc-aware-containment-for-rag-and-agent-memory",
+    event: "defcon-34",
+    submissionId: "form-c979b9956486290c2663",
+    posterAvailability: "hosted",
+    title:
+      "Poison In, Poison Out: CDC-Aware Containment for RAG and Agent Memory",
+    authors: [{ name: "Kunal Jain", affiliation: "Adobe" }],
+    abstract:
+      "An attacker poisons one document in a RAG corpus. The system chunks it, embeds it, retrieves it, and may later save a summary in an agent's memory. An administrator fixes or deletes the source. The hard question is whether the poison is actually gone.\n\nThis work-in-progress poster looks at that cleanup problem. Old chunks can remain in a vector index. Stale embeddings can stay retrievable. A replayed event can restore content that was already removed. Agent memory can keep a summary derived from the poisoned source. Many RAG poisoning defenses focus on spotting bad content at retrieval or generation time, but incident response also needs a way to find derived copies and prove cleanup.\n\nThe poster applies change data capture ideas to RAG and agent-memory containment. Each source change becomes an ordered event with a document version, commit time, actor or producer, content hash, prior content hash, and authorization context. Derived chunks, embeddings, and memory records keep links back to that source event. Corrections and deletions create tombstones for affected records. Version checks reject stale replays, and reconciliation compares source state with what is still available for retrieval.\n\nThe evaluation plan compares periodic source-only re-indexing, append-only updates, deletion support, and a CDC-aware containment design under corrections, deletions, stale replay, partial failures, and poison copied into memory. The goal is practical: after a poisoned source is fixed, the agent should stop using its derived records, and the operator should be able to show why.",
+    sourceUrl:
+      "https://drive.google.com/file/d/1j4O6xZ7_ZdYmM1s6G40-zcLWMuDzLJes/view?usp=drive_link",
+    driveFileId: "1j4O6xZ7_ZdYmM1s6G40-zcLWMuDzLJes",
+  },
+  {
     slug: "poisoned-mandates",
     event: "defcon-34",
     submissionId: "form-15bdad65ba5c924d9c16",
@@ -360,6 +403,19 @@ export const posters: Poster[] = [
     driveFileId: "1sF_O_aYgR85bMDRSeZFZoxv74zV-wfKV",
   },
   {
+    slug: "sadf-synthetic-agent-deception-framework",
+    event: "defcon-34",
+    submissionId: "form-ed10db07e4424aebff95",
+    posterAvailability: "hosted",
+    title: "SADF: Synthetic Agent Deception Framework",
+    authors: [{ name: "Julie Brunias", affiliation: "AI Village" }],
+    abstract:
+      "Agents that can call tools, sign transactions, or execute code are being deployed at scale with no standardized methodology to test them for prompt-injection and coercion failures. SADF (Synthetic Agent Deception Framework) addresses this gap with an eight-class taxonomy of agentic attack vectors — Tool Call Hijacking, Output Poisoning, Cross-Tool Injection, Memory Poisoning, RAG Poisoning, Delegated Authority Abuse, Multi-Agent Propagation, and Context Boundary Violation — paired with an empirical evaluation harness validated across 5,119 real runs spanning eight architectures (Claude Haiku, Claude Sonnet, Llama 3.2, GPT-5.4, and four orchestration frameworks: LangChain, AutoGen, CrewAI, SmolAgents).\n\nThree findings anchor the framework. First, naive substring-matching scoring overstates true compromise rates by up to 6.5x when models quote attack indicators verbatim while refusing — a measurement bug we caught and corrected in our own data (4.1x on Claude Haiku, 6.5x on Claude Sonnet). Second, orchestration framework choice is an independent attack surface: identical backend models show a 2.6x spread in compromise rate (11.9% to 31.1%) depending solely on the framework wrapping them. Third, injection resistance and data-integrity resistance are separate properties — a case study demonstrates a model resisting two direct prompt-injection attempts, then still executing a real financial loss when its own correctly-configured automation rule was fed manipulated input data.\n\nIndependent validation using Garak confirmed that identical attack categories can show up to 4.5x variance in success rate depending on payload phrasing alone, reinforcing that single-payload testing materially understates real exposure.\n\nThis is disclosed as Phase 1 of an ongoing evaluation: session-persistence testing (designed but not yet implemented), six additional target architectures, and a controlled multi-agent-amplification comparison remain explicit future work. All code, datasets, and run logs are public. All evaluations were conducted against a simulated tool environment — no real filesystem, network, mail system, or third-party service was accessed at any point.",
+    sourceUrl:
+      "https://drive.google.com/file/d/1YePG4xsjKyqqcJPAF_p6LLegSttMIE5k/view?usp=drive_link",
+    driveFileId: "1YePG4xsjKyqqcJPAF_p6LLegSttMIE5k",
+  },
+  {
     slug: "securing-cross-enterprise-ai-agents",
     event: "defcon-34",
     submissionId: "form-3c2bde8122997542e1ca",
@@ -395,12 +451,15 @@ export const posters: Poster[] = [
     slug: "stop-pressing-1-do-students-verify-before-they-approve-a-pilot-study-of",
     event: "defcon-34",
     submissionId: "form-45f14c6e72ef95904260",
-    posterAvailability: "missing",
+    posterAvailability: "hosted",
     title:
       "Stop Pressing 1: Do Students Verify Before They Approve? A Pilot Study of Comprehension Gates in Human Oversight of AI Agents",
     authors: [{ name: "Rita Sabri", affiliation: "DCPS" }],
     abstract:
       "Human-in-the-loop approval is a common mitigation in agentic security and one of the least measured. Agent frameworks terminate consequential actions: tool calls, commits, sends, installs with a confirmation prompt and assume the human will verify. In practice, approval and verification diverge: operators can habituate to confirmation dialogs, similar to warning fatigue in traditional security UX, and repeated low-cost approvals reduce verification effort over time. The result is a security boundary guarded by reflex rather than verification. Oversight fidelity is measured as the difference between predicted and executed behavior and ground truth, not the agent’s self-description. In the study, we compare passive confirmation, independent prediction gates, and agent-generated verification prompts and test whether verification prompts themselves become attack surfaces when generated by compromised agents. Seeded misbehaviors include hidden parameter changes, action substitution, omitted side effects, misleading summaries, and dependency substitution attacks. We track how often operators catch seeded misbehaviors versus how often they flag clean requests. \nA live, scripted demo is deployed now. Our pilot uses high school computer science classrooms in a controlled environment for studying oversight behavior under repeated approval tasks. The poster demonstrates where confirmation-based oversight succeeds, where it breaks, and how to measure the difference.",
+    sourceUrl:
+      "https://drive.google.com/file/d/1JN9LjRyZclvuBFqni9PcUqJCAWTN_vML/view?usp=drive_link",
+    driveFileId: "1JN9LjRyZclvuBFqni9PcUqJCAWTN_vML",
   },
   {
     slug: "stop-pressing-1-measuring-human-rubber-stamping-in-agent-oversight",
@@ -415,6 +474,19 @@ export const posters: Poster[] = [
     sourceUrl:
       "https://drive.google.com/file/d/1WwfRy7h2HukCZ_HA-oUYpcHNkqBVmK0i/view?usp=drive_link",
     driveFileId: "1WwfRy7h2HukCZ_HA-oUYpcHNkqBVmK0i",
+  },
+  {
+    slug: "the-agents-of-chaos-ai-driven-malware-generation",
+    event: "defcon-34",
+    submissionId: "form-141b9ebe8cd137120e5a",
+    posterAvailability: "hosted",
+    title: "The Agents of Chaos: AI Driven Malware Generation",
+    authors: [{ name: "Arad Donenfeld", affiliation: "SafeBreach" }],
+    abstract:
+      "AI agents are rapidly making their way into offensive security, with discussions mainly revolving around AI assisted coding, the use of AI at runtime, or attacks against AI systems themselves. In this work, we explore a different idea: what happens when AI is responsible for the entire malware development process? More specifically, can local models do this too?\nWe built an agent in which different models plan, implement, validate, and iteratively improve malware without human involvement. We evaluate different language models, prompting techniques, and workflows, comparing their impact on code quality, creativity, and evasiveness.\nThis poster presents the architecture of the agent, the challenges encountered during development, and the techniques that solved them, and enabled quick generation of a large number of samples. We show how the agent improves randomization, helps break signature-based detection, and enables quick generation of thousands of different samples.\nFinally, we will share how real-world attacker use these techniques and discuss what this means for both offensive and defensive security researchers.",
+    sourceUrl:
+      "https://drive.google.com/file/d/1D50Zd_Ha5tp_3E5OuxfExFI9ODJ0HSH3/view?usp=drive_link",
+    driveFileId: "1D50Zd_Ha5tp_3E5OuxfExFI9ODJ0HSH3",
   },
   {
     slug: "the-anatomy-of-a-chinese-knowledge-distillation-campaign",
@@ -474,7 +546,7 @@ export const posters: Poster[] = [
     abstract:
       "AI agents are moving into the SOC, where they read alerts, gather context and increasingly help decide what to close and what to escalate. Triage has always been an evidence discipline: a verdict is only ever as sound as the material beneath it. Agents inherit that dependency and add a new weakness, they cannot reliably distinguish evidence they are meant to read from instructions they are being told to follow. The SOC is an attractive place to exploit that, because so much of an agent's evidence is attacker-authored by design.\nThis work builds a representative triage agent, defines a four-part tamper taxonomy for machine-read evidence, and alters exactly one artefact per trial. One attacker-controlled field can move an autonomous verdict,  and the reasoning stays coherent, so the failure reads exactly like good work. Silent closures, not noisy escalations, are the failure worth instrumenting first.",
     sourceUrl:
-      "https://drive.google.com/file/d/1lCCJzB3P0bZhj4WMEi2nkunPgwxDVdGW/view?usp=drive_link",
-    driveFileId: "1lCCJzB3P0bZhj4WMEi2nkunPgwxDVdGW",
+      "https://drive.google.com/file/d/1he8BNf9YLtyLzblXzXnTIvToOC-fmrUF/view?usp=sharing",
+    driveFileId: "1he8BNf9YLtyLzblXzXnTIvToOC-fmrUF",
   },
 ];
