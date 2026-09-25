@@ -1,8 +1,5 @@
 ---
 import { kioskSlides } from "../../data/kiosk";
-import { posters } from "../../data/posters";
-
-const posterBySlug = new Map(posters.map((poster) => [poster.slug, poster]));
 const corners = ["top-left", "top-right", "bottom-right", "bottom-left"];
 let posterNumber = 0;
 const slides = kioskSlides.map((slide) => {
@@ -10,16 +7,9 @@ const slides = kioskSlides.map((slide) => {
     return { ...slide, duration: slide.duration ?? 9000 };
   if (slide.type === "embed")
     return { ...slide, duration: slide.duration ?? 28000 };
-  const poster = posterBySlug.get(slide.posterSlug);
-  if (!poster || poster.posterAvailability !== "hosted") {
-    throw new Error(`Kiosk poster must be hosted: ${slide.posterSlug}`);
-  }
   return {
     ...slide,
     duration: slide.duration ?? 22000,
-    url: `https://drive.google.com/thumbnail?id=${encodeURIComponent(poster.driveFileId)}&sz=w2400`,
-    title: poster.title,
-    abstract: poster.abstract,
     corner: corners[posterNumber++ % corners.length],
   };
 });
@@ -186,7 +176,6 @@ if (!slides.length || slides[0].type !== "brand") {
           <section
             class:list={["slide", slide.type, { active: index === 0 }]}
             data-duration={slide.duration}
-            data-src={slide.type === "poster" ? slide.url : undefined}
             data-embed-src={slide.type === "embed" ? slide.url : undefined}
             data-requires-workshops={
               slide.type === "embed" && slide.requiresWorkshops
@@ -206,11 +195,11 @@ if (!slides.length || slides[0].type !== "brand") {
             ) : (
               <>
                 <div class="poster-art">
-                  <img alt={slide.title} />
+                  <img alt="" />
                 </div>
                 <div class="poster-copy">
-                  <h2>{slide.title}</h2>
-                  <p>{slide.abstract}</p>
+                  <h2 />
+                  <p />
                 </div>
                 <img
                   class={`poster-mark poster-mark--${slide.corner}`}
@@ -224,6 +213,33 @@ if (!slides.length || slides[0].type !== "brand") {
       }
     </main>
     <script>
+      import { posters } from "../../data/posters";
+
+      const hostedPosters = posters.filter(
+        (poster) => poster.posterAvailability === "hosted",
+      );
+      const posterSlides =
+        document.querySelectorAll<HTMLElement>(".slide.poster");
+      if (hostedPosters.length === 0) {
+        throw new Error("Kiosk requires hosted posters");
+      }
+      for (let i = hostedPosters.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [hostedPosters[i], hostedPosters[j]] = [
+          hostedPosters[j],
+          hostedPosters[i],
+        ];
+      }
+      posterSlides.forEach((slide, index) => {
+        const poster = hostedPosters[index % hostedPosters.length];
+        slide.dataset.src = `https://drive.google.com/thumbnail?id=${encodeURIComponent(poster.driveFileId)}&sz=w2400`;
+        slide
+          .querySelector(".poster-art img")!
+          .setAttribute("alt", poster.title);
+        slide.querySelector(".poster-copy h2")!.textContent = poster.title;
+        slide.querySelector(".poster-copy p")!.textContent = poster.abstract;
+      });
+
       const workshopsEnabled =
         new URLSearchParams(window.location.search).get("workshops") === "1";
       document
