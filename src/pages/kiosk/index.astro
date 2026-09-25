@@ -3,6 +3,8 @@ import { kioskSlides } from "../../data/kiosk";
 import { posters } from "../../data/posters";
 
 const posterBySlug = new Map(posters.map((poster) => [poster.slug, poster]));
+const corners = ["top-left", "top-right", "bottom-right", "bottom-left"];
+let posterNumber = 0;
 const slides = kioskSlides.map((slide) => {
   if (slide.type === "brand")
     return { ...slide, duration: slide.duration ?? 9000 };
@@ -16,6 +18,7 @@ const slides = kioskSlides.map((slide) => {
     url: `https://drive.google.com/thumbnail?id=${encodeURIComponent(poster.driveFileId)}&sz=w2400`,
     title: poster.title,
     abstract: poster.abstract,
+    corner: corners[posterNumber++ % corners.length],
   };
 });
 
@@ -135,6 +138,30 @@ if (!slides.length || slides[0].type !== "brand") {
         margin: 0;
         white-space: pre-line;
       }
+      .poster-mark {
+        position: absolute;
+        width: clamp(32px, 3vw, 100px);
+        height: auto;
+        filter: invert(1);
+        opacity: 0.8;
+        pointer-events: none;
+      }
+      .poster-mark--top-left {
+        top: 1.5vmin;
+        left: 1.5vmin;
+      }
+      .poster-mark--top-right {
+        top: 1.5vmin;
+        right: 1.5vmin;
+      }
+      .poster-mark--bottom-right {
+        right: 1.5vmin;
+        bottom: 1.5vmin;
+      }
+      .poster-mark--bottom-left {
+        bottom: 1.5vmin;
+        left: 1.5vmin;
+      }
       @media (prefers-reduced-motion: reduce) {
         .slide {
           transition: none;
@@ -167,6 +194,11 @@ if (!slides.length || slides[0].type !== "brand") {
                   <h2>{slide.title}</h2>
                   <p>{slide.abstract}</p>
                 </div>
+                <img
+                  class={`poster-mark poster-mark--${slide.corner}`}
+                  src="/assets/images/aiv_logo.svg"
+                  alt=""
+                />
               </>
             )}
           </section>
