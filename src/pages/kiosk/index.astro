@@ -8,6 +8,8 @@ let posterNumber = 0;
 const slides = kioskSlides.map((slide) => {
   if (slide.type === "brand")
     return { ...slide, duration: slide.duration ?? 9000 };
+  if (slide.type === "embed")
+    return { ...slide, duration: slide.duration ?? 28000 };
   const poster = posterBySlug.get(slide.posterSlug);
   if (!poster || poster.posterAvailability !== "hosted") {
     throw new Error(`Kiosk poster must be hosted: ${slide.posterSlug}`);
@@ -162,6 +164,14 @@ if (!slides.length || slides[0].type !== "brand") {
         bottom: 1.5vmin;
         left: 1.5vmin;
       }
+      .embed {
+        background: #080d19;
+      }
+      .embed iframe {
+        width: 100%;
+        height: 100%;
+        border: 0;
+      }
       @media (prefers-reduced-motion: reduce) {
         .slide {
           transition: none;
@@ -177,6 +187,12 @@ if (!slides.length || slides[0].type !== "brand") {
             class:list={["slide", slide.type, { active: index === 0 }]}
             data-duration={slide.duration}
             data-src={slide.type === "poster" ? slide.url : undefined}
+            data-embed-src={slide.type === "embed" ? slide.url : undefined}
+            data-requires-workshops={
+              slide.type === "embed" && slide.requiresWorkshops
+                ? "true"
+                : undefined
+            }
             aria-hidden={index === 0 ? "false" : "true"}
           >
             {slide.type === "brand" ? (
@@ -185,6 +201,8 @@ if (!slides.length || slides[0].type !== "brand") {
                 <img src="/assets/images/aiv_logo.svg" alt="" />
                 <p>aivillage.org</p>
               </div>
+            ) : slide.type === "embed" ? (
+              <iframe title={slide.title} tabindex="-1" loading="eager" />
             ) : (
               <>
                 <div class="poster-art">
@@ -206,6 +224,13 @@ if (!slides.length || slides[0].type !== "brand") {
       }
     </main>
     <script>
+      const workshopsEnabled =
+        new URLSearchParams(window.location.search).get("workshops") === "1";
+      document
+        .querySelectorAll<HTMLElement>('[data-requires-workshops="true"]')
+        .forEach((slide) => {
+          if (!workshopsEnabled) slide.remove();
+        });
       const slides = Array.from(
         document.querySelectorAll<HTMLElement>(".slide"),
       );
@@ -248,8 +273,16 @@ if (!slides.length || slides[0].type !== "brand") {
             if (imageState.get(url) === "failed") preload(url);
             continue;
           }
-          slides[current].classList.remove("active");
-          slides[current].setAttribute("aria-hidden", "true");
+          const previous = slides[current];
+          previous.classList.remove("active");
+          previous.setAttribute("aria-hidden", "true");
+          const previousFrame = previous.querySelector("iframe");
+          if (previousFrame) {
+            window.setTimeout(() => {
+              if (!previous.classList.contains("active"))
+                previousFrame.removeAttribute("src");
+            }, 500);
+          }
           if (url) {
             const image = candidate.querySelector("img");
             if (image) {
@@ -260,6 +293,9 @@ if (!slides.length || slides[0].type !== "brand") {
               image.src = url;
             }
           }
+          const frame = candidate.querySelector("iframe");
+          if (frame && candidate.dataset.embedSrc)
+            frame.src = candidate.dataset.embedSrc;
           candidate.classList.add("active");
           candidate.setAttribute("aria-hidden", "false");
           current = next;
